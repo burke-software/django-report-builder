@@ -1,0 +1,141 @@
+#container {
+    position: relative;
+    width: 100%;
+    height: 99%;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+header {
+    height: 2.6em;
+    border-bottom: 1px solid black;
+    padding-left: 1em;
+}
+.sidebar {
+    position: absolute;
+    top: 2.6em;
+    left: 0;
+    right: 70%;
+    bottom: 0;
+    padding: 0.5em;
+}
+.top_half {
+    height: 50%;
+    border-bottom: 1px solid black;
+    overflow: auto;
+}
+.bottom_half {
+    padding-top: 0.5em;
+}
+.main_area {
+    position: absolute;
+    top: 2.6em;
+    left: 30%;
+    right: 0;
+    bottom: 0;
+    padding-top: 0.5em;
+    padding-left: 0.5em;
+    border-left: 1px solid black;
+    overflow: auto;
+}
+
+.tree ol {
+    padding-top: 0px;
+}
+
+.tree li {
+    padding-left: 14px;
+    padding-bottom: 1px;
+    list-style-type: none;
+}
+
+li.tree_closed {
+    background: url(toggle-small-expand.png) no-repeat left top;
+}
+
+li.tree_expanded {
+    background: url(toggle-small.png) no-repeat left top;
+}
+
+span.button {
+  background: #e3e3e3;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: bold 12px/1 "helvetica neue", helvetica, arial, sans-serif;
+  padding: 1 px;
+  padding-left: 3px;
+  text-align: center;
+  text-shadow: 0 1px 0 #fff;
+  display: inline-block;
+  min-width: 50%;
+  text-align: left;
+  }
+  span.button:hover {
+    background: #d9d9d9;
+    box-shadow: inset 0 0 1px 1px #eaeaea;
+    color: #222;
+    cursor: pointer; }
+  span.button:active {
+    background: #d0d0d0;
+    box-shadow: inset 0 0 1px 1px #e3e3e3;
+    color: #000;
+}
+
+span.highlight {
+    background: #FED22F;
+}
+span.highlight:hover {
+    background: #FED22F;
+}
+
+.droppable {
+    border: 1px ridge;
+    background: #F9F9F9;
+    margin: 10px;
+    border-radius: 4px;
+    padding-bottom: 30px;
+}
+
+.simple_table {
+	border: 1px solid #DFDFDF;
+	background-color: #F9F9F9;
+	width: 100%;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
+	color: #333;
+}
+.simple_table td, #table-3 th {
+	border-top-color: white;
+	border-bottom: 1px solid #DFDFDF;
+	color: #555;
+}
+.simple_table th {
+	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
+	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-weight: normal;
+	padding: 7px 7px 8px;
+	text-align: left;
+	line-height: 1.3em;
+	font-size: 14px;
+}
+.simple_table td {
+	font-size: 12px;
+	padding: 4px 7px 2px;
+	vertical-align: top;
+}
+
+.hide_me {
+    display: none;
+}
+
+input[readonly="readonly"]
+{
+    background-color:transparent;
+    border: 0px solid;
+    height:20px;
+    width: 100%;
+    
+}

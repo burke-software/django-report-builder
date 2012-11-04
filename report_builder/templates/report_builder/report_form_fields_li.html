@@ -1,0 +1,11 @@
+{% for field in fields %}
+    <li class="draggable" style="list-style: none">
+        <span class="button"
+              data-name="{{ field.name }}"
+              data-path="{{ path }}"
+              data-path_verbose="{{ path_verbose }}"
+              >
+            {{ field.verbose_name }} [{{ field.get_internal_type }}]
+        </span>
+    </li>
+{% endfor %}
