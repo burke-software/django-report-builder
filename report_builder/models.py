@@ -23,8 +23,18 @@ class DisplayField(models.Model):
     field_verbose = models.CharField(max_length=2000)
     name = models.CharField(max_length=2000)
     sort = models.IntegerField(blank=True, null=True)
+    sort_reverse = models.BooleanField(verbose_name="Reverse")
     width = models.IntegerField(default=120)
-    group_by = models.BooleanField()
+    aggregate = models.CharField(
+        max_length=5,
+        choices = (
+            ('Count','Sum'),
+            ('Ave','Ave'),
+            ('Max','Max'),
+            ('Min','Min'),
+        ),
+        blank = True
+    )
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     class Meta:
         ordering = ['position']

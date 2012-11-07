@@ -59,9 +59,9 @@
                   <th>Path</th>
                   <th>Field</th>
                   <th>Name</th>
-                  <th>Sort</th>
+                  <th>Sort<span style="padding-left: 1.2em;">Desc?</span></th>
                   <th>Width</th>
-                  <th>Group By</th>
+                  <th>Aggregate</th>
                   <th>Delete?</th>
                 </tr>
               </thead>
@@ -74,20 +74,19 @@
                     </td>
                     <td>{{ form.field }}{{ form.field_verbose }}{{ form.path }}</td>
                     <td>{{ form.name }}</td>
-                    <td>{{ form.sort }}</td>
+                    <td>{{ form.sort }}{{ form.sort_reverse }}</td>
                     <td>{{ form.width }}</td>
-                    <td>{{ form.group_by }}</td>
+                    <td onclick="aggregate_tip()">{{ form.aggregate }}</td>
                     <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
                   </tr>
-                  
                 {% endfor %}
               </tbody>
             </table>
             Drag fields here
+            <div id="tip_area"></div>
           </div>
         </div>
-        <div id="tabs-3"">
-        </div>
+        <div id="tabs-3"></div>
       </div>
       
     </section>

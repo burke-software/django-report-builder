@@ -1,4 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core import exceptions
+from django.db.models import Avg, Max, Min, Count
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -29,6 +31,8 @@ class DisplayFieldForm(forms.ModelForm):
             'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
             'field_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
             'field': forms.HiddenInput(),
+            'width': forms.TextInput(attrs={'class':'small_input'}),
+            'sort': forms.TextInput(attrs={'class':'small_input'}),
         }
 
 
@@ -45,7 +49,6 @@ def get_relation_fields_from_model(model_class):
         if field[3] or not field[2] or hasattr(field[0], 'related'):
             field[0].field_name = field_name
             relation_fields += [field[0]]
-    print relation_fields
     return relation_fields
 
 def get_direct_fields_from_model(model_class):
@@ -130,19 +133,57 @@ def ajax_get_fields(request):
 
 def ajax_preview(request):
     report = get_object_or_404(Report, pk=request.POST['report_id'])
+    message= ""
     
     model_class = report.root_model.model_class()
     
     objects = model_class.objects.all()
     
+    # Aggregates
+    for display_field in report.displayfield_set.filter(aggregate__isnull=False):
+        if display_field.aggregate == "Avg":
+            objects = objects.annotate(Avg(display_field.path + display_field.field))
+        elif display_field.aggregate == "Max":
+            objects = objects.annotate(Max(display_field.path + display_field.field))
+        elif display_field.aggregate == "Min":
+            objects = objects.annotate(Min(display_field.path + display_field.field))
+        elif display_field.aggregate == "Count":
+            objects = objects.annotate(Count(display_field.path + display_field.field))
+    
+    # Ordering
+    order_list = []
+    for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
+        if display_field.sort_reverse:
+            order_list += ['-' + display_field.path + display_field.field]
+        else:
+            order_list += [display_field.path + display_field.field]
+    objects = objects.order_by(*order_list)
+    
+    # Display Values
     values_list = []
     for display_field in report.displayfield_set.all():
-        values_list += [display_field.path + display_field.field]
-    objects_dict = objects.values_list(*values_list)
+        if display_field.aggregate == "Avg":
+            values_list += [display_field.path + display_field.field + '__ave']
+        elif display_field.aggregate == "Max":
+            values_list += [display_field.path + display_field.field + '__max']
+        elif display_field.aggregate == "Min":
+            values_list += [display_field.path + display_field.field + '__min']
+        elif display_field.aggregate == "Count":
+            values_list += [display_field.path + display_field.field + '__count']
+        else:
+            values_list += [display_field.path + display_field.field]
+    try:
+        objects_dict = objects.values_list(*values_list)
+    except exceptions.FieldError:
+        message += "Field Error on %s. If you are using the report builder then " % display_field.name
+        message += "you found a bug! "
+        message += "If you made this in admin, then you probably something wrong."
+        objects_dict = None
     
     return render_to_response('report_builder/html_report.html', {
         'report': report,
         'objects_dict': objects_dict,
+        'message': message
         
     }, RequestContext(request, {}),)
     

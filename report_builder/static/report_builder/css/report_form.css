@@ -14,7 +14,7 @@ header {
     position: absolute;
     top: 2.6em;
     left: 0;
-    right: 70%;
+    right: 80%;
     bottom: 0;
     padding: 0.5em;
 }
@@ -25,11 +25,13 @@ header {
 }
 .bottom_half {
     padding-top: 0.5em;
+    overflow: auto;
+    height: 49%;
 }
 .main_area {
     position: absolute;
     top: 2.6em;
-    left: 30%;
+    left: 20%;
     right: 0;
     bottom: 0;
     padding-top: 0.5em;
@@ -138,4 +140,14 @@ input[readonly="readonly"]
     height:20px;
     width: 100%;
     
+}
+
+.small_input {
+    width: 50px;
+}
+
+#tip_area {
+    border-radius: 5px;
+    background-color: #B3C6F2;
+    display: none;
 }

@@ -52,17 +52,17 @@ function enable_drag() {
             i = total_forms.val();
             total_forms.val(parseInt(i)+1);
             
-            
             row_html = '<tr><td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-path_verbose" name="displayfield_set-'+i+'-path_verbose" readonly="readonly" type="text" value="' + path_verbose + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field_verbose" name="displayfield_set-'+i+'-field_verbose" readonly="readonly" type="text" value="' + field + '"/><input id="id_displayfield_set-'+i+'-path" name="displayfield_set-'+i+'-path" type="hidden" value="' + path + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + name + '"/>'
             row_html += '<input id="id_displayfield_set-'+i+'-name" name="displayfield_set-'+i+'-name" type="text" value="' + name + '"/></td>';
-            row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" id="id_displayfield_set-'+i+'-sort"></td>';
-            row_html += '<td><input type="text" name="displayfield_set-'+i+'-width" value="120" id="id_displayfield_set-'+i+'-width"></td>';
-            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-group_by" id="id_displayfield_set-'+i+'-group_by"></td>';
+            row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" class="small_input" id="id_displayfield_set-'+i+'-sort">';
+            row_html += '<input type="checkbox" name="displayfield_set-'+i+'-sort_reverse" id="id_displayfield_set-'+i+'-sort_reverse"></td>';
+            row_html += '<td><input type="text" name="displayfield_set-'+i+'-width" class="small_input" value="120" id="id_displayfield_set-'+i+'-width"></td>';
+            row_html += '<td onclick="aggregate_tip()"><select id="id_displayfield_set-'+i+'-aggregate" name="displayfield_set-'+i+'-aggregate"><option selected="selected" value="">---------</option><option value="Count">Sum</option><option value="Ave">Ave</option><option value="Max">Max</option><option value="Min">Min</option></select></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-DELETE" id="id_displayfield_set-'+i+'-DELETE">';
-            row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="" id="id_displayfield_set-'+i+'-position"></span></td>';
+            row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="999" id="id_displayfield_set-'+i+'-position"></span></td>';
             row_html += '</tr>';
             $('#field_list_table > tbody:last').append(row_html);
         }
@@ -80,6 +80,11 @@ function refresh_preview() {
             $('#tabs-3').html(data);
         }
     );
+}
+
+function aggregate_tip() {
+    $('#tip_area').html('Aggregates can have unexpected behavior if used with sort order and the values in your search. To read more check out <a target="_blank" href="https://docs.djangoproject.com/en/dev/topics/db/aggregation/">Django Aggregation</a>')
+    $('#tip_area').show('slow');
 }
 
 $(function() {
