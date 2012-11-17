@@ -5,22 +5,25 @@ from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from report_builder.models import Report, DisplayField
+from report_builder.models import Report, DisplayField, FilterField
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
 
 from django import forms
 
+import datetime
+from dateutil import parser
+
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'root_model']
+        fields = ['name', 'distinct', 'root_model']
 
 
 class ReportEditForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name',]
+        fields = ['name', 'distinct',]
     
     
 class DisplayFieldForm(forms.ModelForm):
@@ -33,6 +36,18 @@ class DisplayFieldForm(forms.ModelForm):
             'field': forms.HiddenInput(),
             'width': forms.TextInput(attrs={'class':'small_input'}),
             'sort': forms.TextInput(attrs={'class':'small_input'}),
+        }
+        
+
+class FilterFieldForm(forms.ModelForm):
+    class Meta:
+        model = FilterField
+        widgets = {
+            'path': forms.HiddenInput(),
+            'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
+            'field_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
+            'field': forms.HiddenInput(),
+            'filter_type': forms.Select(attrs={'onchange':'check_filter_type(event.target)'})
         }
 
 
@@ -56,7 +71,8 @@ def get_direct_fields_from_model(model_class):
     all_fields_names = model_class._meta.get_all_field_names()
     for field_name in all_fields_names:
         field = model_class._meta.get_field_by_name(field_name)
-        if field[2]:
+        # Direct, not m2m, not FK
+        if field[2] and not field[3] and field[0].__class__.__name__ != "ForeignKey":
             direct_fields += [field[0]]
     return direct_fields
             
@@ -131,13 +147,43 @@ def ajax_get_fields(request):
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
 
-def ajax_preview(request):
-    report = get_object_or_404(Report, pk=request.POST['report_id'])
+def report_to_list(report, preview=False):
+    """ Create list from a report with all data filtering
+    Returns list, message in case of issues
+    """
     message= ""
     
     model_class = report.root_model.model_class()
     
     objects = model_class.objects.all()
+    
+    # Filters
+    for filter_field in report.filterfield_set.all():
+        try:
+            filter_string = str(filter_field.path + filter_field.field)
+            
+            if filter_field.filter_type:
+                filter_string += '__' + filter_field.filter_type
+            
+            # Check for special types such as isnull
+            if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
+                filter_list = {filter_string: False}
+            else:
+                # All filter values are stored as strings, but may need to be converted
+                if '[DateField]' in filter_field.field_verbose:
+                    filter_value = parser.parse(filter_field.filter_value)
+                else:
+                    filter_value = filter_field.filter_value
+                filter_list = {filter_string: filter_value}
+                
+            if not filter_field.exclude:
+                objects = objects.filter(**filter_list)
+            else:
+                objects = objects.exclude(**filter_list)
+        except:
+            message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
+            message += "you found a bug! "
+            message += "If you made this in admin, then you probably did something wrong."
     
     # Aggregates
     for display_field in report.displayfield_set.filter(aggregate__isnull=False):
@@ -159,6 +205,14 @@ def ajax_preview(request):
             order_list += [display_field.path + display_field.field]
     objects = objects.order_by(*order_list)
     
+    # Distinct
+    if report.distinct:
+        objects = objects.distinct()
+    
+    # Limit because this is a preview
+    if preview:
+        objects = objects[:50]
+    
     # Display Values
     values_list = []
     for display_field in report.displayfield_set.all():
@@ -173,16 +227,26 @@ def ajax_preview(request):
         else:
             values_list += [display_field.path + display_field.field]
     try:
-        objects_dict = objects.values_list(*values_list)
+        objects_list = objects.values_list(*values_list)
     except exceptions.FieldError:
         message += "Field Error on %s. If you are using the report builder then " % display_field.name
         message += "you found a bug! "
-        message += "If you made this in admin, then you probably something wrong."
-        objects_dict = None
+        message += "If you made this in admin, then you probably did something wrong."
+        objects_list = None
+    
+    return objects_list, message
+    
+
+def ajax_preview(request):
+    """ This view is intended for a quick preview useful when debugging
+    reports. It limits to 50 objects.
+    """
+    report = get_object_or_404(Report, pk=request.POST['report_id'])
+    objects_list, message = report_to_list(report, preview=True)
     
     return render_to_response('report_builder/html_report.html', {
         'report': report,
-        'objects_dict': objects_dict,
+        'objects_dict': objects_list,
         'message': message
         
     }, RequestContext(request, {}),)
@@ -210,10 +274,19 @@ class ReportUpdateView(UpdateView):
             can_delete=True,
             form=DisplayFieldForm)
         
+        FilterFieldFormset = inlineformset_factory(
+            Report,
+            FilterField,
+            extra=0,
+            can_delete=True,
+            form=FilterFieldForm)
+        
         if self.request.POST:
             ctx['field_list_formset'] =  DisplayFieldFormset(self.request.POST, instance=self.object)
+            ctx['field_filter_formset'] =  FilterFieldFormset(self.request.POST, instance=self.object, prefix="fil")
         else:
             ctx['field_list_formset'] =  DisplayFieldFormset(instance=self.object)
+            ctx['field_filter_formset'] =  FilterFieldFormset(instance=self.object, prefix="fil")
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
@@ -224,11 +297,55 @@ class ReportUpdateView(UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         field_list_formset = context['field_list_formset']
-        print field_list_formset
-        if field_list_formset.is_valid():
+        field_filter_formset = context['field_filter_formset']
+        
+        if field_list_formset.is_valid() and field_filter_formset.is_valid():
             self.object = form.save()
             field_list_formset.report = self.object
             field_list_formset.save()
+            field_filter_formset.report = self.object
+            field_filter_formset.save()
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form))
+        
+        
+def download_xlsx(request, pk):
+    """ Download the full report in xlsx format
+    Why xlsx? Because there is no decent ods library for python and xls has limitations """
+    import cStringIO as StringIO
+    from openpyxl.workbook import Workbook
+    from openpyxl.writer.excel import save_virtual_workbook
+    from openpyxl.cell import get_column_letter
+    import re
+
+    report = get_object_or_404(Report, pk=pk)
+    
+    wb = Workbook()
+    ws = wb.worksheets[0]
+    ws.title = report.name
+    filename = re.sub(r'\W+', '', report.name) + '.xlsx'
+    
+    i = 0
+    for field in report.displayfield_set.all():
+        cell = ws.cell(row=0, column=i)
+        cell.value = field.name
+        cell.style.font.bold = True
+        ws.column_dimensions[get_column_letter(i+1)].width = field.width
+        i += 1
+    
+    objects_list, message = report_to_list(report)
+    for row in objects_list:
+        ws.append(row)
+    
+    myfile = StringIO.StringIO()
+    myfile.write(save_virtual_workbook(wb))
+    response = HttpResponse(
+        myfile.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response['Content-Length'] = myfile.tell()
+    return response
+    
+    
+    

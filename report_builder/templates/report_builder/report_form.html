@@ -13,7 +13,7 @@
       Last updated: {{ object.modified }}
       Model: {{ object.root_model }}
       <span style="float: right; padding-right: 5%;">
-        <input type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
+        <input type="submit" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
       </span>
     </header>
     <section class="sidebar">
@@ -41,10 +41,53 @@
         <ul>
           <li><a href="#tabs-1">Search Criteria</a></li>
           <li><a href="#tabs-2">Display Fields</a></li>
-          <li><a href="#tabs-3">Preview</a></li>
+          <li><a href="#tabs-3">Preview (requires save)</a></li>
         </ul>
         <div id="tabs-1">
-          <p>orper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+          {{ form.distinct }}{{ form.distinct.label}} (Removes duplicates)
+          <div id="field_filter_droppable" class="droppable">
+            {{ field_filter_formset.management_form }}
+            {% for form in field_filter_formset %}
+              {{ form.errors }}
+            {% endfor %}
+            <table id="field_filter_table" class="simple_table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Path</th>
+                  <th>Field</th>
+                  <th>Filter Type</th>
+                  <th>Value</th>
+                  <th>Exclude?</th>
+                  <th>Delete?</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for form in field_filter_formset %}
+                  <tr>
+                    <td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                    <td>
+                      {{ form.id }}{{ form.path_verbose }}
+                    </td>
+                    <td>{{ form.field }}{{ form.field_verbose }}{{ form.path }}</td>
+                    <td>{{ form.filter_type }}</td>
+                    {% if "DateField" in form.field_verbose.value %}
+                        <td class="datepicker">{{ form.filter_value }}</td>
+                        <script>
+                            $( ".datepicker input" ).datepicker();
+                        </script>
+                    {% else %}
+                        <td>{{ form.filter_value }}</td>
+                    {% endif %}
+                    <td>{{ form.exclude }}</td>
+                    <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            Drag fields here
+            <div id="tip_area"></div>
+          </div>
         </div>
         <div id="tabs-2">
           <div id="field_list_droppable" class="droppable">
@@ -86,7 +129,10 @@
             <div id="tip_area"></div>
           </div>
         </div>
-        <div id="tabs-3"></div>
+        <div id="tabs-3">
+          <a href="{% url report_builder.views.download_xlsx object.id %}">Download full xlsx</a>
+          <div id="preview_area"></div>
+        </div>
       </div>
       
     </section>
