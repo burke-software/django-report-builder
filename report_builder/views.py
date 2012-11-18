@@ -1,8 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Avg, Max, Min, Count
 from django.forms.models import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
@@ -236,7 +237,7 @@ def report_to_list(report, preview=False):
     
     return objects_list, message
     
-
+@staff_member_required
 def ajax_preview(request):
     """ This view is intended for a quick preview useful when debugging
     reports. It limits to 50 objects.
@@ -250,7 +251,7 @@ def ajax_preview(request):
         'message': message
         
     }, RequestContext(request, {}),)
-    
+
 class ReportUpdateView(UpdateView):
     """ This view handles the edit report builder
     It includes attached formsets for display and criteria fields
@@ -258,6 +259,11 @@ class ReportUpdateView(UpdateView):
     model = Report
     form_class = ReportEditForm
     success_url = './'
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden()
+        return super(ReportUpdateView, self).dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
@@ -309,7 +315,7 @@ class ReportUpdateView(UpdateView):
         else:
             return self.render_to_response(self.get_context_data(form=form))
         
-        
+@staff_member_required
 def download_xlsx(request, pk):
     """ Download the full report in xlsx format
     Why xlsx? Because there is no decent ods library for python and xls has limitations """
