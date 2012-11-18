@@ -30,6 +30,7 @@ What isn't
 Optional - limit which models can be used by adding in settings.py
 
 REPORT_BUILDER_INCLUDE = []
+
 REPORT_BUILDER_EXCLUDE = []
 
 # Usage
