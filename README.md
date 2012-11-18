@@ -14,7 +14,6 @@ What's finished?
 
 What isn't
 - Security!
-- Choosing which models are allowed or excluded
 - More exports, views
 - Decent form validation
 - Functions in display fields
@@ -27,6 +26,11 @@ What isn't
 1. Add url(r'^report_builder/', include('report_builder.urls')) to url.py url patterns
 1. syncdb (you may use south)
 1. Use admin access
+
+Optional - limit which models can be used by adding in settings.py
+
+REPORT_BUILDER_INCLUDE = []
+REPORT_BUILDER_EXCLUDE = []
 
 # Usage
 

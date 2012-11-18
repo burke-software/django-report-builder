@@ -1,19 +1,31 @@
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.db import models
 
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
     """
+    def _get_allowed_models():
+        models = ContentType.objects.all()
+        if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
+            models = models.filter(name__in=settings.REPORT_BUILDER_INCLUDE)
+        if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
+            models = models.exclude(name__in=settings.REPORT_BUILDER_EXCLUDE)
+        return models
+    
     name = models.CharField(max_length=255)
-    root_model = models.ForeignKey(ContentType)
+    root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     distinct = models.BooleanField()
     
+    
+    
     @models.permalink
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
+    
     
 class DisplayField(models.Model):
     """ A display field to show in a report. Always belongs to a Report
