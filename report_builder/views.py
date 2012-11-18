@@ -148,7 +148,7 @@ def ajax_get_fields(request):
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
 
-def report_to_list(report, preview=False):
+def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
     Returns list, message in case of issues
     """
@@ -217,21 +217,28 @@ def report_to_list(report, preview=False):
     # Display Values
     values_list = []
     for display_field in report.displayfield_set.all():
-        if display_field.aggregate == "Avg":
-            values_list += [display_field.path + display_field.field + '__ave']
-        elif display_field.aggregate == "Max":
-            values_list += [display_field.path + display_field.field + '__max']
-        elif display_field.aggregate == "Min":
-            values_list += [display_field.path + display_field.field + '__min']
-        elif display_field.aggregate == "Count":
-            values_list += [display_field.path + display_field.field + '__count']
+        if user: #TODO CHECK PERM!
+            if display_field.aggregate == "Avg":
+                values_list += [display_field.path + display_field.field + '__ave']
+            elif display_field.aggregate == "Max":
+                values_list += [display_field.path + display_field.field + '__max']
+            elif display_field.aggregate == "Min":
+                values_list += [display_field.path + display_field.field + '__min']
+            elif display_field.aggregate == "Count":
+                values_list += [display_field.path + display_field.field + '__count']
+            else:
+                values_list += [display_field.path + display_field.field]
         else:
-            values_list += [display_field.path + display_field.field]
+            message += "You don't have permission to " + display_field.name
     try:
-        objects_list = objects.values_list(*values_list)
+        if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
+        or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
+            objects_list = objects.values_list(*values_list)
+        else:
+            objects_list = []
+            message = "Permission Denied on %s" % report.root_model.name
     except exceptions.FieldError:
-        message += "Field Error on %s. If you are using the report builder then " % display_field.name
-        message += "you found a bug! "
+        message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
         objects_list = None
     
@@ -243,7 +250,7 @@ def ajax_preview(request):
     reports. It limits to 50 objects.
     """
     report = get_object_or_404(Report, pk=request.POST['report_id'])
-    objects_list, message = report_to_list(report, preview=True)
+    objects_list, message = report_to_list(report, request.user, preview=True)
     
     return render_to_response('report_builder/html_report.html', {
         'report': report,
@@ -340,7 +347,7 @@ def download_xlsx(request, pk):
         ws.column_dimensions[get_column_letter(i+1)].width = field.width
         i += 1
     
-    objects_list, message = report_to_list(report)
+    objects_list, message = report_to_list(report, request.user)
     for row in objects_list:
         ws.append(row)
     
