@@ -31,7 +31,7 @@ Optional - limit which models can be used by adding in settings.py
 
 REPORT_BUILDER_INCLUDE = []
 
-REPORT_BUILDER_EXCLUDE = []
+REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
 
 # Usage
 
