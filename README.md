@@ -21,7 +21,7 @@ What isn't
 
 # Installation
 
-1. pip install django-report-builder openpyxl
+1. pip install django-report-builder
 1. Add report_builder to INSTALLED_APPS
 1. Add url(r'^report_builder/', include('report_builder.urls')) to url.py url patterns
 1. syncdb (you may use south)
