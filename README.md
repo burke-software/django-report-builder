@@ -14,6 +14,7 @@ What's finished?
 
 What isn't
 - Security!
+- "or" filters together
 - More exports, views
 - Decent form validation
 - Functions in display fields
