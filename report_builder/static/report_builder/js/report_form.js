@@ -208,4 +208,9 @@ $(function() {
         check_filter_type(element);
     });
     $( ".datepicker" ).datepicker();
+    $('input').change(function() {
+        if( $(this).val() != "" )
+            window.onbeforeunload = "Are you sure you want to leave?";
+    });
+    window.onbeforeunload = "Are you sure you want to leave?";
 });

@@ -11,9 +11,10 @@ What's finished?
 - Add filters
 - Add display fields
 - Preview and create xlsx reports
+- Very simple security, user must have change or "view" permission to view 
+reports. Unprivileged users can still build reports and see database schema.
 
 What isn't
-- Security!
 - "or" filters together
 - More exports, views
 - Decent form validation

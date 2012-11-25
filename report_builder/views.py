@@ -1,12 +1,14 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import permission_required
 from django.db.models import Avg, Max, Min, Count
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
 
@@ -148,6 +150,20 @@ def ajax_get_fields(request):
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
 
+def get_model_from_path_string(root_model, path):
+    """ Return a model class for a related model
+    root_model is the class of the initial model
+    path is like foo__bar where bar is related to foo
+    """
+    for path_section in path.split('__'):
+        if path_section:
+            field = root_model._meta.get_field_by_name(path_section)
+            if field[2]:
+                root_model = field[0].related.parent_model()
+            else:
+                root_model = field[0].model
+    return root_model
+
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
     Returns list, message in case of issues
@@ -217,7 +233,10 @@ def report_to_list(report, user, preview=False):
     # Display Values
     values_list = []
     for display_field in report.displayfield_set.all():
-        if user: #TODO CHECK PERM!
+        model = get_model_from_path_string(model_class, display_field.path)
+        if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
+        or user.has_perm(model._meta.app_label + '.view_' + model._meta.module_name) \
+        or not model:
             if display_field.aggregate == "Avg":
                 values_list += [display_field.path + display_field.field + '__ave']
             elif display_field.aggregate == "Max":
@@ -267,9 +286,8 @@ class ReportUpdateView(UpdateView):
     form_class = ReportEditForm
     success_url = './'
     
+    @method_decorator(permission_required('report_builder.change_report'))
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            return HttpResponseForbidden()
         return super(ReportUpdateView, self).dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
