@@ -1,0 +1,2 @@
+recursive-include report_builder/templates *
+recursive-include report_builder/static *
