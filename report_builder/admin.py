@@ -5,7 +5,7 @@ from report_builder.models import DisplayField, Report, FilterField
 
 
 class DisplayFieldForm(forms.ModelForm):
-    position = forms.IntegerField(widget=forms.HiddenInput)
+    position = forms.IntegerField(widget=forms.HiddenInput, required=False)
     class Meta:
         model = DisplayField
 
