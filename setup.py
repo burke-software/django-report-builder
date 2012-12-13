@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "django-report-builder",
-    version = "1.3",
+    version = "1.4",
     author = "David Burke",
     author_email = "david@burkesoftware.com",
     description = ("Query and Report builder for Django ORM"),
