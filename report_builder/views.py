@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db.models import Avg, Max, Min, Count
+from django.db.models import Avg, Max, Min, Count, Sum
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
@@ -212,6 +212,8 @@ def report_to_list(report, user, preview=False):
             objects = objects.annotate(Min(display_field.path + display_field.field))
         elif display_field.aggregate == "Count":
             objects = objects.annotate(Count(display_field.path + display_field.field))
+        elif display_field.aggregate == "Sum":
+            objects = objects.annotate(Sum(display_field.path + display_field.field))
     
     # Ordering
     order_list = []
@@ -245,6 +247,8 @@ def report_to_list(report, user, preview=False):
                 values_list += [display_field.path + display_field.field + '__min']
             elif display_field.aggregate == "Count":
                 values_list += [display_field.path + display_field.field + '__count']
+            elif display_field.aggregate == "Sum":
+                values_list += [display_field.path + display_field.field + '__sum']
             else:
                 values_list += [display_field.path + display_field.field]
         else:

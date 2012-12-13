@@ -42,7 +42,8 @@ class DisplayField(models.Model):
     aggregate = models.CharField(
         max_length=5,
         choices = (
-            ('Count','Sum'),
+            ('Sum','Sum'),
+            ('Count','Count'),
             ('Ave','Ave'),
             ('Max','Max'),
             ('Min','Min'),
