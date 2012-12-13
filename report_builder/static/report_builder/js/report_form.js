@@ -60,7 +60,7 @@ function enable_drag() {
             row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" class="small_input" id="id_displayfield_set-'+i+'-sort">';
             row_html += '<input type="checkbox" name="displayfield_set-'+i+'-sort_reverse" id="id_displayfield_set-'+i+'-sort_reverse"></td>';
             row_html += '<td><input type="text" name="displayfield_set-'+i+'-width" class="small_input" value="15" id="id_displayfield_set-'+i+'-width"></td>';
-            row_html += '<td onclick="aggregate_tip(event)"><select id="id_displayfield_set-'+i+'-aggregate" name="displayfield_set-'+i+'-aggregate"><option selected="selected" value="">---------</option><option value="Count">Sum</option><option value="Ave">Ave</option><option value="Max">Max</option><option value="Min">Min</option></select></td>';
+            row_html += '<td onclick="aggregate_tip(event)"><select id="id_displayfield_set-'+i+'-aggregate" name="displayfield_set-'+i+'-aggregate"><option selected="selected" value="">---------</option><option value="Sum">Sum</option><option value="Count">Count</option><option value="Ave">Ave</option><option value="Max">Max</option><option value="Min">Min</option></select></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-DELETE" id="id_displayfield_set-'+i+'-DELETE">';
             row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="999" id="id_displayfield_set-'+i+'-position"></span></td>';
             row_html += '</tr>';
