@@ -19,14 +19,14 @@ header {
     padding: 0.5em;
 }
 .top_half {
-    height: 50%;
+    height: 40%;
     border-bottom: 1px solid black;
     overflow: auto;
 }
 .bottom_half {
     padding-top: 0.5em;
     overflow: auto;
-    height: 49%;
+    height: 59%;
 }
 .main_area {
     position: absolute;
