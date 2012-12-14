@@ -77,7 +77,16 @@ def get_direct_fields_from_model(model_class):
         # Direct, not m2m, not FK
         if field[2] and not field[3] and field[0].__class__.__name__ != "ForeignKey":
             direct_fields += [field[0]]
+    direct_fields += get_properties_from_model(model_class)
     return direct_fields
+
+def get_properties_from_model(model_class):
+    properties = []
+    for attr_name, attr in dict(model_class.__class__.__dict__).iteritems():
+        if type(attr) == property:
+            properties.append(attr) 
+        # TODO: append dummy attributes to properties so they get data-name and text in UI
+    return properties
             
 def ajax_get_related(request):
     """ Get related model and fields
