@@ -256,7 +256,11 @@ def report_to_list(report, user, preview=False):
     try:
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
-            objects_list = objects.values_list(*values_list)
+            objects_list = []
+            for i, obj in enumerate(objects):
+                objects_list.append(tuple())
+                for field in values_list:
+                    objects_list[i] += (reduce(getattr, field.split('__'), obj),) 
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name
@@ -264,6 +268,7 @@ def report_to_list(report, user, preview=False):
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
         objects_list = None
+
     
     return objects_list, message
     
