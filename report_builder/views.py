@@ -168,7 +168,7 @@ def ajax_get_related(request):
     
     new_fields = get_relation_fields_from_model(new_model)
     model_ct = ContentType.objects.get_for_model(new_model)
-    
+
     if path_verbose:
         path_verbose += "::"
     path_verbose += field[0].name
@@ -292,7 +292,7 @@ def report_to_list(report, user, preview=False):
             objects = objects.annotate(Count(display_field.path + display_field.field))
         elif display_field.aggregate == "Sum":
             objects = objects.annotate(Sum(display_field.path + display_field.field))
-    
+
     # Ordering
     order_list = []
     for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
@@ -317,18 +317,20 @@ def report_to_list(report, user, preview=False):
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
         or user.has_perm(model._meta.app_label + '.view_' + model._meta.module_name) \
         or not model:
+            aggregates_list = []
             if display_field.aggregate == "Avg":
-                values_list += [display_field.path + display_field.field + '__ave']
+                aggregates_list += [display_field.path + display_field.field + '__ave']
             elif display_field.aggregate == "Max":
-                values_list += [display_field.path + display_field.field + '__max']
+                aggregates_list += [display_field.path + display_field.field + '__max']
             elif display_field.aggregate == "Min":
-                values_list += [display_field.path + display_field.field + '__min']
+                aggregates_list += [display_field.path + display_field.field + '__min']
             elif display_field.aggregate == "Count":
-                values_list += [display_field.path + display_field.field + '__count']
+                aggregates_list += [display_field.path + display_field.field + '__count']
             elif display_field.aggregate == "Sum":
-                values_list += [display_field.path + display_field.field + '__sum']
+                aggregates_list += [display_field.path + display_field.field + '__sum']
             else:
-                values_list += [display_field.path + display_field.field]
+                aggregates_list += [display_field.path + display_field.field]
+            values_list += aggregates_list
         else:
             message += "You don't have permission to " + display_field.name
     try:
@@ -339,9 +341,14 @@ def report_to_list(report, user, preview=False):
             property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
+            aggregates = objects.values_list(*aggregates_list)
             for i, obj in enumerate(objects):
                 objects_list.append(tuple())
                 for field in values_list:
+                    # add aggregates since these can't be accessed from objects
+                    if field.split('__')[-1] in ('ave', 'max', 'min', 'count', 'sum'):
+                        objects_list[-1] += aggregates[i] 
+                        continue
                     val = reduce(getattr, field.split('__'), obj)
                     objects_list[-1] += (val,) 
                     # TODO: move property filter so you don't have to display properties to filter
