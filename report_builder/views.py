@@ -84,7 +84,7 @@ def get_direct_fields_from_model(model_class):
 
 def get_properties_from_model(model_class):
     properties = []
-    for attr_name, attr in dict(model_class.__class__.__dict__).iteritems():
+    for attr_name, attr in dict(model_class.__dict__).iteritems():
         if type(attr) == property:
             properties.append(attr_name)
     return sorted(properties)
@@ -180,14 +180,17 @@ def ajax_get_related(request):
 def ajax_get_fields(request):
     """ Get fields and properties for a particular model
     """
-    field_name = request.GET['field']
+    field_name = request.GET.get('field')
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
-    path_verbose = request.GET['path_verbose']
-    
+    path_verbose = request.GET.get('path_verbose')
+    properties = get_properties_from_model(model)
+
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
+            'properties': properties,
+
         }, RequestContext(request, {}),)
     
     field = model._meta.get_field_by_name(field_name)
@@ -200,11 +203,11 @@ def ajax_get_fields(request):
     
     if field[2]:
         # Direct field
-        new_model = field[0].related.parent_model()
+        new_model = field[0].related.parent_model
     else:
         # Indirect related field
-        new_model = field[0].model()
-    
+        new_model = field[0].model
+   
     fields = get_direct_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
     
@@ -241,10 +244,11 @@ def report_to_list(report, user, preview=False):
     
     # Filters
     for filter_field in report.filterfield_set.all():
-        # exclude properties from standard ORM filtering 
-        if '[property]' in filter_field.field_verbose:
-            continue
         try:
+            # exclude properties from standard ORM filtering 
+            if '[property]' in filter_field.field_verbose:
+                continue
+
             filter_string = str(filter_field.path + filter_field.field)
             
             if filter_field.filter_type:
