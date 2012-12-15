@@ -102,7 +102,7 @@ def filter_property(objects_list, filter_field, value):
         'saturday': 5,
         'sunday': 6,
     }
-    if filter_type == 'exact' and value == filter_value:
+    if filter_type == 'exact' and str(value) == filter_value:
         return False
     if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
         return False
@@ -338,6 +338,7 @@ def report_to_list(report, user, preview=False):
                 for field in values_list:
                     val = reduce(getattr, field.split('__'), obj)
                     objects_list[-1] += (val,) 
+                    # TODO: move property filter so you don't have to display properties to filter
                     pf = property_filters.get(field.split('__')[-1])
                     if pf and filter_property(objects_list, pf, val):
                         break
