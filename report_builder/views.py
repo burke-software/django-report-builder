@@ -14,6 +14,7 @@ from django.views.generic.edit import UpdateView
 from django import forms
 
 import datetime
+import time
 import re
 from decimal import Decimal
 
@@ -112,6 +113,11 @@ def filter_property(objects_list, filter_field, value):
         return False
     if filter_type == 'in' and value in filter_value:
         return False
+    # convert dates and datetimes to timestamps in order to compare digits and date/times the same
+    if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
+        value = str(time.mktime(value.timetuple())) 
+        filter_value_dt = parser.parse(filter_value)
+        filter_value = str(time.mktime(filter_value_dt.timetuple()))
     if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
         return False
     if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
