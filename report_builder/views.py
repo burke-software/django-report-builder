@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db.models import Avg, Max, Min, Count, Sum
+from django.db.models import Avg, Max, Min, Count, Sum, CharField
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
@@ -11,11 +11,15 @@ from report_builder.models import Report, DisplayField, FilterField
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
-
 from django import forms
 
 import datetime
+import time
+import re
+from decimal import Decimal
+
 from dateutil import parser
+
 
 class ReportForm(forms.ModelForm):
     class Meta:
@@ -78,6 +82,71 @@ def get_direct_fields_from_model(model_class):
         if field[2] and not field[3] and field[0].__class__.__name__ != "ForeignKey":
             direct_fields += [field[0]]
     return direct_fields
+
+def get_properties_from_model(model_class):
+    properties = []
+    for attr_name, attr in dict(model_class.__dict__).iteritems():
+        if type(attr) == property:
+            properties.append(attr_name)
+    return sorted(properties)
+
+def filter_property(objects_list, filter_field, value):
+    filter_type = filter_field.filter_type
+    filter_value = filter_field.filter_value
+    #TODO: i10n
+    WEEKDAY_INTS = {
+        'monday': 0,
+        'tuesday': 1,
+        'wednesday': 2,
+        'thursday': 3,
+        'friday': 4,
+        'saturday': 5,
+        'sunday': 6,
+    }
+    if filter_type == 'exact' and str(value) == filter_value:
+        return False
+    if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
+        return False
+    if filter_type == 'contains' and filter_value in value:
+        return False
+    if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
+        return False
+    if filter_type == 'in' and value in filter_value:
+        return False
+    # convert dates and datetimes to timestamps in order to compare digits and date/times the same
+    if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
+        value = str(time.mktime(value.timetuple())) 
+        filter_value_dt = parser.parse(filter_value)
+        filter_value = str(time.mktime(filter_value_dt.timetuple()))
+    if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
+        return False
+    if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
+        return False
+    if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
+        return False
+    if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
+        return False
+    if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
+        return False
+    if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
+        return False
+    if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
+        return False
+    if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
+        return False
+    if filter_type == 'range' and value in [int(x) for x in filter_value]:
+        return False
+    if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
+        return False
+    if filter_type == 'isnull' and value == None:
+        return False
+    if filter_type == 'regex' and re.search(filter_value, value):
+        return False
+    if filter_type == 'iregex' and re.search(filter_value, value, re.I):
+        return False
+    objects_list.pop()
+    return True
+
             
 def ajax_get_related(request):
     """ Get related model and fields
@@ -115,16 +184,19 @@ def ajax_get_related(request):
     }, RequestContext(request, {}),)
 
 def ajax_get_fields(request):
-    """ Get fields for a particular model
+    """ Get fields and properties for a particular model
     """
-    field_name = request.GET['field']
+    field_name = request.GET.get('field')
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
-    path_verbose = request.GET['path_verbose']
-    
+    path_verbose = request.GET.get('path_verbose')
+    properties = get_properties_from_model(model)
+
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
+            'properties': properties,
+
         }, RequestContext(request, {}),)
     
     field = model._meta.get_field_by_name(field_name)
@@ -137,15 +209,17 @@ def ajax_get_fields(request):
     
     if field[2]:
         # Direct field
-        new_model = field[0].related.parent_model()
+        new_model = field[0].related.parent_model
     else:
         # Indirect related field
-        new_model = field[0].model()
-    
+        new_model = field[0].model
+   
     fields = get_direct_fields_from_model(new_model)
+    properties = get_properties_from_model(new_model)
     
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
+        'properties': properties,
         'path': path,
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
@@ -177,6 +251,10 @@ def report_to_list(report, user, preview=False):
     # Filters
     for filter_field in report.filterfield_set.all():
         try:
+            # exclude properties from standard ORM filtering 
+            if '[property]' in filter_field.field_verbose:
+                continue
+
             filter_string = str(filter_field.path + filter_field.field)
             
             if filter_field.filter_type:
@@ -197,7 +275,7 @@ def report_to_list(report, user, preview=False):
                 objects = objects.filter(**filter_list)
             else:
                 objects = objects.exclude(**filter_list)
-        except:
+        except Exception, e:
             message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
             message += "you found a bug! "
             message += "If you made this in admin, then you probably did something wrong."
@@ -256,7 +334,20 @@ def report_to_list(report, user, preview=False):
     try:
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
-            objects_list = objects.values_list(*values_list)
+            # get properties display values and filter
+            objects_list = []
+            property_filters = {} 
+            for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
+                property_filters[property_filter.field] = property_filter 
+            for i, obj in enumerate(objects):
+                objects_list.append(tuple())
+                for field in values_list:
+                    val = reduce(getattr, field.split('__'), obj)
+                    objects_list[-1] += (val,) 
+                    # TODO: move property filter so you don't have to display properties to filter
+                    pf = property_filters.get(field.split('__')[-1])
+                    if pf and filter_property(objects_list, pf, val):
+                        break
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name
@@ -264,6 +355,7 @@ def report_to_list(report, user, preview=False):
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
         objects_list = None
+
     
     return objects_list, message
     
@@ -293,7 +385,7 @@ class ReportUpdateView(UpdateView):
     @method_decorator(permission_required('report_builder.change_report'))
     def dispatch(self, request, *args, **kwargs):
         return super(ReportUpdateView, self).dispatch(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
         model_class = self.object.root_model.model_class()
@@ -328,7 +420,7 @@ class ReportUpdateView(UpdateView):
         ctx['model_ct'] = model_ct
         
         return ctx
-    
+
     def form_valid(self, form):
         context = self.get_context_data()
         field_list_formset = context['field_list_formset']
