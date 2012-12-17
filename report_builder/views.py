@@ -341,7 +341,7 @@ def report_to_list(report, user, preview=False):
             property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
-            aggregates = objects.values_list(*aggregates_list)
+            aggregates = list(objects.values_list(*aggregates_list))
             for i, obj in enumerate(objects):
                 objects_list.append(tuple())
                 for field in values_list:
