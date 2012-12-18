@@ -144,7 +144,6 @@ def filter_property(objects_list, filter_field, value):
         return False
     if filter_type == 'iregex' and re.search(filter_value, value, re.I):
         return False
-    objects_list.pop()
     return True
 
             
@@ -270,11 +269,12 @@ def report_to_list(report, user, preview=False):
                 else:
                     filter_value = filter_field.filter_value
                 filter_list = {filter_string: filter_value}
-                
+            
             if not filter_field.exclude:
                 objects = objects.filter(**filter_list)
             else:
                 objects = objects.exclude(**filter_list)
+
         except Exception, e:
             message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
             message += "you found a bug! "
@@ -312,16 +312,15 @@ def report_to_list(report, user, preview=False):
     
     # Display Values
     values_list = []
-    aggregates_list = []
-    property_filters = {} 
-    for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
-        property_filters[property_filter.field] = property_filter 
-    for display_field in report.displayfield_set.all():
+    property_list = {} 
+    for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
         or user.has_perm(model._meta.app_label + '.view_' + model._meta.module_name) \
         or not model:
-            if display_field.aggregate == "Avg":
+            if '[property]' in display_field.field_verbose:
+                property_list[i] = display_field.path + display_field.field
+            elif display_field.aggregate == "Avg":
                 values_list += [display_field.path + display_field.field + '__ave']
             elif display_field.aggregate == "Max":
                 values_list += [display_field.path + display_field.field + '__max']
@@ -339,20 +338,33 @@ def report_to_list(report, user, preview=False):
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
             objects_list = []
-            aggregates = list(objects.values_list(*aggregates_list))
-            for i, obj in enumerate(objects):
-                objects_list.append(tuple())
-                for field in values_list:
-                    if field.split('__')[-1] in ('ave', 'max', 'min', 'count', 'sum'):
-                        relations = [field]
-                    else:
-                        relations = field.split('__')
-                    val = reduce(getattr, relations, obj)
-                    objects_list[-1] += (val,) 
-                    # TODO: move property filter so you don't have to display properties to filter
-                    pf = property_filters.get(field.split('__')[-1])
-                    if pf and filter_property(objects_list, pf, val):
-                        break
+            # need to get values_list in order to traverse relations and get aggregates
+            # need objects for properties
+
+            property_filters = {} 
+            for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
+                property_filters[property_filter.field] = property_filter 
+
+            objects_list = list(objects.values_list(*values_list))
+            objects = list(objects)
+
+            if property_list: 
+                filtered_objects_list = []
+                for i, obj in enumerate(objects):
+                    remove_row = False
+                    for position, display_property in property_list.iteritems(): 
+                        val = reduce(getattr, display_property.split('__'), obj)
+                        # change tuples to lists in order to insert
+                        objects_list[i] = list(objects_list[i])
+                        objects_list[i].insert(position, val)
+                        # TODO: move property filter so you don't have to display properties to filter
+                        pf = property_filters.get(display_property)
+                        if pf and filter_property(objects_list, pf, val):
+                            remove_row = True
+                            break
+                    if not remove_row:
+                        filtered_objects_list += [objects_list[i]]
+                objects_list = filtered_objects_list
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name
