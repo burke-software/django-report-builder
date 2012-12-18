@@ -9,3 +9,18 @@
         </span>
     </li>
 {% endfor %}
+<br/>
+{% for property in properties %}
+    {% if forloop.first %}
+        Properties:
+    {% endif %}
+    <li class="draggable" style="list-style: none">
+        <span class="button"
+              data-name="{{ property }}"
+              data-path="{{ path }}"
+              data-path_verbose="{{ path_verbose }}"
+              >
+            {{ property }} [property]
+        </span>
+    </li>
+{% endfor %}
