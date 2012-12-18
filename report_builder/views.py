@@ -312,44 +312,42 @@ def report_to_list(report, user, preview=False):
     
     # Display Values
     values_list = []
+    aggregates_list = []
+    property_filters = {} 
+    for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
+        property_filters[property_filter.field] = property_filter 
     for display_field in report.displayfield_set.all():
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
         or user.has_perm(model._meta.app_label + '.view_' + model._meta.module_name) \
         or not model:
-            aggregates_list = []
             if display_field.aggregate == "Avg":
-                aggregates_list += [display_field.path + display_field.field + '__ave']
+                values_list += [display_field.path + display_field.field + '__ave']
             elif display_field.aggregate == "Max":
-                aggregates_list += [display_field.path + display_field.field + '__max']
+                values_list += [display_field.path + display_field.field + '__max']
             elif display_field.aggregate == "Min":
-                aggregates_list += [display_field.path + display_field.field + '__min']
+                values_list += [display_field.path + display_field.field + '__min']
             elif display_field.aggregate == "Count":
-                aggregates_list += [display_field.path + display_field.field + '__count']
+                values_list += [display_field.path + display_field.field + '__count']
             elif display_field.aggregate == "Sum":
-                aggregates_list += [display_field.path + display_field.field + '__sum']
+                values_list += [display_field.path + display_field.field + '__sum']
             else:
-                aggregates_list += [display_field.path + display_field.field]
-            values_list += aggregates_list
+                values_list += [display_field.path + display_field.field]
         else:
             message += "You don't have permission to " + display_field.name
     try:
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
-            # get properties display values and filter
             objects_list = []
-            property_filters = {} 
-            for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
-                property_filters[property_filter.field] = property_filter 
             aggregates = list(objects.values_list(*aggregates_list))
             for i, obj in enumerate(objects):
                 objects_list.append(tuple())
                 for field in values_list:
-                    # add aggregates since these can't be accessed from objects
                     if field.split('__')[-1] in ('ave', 'max', 'min', 'count', 'sum'):
-                        objects_list[-1] += aggregates[i] 
-                        continue
-                    val = reduce(getattr, field.split('__'), obj)
+                        relations = [field]
+                    else:
+                        relations = field.split('__')
+                    val = reduce(getattr, relations, obj)
                     objects_list[-1] += (val,) 
                     # TODO: move property filter so you don't have to display properties to filter
                     pf = property_filters.get(field.split('__')[-1])
