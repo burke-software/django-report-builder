@@ -15,6 +15,7 @@ class Report(models.Model):
         return models
     
     name = models.CharField(max_length=255)
+    slug = models.SlugField()
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
