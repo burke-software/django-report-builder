@@ -237,74 +237,14 @@ def get_model_from_path_string(root_model, path):
                 root_model = field[0].model
     return root_model
 
+
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
     Returns list, message in case of issues
     """
     message= ""
-    
     model_class = report.root_model.model_class()
-    
-    objects = model_class.objects.all()
-    
-    # Filters
-    for filter_field in report.filterfield_set.all():
-        try:
-            # exclude properties from standard ORM filtering 
-            if '[property]' in filter_field.field_verbose:
-                continue
-
-            filter_string = str(filter_field.path + filter_field.field)
-            
-            if filter_field.filter_type:
-                filter_string += '__' + filter_field.filter_type
-            
-            # Check for special types such as isnull
-            if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
-                filter_list = {filter_string: False}
-            else:
-                # All filter values are stored as strings, but may need to be converted
-                if '[DateField]' in filter_field.field_verbose:
-                    filter_value = parser.parse(filter_field.filter_value)
-                else:
-                    filter_value = filter_field.filter_value
-                filter_list = {filter_string: filter_value}
-            
-            if not filter_field.exclude:
-                objects = objects.filter(**filter_list)
-            else:
-                objects = objects.exclude(**filter_list)
-
-        except Exception, e:
-            message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
-            message += "you found a bug! "
-            message += "If you made this in admin, then you probably did something wrong."
-    
-    # Aggregates
-    for display_field in report.displayfield_set.filter(aggregate__isnull=False):
-        if display_field.aggregate == "Avg":
-            objects = objects.annotate(Avg(display_field.path + display_field.field))
-        elif display_field.aggregate == "Max":
-            objects = objects.annotate(Max(display_field.path + display_field.field))
-        elif display_field.aggregate == "Min":
-            objects = objects.annotate(Min(display_field.path + display_field.field))
-        elif display_field.aggregate == "Count":
-            objects = objects.annotate(Count(display_field.path + display_field.field))
-        elif display_field.aggregate == "Sum":
-            objects = objects.annotate(Sum(display_field.path + display_field.field))
-
-    # Ordering
-    order_list = []
-    for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
-        if display_field.sort_reverse:
-            order_list += ['-' + display_field.path + display_field.field]
-        else:
-            order_list += [display_field.path + display_field.field]
-    objects = objects.order_by(*order_list)
-    
-    # Distinct
-    if report.distinct:
-        objects = objects.distinct()
+    objects = report.get_query()
     
     # Limit because this is a preview
     if preview:
