@@ -121,6 +121,7 @@ class DisplayField(models.Model):
         blank = True
     )
     position = models.PositiveSmallIntegerField(blank = True, null = True)
+    total = models.BooleanField(default=False)
     class Meta:
         ordering = ['position']
     def __unicode__(self):
