@@ -319,8 +319,7 @@ def ajax_preview(request):
     """ This view is intended for a quick preview useful when debugging
     reports. It limits to 50 objects.
     """
-    #report = get_object_or_404(Report, pk=request.POST['report_id'])
-    report = get_object_or_404(Report, pk=19)
+    report = get_object_or_404(Report, pk=request.POST['report_id'])
     objects_list, message = report_to_list(report, request.user, preview=True)
     
     return render_to_response('report_builder/html_report.html', {
