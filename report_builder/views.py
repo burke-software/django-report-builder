@@ -17,6 +17,7 @@ import datetime
 import time
 import re
 from decimal import Decimal
+from numbers import Number
 
 from dateutil import parser
 
@@ -253,25 +254,44 @@ def report_to_list(report, user, preview=False):
     # Display Values
     values_list = []
     property_list = {} 
+    display_totals = {}
+    def append_display_total(display_totals, display_field, display_field_key):
+        if display_field.total:
+            display_totals[display_field_key] = {'label': display_field.name, 'val': Decimal('1.00')}
+        
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
         or user.has_perm(model._meta.app_label + '.view_' + model._meta.module_name) \
         or not model:
+            # TODO: clean this up a bit
+            display_field_key = display_field.path + display_field.field
             if '[property]' in display_field.field_verbose:
-                property_list[i] = display_field.path + display_field.field
+                property_list[i] = display_field_key 
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Avg":
-                values_list += [display_field.path + display_field.field + '__avg']
+                display_field_key += '__avg'
+                values_list += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Max":
-                values_list += [display_field.path + display_field.field + '__max']
+                display_field_key += '__max'
+                values_list += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Min":
-                values_list += [display_field.path + display_field.field + '__min']
+                display_field_key += '__min'
+                values_list += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Count":
-                values_list += [display_field.path + display_field.field + '__count']
+                display_field_key += '__count'
+                values_list += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Sum":
-                values_list += [display_field.path + display_field.field + '__sum']
+                display_field_key += '__sum'
+                values_list += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             else:
-                values_list += [display_field.path + display_field.field]
+                values_list += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
         else:
             message += "You don't have permission to " + display_field.name
     try:
@@ -284,25 +304,41 @@ def report_to_list(report, user, preview=False):
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
 
+            def increment_total(display_field_key, display_totals, val):
+                if display_totals.has_key(display_field_key):
+                    if isinstance(val, Number):
+                        # do decimal math for all numbers
+                        display_totals[display_field_key]['val'] += Decimal(str(val))
+                    else:
+                        display_totals[display_field_key]['val'] += Decimal('1.00')
+
             objects = list(objects)
-            if property_list: 
-                filtered_objects_list = []
-                for i, obj in enumerate(objects):
-                    remove_row = False
-                    objects_list.append([])
-                    for display_field in values_list:
-                        objects_list[i].append(getattr(obj, display_field))
-                    for position, display_property in property_list.iteritems(): 
-                        val = reduce(getattr, display_property.split('__'), obj)
-                        objects_list[i].insert(position, val)
-                        # TODO: move property filter so you don't have to display properties to filter
-                        pf = property_filters.get(display_property)
-                        if pf and filter_property(objects_list, pf, val):
-                            remove_row = True
-                            break
-                    if not remove_row:
-                        filtered_objects_list += [objects_list[i]]
-                objects_list = filtered_objects_list
+            filtered_objects_list = []
+            for i, obj in enumerate(objects):
+                remove_row = False
+                objects_list.append([])
+                for display_field in values_list:
+                    val = getattr(obj, display_field)
+                    increment_total(display_field, display_totals, val)
+                    objects_list[i].append(val)
+                for position, display_property in property_list.iteritems(): 
+                    val = reduce(getattr, display_property.split('__'), obj)
+                    increment_total(display_property, display_totals, val)
+                    objects_list[i].insert(position, val)
+                    # TODO: move property filter so you don't have to display properties to filter
+                    pf = property_filters.get(display_property)
+                    if pf and filter_property(objects_list, pf, val):
+                        remove_row = True
+                        break
+                if not remove_row:
+                    filtered_objects_list += [objects_list[i]]
+            display_totals_row = ['TOTALS'] + [
+                '%s: %s' % (
+                    display_totals[t]['label'],
+                    display_totals[t]['val']
+                ) for t in display_totals
+            ]
+            objects_list = filtered_objects_list + [display_totals_row]
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name
@@ -311,7 +347,6 @@ def report_to_list(report, user, preview=False):
         message += "If you made this in admin, then you probably did something wrong."
         objects_list = None
 
-    
     return objects_list, message
     
 @staff_member_required
