@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.db import models
+from django.db.models import Avg, Min, Max, Count, Sum
 
 from dateutil import parser
 
@@ -75,6 +76,7 @@ class Report(models.Model):
             elif display_field.aggregate == "Sum":
                 objects = objects.annotate(Sum(display_field.path + display_field.field))
 
+
         # Ordering
         order_list = []
         for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
@@ -112,7 +114,7 @@ class DisplayField(models.Model):
         choices = (
             ('Sum','Sum'),
             ('Count','Count'),
-            ('Ave','Ave'),
+            ('Avg','Avg'),
             ('Max','Max'),
             ('Min','Min'),
         ),

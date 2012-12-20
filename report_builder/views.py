@@ -261,7 +261,7 @@ def report_to_list(report, user, preview=False):
             if '[property]' in display_field.field_verbose:
                 property_list[i] = display_field.path + display_field.field
             elif display_field.aggregate == "Avg":
-                values_list += [display_field.path + display_field.field + '__ave']
+                values_list += [display_field.path + display_field.field + '__avg']
             elif display_field.aggregate == "Max":
                 values_list += [display_field.path + display_field.field + '__max']
             elif display_field.aggregate == "Min":
