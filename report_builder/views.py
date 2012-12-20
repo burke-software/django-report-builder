@@ -280,22 +280,20 @@ def report_to_list(report, user, preview=False):
             objects_list = []
             # need to get values_list in order to traverse relations and get aggregates
             # need objects for properties
-
             property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
 
-            objects_list = list(objects.values_list(*values_list))
             objects = list(objects)
-
             if property_list: 
                 filtered_objects_list = []
                 for i, obj in enumerate(objects):
                     remove_row = False
+                    objects_list.append([])
+                    for display_field in values_list:
+                        objects_list[i].append(getattr(obj, display_field))
                     for position, display_property in property_list.iteritems(): 
                         val = reduce(getattr, display_property.split('__'), obj)
-                        # change tuples to lists in order to insert
-                        objects_list[i] = list(objects_list[i])
                         objects_list[i].insert(position, val)
                         # TODO: move property filter so you don't have to display properties to filter
                         pf = property_filters.get(display_property)
@@ -321,7 +319,8 @@ def ajax_preview(request):
     """ This view is intended for a quick preview useful when debugging
     reports. It limits to 50 objects.
     """
-    report = get_object_or_404(Report, pk=request.POST['report_id'])
+    #report = get_object_or_404(Report, pk=request.POST['report_id'])
+    report = get_object_or_404(Report, pk=19)
     objects_list, message = report_to_list(report, request.user, preview=True)
     
     return render_to_response('report_builder/html_report.html', {
