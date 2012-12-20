@@ -257,7 +257,7 @@ def report_to_list(report, user, preview=False):
     display_totals = {}
     def append_display_total(display_totals, display_field, display_field_key):
         if display_field.total:
-            display_totals[display_field_key] = {'label': display_field.name, 'val': Decimal('1.00')}
+            display_totals[display_field_key] = {'label': display_field.name, 'val': Decimal('0.00')}
         
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
