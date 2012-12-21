@@ -74,6 +74,10 @@ function enable_drag() {
             name = $.trim($(ui.draggable).children().data('name'));
             path_verbose = $.trim($(ui.draggable).children().data('path_verbose'));
             path = $.trim($(ui.draggable).children().data('path'));
+
+            if (field.match(/\[property\]/)) {
+                property_tip();
+            };
             
             if (name == '') return;
             
@@ -170,6 +174,11 @@ function refresh_preview() {
 
 function aggregate_tip() {
     $('#tip_area').html('Aggregates can have unexpected behavior if used with sort order and the values in your search. To read more check out <a target="_blank" href="https://docs.djangoproject.com/en/dev/topics/db/aggregation/">Django Aggregation</a>')
+    $('#tip_area').show('slow');
+}
+
+function property_tip() {
+    $('#tip_area').html("NOTE: Searching on properties can be <i>very</i> slow.  It's a good idea to add some fields to help speed up your report.")
     $('#tip_area').show('slow');
 }
 

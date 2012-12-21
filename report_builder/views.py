@@ -249,10 +249,6 @@ def report_to_list(report, user, preview=False):
     model_class = report.root_model.model_class()
     objects = report.get_query()
     
-    # Limit because this is a preview
-    if preview:
-        objects = objects[:50]
-    
     # Display Values
     values_list = []
     property_list = {} 
@@ -325,17 +321,20 @@ def report_to_list(report, user, preview=False):
                     val = reduce(getattr, property_filter_label.split('__'), obj)
                     if filter_property(objects_list, property_filter, val):
                         remove_row = True
+                        objects_list.pop()
                         break
                 if not remove_row:
                     for display_field in values_list:
                         val = getattr(obj, display_field)
                         increment_total(display_field, display_totals, val)
-                        objects_list[i].append(val)
+                        objects_list[-1].append(val)
                     for position, display_property in property_list.iteritems(): 
                         val = reduce(getattr, display_property.split('__'), obj)
-                        objects_list[i].insert(position, val)
+                        objects_list[-1].insert(position, val)
                         increment_total(display_property, display_totals, val)
-                    filtered_objects_list += [objects_list[i]]
+                    filtered_objects_list += [objects_list[-1]]
+                if preview and len(filtered_objects_list) == 50:
+                    break
             display_totals_row = ['TOTALS'] + [
                 '%s: %s' % (
                     display_totals[t]['label'],
