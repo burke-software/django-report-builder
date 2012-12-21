@@ -18,6 +18,7 @@ import time
 import re
 from decimal import Decimal
 from numbers import Number
+from types import BooleanType
 
 from dateutil import parser
 
@@ -306,11 +307,13 @@ def report_to_list(report, user, preview=False):
 
             def increment_total(display_field_key, display_totals, val):
                 if display_totals.has_key(display_field_key):
-                    if isinstance(val, Number):
+                    # Booleans are Numbers - blah
+                    if isinstance(val, Number) and not isinstance(val, BooleanType):
                         # do decimal math for all numbers
                         display_totals[display_field_key]['val'] += Decimal(str(val))
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
+
 
             objects = list(objects)
             filtered_objects_list = []
