@@ -16,6 +16,7 @@ from django import forms
 import datetime
 import time
 import re
+from operator import itemgetter
 from decimal import Decimal
 from numbers import Number
 from types import BooleanType
@@ -341,7 +342,10 @@ def report_to_list(report, user, preview=False):
                     display_totals[t]['val']
                 ) for t in display_totals
             ]
-            objects_list = filtered_objects_list + [display_totals_row]
+            sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
+                values_list('position', flat=True)
+            objects_list = sorted(filtered_objects_list, key=itemgetter(*[s-1 for s in sort_fields])) 
+            objects_list = objects_list + [display_totals_row]
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name

@@ -76,16 +76,6 @@ class Report(models.Model):
             elif display_field.aggregate == "Sum":
                 objects = objects.annotate(Sum(display_field.path + display_field.field))
 
-
-        # Ordering
-        order_list = []
-        for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
-            if display_field.sort_reverse:
-                order_list += ['-' + display_field.path + display_field.field]
-            else:
-                order_list += [display_field.path + display_field.field]
-        objects = objects.order_by(*order_list)
-        
         # Distinct
         if report.distinct:
             objects = objects.distinct()
