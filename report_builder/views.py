@@ -321,20 +321,20 @@ def report_to_list(report, user, preview=False):
             for i, obj in enumerate(objects):
                 remove_row = False
                 objects_list.append([])
-                for display_field in values_list:
-                    val = getattr(obj, display_field)
-                    increment_total(display_field, display_totals, val)
-                    objects_list[i].append(val)
-                for position, display_property in property_list.iteritems(): 
-                    val = reduce(getattr, display_property.split('__'), obj)
-                    objects_list[i].insert(position, val)
-                    # TODO: move property filter so you don't have to display properties to filter
-                    pf = property_filters.get(display_property)
-                    if pf and filter_property(objects_list, pf, val):
+                for property_filter_label, property_filter in property_filters.iteritems():
+                    val = reduce(getattr, property_filter_label.split('__'), obj)
+                    if filter_property(objects_list, property_filter, val):
                         remove_row = True
                         break
-                    increment_total(display_property, display_totals, val)
                 if not remove_row:
+                    for display_field in values_list:
+                        val = getattr(obj, display_field)
+                        increment_total(display_field, display_totals, val)
+                        objects_list[i].append(val)
+                    for position, display_property in property_list.iteritems(): 
+                        val = reduce(getattr, display_property.split('__'), obj)
+                        objects_list[i].insert(position, val)
+                        increment_total(display_property, display_totals, val)
                     filtered_objects_list += [objects_list[i]]
             display_totals_row = ['TOTALS'] + [
                 '%s: %s' % (
@@ -344,7 +344,8 @@ def report_to_list(report, user, preview=False):
             ]
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
                 values_list('position', flat=True)
-            objects_list = sorted(filtered_objects_list, key=itemgetter(*[s-1 for s in sort_fields])) 
+            if sort_fields:
+                objects_list = sorted(filtered_objects_list, key=itemgetter(*[s-1 for s in sort_fields])) 
             objects_list = objects_list + [display_totals_row]
         else:
             objects_list = []
