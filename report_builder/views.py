@@ -323,13 +323,13 @@ def report_to_list(report, user, preview=False):
                     objects_list[i].append(val)
                 for position, display_property in property_list.iteritems(): 
                     val = reduce(getattr, display_property.split('__'), obj)
-                    increment_total(display_property, display_totals, val)
                     objects_list[i].insert(position, val)
                     # TODO: move property filter so you don't have to display properties to filter
                     pf = property_filters.get(display_property)
                     if pf and filter_property(objects_list, pf, val):
                         remove_row = True
                         break
+                    increment_total(display_property, display_totals, val)
                 if not remove_row:
                     filtered_objects_list += [objects_list[i]]
             display_totals_row = ['TOTALS'] + [
