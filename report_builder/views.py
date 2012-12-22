@@ -27,13 +27,13 @@ from dateutil import parser
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct', 'root_model']
+        fields = ['name', 'distinct', 'root_model', 'slug']
 
 
 class ReportEditForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct',]
+        fields = ['name', 'distinct', 'slug']
     
     
 class DisplayFieldForm(forms.ModelForm):
