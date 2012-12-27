@@ -407,6 +407,7 @@ class ReportUpdateView(UpdateView):
         ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
         model_class = self.object.root_model.model_class()
         model_ct = ContentType.objects.get_for_model(model_class)
+        properties = get_properties_from_model(model_class)
         
         direct_fields = get_direct_fields_from_model(model_class)
         relation_fields = get_relation_fields_from_model(model_class)
@@ -434,6 +435,7 @@ class ReportUpdateView(UpdateView):
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
+        ctx['properties'] = properties
         ctx['model_ct'] = model_ct
         
         return ctx
