@@ -1,0 +1,11 @@
+{% extends "admin/change_form.html" %}
+
+{% block submit_buttons_bottom %}
+ {{ block.super }}
+ <script>
+    (function($) {$('<input type="submit" name="_easy" value="Save and continue to easy edit"/>').appendTo('.submit-row');})(django.jQuery);
+    
+    $('<li><input type="submit" class="grp-button grp-default" name="_easy" value="Save and continue to easy edit"/></li>').appendTo('footer ul');
+    
+</script>
+{% endblock %}

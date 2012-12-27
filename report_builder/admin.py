@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from report_builder.models import DisplayField, Report, FilterField
 
 
@@ -31,6 +32,16 @@ class ReportAdmin(admin.ModelAdmin):
     inlines = [DisplayFieldInline, FilterFieldInline]
     list_display_links = ['admin_edit']
     
+    def response_add(self, request, obj, post_url_continue=None):
+        if '_easy' in request.POST:
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super(ReportAdmin, self).response_add(request, obj, post_url_continue)
+    
+    def response_change(self, request, obj, post_url_continue=None):
+        if '_easy' in request.POST:
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super(ReportAdmin, self).response_change(request, obj, post_url_continue)
+        
     def easy_edit(self, obj):
         return '<a href="%s">Edit</a>' % obj.get_absolute_url()
     easy_edit.allow_tags = True

@@ -20,8 +20,6 @@ class Report(models.Model):
     modified = models.DateField(auto_now=True)
     distinct = models.BooleanField()
     
-    
-    
     @models.permalink
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
