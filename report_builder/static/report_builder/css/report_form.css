@@ -1,16 +1,17 @@
-#container {
+div#container {
     position: relative;
     width: 100%;
     height: 99%;
     border: 1px solid black;
     border-radius: 15px;
 }
-header {
+div#container header {
     height: 2.6em;
     border-bottom: 1px solid black;
     padding-left: 1em;
-}
-.sidebar {
+ }
+
+div#container .sidebar {
     position: absolute;
     top: 2.6em;
     left: 0;
@@ -18,17 +19,17 @@ header {
     bottom: 0;
     padding: 0.5em;
 }
-.top_half {
+div#container .top_half {
     height: 40%;
     border-bottom: 1px solid black;
     overflow: auto;
 }
-.bottom_half {
+div#container .bottom_half {
     padding-top: 0.5em;
     overflow: auto;
     height: 59%;
 }
-.main_area {
+div#container .main_area {
     position: absolute;
     top: 2.6em;
     left: 20%;
@@ -40,25 +41,25 @@ header {
     overflow: auto;
 }
 
-.tree ol {
+div#container .tree ol {
     padding-top: 0px;
 }
 
-.tree li {
+div#container .tree li {
     padding-left: 14px;
     padding-bottom: 1px;
     list-style-type: none;
 }
 
-li.tree_closed {
+div#container li.tree_closed {
     background: url(toggle-small-expand.png) no-repeat left top;
 }
 
-li.tree_expanded {
+div#container li.tree_expanded {
     background: url(toggle-small.png) no-repeat left top;
 }
 
-span.button {
+div#container span.button {
   background: #e3e3e3;
   border: 1px solid #bbb;
   border-radius: 3px;
@@ -84,14 +85,14 @@ span.button {
     color: #000;
 }
 
-span.highlight {
+div#container span.highlight {
     background: #FED22F;
 }
-span.highlight:hover {
+div#container span.highlight:hover {
     background: #FED22F;
 }
 
-.droppable {
+div#container .droppable {
     border: 1px ridge;
     background: #F9F9F9;
     margin: 10px;
@@ -99,7 +100,7 @@ span.highlight:hover {
     padding-bottom: 30px;
 }
 
-.simple_table {
+div#container .simple_table {
 	border: 1px solid #DFDFDF;
 	background-color: #F9F9F9;
 	width: 100%;
@@ -109,12 +110,12 @@ span.highlight:hover {
 	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
 	color: #333;
 }
-.simple_table td, #table-3 th {
+div#container .simple_table td, #table-3 th {
 	border-top-color: white;
 	border-bottom: 1px solid #DFDFDF;
 	color: #555;
 }
-.simple_table th {
+div#container .simple_table th {
 	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
 	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 	font-weight: normal;
@@ -123,17 +124,17 @@ span.highlight:hover {
 	line-height: 1.3em;
 	font-size: 14px;
 }
-.simple_table td {
+div#container .simple_table td {
 	font-size: 12px;
 	padding: 4px 7px 2px;
 	vertical-align: top;
 }
 
-.hide_me {
+div#container .hide_me {
     display: none;
 }
 
-input[readonly="readonly"]
+div#container input[readonly="readonly"]
 {
     background-color:transparent;
     border: 0px solid;
@@ -142,12 +143,13 @@ input[readonly="readonly"]
     
 }
 
-.small_input {
+div#container .small_input {
     width: 50px;
 }
 
-#tip_area {
+div#container #tip_area {
     border-radius: 5px;
     background-color: #B3C6F2;
     display: none;
 }
+
