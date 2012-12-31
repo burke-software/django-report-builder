@@ -9,6 +9,21 @@
         </span>
     </li>
 {% endfor %}
+{% for custom_field in custom_fields %}
+    {% if forloop.first %}
+        <br/>
+        Custom Fields:
+    {% endif %}
+    <li class="draggable" style="list-style: none">
+        <span class="button"
+              data-name="{{ custom_field.name }}"
+              data-path="{{ path }}"
+              data-path_verbose="{{ path_verbose }}"
+              >
+            {{ custom_field.name }} [custom {{ custom_field.get_field_type_display }}]
+        </span>
+    </li>
+{% endfor %}
 <br/>
 {% for property in properties %}
     {% if forloop.first %}

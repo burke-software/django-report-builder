@@ -1,10 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db.models import Avg, Max, Min, Count, Sum, CharField
+from django.db.models import Avg, Max, Min, Count, Sum
 from django.forms.models import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
@@ -82,6 +83,18 @@ def get_direct_fields_from_model(model_class):
         if field[2] and not field[3] and field[0].__class__.__name__ != "ForeignKey":
             direct_fields += [field[0]]
     return direct_fields
+
+def get_custom_fields_from_model(model_class):
+    """ django-custom-fields support
+    """
+    if 'custom_field' in settings.INSTALLED_APPS:
+        from custom_field.models import CustomField
+        try:
+            content_type = ContentType.objects.get(model=model_class._meta.module_name,app_label=model_class._meta.app_label)
+        except ContentType.DoesNotExist:
+            content_type = None
+        custom_fields = CustomField.objects.filter(content_type=content_type)
+        return custom_fields
 
 def get_properties_from_model(model_class):
     properties = []
@@ -194,6 +207,7 @@ def ajax_get_fields(request):
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
+            'custom_fields': get_custom_fields_from_model(model),
             'properties': properties,
 
         }, RequestContext(request, {}),)
@@ -214,10 +228,12 @@ def ajax_get_fields(request):
         new_model = field[0].model
    
     fields = get_direct_fields_from_model(new_model)
+    custom_fields = get_custom_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
     
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
+        'custom_fields': custom_fields,
         'properties': properties,
         'path': path,
         'path_verbose': path_verbose,
@@ -250,8 +266,10 @@ def report_to_list(report, user, preview=False):
     # Filters
     for filter_field in report.filterfield_set.all():
         try:
-            # exclude properties from standard ORM filtering 
+            # exclude properties and custom fields from standard ORM filtering 
             if '[property]' in filter_field.field_verbose:
+                continue
+            if '[custom' in filter_field.field_verbose:
                 continue
 
             filter_string = str(filter_field.path + filter_field.field)
@@ -312,7 +330,8 @@ def report_to_list(report, user, preview=False):
     
     # Display Values
     values_list = []
-    property_list = {} 
+    custom_list = {}
+    property_list = {}
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
@@ -320,6 +339,8 @@ def report_to_list(report, user, preview=False):
         or not model:
             if '[property]' in display_field.field_verbose:
                 property_list[i] = display_field.path + display_field.field
+            elif '[custom' in display_field.field_verbose:
+                custom_list[i] = display_field.path + display_field.field
             elif display_field.aggregate == "Avg":
                 values_list += [display_field.path + display_field.field + '__ave']
             elif display_field.aggregate == "Max":
@@ -347,13 +368,15 @@ def report_to_list(report, user, preview=False):
 
             objects_list = list(objects.values_list(*values_list))
             objects = list(objects)
-
+            
             if property_list: 
                 filtered_objects_list = []
                 for i, obj in enumerate(objects):
                     remove_row = False
                     for position, display_property in property_list.iteritems(): 
                         val = reduce(getattr, display_property.split('__'), obj)
+                        print obj
+                        print val
                         # change tuples to lists in order to insert
                         objects_list[i] = list(objects_list[i])
                         objects_list[i].insert(position, val)
@@ -407,6 +430,7 @@ class ReportUpdateView(UpdateView):
         ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
         model_class = self.object.root_model.model_class()
         model_ct = ContentType.objects.get_for_model(model_class)
+        custom_fields = get_custom_fields_from_model(model_class)
         properties = get_properties_from_model(model_class)
         
         direct_fields = get_direct_fields_from_model(model_class)
@@ -435,6 +459,7 @@ class ReportUpdateView(UpdateView):
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
+        ctx['custom_fields'] = custom_fields
         ctx['properties'] = properties
         ctx['model_ct'] = model_ct
         
