@@ -202,7 +202,12 @@ def ajax_get_fields(request):
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
-    properties = get_properties_from_model(model)
+    if path:
+        # If there is a path, properties are not allowed as it will
+        # break things. See issues #10 and #11
+        properties = None
+    else:
+        properties = get_properties_from_model(model)
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
@@ -229,7 +234,10 @@ def ajax_get_fields(request):
    
     fields = get_direct_fields_from_model(new_model)
     custom_fields = get_custom_fields_from_model(new_model)
-    properties = get_properties_from_model(new_model)
+    
+    if properties:
+        # get for new model
+        properties = get_properties_from_model(new_model)
     
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
@@ -252,6 +260,7 @@ def get_model_from_path_string(root_model, path):
             else:
                 root_model = field[0].model
     return root_model
+
 
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
@@ -365,29 +374,61 @@ def report_to_list(report, user, preview=False):
             property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
-
+            
+            if property_list:
+                # we'll need this later
+                values_list = ['pk'] + values_list
+            
             objects_list = list(objects.values_list(*values_list))
             objects = list(objects)
             
             if property_list: 
                 filtered_objects_list = []
+                row_counter = 0
+                row_count_list = []
+                current_pk = objects_list[0][0]
+                # How many rows in each root object?
+                for objects_section in objects_list:
+                    if objects_section[0] != current_pk:
+                        current_pk = objects_section[0]
+                        row_count_list += [row_counter]
+                        row_counter = 1
+                    else:
+                        row_counter += 1
+                row_count_list += [row_counter]
+                row_i = 0
                 for i, obj in enumerate(objects):
                     remove_row = False
-                    for position, display_property in property_list.iteritems(): 
-                        val = reduce(getattr, display_property.split('__'), obj)
-                        print obj
-                        print val
-                        # change tuples to lists in order to insert
-                        objects_list[i] = list(objects_list[i])
-                        objects_list[i].insert(position, val)
+                    if row_count_list:
+                        rows_for_object = row_count_list.pop(0)
+                    else:
+                        # Must be a preview (first 50) so we are done
+                        break
+                    
+                    x = 0
+                    while x < rows_for_object:
+                        for position, display_property in property_list.iteritems(): 
+                            val = reduce(getattr, display_property.split('__'), obj)
+                            
+                            objects_list[row_i] = list(objects_list[row_i])
+                            objects_list[row_i].insert(position+1, val)
+                        x += 1
+                        row_i += 1 
                         # TODO: move property filter so you don't have to display properties to filter
                         pf = property_filters.get(display_property)
                         if pf and filter_property(objects_list, pf, val):
                             remove_row = True
                             break
-                    if not remove_row:
-                        filtered_objects_list += [objects_list[i]]
+                        if not remove_row:
+                            filtered_objects_list += [objects_list[row_i-1]]
                 objects_list = filtered_objects_list
+                
+                # now remove the pk we had to add before
+                for obj in objects_list:
+                    try:
+                        obj.pop(0)
+                    except:
+                        pass
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name
