@@ -116,46 +116,50 @@ def filter_property(objects_list, filter_field, value):
         'saturday': 5,
         'sunday': 6,
     }
-    if filter_type == 'exact' and str(value) == filter_value:
-        return False
-    if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
-        return False
-    if filter_type == 'contains' and filter_value in value:
-        return False
-    if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
-        return False
-    if filter_type == 'in' and value in filter_value:
-        return False
-    # convert dates and datetimes to timestamps in order to compare digits and date/times the same
-    if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
-        value = str(time.mktime(value.timetuple())) 
-        filter_value_dt = parser.parse(filter_value)
-        filter_value = str(time.mktime(filter_value_dt.timetuple()))
-    if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
-        return False
-    if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
-        return False
-    if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
-        return False
-    if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
-        return False
-    if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
-        return False
-    if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
-        return False
-    if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
-        return False
-    if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
-        return False
-    if filter_type == 'range' and value in [int(x) for x in filter_value]:
-        return False
-    if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
-        return False
-    if filter_type == 'isnull' and value == None:
-        return False
-    if filter_type == 'regex' and re.search(filter_value, value):
-        return False
-    if filter_type == 'iregex' and re.search(filter_value, value, re.I):
+    
+    try:
+        if filter_type == 'exact' and str(value) == filter_value:
+            return False
+        if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
+            return False
+        if filter_type == 'contains' and filter_value in value:
+            return False
+        if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
+            return False
+        if filter_type == 'in' and value in filter_value:
+            return False
+        # convert dates and datetimes to timestamps in order to compare digits and date/times the same
+        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
+            value = str(time.mktime(value.timetuple())) 
+            filter_value_dt = parser.parse(filter_value)
+            filter_value = str(time.mktime(filter_value_dt.timetuple()))
+        if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
+            return False
+        if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
+            return False
+        if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
+            return False
+        if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
+            return False
+        if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
+            return False
+        if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
+            return False
+        if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
+            return False
+        if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
+            return False
+        if filter_type == 'range' and value in [int(x) for x in filter_value]:
+            return False
+        if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
+            return False
+        if filter_type == 'isnull' and value == None:
+            return False
+        if filter_type == 'regex' and re.search(filter_value, value):
+            return False
+        if filter_type == 'iregex' and re.search(filter_value, value, re.I):
+            return False
+    except:
         return False
     return True
 
@@ -320,6 +324,9 @@ def report_to_list(report, user, preview=False):
         elif display_field.aggregate == "Sum":
             objects = objects.annotate(Sum(display_field.path + display_field.field))
 
+    # Get a distinct set of objects now just in case because we can't after ordering them
+    distinct_objects = objects.distinct()
+
     # Ordering
     order_list = []
     for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
@@ -370,7 +377,6 @@ def report_to_list(report, user, preview=False):
             objects_list = []
             # need to get values_list in order to traverse relations and get aggregates
             # need objects for properties
-
             property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
@@ -380,55 +386,35 @@ def report_to_list(report, user, preview=False):
                 values_list = ['pk'] + values_list
             
             objects_list = list(objects.values_list(*values_list))
-            objects = list(objects)
             
             if property_list: 
-                filtered_objects_list = []
-                row_counter = 0
-                row_count_list = []
-                current_pk = objects_list[0][0]
-                # How many rows in each root object?
-                for objects_section in objects_list:
-                    if objects_section[0] != current_pk:
-                        current_pk = objects_section[0]
-                        row_count_list += [row_counter]
-                        row_counter = 1
-                    else:
-                        row_counter += 1
-                row_count_list += [row_counter]
-                row_i = 0
-                for i, obj in enumerate(objects):
-                    remove_row = False
-                    if row_count_list:
-                        rows_for_object = row_count_list.pop(0)
-                    else:
-                        # Must be a preview (first 50) so we are done
-                        break
+                for i, obj in enumerate(distinct_objects):
                     
-                    x = 0
-                    while x < rows_for_object:
-                        for position, display_property in property_list.iteritems(): 
-                            val = reduce(getattr, display_property.split('__'), obj)
-                            
-                            objects_list[row_i] = list(objects_list[row_i])
-                            objects_list[row_i].insert(position+1, val)
-                        x += 1
-                        row_i += 1 
-                        # TODO: move property filter so you don't have to display properties to filter
+                    remove_row = False
+                    for position, display_property in property_list.iteritems(): 
+                        val = reduce(getattr, display_property.split('__'), obj)
                         pf = property_filters.get(display_property)
                         if pf and filter_property(objects_list, pf, val):
                             remove_row = True
-                            break
-                        if not remove_row:
-                            filtered_objects_list += [objects_list[row_i-1]]
-                objects_list = filtered_objects_list
+                        for object_i, objects_row in enumerate(objects_list):
+                            # Find all rows replated to specific object
+                            # Need this to handle multiple rows even if they are out of order
+                            if objects_row[0] == obj.pk:
+                                new_row = list(objects_row)
+                                new_row.insert(position+1, val)
+                                # If it is None then it was already marked for deletion
+                                if not remove_row and objects_list[object_i] != (None,):
+                                    objects_list[object_i] = tuple(new_row)
+                                else:
+                                    # Mark for deletion by setting to None, yea a bit lazy
+                                    objects_list[object_i] = (None,)
                 
                 # now remove the pk we had to add before
+                for obj_i, obj in enumerate(objects_list):
+                    objects_list[obj_i] = list(obj)
                 for obj in objects_list:
-                    try:
-                        obj.pop(0)
-                    except:
-                        pass
+                    obj.pop(0)
+                    
         else:
             objects_list = []
             message = "Permission Denied on %s" % report.root_model.name
