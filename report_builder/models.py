@@ -2,6 +2,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.db import models
+from django.db.models import Avg, Min, Max, Count, Sum
+
+from dateutil import parser
 
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
@@ -15,10 +18,69 @@ class Report(models.Model):
         return models
     
     name = models.CharField(max_length=255)
+    slug = models.SlugField()
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     distinct = models.BooleanField()
+    
+    def get_query(self):
+        report = self
+        model_class = report.root_model.model_class()
+        message= ""
+        objects = model_class.objects.all()
+
+        # Filters
+        for filter_field in report.filterfield_set.all():
+            try:
+                # exclude properties from standard ORM filtering 
+                if '[property]' in filter_field.field_verbose:
+                    continue
+
+                filter_string = str(filter_field.path + filter_field.field)
+                
+                if filter_field.filter_type:
+                    filter_string += '__' + filter_field.filter_type
+                
+                # Check for special types such as isnull
+                if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
+                    filter_list = {filter_string: False}
+                else:
+                    # All filter values are stored as strings, but may need to be converted
+                    if '[DateField]' in filter_field.field_verbose:
+                        filter_value = parser.parse(filter_field.filter_value)
+                    else:
+                        filter_value = filter_field.filter_value
+                    filter_list = {filter_string: filter_value}
+                
+                if not filter_field.exclude:
+                    objects = objects.filter(**filter_list)
+                else:
+                    objects = objects.exclude(**filter_list)
+
+            except Exception, e:
+                message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
+                message += "you found a bug! "
+                message += "If you made this in admin, then you probably did something wrong."
+        
+        # Aggregates
+        for display_field in report.displayfield_set.filter(aggregate__isnull=False):
+            if display_field.aggregate == "Avg":
+                objects = objects.annotate(Avg(display_field.path + display_field.field))
+            elif display_field.aggregate == "Max":
+                objects = objects.annotate(Max(display_field.path + display_field.field))
+            elif display_field.aggregate == "Min":
+                objects = objects.annotate(Min(display_field.path + display_field.field))
+            elif display_field.aggregate == "Count":
+                objects = objects.annotate(Count(display_field.path + display_field.field))
+            elif display_field.aggregate == "Sum":
+                objects = objects.annotate(Sum(display_field.path + display_field.field))
+
+        # Distinct
+        if report.distinct:
+            objects = objects.distinct()
+
+        return objects
     
     @models.permalink
     def get_absolute_url(self):
@@ -42,13 +104,14 @@ class DisplayField(models.Model):
         choices = (
             ('Sum','Sum'),
             ('Count','Count'),
-            ('Ave','Ave'),
+            ('Avg','Avg'),
             ('Max','Max'),
             ('Min','Min'),
         ),
         blank = True
     )
     position = models.PositiveSmallIntegerField(blank = True, null = True)
+    total = models.BooleanField(default=False)
     class Meta:
         ordering = ['position']
     def __unicode__(self):

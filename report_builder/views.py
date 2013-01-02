@@ -17,7 +17,10 @@ from django import forms
 import datetime
 import time
 import re
+from operator import itemgetter
 from decimal import Decimal
+from numbers import Number
+from types import BooleanType
 
 from dateutil import parser
 
@@ -25,13 +28,13 @@ from dateutil import parser
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct', 'root_model']
+        fields = ['name', 'distinct', 'root_model', 'slug']
 
 
 class ReportEditForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct',]
+        fields = ['name', 'distinct', 'slug']
     
     
 class DisplayFieldForm(forms.ModelForm):
@@ -264,7 +267,6 @@ def get_model_from_path_string(root_model, path):
             else:
                 root_model = field[0].model
     return root_model
-
 
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
