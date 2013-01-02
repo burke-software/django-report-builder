@@ -326,7 +326,10 @@ def report_to_list(report, user, preview=False):
                         break
                 if not remove_row:
                     for display_field in values_list:
-                        val = getattr(obj, display_field)
+                        if ('avg' or 'sum' or 'count' or 'min' or 'max') in display_field:  
+                            val = getattr(obj, display_field)
+                        else:
+                            val = reduce(getattr, display_field.split('__'), obj)
                         increment_total(display_field, display_totals, val)
                         objects_list[-1].append(val)
                     for position, display_property in property_list.iteritems(): 
