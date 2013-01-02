@@ -62,6 +62,7 @@ class Report(models.Model):
                 message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
                 message += "you found a bug! "
                 message += "If you made this in admin, then you probably did something wrong."
+
         
         # Aggregates
         for display_field in report.displayfield_set.filter(aggregate__isnull=False):

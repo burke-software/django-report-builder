@@ -33,7 +33,7 @@ class ReportForm(forms.ModelForm):
 class ReportEditForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct', 'slug']
+        fields = ['name', 'distinct']
     
     
 class DisplayFieldForm(forms.ModelForm):
@@ -299,6 +299,7 @@ def report_to_list(report, user, preview=False):
             # need to get values_list in order to traverse relations and get aggregates
             # need objects for properties
             property_filters = {} 
+
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
 
