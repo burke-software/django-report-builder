@@ -3,6 +3,7 @@ from django.core import exceptions
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Avg, Max, Min, Count, Sum, CharField
+from django.db.models.manager import Manager
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
@@ -329,7 +330,13 @@ def report_to_list(report, user, preview=False):
                         if ('avg' or 'sum' or 'count' or 'min' or 'max') in display_field:  
                             val = getattr(obj, display_field)
                         else:
-                            val = reduce(getattr, display_field.split('__'), obj)
+                            # deal with related managers
+                            relation_names = display_field.split('__')
+                            root_relation = getattr(obj, relation_names[0])
+                            if isinstance(root_relation, Manager):
+                                val = ', '.join(root_relation.values_list(relation_names[1], flat=True))
+                            else:
+                                val = reduce(getattr, relation_names, obj)
                         increment_total(display_field, display_totals, val)
                         objects_list[-1].append(val)
                     for position, display_property in property_list.iteritems(): 
