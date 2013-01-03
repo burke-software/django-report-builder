@@ -350,7 +350,7 @@ def report_to_list(report, user, preview=False):
                         objects_list[-1].insert(position, val)
                         increment_total(display_property, display_totals, val)
                     filtered_objects_list += [objects_list[-1]]
-                if preview and len(filtered_objects_list) == 1:
+                if preview and len(filtered_objects_list) == 50:
                     break
             display_totals_row = ['TOTALS'] + [
                 '%s: %s' % (
