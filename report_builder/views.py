@@ -327,14 +327,20 @@ def report_to_list(report, user, preview=False):
                         break
                 if not remove_row:
                     for display_field in values_list:
-                        if ('avg' or 'sum' or 'count' or 'min' or 'max') in display_field:  
+                        if display_field.endswith(('__avg', '__sum', '__count', '__min', '__max')):
                             val = getattr(obj, display_field)
                         else:
                             # deal with related managers
                             relation_names = display_field.split('__')
                             root_relation = getattr(obj, relation_names[0])
                             if isinstance(root_relation, Manager):
-                                val = ', '.join(root_relation.values_list(relation_names[1], flat=True))
+                                # stringify values for joining and truncate large relations to 10
+                                relation_values = [
+                                    str(v) for v in root_relation.values_list(relation_names[1], flat=True)[:10]
+                                ]  
+                                val = ', '.join(relation_values)
+                                if len(relation_values) == 10:
+                                    val += '...'
                             else:
                                 val = reduce(getattr, relation_names, obj)
                         increment_total(display_field, display_totals, val)
@@ -344,7 +350,7 @@ def report_to_list(report, user, preview=False):
                         objects_list[-1].insert(position, val)
                         increment_total(display_property, display_totals, val)
                     filtered_objects_list += [objects_list[-1]]
-                if preview and len(filtered_objects_list) == 50:
+                if preview and len(filtered_objects_list) == 1:
                     break
             display_totals_row = ['TOTALS'] + [
                 '%s: %s' % (
