@@ -320,7 +320,7 @@ def report_to_list(report, user, preview=False):
                 remove_row = False
                 objects_list.append([])
                 for property_filter_label, property_filter in property_filters.iteritems():
-                    val = reduce(getattr, property_filter_label.split('__'), obj)
+                    val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
                     if filter_property(objects_list, property_filter, val):
                         remove_row = True
                         objects_list.pop()
