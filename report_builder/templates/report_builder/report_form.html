@@ -14,7 +14,7 @@
   <form action="" method="post">{% csrf_token %}
     <header>
       <div id="report_id" data-id="{{ object.id }}">
-      Report Builder: {{ form.name }} {{ form.slug }}
+      Report Builder: {{ form.name }}
       Last updated: {{ object.modified }}
       Model: {{ object.root_model }}
       <span style="float: right; padding-right: 5%;">

@@ -34,7 +34,7 @@ class ReportForm(forms.ModelForm):
 class ReportEditForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct', 'slug']
+        fields = ['name', 'distinct']
     
     
 class DisplayFieldForm(forms.ModelForm):
