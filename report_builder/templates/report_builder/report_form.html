@@ -17,8 +17,6 @@
       Report Builder: {{ form.name }} {{ form.slug }}
       Last updated: {{ object.modified }}
       Model: {{ object.root_model }}
-{{ error|escape }}
-{% endfor %}
       <span style="float: right; padding-right: 5%;">
         <input type="submit" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
       </span>
