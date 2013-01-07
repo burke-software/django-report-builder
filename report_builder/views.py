@@ -97,6 +97,7 @@ def get_properties_from_model(model_class):
 def filter_property(filter_field, value):
     filter_type = filter_field.filter_type
     filter_value = filter_field.filter_value
+    filtered = True 
     #TODO: i10n
     WEEKDAY_INTS = {
         'monday': 0,
@@ -108,47 +109,50 @@ def filter_property(filter_field, value):
         'sunday': 6,
     }
     if filter_type == 'exact' and str(value) == filter_value:
-        return False
+        filtered = False
     if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
-        return False
+        filtered = False
     if filter_type == 'contains' and filter_value in value:
-        return False
+        filtered = False
     if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
-        return False
+        filtered = False
     if filter_type == 'in' and value in filter_value:
-        return False
+        filtered = False
     # convert dates and datetimes to timestamps in order to compare digits and date/times the same
     if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
         value = str(time.mktime(value.timetuple())) 
         filter_value_dt = parser.parse(filter_value)
         filter_value = str(time.mktime(filter_value_dt.timetuple()))
     if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
-        return False
+        filtered = False
     if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
-        return False
+        filtered = False
     if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
-        return False
+        filtered = False
     if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
-        return False
+        filtered = False
     if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
-        return False
+        filtered = False
     if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
-        return False
+        filtered = False
     if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
-        return False
+        filtered = False
     if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
-        return False
+        filtered = False
     if filter_type == 'range' and value in [int(x) for x in filter_value]:
-        return False
+        filtered = False
     if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
-        return False
+        filtered = False
     if filter_type == 'isnull' and value == None:
-        return False
+        filtered = False
     if filter_type == 'regex' and re.search(filter_value, value):
-        return False
+        filtered = False
     if filter_type == 'iregex' and re.search(filter_value, value, re.I):
-        return False
-    return True
+        filtered = False
+
+    if filter_field.exclude:
+        return not filtered
+    return filtered 
 
             
 def ajax_get_related(request):
@@ -310,8 +314,6 @@ def report_to_list(report, user, preview=False):
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
 
-            #objects = list(objects)
-            #filtered_objects_list = []
             # get pk in order to retrieve object for adding properties to report rows
             display_field_paths.insert(0, 'pk')
             values_list = objects.values_list(*display_field_paths)
