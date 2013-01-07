@@ -94,7 +94,7 @@ def get_properties_from_model(model_class):
             properties.append(attr_name)
     return sorted(properties)
 
-def filter_property(objects_list, filter_field, value):
+def filter_property(filter_field, value):
     filter_type = filter_field.filter_type
     filter_value = filter_field.filter_value
     #TODO: i10n
@@ -251,7 +251,7 @@ def report_to_list(report, user, preview=False):
     objects = report.get_query()
     
     # Display Values
-    values_list = []
+    display_field_paths = []
     property_list = {} 
     display_totals = {}
     def append_display_total(display_totals, display_field, display_field_key):
@@ -270,37 +270,34 @@ def report_to_list(report, user, preview=False):
                 append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Avg":
                 display_field_key += '__avg'
-                values_list += [display_field_key]
+                display_field_paths += [display_field_key]
                 append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Max":
                 display_field_key += '__max'
-                values_list += [display_field_key]
+                display_field_paths += [display_field_key]
                 append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Min":
                 display_field_key += '__min'
-                values_list += [display_field_key]
+                display_field_paths += [display_field_key]
                 append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Count":
                 display_field_key += '__count'
-                values_list += [display_field_key]
+                display_field_paths += [display_field_key]
                 append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Sum":
                 display_field_key += '__sum'
-                values_list += [display_field_key]
+                display_field_paths += [display_field_key]
                 append_display_total(display_totals, display_field, display_field_key)
             else:
-                values_list += [display_field_key]
+                display_field_paths += [display_field_key]
                 append_display_total(display_totals, display_field, display_field_key)
         else:
             message += "You don't have permission to " + display_field.name
     try:
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
-            objects_list = []
-            # need to get values_list in order to traverse relations and get aggregates
-            # need objects for properties
-            property_filters = {} 
 
+            property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
 
@@ -313,44 +310,37 @@ def report_to_list(report, user, preview=False):
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
 
+            #objects = list(objects)
+            #filtered_objects_list = []
+            # get pk in order to retrieve object for adding properties to report rows
+            display_field_paths.insert(0, 'pk')
+            values_list = objects.values_list(*display_field_paths)
+            values_and_properties_list = []
+            filtered_report_rows = []
 
-            objects = list(objects)
-            filtered_objects_list = []
-            for i, obj in enumerate(objects):
+            for row in values_list:
+                row = list(row)
+                obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
                 remove_row = False
-                objects_list.append([])
+                values_and_properties_list.append(row)
+                # filter properties (remove rows with excluded properties)
                 for property_filter_label, property_filter in property_filters.iteritems():
                     val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
-                    if filter_property(objects_list, property_filter, val):
+                    if filter_property(property_filter, val):
                         remove_row = True
-                        objects_list.pop()
+                        values_and_properties_list.pop()
                         break
                 if not remove_row:
-                    for display_field in values_list:
-                        if display_field.endswith(('__avg', '__sum', '__count', '__min', '__max')):
-                            val = getattr(obj, display_field)
-                        else:
-                            # deal with related managers
-                            relation_names = display_field.split('__')
-                            root_relation = getattr(obj, relation_names[0])
-                            if isinstance(root_relation, Manager):
-                                # stringify values for joining and truncate large relations to 10
-                                relation_values = [
-                                    str(v) for v in root_relation.values_list(relation_names[1], flat=True)[:10]
-                                ]  
-                                val = ', '.join(relation_values)
-                                if len(relation_values) == 10:
-                                    val += '...'
-                            else:
-                                val = reduce(getattr, relation_names, obj)
-                        increment_total(display_field, display_totals, val)
-                        objects_list[-1].append(val)
+                    # increment totals for fields
+                    for i, field in enumerate(display_field_paths[1:]):
+                        if field in display_totals.keys():
+                            increment_total(field, display_totals, row[i])
                     for position, display_property in property_list.iteritems(): 
                         val = reduce(getattr, display_property.split('__'), obj)
-                        objects_list[-1].insert(position, val)
+                        values_and_properties_list[-1].insert(position, val)
                         increment_total(display_property, display_totals, val)
-                    filtered_objects_list += [objects_list[-1]]
-                if preview and len(filtered_objects_list) == 50:
+                    filtered_report_rows += [values_and_properties_list[-1]]
+                if preview and len(filtered_report_rows) == 50:
                     break
             display_totals_row = ['TOTALS'] + [
                 '%s: %s' % (
@@ -362,20 +352,20 @@ def report_to_list(report, user, preview=False):
                 values_list('position', flat=True)
             if sort_fields:
                 get_key = itemgetter(*[s-1 for s in sort_fields])
-                objects_list = sorted(
-                    filtered_objects_list,
+                values_and_properties_list = sorted(
+                    filtered_report_rows,
                     key=lambda x: get_key(x).lower() if isinstance(get_key(x), basestring) else get_key(x)
                 )
-            objects_list = objects_list + [display_totals_row]
+            values_and_properties_list = values_and_properties_list + [display_totals_row]
         else:
-            objects_list = []
+            values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
     except exceptions.FieldError:
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
-        objects_list = None
+        values_and_properties_list = None
 
-    return objects_list, message
+    return values_and_properties_list, message
     
 @staff_member_required
 def ajax_preview(request):
