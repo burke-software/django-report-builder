@@ -46,6 +46,7 @@ class DisplayFieldForm(forms.ModelForm):
             'field_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
             'field': forms.HiddenInput(),
             'width': forms.TextInput(attrs={'class':'small_input'}),
+            'total': forms.CheckboxInput(attrs={'class':'small_input'}),
             'sort': forms.TextInput(attrs={'class':'small_input'}),
         }
         
