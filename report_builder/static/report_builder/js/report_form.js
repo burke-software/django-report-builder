@@ -73,6 +73,7 @@ function enable_drag() {
         drop: function( event, ui ) {
             field = $.trim($(ui.draggable).text());
             name = $.trim($(ui.draggable).children().data('name'));
+            label = $.trim($(ui.draggable).children().data('label'));
             path_verbose = $.trim($(ui.draggable).children().data('path_verbose'));
             path = $.trim($(ui.draggable).children().data('path'));
 
@@ -89,7 +90,7 @@ function enable_drag() {
             row_html = '<tr>'
             row_html += '<td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>'
             row_html += '<td><input id="id_fil-'+i+'-path_verbose" value="'+ path_verbose +'" readonly="readonly" type="text" name="fil-'+i+'-path_verbose" maxlength="2000"></td>'
-            row_html += '<td><input type="hidden" name="fil-'+i+'-field" value="'+ name +'" id="id_fil-'+i+'-field">'
+            row_html += '<td><input type="hidden" name="fil-'+i+'-field" value="'+ label +'" id="id_fil-'+i+'-field">'
             row_html += '<input name="fil-'+i+'-field_verbose" value="'+ field +'" readonly="readonly" maxlength="2000" type="text" id="id_fil-'+i+'-field_verbose">'
             row_html += '<input type="hidden" value="'+ path +'" name="fil-'+i+'-path" id="id_fil-'+i+'-path"></td>'
             row_html += '<td><select onchange="check_filter_type(event.target)" name="fil-'+i+'-filter_type" id="id_fil-'+i+'-filter_type">'
