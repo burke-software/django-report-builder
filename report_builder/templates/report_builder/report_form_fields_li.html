@@ -1,7 +1,7 @@
 {% for field in fields %}
     <li class="draggable" style="list-style: none">
         <span class="button"
-              data-name="{{ field.name }}"
+              data-name="{{ field.verbose_name }}"
               data-path="{{ path }}"
               data-path_verbose="{{ path_verbose }}"
               >
@@ -16,11 +16,12 @@
     {% endif %}
     <li class="draggable" style="list-style: none">
         <span class="button"
-              data-name="{{ property }}"
+              data-name="{{ property.name }}"
+              data-label="{{ property.label }}"
               data-path="{{ path }}"
               data-path_verbose="{{ path_verbose }}"
               >
-            {{ property }} [property]
+            {{ property.label }} [property]
         </span>
     </li>
 {% endfor %}

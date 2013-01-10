@@ -43,6 +43,7 @@ function enable_drag() {
         drop: function( event, ui ) {
             field = $.trim($(ui.draggable).text());
             name = $.trim($(ui.draggable).children().data('name'));
+            label = $.trim($(ui.draggable).children().data('label'));
             path_verbose = $.trim($(ui.draggable).children().data('path_verbose'));
             path = $.trim($(ui.draggable).children().data('path'));
             
@@ -55,7 +56,7 @@ function enable_drag() {
             row_html = '<tr><td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-path_verbose" name="displayfield_set-'+i+'-path_verbose" readonly="readonly" type="text" value="' + path_verbose + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field_verbose" name="displayfield_set-'+i+'-field_verbose" readonly="readonly" type="text" value="' + field + '"/><input id="id_displayfield_set-'+i+'-path" name="displayfield_set-'+i+'-path" type="hidden" value="' + path + '"/></td>';
-            row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + name + '"/>'
+            row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + label + '"/>'
             row_html += '<input id="id_displayfield_set-'+i+'-name" name="displayfield_set-'+i+'-name" type="text" value="' + name + '"/></td>';
             row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" class="small_input" id="id_displayfield_set-'+i+'-sort">';
             row_html += '<input type="checkbox" name="displayfield_set-'+i+'-sort_reverse" id="id_displayfield_set-'+i+'-sort_reverse"></td>';

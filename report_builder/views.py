@@ -92,7 +92,7 @@ def get_properties_from_model(model_class):
     properties = []
     for attr_name, attr in dict(model_class.__dict__).iteritems():
         if type(attr) == property:
-            properties.append(attr_name)
+            properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
     return sorted(properties)
 
 def filter_property(filter_field, value):
