@@ -52,6 +52,7 @@ class DisplayFieldForm(forms.ModelForm):
         
 
 class FilterFieldForm(forms.ModelForm):
+
     class Meta:
         model = FilterField
         widgets = {
@@ -61,6 +62,12 @@ class FilterFieldForm(forms.ModelForm):
             'field': forms.HiddenInput(),
             'filter_type': forms.Select(attrs={'onchange':'check_filter_type(event.target)'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super(FilterFieldForm, self).__init__(*args, **kwargs)
+        # override the filter_value field with the models native ChoiceField
+        if self.instance.choices:
+            self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
 
 
 class ReportCreateView(CreateView):
@@ -210,11 +217,15 @@ def ajax_get_fields(request):
     field = model._meta.get_field_by_name(field_name)
     if path_verbose:
         path_verbose += "::"
-    path_verbose += field[0].name
+    # TODO: need actual model name to generate choic list (not pluralized field name)
+    # - maybe store this as a separate value?
+    if field[3]:
+        path_verbose += field[0].m2m_reverse_field_name()
+    else:
+        path_verbose += field[0].name
     
     path += field_name
-    path += '__'
-    
+    path += '__' 
     if field[2]:
         # Direct field
         new_model = field[0].related.parent_model
@@ -231,6 +242,13 @@ def ajax_get_fields(request):
         'path': path,
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
+
+def ajax_get_choices(request):
+    # TODO: get choices from model (like FilterField.choices) - make repurposable?
+    #choices = FilterField.objects.get(pk=int(request.GET.get('filter_field_pk'))).choices 
+    #return HttpResponse(choices)
+    #return choices
+    return ''
 
 def get_model_from_path_string(root_model, path):
     """ Return a model class for a related model

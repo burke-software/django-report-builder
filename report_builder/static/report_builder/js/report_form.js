@@ -76,6 +76,8 @@ function enable_drag() {
             label = $.trim($(ui.draggable).children().data('label'));
             path_verbose = $.trim($(ui.draggable).children().data('path_verbose'));
             path = $.trim($(ui.draggable).children().data('path'));
+            choices = $.trim($(ui.draggable).children().data('choices'));
+            filter_field_pk = $.trim($(ui.draggable).children().data('pk'));
 
             if (field.match(/\[property\]/)) {
                 property_tip();
@@ -116,6 +118,9 @@ function enable_drag() {
 </select></td>'
             if ( field.indexOf("DateField") > 0 ) {
             	row_html += '<td><input class="datepicker" id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
+            } else if (choices) {
+                //row_html += get_choices(path_verbose, label)
+                row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             } else {
                 row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             }
@@ -126,6 +131,12 @@ function enable_drag() {
             $('#field_filter_table > tbody:last').append(row_html);
             $( ".datepicker" ).datepicker();
         }
+    });
+}
+
+function get_choices(filter_field_pk) {
+    $.get('/report_builder/ajax_get_choices/', {'filter_field_pk': filter_field_pk}, function(data) {
+        return data
     });
 }
 
