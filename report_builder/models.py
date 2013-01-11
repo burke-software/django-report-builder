@@ -62,6 +62,7 @@ class Report(models.Model):
                 message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
                 message += "you found a bug! "
                 message += "If you made this in admin, then you probably did something wrong."
+
         
         # Aggregates
         for display_field in report.displayfield_set.filter(aggregate__isnull=False):
@@ -154,8 +155,23 @@ class FilterField(models.Model):
     filter_value2 = models.CharField(max_length=2000, blank=True)
     exclude = models.BooleanField()
     position = models.PositiveSmallIntegerField(blank = True, null = True)
+
     class Meta:
         ordering = ['position']
+
+    @property
+    def choices(self):
+        if self.pk:
+            field_name = self.field
+            model_name = self.path_verbose.split(':')[-1] or self.report.root_model.model
+            model = ContentType.objects.get(model=model_name).model_class()
+            try:
+                model_field = model._meta.get_field_by_name(field_name)[0]
+            except:
+                model_field = None
+            if model_field and model_field.choices:
+                return model_field.choices
+    
     def __unicode__(self):
         return self.field
     

@@ -43,6 +43,7 @@ function enable_drag() {
         drop: function( event, ui ) {
             field = $.trim($(ui.draggable).text());
             name = $.trim($(ui.draggable).children().data('name'));
+            label = $.trim($(ui.draggable).children().data('label'));
             path_verbose = $.trim($(ui.draggable).children().data('path_verbose'));
             path = $.trim($(ui.draggable).children().data('path'));
             
@@ -55,7 +56,7 @@ function enable_drag() {
             row_html = '<tr><td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-path_verbose" name="displayfield_set-'+i+'-path_verbose" readonly="readonly" type="text" value="' + path_verbose + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field_verbose" name="displayfield_set-'+i+'-field_verbose" readonly="readonly" type="text" value="' + field + '"/><input id="id_displayfield_set-'+i+'-path" name="displayfield_set-'+i+'-path" type="hidden" value="' + path + '"/></td>';
-            row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + name + '"/>'
+            row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + label + '"/>'
             row_html += '<input id="id_displayfield_set-'+i+'-name" name="displayfield_set-'+i+'-name" type="text" value="' + name + '"/></td>';
             row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" class="small_input" id="id_displayfield_set-'+i+'-sort">';
             row_html += '<input type="checkbox" name="displayfield_set-'+i+'-sort_reverse" id="id_displayfield_set-'+i+'-sort_reverse"></td>';
@@ -63,7 +64,7 @@ function enable_drag() {
             row_html += '<td onclick="aggregate_tip(event)"><select id="id_displayfield_set-'+i+'-aggregate" name="displayfield_set-'+i+'-aggregate"><option selected="selected" value="">---------</option><option value="Sum">Sum</option><option value="Count">Count</option><option value="Avg">Avg</option><option value="Max">Max</option><option value="Min">Min</option></select></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-total" id="id_displayfield_set-'+i+'-total"></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-DELETE" id="id_displayfield_set-'+i+'-DELETE">';
-            row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="999" id="id_displayfield_set-'+i+'-position"></span></td>';
+            row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="'+total_forms.val()+'" id="id_displayfield_set-'+i+'-position"></span></td>';
             row_html += '</tr>';
             $('#field_list_table > tbody:last').append(row_html);
         }
@@ -72,8 +73,11 @@ function enable_drag() {
         drop: function( event, ui ) {
             field = $.trim($(ui.draggable).text());
             name = $.trim($(ui.draggable).children().data('name'));
+            label = $.trim($(ui.draggable).children().data('label'));
             path_verbose = $.trim($(ui.draggable).children().data('path_verbose'));
             path = $.trim($(ui.draggable).children().data('path'));
+            choices = $.trim($(ui.draggable).children().data('choices'));
+            filter_field_pk = $.trim($(ui.draggable).children().data('pk'));
 
             if (field.match(/\[property\]/)) {
                 property_tip();
@@ -88,7 +92,7 @@ function enable_drag() {
             row_html = '<tr>'
             row_html += '<td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>'
             row_html += '<td><input id="id_fil-'+i+'-path_verbose" value="'+ path_verbose +'" readonly="readonly" type="text" name="fil-'+i+'-path_verbose" maxlength="2000"></td>'
-            row_html += '<td><input type="hidden" name="fil-'+i+'-field" value="'+ name +'" id="id_fil-'+i+'-field">'
+            row_html += '<td><input type="hidden" name="fil-'+i+'-field" value="'+ label +'" id="id_fil-'+i+'-field">'
             row_html += '<input name="fil-'+i+'-field_verbose" value="'+ field +'" readonly="readonly" maxlength="2000" type="text" id="id_fil-'+i+'-field_verbose">'
             row_html += '<input type="hidden" value="'+ path +'" name="fil-'+i+'-path" id="id_fil-'+i+'-path"></td>'
             row_html += '<td><select onchange="check_filter_type(event.target)" name="fil-'+i+'-filter_type" id="id_fil-'+i+'-filter_type">'
@@ -114,6 +118,9 @@ function enable_drag() {
 </select></td>'
             if ( field.indexOf("DateField") > 0 ) {
             	row_html += '<td><input class="datepicker" id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
+            } else if (choices) {
+                //row_html += get_choices(path_verbose, label)
+                row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             } else {
                 row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             }
@@ -124,6 +131,12 @@ function enable_drag() {
             $('#field_filter_table > tbody:last').append(row_html);
             $( ".datepicker" ).datepicker();
         }
+    });
+}
+
+function get_choices(filter_field_pk) {
+    $.get('/report_builder/ajax_get_choices/', {'filter_field_pk': filter_field_pk}, function(data) {
+        return data
     });
 }
 

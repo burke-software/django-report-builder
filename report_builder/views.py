@@ -1,11 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
-from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db.models import Avg, Max, Min, Count, Sum
+from django.db.models import Avg, Max, Min, Count, Sum, CharField
+from django.db.models.manager import Manager
 from django.forms.models import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
@@ -46,6 +46,7 @@ class DisplayFieldForm(forms.ModelForm):
             'field_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
             'field': forms.HiddenInput(),
             'width': forms.TextInput(attrs={'class':'small_input'}),
+            'total': forms.CheckboxInput(attrs={'class':'small_input'}),
             'sort': forms.TextInput(attrs={'class':'small_input'}),
         }
         
@@ -60,6 +61,12 @@ class FilterFieldForm(forms.ModelForm):
             'field': forms.HiddenInput(),
             'filter_type': forms.Select(attrs={'onchange':'check_filter_type(event.target)'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super(FilterFieldForm, self).__init__(*args, **kwargs)
+        # override the filter_value field with the models native ChoiceField
+        if self.instance.choices:
+            self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
 
 
 class ReportCreateView(CreateView):
@@ -87,28 +94,17 @@ def get_direct_fields_from_model(model_class):
             direct_fields += [field[0]]
     return direct_fields
 
-def get_custom_fields_from_model(model_class):
-    """ django-custom-fields support
-    """
-    if 'custom_field' in settings.INSTALLED_APPS:
-        from custom_field.models import CustomField
-        try:
-            content_type = ContentType.objects.get(model=model_class._meta.module_name,app_label=model_class._meta.app_label)
-        except ContentType.DoesNotExist:
-            content_type = None
-        custom_fields = CustomField.objects.filter(content_type=content_type)
-        return custom_fields
-
 def get_properties_from_model(model_class):
     properties = []
     for attr_name, attr in dict(model_class.__dict__).iteritems():
         if type(attr) == property:
-            properties.append(attr_name)
+            properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
     return sorted(properties)
 
-def filter_property(objects_list, filter_field, value):
+def filter_property(filter_field, value):
     filter_type = filter_field.filter_type
     filter_value = filter_field.filter_value
+    filtered = True 
     #TODO: i10n
     WEEKDAY_INTS = {
         'monday': 0,
@@ -119,52 +115,51 @@ def filter_property(objects_list, filter_field, value):
         'saturday': 5,
         'sunday': 6,
     }
-    
-    try:
-        if filter_type == 'exact' and str(value) == filter_value:
-            return False
-        if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
-            return False
-        if filter_type == 'contains' and filter_value in value:
-            return False
-        if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
-            return False
-        if filter_type == 'in' and value in filter_value:
-            return False
-        # convert dates and datetimes to timestamps in order to compare digits and date/times the same
-        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
-            value = str(time.mktime(value.timetuple())) 
-            filter_value_dt = parser.parse(filter_value)
-            filter_value = str(time.mktime(filter_value_dt.timetuple()))
-        if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
-            return False
-        if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
-            return False
-        if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
-            return False
-        if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
-            return False
-        if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
-            return False
-        if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
-            return False
-        if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
-            return False
-        if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
-            return False
-        if filter_type == 'range' and value in [int(x) for x in filter_value]:
-            return False
-        if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
-            return False
-        if filter_type == 'isnull' and value == None:
-            return False
-        if filter_type == 'regex' and re.search(filter_value, value):
-            return False
-        if filter_type == 'iregex' and re.search(filter_value, value, re.I):
-            return False
-    except:
-        return False
-    return True
+    if filter_type == 'exact' and str(value) == filter_value:
+        filtered = False
+    if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
+        filtered = False
+    if filter_type == 'contains' and filter_value in value:
+        filtered = False
+    if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
+        filtered = False
+    if filter_type == 'in' and value in filter_value:
+        filtered = False
+    # convert dates and datetimes to timestamps in order to compare digits and date/times the same
+    if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
+        value = str(time.mktime(value.timetuple())) 
+        filter_value_dt = parser.parse(filter_value)
+        filter_value = str(time.mktime(filter_value_dt.timetuple()))
+    if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
+        filtered = False
+    if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
+        filtered = False
+    if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
+        filtered = False
+    if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
+        filtered = False
+    if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
+        filtered = False
+    if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
+        filtered = False
+    if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
+        filtered = False
+    if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
+        filtered = False
+    if filter_type == 'range' and value in [int(x) for x in filter_value]:
+        filtered = False
+    if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
+        filtered = False
+    if filter_type == 'isnull' and value == None:
+        filtered = False
+    if filter_type == 'regex' and re.search(filter_value, value):
+        filtered = False
+    if filter_type == 'iregex' and re.search(filter_value, value, re.I):
+        filtered = False
+
+    if filter_field.exclude:
+        return not filtered
+    return filtered 
 
             
 def ajax_get_related(request):
@@ -209,17 +204,11 @@ def ajax_get_fields(request):
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
-    if path:
-        # If there is a path, properties are not allowed as it will
-        # break things. See issues #10 and #11
-        properties = None
-    else:
-        properties = get_properties_from_model(model)
+    properties = get_properties_from_model(model)
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
-            'custom_fields': get_custom_fields_from_model(model),
             'properties': properties,
 
         }, RequestContext(request, {}),)
@@ -227,11 +216,15 @@ def ajax_get_fields(request):
     field = model._meta.get_field_by_name(field_name)
     if path_verbose:
         path_verbose += "::"
-    path_verbose += field[0].name
+    # TODO: need actual model name to generate choic list (not pluralized field name)
+    # - maybe store this as a separate value?
+    if field[3]:
+        path_verbose += field[0].m2m_reverse_field_name()
+    else:
+        path_verbose += field[0].name
     
     path += field_name
-    path += '__'
-    
+    path += '__' 
     if field[2]:
         # Direct field
         new_model = field[0].related.parent_model
@@ -240,19 +233,21 @@ def ajax_get_fields(request):
         new_model = field[0].model
    
     fields = get_direct_fields_from_model(new_model)
-    custom_fields = get_custom_fields_from_model(new_model)
-    
-    if properties:
-        # get for new model
-        properties = get_properties_from_model(new_model)
+    properties = get_properties_from_model(new_model)
     
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
-        'custom_fields': custom_fields,
         'properties': properties,
         'path': path,
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
+
+def ajax_get_choices(request):
+    # TODO: get choices from model (like FilterField.choices) - make repurposable?
+    #choices = FilterField.objects.get(pk=int(request.GET.get('filter_field_pk'))).choices 
+    #return HttpResponse(choices)
+    #return choices
+    return ''
 
 def get_model_from_path_string(root_model, path):
     """ Return a model class for a related model
@@ -268,165 +263,131 @@ def get_model_from_path_string(root_model, path):
                 root_model = field[0].model
     return root_model
 
+
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
     Returns list, message in case of issues
     """
     message= ""
-    
     model_class = report.root_model.model_class()
-    
-    objects = model_class.objects.all()
-    
-    # Filters
-    for filter_field in report.filterfield_set.all():
-        try:
-            # exclude properties and custom fields from standard ORM filtering 
-            if '[property]' in filter_field.field_verbose:
-                continue
-            if '[custom' in filter_field.field_verbose:
-                continue
-
-            filter_string = str(filter_field.path + filter_field.field)
-            
-            if filter_field.filter_type:
-                filter_string += '__' + filter_field.filter_type
-            
-            # Check for special types such as isnull
-            if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
-                filter_list = {filter_string: False}
-            else:
-                # All filter values are stored as strings, but may need to be converted
-                if '[DateField]' in filter_field.field_verbose:
-                    filter_value = parser.parse(filter_field.filter_value)
-                else:
-                    filter_value = filter_field.filter_value
-                filter_list = {filter_string: filter_value}
-            
-            if not filter_field.exclude:
-                objects = objects.filter(**filter_list)
-            else:
-                objects = objects.exclude(**filter_list)
-
-        except Exception, e:
-            message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
-            message += "you found a bug! "
-            message += "If you made this in admin, then you probably did something wrong."
-    
-    # Aggregates
-    for display_field in report.displayfield_set.filter(aggregate__isnull=False):
-        if display_field.aggregate == "Avg":
-            objects = objects.annotate(Avg(display_field.path + display_field.field))
-        elif display_field.aggregate == "Max":
-            objects = objects.annotate(Max(display_field.path + display_field.field))
-        elif display_field.aggregate == "Min":
-            objects = objects.annotate(Min(display_field.path + display_field.field))
-        elif display_field.aggregate == "Count":
-            objects = objects.annotate(Count(display_field.path + display_field.field))
-        elif display_field.aggregate == "Sum":
-            objects = objects.annotate(Sum(display_field.path + display_field.field))
-
-    # Get a distinct set of objects now just in case because we can't after ordering them
-    distinct_objects = objects.distinct()
-
-    # Ordering
-    order_list = []
-    for display_field in report.displayfield_set.filter(sort__isnull=False).order_by('sort'):
-        if display_field.sort_reverse:
-            order_list += ['-' + display_field.path + display_field.field]
-        else:
-            order_list += [display_field.path + display_field.field]
-    objects = objects.order_by(*order_list)
-    
-    # Distinct
-    if report.distinct:
-        objects = objects.distinct()
-    
-    # Limit because this is a preview
-    if preview:
-        objects = objects[:50]
+    objects = report.get_query()
     
     # Display Values
-    values_list = []
-    custom_list = {}
-    property_list = {}
+    display_field_paths = []
+    property_list = {} 
+    display_totals = {}
+    def append_display_total(display_totals, display_field, display_field_key):
+        if display_field.total:
+            display_totals[display_field_key] = {'label': display_field.name, 'val': Decimal('0.00')}
+        
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
         or user.has_perm(model._meta.app_label + '.view_' + model._meta.module_name) \
         or not model:
+            # TODO: clean this up a bit
+            display_field_key = display_field.path + display_field.field
             if '[property]' in display_field.field_verbose:
-                property_list[i] = display_field.path + display_field.field
-            elif '[custom' in display_field.field_verbose:
-                custom_list[i] = display_field.path + display_field.field
+                property_list[i] = display_field_key 
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Avg":
-                values_list += [display_field.path + display_field.field + '__ave']
+                display_field_key += '__avg'
+                display_field_paths += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Max":
-                values_list += [display_field.path + display_field.field + '__max']
+                display_field_key += '__max'
+                display_field_paths += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Min":
-                values_list += [display_field.path + display_field.field + '__min']
+                display_field_key += '__min'
+                display_field_paths += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Count":
-                values_list += [display_field.path + display_field.field + '__count']
+                display_field_key += '__count'
+                display_field_paths += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Sum":
-                values_list += [display_field.path + display_field.field + '__sum']
+                display_field_key += '__sum'
+                display_field_paths += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
             else:
-                values_list += [display_field.path + display_field.field]
+                display_field_paths += [display_field_key]
+                append_display_total(display_totals, display_field, display_field_key)
         else:
             message += "You don't have permission to " + display_field.name
     try:
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
-            objects_list = []
-            # need to get values_list in order to traverse relations and get aggregates
-            # need objects for properties
+
             property_filters = {} 
             for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
                 property_filters[property_filter.field] = property_filter 
-            
-            if property_list:
-                # we'll need this later
-                values_list = ['pk'] + values_list
-            
-            objects_list = list(objects.values_list(*values_list))
-            
-            if property_list: 
-                for i, obj in enumerate(distinct_objects):
-                    
-                    remove_row = False
+
+            def increment_total(display_field_key, display_totals, val):
+                if display_totals.has_key(display_field_key):
+                    # Booleans are Numbers - blah
+                    if isinstance(val, Number) and not isinstance(val, BooleanType):
+                        # do decimal math for all numbers
+                        display_totals[display_field_key]['val'] += Decimal(str(val))
+                    else:
+                        display_totals[display_field_key]['val'] += Decimal('1.00')
+
+            # get pk in order to retrieve object for adding properties to report rows
+            display_field_paths.insert(0, 'pk')
+            values_list = objects.values_list(*display_field_paths)
+            values_and_properties_list = []
+            filtered_report_rows = []
+
+            for row in values_list:
+                row = list(row)
+                obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
+                remove_row = False
+                values_and_properties_list.append(row)
+                # filter properties (remove rows with excluded properties)
+                for property_filter_label, property_filter in property_filters.iteritems():
+                    val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
+                    if filter_property(property_filter, val):
+                        remove_row = True
+                        values_and_properties_list.pop()
+                        break
+                if not remove_row:
+                    # increment totals for fields
+                    for i, field in enumerate(display_field_paths[1:]):
+                        if field in display_totals.keys():
+                            increment_total(field, display_totals, row[i])
                     for position, display_property in property_list.iteritems(): 
                         val = reduce(getattr, display_property.split('__'), obj)
-                        pf = property_filters.get(display_property)
-                        if pf and filter_property(objects_list, pf, val):
-                            remove_row = True
-                        for object_i, objects_row in enumerate(objects_list):
-                            # Find all rows replated to specific object
-                            # Need this to handle multiple rows even if they are out of order
-                            if objects_row[0] == obj.pk:
-                                new_row = list(objects_row)
-                                new_row.insert(position+1, val)
-                                # If it is None then it was already marked for deletion
-                                if not remove_row and objects_list[object_i] != (None,):
-                                    objects_list[object_i] = tuple(new_row)
-                                else:
-                                    # Mark for deletion by setting to None, yea a bit lazy
-                                    objects_list[object_i] = (None,)
-                
-                # now remove the pk we had to add before
-                for obj_i, obj in enumerate(objects_list):
-                    objects_list[obj_i] = list(obj)
-                for obj in objects_list:
-                    obj.pop(0)
-                    
+                        values_and_properties_list[-1].insert(position, val)
+                        increment_total(display_property, display_totals, val)
+                    filtered_report_rows += [values_and_properties_list[-1]]
+                if preview and len(filtered_report_rows) == 50:
+                    break
+            if display_totals:
+                display_totals_row = ['TOTALS'] + [
+                    '%s: %s' % (
+                        display_totals[t]['label'],
+                        display_totals[t]['val']
+                    ) for t in display_totals
+                ]
+            sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
+                values_list('position', flat=True)
+            if sort_fields:
+                get_key = itemgetter(*[s-1 for s in sort_fields])
+                values_and_properties_list = sorted(
+                    filtered_report_rows,
+                    key=lambda x: get_key(x).lower() if isinstance(get_key(x), basestring) else get_key(x)
+                )
+            if display_totals:
+                values_and_properties_list = values_and_properties_list + [display_totals_row]
         else:
-            objects_list = []
+            values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
     except exceptions.FieldError:
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
-        objects_list = None
+        values_and_properties_list = None
 
-    
-    return objects_list, message
+    return values_and_properties_list, message
     
 @staff_member_required
 def ajax_preview(request):
@@ -459,9 +420,8 @@ class ReportUpdateView(UpdateView):
         ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
         model_class = self.object.root_model.model_class()
         model_ct = ContentType.objects.get_for_model(model_class)
-        custom_fields = get_custom_fields_from_model(model_class)
         properties = get_properties_from_model(model_class)
-        
+
         direct_fields = get_direct_fields_from_model(model_class)
         relation_fields = get_relation_fields_from_model(model_class)
         
@@ -488,7 +448,6 @@ class ReportUpdateView(UpdateView):
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
-        ctx['custom_fields'] = custom_fields
         ctx['properties'] = properties
         ctx['model_ct'] = model_ct
         
