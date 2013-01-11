@@ -211,7 +211,7 @@ def ajax_get_fields(request):
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
             'properties': properties,
-
+            'root_model': model.__name__.lower(),
         }, RequestContext(request, {}),)
     
     field = model._meta.get_field_by_name(field_name)
@@ -232,6 +232,7 @@ def ajax_get_fields(request):
     else:
         # Indirect related field
         new_model = field[0].model
+
    
     fields = get_direct_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
@@ -241,14 +242,17 @@ def ajax_get_fields(request):
         'properties': properties,
         'path': path,
         'path_verbose': path_verbose,
+        'root_model': root_model,
     }, RequestContext(request, {}),)
 
 def ajax_get_choices(request):
-    # TODO: get choices from model (like FilterField.choices) - make repurposable?
-    #choices = FilterField.objects.get(pk=int(request.GET.get('filter_field_pk'))).choices 
-    #return HttpResponse(choices)
-    #return choices
-    return ''
+    path_verbose = request.GET.get('path_verbose')
+    label = request.GET.get('label')
+    root_model = request.GET.get('root_model')
+    choices = FilterField().get_choices(path_verbose or root_model, label)
+    select_widget = forms.Select(choices=choices)
+    options_html = select_widget.render_options(select_widget.choices, [0])
+    return HttpResponse(options_html)
 
 def get_model_from_path_string(root_model, path):
     """ Return a model class for a related model
@@ -449,6 +453,7 @@ class ReportUpdateView(UpdateView):
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
         ctx['model_ct'] = model_ct
+        ctx['root_model'] = model_ct.model
         
         return ctx
 
