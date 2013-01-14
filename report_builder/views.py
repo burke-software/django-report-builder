@@ -206,18 +206,19 @@ def ajax_get_fields(request):
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
     properties = get_properties_from_model(model)
+    root_model = model.__name__.lower()
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
             'properties': properties,
-            'root_model': model.__name__.lower(),
+            'root_model': root_model,
         }, RequestContext(request, {}),)
     
     field = model._meta.get_field_by_name(field_name)
     if path_verbose:
         path_verbose += "::"
-    # TODO: need actual model name to generate choic list (not pluralized field name)
+    # TODO: need actual model name to generate choice list (not pluralized field name)
     # - maybe store this as a separate value?
     if field[3]:
         path_verbose += field[0].m2m_reverse_field_name()
@@ -229,10 +230,11 @@ def ajax_get_fields(request):
     if field[2]:
         # Direct field
         new_model = field[0].related.parent_model
+        path_verbose = new_model.__name__.lower()
     else:
         # Indirect related field
         new_model = field[0].model
-
+        path_verbose = new_model.__name__.lower()
    
     fields = get_direct_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
