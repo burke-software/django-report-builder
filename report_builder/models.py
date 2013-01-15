@@ -31,6 +31,10 @@ class Report(models.Model):
         objects = model_class.objects.all()
 
         # Filters
+        # NOTE: group all the filters together into one in order to avoid 
+        # unnecessary joins
+        filters = {}
+        excludes = {}
         for filter_field in report.filterfield_set.all():
             try:
                 # exclude properties from standard ORM filtering 
@@ -44,24 +48,29 @@ class Report(models.Model):
                 
                 # Check for special types such as isnull
                 if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
-                    filter_list = {filter_string: False}
+                    filter_ = {filter_string: False}
                 else:
                     # All filter values are stored as strings, but may need to be converted
                     if '[DateField]' in filter_field.field_verbose:
                         filter_value = parser.parse(filter_field.filter_value)
                     else:
                         filter_value = filter_field.filter_value
-                    filter_list = {filter_string: filter_value}
-                
+                    filter_ = {filter_string: filter_value}
+
                 if not filter_field.exclude:
-                    objects = objects.filter(**filter_list)
+                    filters.update(filter_) 
                 else:
-                    objects = objects.exclude(**filter_list)
+                    excludes.update(filter_) 
 
             except Exception, e:
                 message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
                 message += "you found a bug! "
                 message += "If you made this in admin, then you probably did something wrong."
+
+        if filters:
+            objects = objects.filter(**filters)
+        if excludes:
+            objects = objects.exclude(**excludes)
 
         
         # Aggregates
@@ -80,6 +89,7 @@ class Report(models.Model):
         # Distinct
         if report.distinct:
             objects = objects.distinct()
+
 
         return objects
     

@@ -278,7 +278,7 @@ def report_to_list(report, user, preview=False):
     message= ""
     model_class = report.root_model.model_class()
     objects = report.get_query()
-    
+
     # Display Values
     display_field_paths = []
     property_list = {} 
