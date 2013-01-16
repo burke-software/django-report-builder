@@ -344,41 +344,50 @@ def report_to_list(report, user, preview=False):
 
             # get pk in order to retrieve object for adding properties to report rows
             display_field_paths.insert(0, 'pk')
-            values_list = objects.values_list(*display_field_paths)
             values_and_properties_list = []
             filtered_report_rows = []
-
-            for row in values_list:
-                row = list(row)
-                obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
-                remove_row = False
-                values_and_properties_list.append(row)
-                # filter properties (remove rows with excluded properties)
-                for property_filter_label, property_filter in property_filters.iteritems():
-                    val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
-                    if filter_property(property_filter, val):
-                        remove_row = True
-                        values_and_properties_list.pop()
-                        break
-                if not remove_row:
-                    # increment totals for fields
-                    for i, field in enumerate(display_field_paths[1:]):
-                        if field in display_totals.keys():
-                            increment_total(field, display_totals, row[i])
-                    for position, display_property in property_list.iteritems(): 
-                        val = reduce(getattr, display_property.split('__'), obj)
-                        values_and_properties_list[-1].insert(position, val)
-                        increment_total(display_property, display_totals, val)
-                    filtered_report_rows += [values_and_properties_list[-1]]
-                if preview and len(filtered_report_rows) == 50:
+            group = None 
+            for df in report.displayfield_set.all():
+                if df.group:
+                    group = df.field
                     break
-            if display_totals:
-                display_totals_row = ['TOTALS'] + [
-                    '%s: %s' % (
-                        display_totals[t]['label'],
-                        display_totals[t]['val']
-                    ) for t in display_totals
-                ]
+            if group:
+                values_and_properties_list = report.add_aggregates(objects.values_list(group))
+            else:
+                values_list = objects.values_list(*display_field_paths)
+
+            if not group: 
+                for row in values_list:
+                    row = list(row)
+                    obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
+                    remove_row = False
+                    values_and_properties_list.append(row)
+                    # filter properties (remove rows with excluded properties)
+                    for property_filter_label, property_filter in property_filters.iteritems():
+                        val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
+                        if filter_property(property_filter, val):
+                            remove_row = True
+                            values_and_properties_list.pop()
+                            break
+                    if not remove_row:
+                        # increment totals for fields
+                        for i, field in enumerate(display_field_paths[1:]):
+                            if field in display_totals.keys():
+                                increment_total(field, display_totals, row[i])
+                        for position, display_property in property_list.iteritems(): 
+                            val = reduce(getattr, display_property.split('__'), obj)
+                            values_and_properties_list[-1].insert(position, val)
+                            increment_total(display_property, display_totals, val)
+                        filtered_report_rows += [values_and_properties_list[-1]]
+                    if preview and len(filtered_report_rows) == 50:
+                        break
+                if display_totals:
+                    display_totals_row = ['TOTALS'] + [
+                        '%s: %s' % (
+                            display_totals[t]['label'],
+                            display_totals[t]['val']
+                        ) for t in display_totals
+                    ]
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
                 values_list('position', flat=True)
             if sort_fields:

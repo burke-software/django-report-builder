@@ -23,6 +23,22 @@ class Report(models.Model):
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     distinct = models.BooleanField()
+
+
+    def add_aggregates(self, queryset):
+        for display_field in self.displayfield_set.filter(aggregate__isnull=False):
+            if display_field.aggregate == "Avg":
+                queryset = queryset.annotate(Avg(display_field.path + display_field.field))
+            elif display_field.aggregate == "Max":
+                queryset = queryset.annotate(Max(display_field.path + display_field.field))
+            elif display_field.aggregate == "Min":
+                queryset = queryset.annotate(Min(display_field.path + display_field.field))
+            elif display_field.aggregate == "Count":
+                queryset = queryset.annotate(Count(display_field.path + display_field.field))
+            elif display_field.aggregate == "Sum":
+                queryset = queryset.annotate(Sum(display_field.path + display_field.field))
+        return queryset
+
     
     def get_query(self):
         report = self
@@ -72,25 +88,13 @@ class Report(models.Model):
         if excludes:
             objects = objects.exclude(**excludes)
 
-        
         # Aggregates
-        for display_field in report.displayfield_set.filter(aggregate__isnull=False):
-            if display_field.aggregate == "Avg":
-                objects = objects.annotate(Avg(display_field.path + display_field.field))
-            elif display_field.aggregate == "Max":
-                objects = objects.annotate(Max(display_field.path + display_field.field))
-            elif display_field.aggregate == "Min":
-                objects = objects.annotate(Min(display_field.path + display_field.field))
-            elif display_field.aggregate == "Count":
-                objects = objects.annotate(Count(display_field.path + display_field.field))
-            elif display_field.aggregate == "Sum":
-                objects = objects.annotate(Sum(display_field.path + display_field.field))
+        objects = self.add_aggregates(objects) 
 
         # Distinct
         if report.distinct:
             objects = objects.distinct()
-
-
+        
         return objects
     
     @models.permalink
@@ -123,6 +127,7 @@ class DisplayField(models.Model):
     )
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     total = models.BooleanField(default=False)
+    group = models.BooleanField(default=False)
     class Meta:
         ordering = ['position']
     def __unicode__(self):
