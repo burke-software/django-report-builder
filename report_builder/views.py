@@ -129,8 +129,11 @@ def filter_property(filter_field, value):
     # convert dates and datetimes to timestamps in order to compare digits and date/times the same
     if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
         value = str(time.mktime(value.timetuple())) 
-        filter_value_dt = parser.parse(filter_value)
-        filter_value = str(time.mktime(filter_value_dt.timetuple()))
+        try:
+            filter_value_dt = parser.parse(filter_value)
+            filter_value = str(time.mktime(filter_value_dt.timetuple()))
+        except ValueError:
+            pass
     if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
         filtered = False
     if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
