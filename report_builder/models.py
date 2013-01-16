@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
@@ -69,6 +70,11 @@ class Report(models.Model):
                     # All filter values are stored as strings, but may need to be converted
                     if '[Date' in filter_field.field_verbose:
                         filter_value = parser.parse(filter_field.filter_value)
+                        if settings.USE_TZ:
+                            filter_value = timezone.make_aware(
+                                filter_value,
+                                timezone.get_current_timezone()
+                            )
                     else:
                         filter_value = filter_field.filter_value
                     filter_ = {filter_string: filter_value}
@@ -94,7 +100,7 @@ class Report(models.Model):
         # Distinct
         if report.distinct:
             objects = objects.distinct()
-        
+
         return objects
     
     @models.permalink
