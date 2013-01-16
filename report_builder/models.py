@@ -67,7 +67,7 @@ class Report(models.Model):
                     filter_ = {filter_string: False}
                 else:
                     # All filter values are stored as strings, but may need to be converted
-                    if '[DateField]' in filter_field.field_verbose:
+                    if '[Date' in filter_field.field_verbose:
                         filter_value = parser.parse(filter_field.filter_value)
                     else:
                         filter_value = filter_field.filter_value
