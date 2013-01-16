@@ -111,6 +111,7 @@
                   <th>Width</th>
                   <th>Aggregate</th>
                   <th>Total</th>
+                  <th>Group</th>
                   <th>Delete?</th>
                 </tr>
               </thead>
@@ -127,6 +128,7 @@
                     <td>{{ form.width }}</td>
                     <td onclick="aggregate_tip()">{{ form.aggregate }}</td>
                     <td>{{ form.total }}</td>
+                    <td>{{ form.group }}</td>
                     <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
                   </tr>
                 {% endfor %}

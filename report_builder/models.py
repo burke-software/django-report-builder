@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
@@ -23,6 +24,22 @@ class Report(models.Model):
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     distinct = models.BooleanField()
+
+
+    def add_aggregates(self, queryset):
+        for display_field in self.displayfield_set.filter(aggregate__isnull=False):
+            if display_field.aggregate == "Avg":
+                queryset = queryset.annotate(Avg(display_field.path + display_field.field))
+            elif display_field.aggregate == "Max":
+                queryset = queryset.annotate(Max(display_field.path + display_field.field))
+            elif display_field.aggregate == "Min":
+                queryset = queryset.annotate(Min(display_field.path + display_field.field))
+            elif display_field.aggregate == "Count":
+                queryset = queryset.annotate(Count(display_field.path + display_field.field))
+            elif display_field.aggregate == "Sum":
+                queryset = queryset.annotate(Sum(display_field.path + display_field.field))
+        return queryset
+
     
     def get_query(self):
         report = self
@@ -31,6 +48,10 @@ class Report(models.Model):
         objects = model_class.objects.all()
 
         # Filters
+        # NOTE: group all the filters together into one in order to avoid 
+        # unnecessary joins
+        filters = {}
+        excludes = {}
         for filter_field in report.filterfield_set.all():
             try:
                 # exclude properties from standard ORM filtering 
@@ -44,38 +65,37 @@ class Report(models.Model):
                 
                 # Check for special types such as isnull
                 if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
-                    filter_list = {filter_string: False}
+                    filter_ = {filter_string: False}
                 else:
                     # All filter values are stored as strings, but may need to be converted
-                    if '[DateField]' in filter_field.field_verbose:
+                    if '[Date' in filter_field.field_verbose:
                         filter_value = parser.parse(filter_field.filter_value)
+                        if settings.USE_TZ:
+                            filter_value = timezone.make_aware(
+                                filter_value,
+                                timezone.get_current_timezone()
+                            )
                     else:
                         filter_value = filter_field.filter_value
-                    filter_list = {filter_string: filter_value}
-                
+                    filter_ = {filter_string: filter_value}
+
                 if not filter_field.exclude:
-                    objects = objects.filter(**filter_list)
+                    filters.update(filter_) 
                 else:
-                    objects = objects.exclude(**filter_list)
+                    excludes.update(filter_) 
 
             except Exception, e:
                 message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
                 message += "you found a bug! "
                 message += "If you made this in admin, then you probably did something wrong."
 
-        
+        if filters:
+            objects = objects.filter(**filters)
+        if excludes:
+            objects = objects.exclude(**excludes)
+
         # Aggregates
-        for display_field in report.displayfield_set.filter(aggregate__isnull=False):
-            if display_field.aggregate == "Avg":
-                objects = objects.annotate(Avg(display_field.path + display_field.field))
-            elif display_field.aggregate == "Max":
-                objects = objects.annotate(Max(display_field.path + display_field.field))
-            elif display_field.aggregate == "Min":
-                objects = objects.annotate(Min(display_field.path + display_field.field))
-            elif display_field.aggregate == "Count":
-                objects = objects.annotate(Count(display_field.path + display_field.field))
-            elif display_field.aggregate == "Sum":
-                objects = objects.annotate(Sum(display_field.path + display_field.field))
+        objects = self.add_aggregates(objects) 
 
         # Distinct
         if report.distinct:
@@ -113,8 +133,36 @@ class DisplayField(models.Model):
     )
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     total = models.BooleanField(default=False)
+    group = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['position']
+    
+    def get_choices(self, path, field_name):
+        model_name = path.split(':')[-1]
+        model = ContentType.objects.get(model=model_name).model_class()
+        try:
+            model_field = model._meta.get_field_by_name(field_name)[0]
+        except:
+            model_field = None
+        if model_field and model_field.choices:
+            return model_field.choices
+
+    @property
+    def choices_dict(self):
+        choices = self.choices
+        choices_dict = {}
+        if choices:
+            for choice in choices:
+                choices_dict.update({choice[0]: choice[1]})
+        return choices_dict
+
+    @property
+    def choices(self):
+        if self.pk:
+            path = self.path_verbose or self.report.root_model.model
+            return self.get_choices(path, self.field)
+
     def __unicode__(self):
         return self.name
         
@@ -159,19 +207,22 @@ class FilterField(models.Model):
     class Meta:
         ordering = ['position']
 
+    def get_choices(self, path, field_name):
+        model_name = path.split(':')[-1]
+        model = ContentType.objects.get(model=model_name).model_class()
+        try:
+            model_field = model._meta.get_field_by_name(field_name)[0]
+        except:
+            model_field = None
+        if model_field and model_field.choices:
+            return model_field.choices
+
     @property
     def choices(self):
         if self.pk:
-            field_name = self.field
-            model_name = self.path_verbose.split(':')[-1] or self.report.root_model.model
-            model = ContentType.objects.get(model=model_name).model_class()
-            try:
-                model_field = model._meta.get_field_by_name(field_name)[0]
-            except:
-                model_field = None
-            if model_field and model_field.choices:
-                return model_field.choices
-    
+            path = self.path_verbose or self.report.root_model.model
+            return self.get_choices(path, self.field)
+
     def __unicode__(self):
         return self.field
     
