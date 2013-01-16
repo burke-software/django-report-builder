@@ -352,7 +352,7 @@ def report_to_list(report, user, preview=False):
                     group = df.field
                     break
             if group:
-                values_and_properties_list = report.add_aggregates(objects.values_list(group))
+                filtered_report_rows = report.add_aggregates(objects.values_list(group))
             else:
                 values_list = objects.values_list(*display_field_paths)
 
