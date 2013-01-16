@@ -401,6 +401,22 @@ def report_to_list(report, user, preview=False):
         else:
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
+
+        # add choice list display
+        choice_lists = {} 
+        final_list = []
+        for df in report.displayfield_set.all():
+            if df.choices:
+                choice_lists.update({df.position: df.choices_dict}) 
+        if choice_lists:
+            for row in values_and_properties_list:
+                row = list(row)
+                for position, choice_list in choice_lists.iteritems():
+                    row[position-1] = choice_list[row[position-1]]
+                    final_list.append(row)
+            values_and_properties_list = final_list
+                
+
     except exceptions.FieldError:
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."

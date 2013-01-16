@@ -128,8 +128,35 @@ class DisplayField(models.Model):
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['position']
+    
+    def get_choices(self, path, field_name):
+        model_name = path.split(':')[-1]
+        model = ContentType.objects.get(model=model_name).model_class()
+        try:
+            model_field = model._meta.get_field_by_name(field_name)[0]
+        except:
+            model_field = None
+        if model_field and model_field.choices:
+            return model_field.choices
+
+    @property
+    def choices_dict(self):
+        choices = self.choices
+        choices_dict = {}
+        if choices:
+            for choice in choices:
+                choices_dict.update({choice[0]: choice[1]})
+        return choices_dict
+
+    @property
+    def choices(self):
+        if self.pk:
+            path = self.path_verbose or self.report.root_model.model
+            return self.get_choices(path, self.field)
+
     def __unicode__(self):
         return self.name
         
