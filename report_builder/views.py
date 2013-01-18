@@ -128,8 +128,11 @@ def filter_property(filter_field, value):
     # convert dates and datetimes to timestamps in order to compare digits and date/times the same
     if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
         value = str(time.mktime(value.timetuple())) 
-        filter_value_dt = parser.parse(filter_value)
-        filter_value = str(time.mktime(filter_value_dt.timetuple()))
+        try:
+            filter_value_dt = parser.parse(filter_value)
+            filter_value = str(time.mktime(filter_value_dt.timetuple()))
+        except ValueError:
+            pass
     if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
         filtered = False
     if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
@@ -205,18 +208,19 @@ def ajax_get_fields(request):
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
     properties = get_properties_from_model(model)
+    root_model = model.__name__.lower()
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
             'properties': properties,
-
+            'root_model': root_model,
         }, RequestContext(request, {}),)
     
     field = model._meta.get_field_by_name(field_name)
     if path_verbose:
         path_verbose += "::"
-    # TODO: need actual model name to generate choic list (not pluralized field name)
+    # TODO: need actual model name to generate choice list (not pluralized field name)
     # - maybe store this as a separate value?
     if field[3]:
         path_verbose += field[0].m2m_reverse_field_name()
@@ -228,9 +232,11 @@ def ajax_get_fields(request):
     if field[2]:
         # Direct field
         new_model = field[0].related.parent_model
+        path_verbose = new_model.__name__.lower()
     else:
         # Indirect related field
         new_model = field[0].model
+        path_verbose = new_model.__name__.lower()
    
     fields = get_direct_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
@@ -240,14 +246,17 @@ def ajax_get_fields(request):
         'properties': properties,
         'path': path,
         'path_verbose': path_verbose,
+        'root_model': root_model,
     }, RequestContext(request, {}),)
 
 def ajax_get_choices(request):
-    # TODO: get choices from model (like FilterField.choices) - make repurposable?
-    #choices = FilterField.objects.get(pk=int(request.GET.get('filter_field_pk'))).choices 
-    #return HttpResponse(choices)
-    #return choices
-    return ''
+    path_verbose = request.GET.get('path_verbose')
+    label = request.GET.get('label')
+    root_model = request.GET.get('root_model')
+    choices = FilterField().get_choices(path_verbose or root_model, label)
+    select_widget = forms.Select(choices=choices)
+    options_html = select_widget.render_options(select_widget.choices, [0])
+    return HttpResponse(options_html)
 
 def get_model_from_path_string(root_model, path):
     """ Return a model class for a related model
@@ -271,7 +280,7 @@ def report_to_list(report, user, preview=False):
     message= ""
     model_class = report.root_model.model_class()
     objects = report.get_query()
-    
+
     # Display Values
     display_field_paths = []
     property_list = {} 
@@ -334,41 +343,50 @@ def report_to_list(report, user, preview=False):
 
             # get pk in order to retrieve object for adding properties to report rows
             display_field_paths.insert(0, 'pk')
-            values_list = objects.values_list(*display_field_paths)
             values_and_properties_list = []
             filtered_report_rows = []
-
-            for row in values_list:
-                row = list(row)
-                obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
-                remove_row = False
-                values_and_properties_list.append(row)
-                # filter properties (remove rows with excluded properties)
-                for property_filter_label, property_filter in property_filters.iteritems():
-                    val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
-                    if filter_property(property_filter, val):
-                        remove_row = True
-                        values_and_properties_list.pop()
-                        break
-                if not remove_row:
-                    # increment totals for fields
-                    for i, field in enumerate(display_field_paths[1:]):
-                        if field in display_totals.keys():
-                            increment_total(field, display_totals, row[i])
-                    for position, display_property in property_list.iteritems(): 
-                        val = reduce(getattr, display_property.split('__'), obj)
-                        values_and_properties_list[-1].insert(position, val)
-                        increment_total(display_property, display_totals, val)
-                    filtered_report_rows += [values_and_properties_list[-1]]
-                if preview and len(filtered_report_rows) == 50:
+            group = None 
+            for df in report.displayfield_set.all():
+                if df.group:
+                    group = df.field
                     break
-            if display_totals:
-                display_totals_row = ['TOTALS'] + [
-                    '%s: %s' % (
-                        display_totals[t]['label'],
-                        display_totals[t]['val']
-                    ) for t in display_totals
-                ]
+            if group:
+                filtered_report_rows = report.add_aggregates(objects.values_list(group))
+            else:
+                values_list = objects.values_list(*display_field_paths)
+
+            if not group: 
+                for row in values_list:
+                    row = list(row)
+                    obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
+                    remove_row = False
+                    values_and_properties_list.append(row)
+                    # filter properties (remove rows with excluded properties)
+                    for property_filter_label, property_filter in property_filters.iteritems():
+                        val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
+                        if filter_property(property_filter, val):
+                            remove_row = True
+                            values_and_properties_list.pop()
+                            break
+                    if not remove_row:
+                        # increment totals for fields
+                        for i, field in enumerate(display_field_paths[1:]):
+                            if field in display_totals.keys():
+                                increment_total(field, display_totals, row[i])
+                        for position, display_property in property_list.iteritems(): 
+                            val = reduce(getattr, display_property.split('__'), obj)
+                            values_and_properties_list[-1].insert(position, val)
+                            increment_total(display_property, display_totals, val)
+                        filtered_report_rows += [values_and_properties_list[-1]]
+                    if preview and len(filtered_report_rows) == 50:
+                        break
+                if display_totals:
+                    display_totals_row = ['TOTALS'] + [
+                        '%s: %s' % (
+                            display_totals[t]['label'],
+                            display_totals[t]['val']
+                        ) for t in display_totals
+                    ]
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
                 values_list('position', flat=True)
             if sort_fields:
@@ -382,6 +400,22 @@ def report_to_list(report, user, preview=False):
         else:
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
+
+        # add choice list display
+        choice_lists = {} 
+        final_list = []
+        for df in report.displayfield_set.all():
+            if df.choices:
+                choice_lists.update({df.position: df.choices_dict}) 
+        if choice_lists:
+            for row in values_and_properties_list:
+                row = list(row)
+                for position, choice_list in choice_lists.iteritems():
+                    row[position-1] = choice_list[row[position-1]]
+                    final_list.append(row)
+            values_and_properties_list = final_list
+                
+
     except exceptions.FieldError:
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
@@ -450,6 +484,7 @@ class ReportUpdateView(UpdateView):
         ctx['fields'] = direct_fields
         ctx['properties'] = properties
         ctx['model_ct'] = model_ct
+        ctx['root_model'] = model_ct.model
         
         return ctx
 

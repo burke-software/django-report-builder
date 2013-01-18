@@ -63,13 +63,29 @@ function enable_drag() {
             row_html += '<td><input type="text" name="displayfield_set-'+i+'-width" class="small_input" value="15" id="id_displayfield_set-'+i+'-width"></td>';
             row_html += '<td onclick="aggregate_tip(event)"><select id="id_displayfield_set-'+i+'-aggregate" name="displayfield_set-'+i+'-aggregate"><option selected="selected" value="">---------</option><option value="Sum">Sum</option><option value="Count">Count</option><option value="Avg">Avg</option><option value="Max">Max</option><option value="Min">Min</option></select></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-total" id="id_displayfield_set-'+i+'-total"></td>';
+            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-group" id="id_displayfield_set-'+i+'-group"></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-DELETE" id="id_displayfield_set-'+i+'-DELETE">';
             row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="'+total_forms.val()+'" id="id_displayfield_set-'+i+'-position"></span></td>';
             row_html += '</tr>';
             $('#field_list_table > tbody:last').append(row_html);
         }
     });
-    $( "#field_filter_droppable" ).droppable({
+
+
+    $("span.button[data-choices='true']").mousedown(function() {
+        $.get('/report_builder/ajax_get_choices/', {
+            'path_verbose': $(this).data('path_verbose'),
+            'label': $(this).data('label'),
+            'root_model': $(this).data('root_model'),
+            },
+            function(data) {
+                $("span.button[data-choices='true']").data('choices', data);
+            }
+        );
+    });
+
+
+    $("#field_filter_droppable" ).droppable({
         drop: function( event, ui ) {
             field = $.trim($(ui.draggable).text());
             name = $.trim($(ui.draggable).children().data('name'));
@@ -119,8 +135,7 @@ function enable_drag() {
             if ( field.indexOf("DateField") > 0 ) {
             	row_html += '<td><input class="datepicker" id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             } else if (choices) {
-                //row_html += get_choices(path_verbose, label)
-                row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
+                row_html += '<td><select id="id_fil-'+i+'-filter_value" name="fil-'+i+'-filter_value">'+choices+'</select></td>'
             } else {
                 row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             }
@@ -131,12 +146,6 @@ function enable_drag() {
             $('#field_filter_table > tbody:last').append(row_html);
             $( ".datepicker" ).datepicker();
         }
-    });
-}
-
-function get_choices(filter_field_pk) {
-    $.get('/report_builder/ajax_get_choices/', {'filter_field_pk': filter_field_pk}, function(data) {
-        return data
     });
 }
 
