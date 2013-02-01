@@ -412,7 +412,11 @@ def report_to_list(report, user, preview=False):
         final_list = []
         for df in report.displayfield_set.all():
             if df.choices:
-                choice_lists.update({df.position: df.choices_dict}) 
+                df_choices = df.choices_dict
+                # Insert blank and None as valid choices
+                df_choices[''] = ''
+                df_choices[None] = ''
+                choice_lists.update({df.position: df_choices}) 
         if choice_lists:
             for row in values_and_properties_list:
                 row = list(row)
