@@ -386,13 +386,6 @@ def report_to_list(report, user, preview=False):
                         filtered_report_rows += [values_and_properties_list[-1]]
                     if preview and len(filtered_report_rows) == 50:
                         break
-                if display_totals:
-                    display_totals_row = ['TOTALS'] + [
-                        '%s: %s' % (
-                            display_totals[t]['label'],
-                            display_totals[t]['val']
-                        ) for t in display_totals
-                    ]
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
                 values_list('position', flat=True)
             if sort_fields:
@@ -401,8 +394,6 @@ def report_to_list(report, user, preview=False):
                     filtered_report_rows,
                     key=lambda x: get_key(x).lower() if isinstance(get_key(x), basestring) else get_key(x)
                 )
-            if display_totals:
-                values_and_properties_list = values_and_properties_list + [display_totals_row]
         else:
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
@@ -424,6 +415,25 @@ def report_to_list(report, user, preview=False):
                     row[position-1] = choice_list[row[position-1]]
                     final_list.append(row)
             values_and_properties_list = final_list
+
+        # add display totals for grouped result sets
+        if group:
+            # increment totals for fields
+            for row in values_and_properties_list: 
+                for i, field in enumerate(display_field_paths[1:]):
+                    if field in display_totals.keys():
+                        increment_total(field, display_totals, row[i])
+
+        if display_totals:
+            display_totals_row = ['TOTALS'] + [
+                '%s: %s' % (
+                    display_totals[t]['label'],
+                    display_totals[t]['val']
+                ) for t in display_totals
+            ]
+
+        if display_totals:
+            values_and_properties_list = values_and_properties_list + [display_totals_row]
                 
 
     except exceptions.FieldError:
