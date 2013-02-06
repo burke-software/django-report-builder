@@ -52,7 +52,6 @@ class DisplayFieldForm(forms.ModelForm):
         
 
 class FilterFieldForm(forms.ModelForm):
-
     class Meta:
         model = FilterField
         widgets = {
@@ -116,50 +115,56 @@ def filter_property(filter_field, value):
         'saturday': 5,
         'sunday': 6,
     }
-    if filter_type == 'exact' and str(value) == filter_value:
-        filtered = False
-    if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
-        filtered = False
-    if filter_type == 'contains' and filter_value in value:
-        filtered = False
-    if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
-        filtered = False
-    if filter_type == 'in' and value in filter_value:
-        filtered = False
-    # convert dates and datetimes to timestamps in order to compare digits and date/times the same
-    if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
-        value = str(time.mktime(value.timetuple())) 
-        try:
-            filter_value_dt = parser.parse(filter_value)
-            filter_value = str(time.mktime(filter_value_dt.timetuple()))
-        except ValueError:
-            pass
-    if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
-        filtered = False
-    if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
-        filtered = False
-    if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
-        filtered = False
-    if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
-        filtered = False
-    if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
-        filtered = False
-    if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
-        filtered = False
-    if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
-        filtered = False
-    if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
-        filtered = False
-    if filter_type == 'range' and value in [int(x) for x in filter_value]:
-        filtered = False
-    if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
-        filtered = False
-    if filter_type == 'isnull' and value == None:
-        filtered = False
-    if filter_type == 'regex' and re.search(filter_value, value):
-        filtered = False
-    if filter_type == 'iregex' and re.search(filter_value, value, re.I):
-        filtered = False
+    #TODO instead of catch all, deal with all cases
+    # Example is 'a' < 2 is a valid python comparison
+    # But what about 2 < '1' which yeilds true! Not intuitive for humans.
+    try:
+        if filter_type == 'exact' and str(value) == filter_value:
+            filtered = False
+        if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
+            filtered = False
+        if filter_type == 'contains' and filter_value in value:
+            filtered = False
+        if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
+            filtered = False
+        if filter_type == 'in' and value in filter_value:
+            filtered = False
+        # convert dates and datetimes to timestamps in order to compare digits and date/times the same
+        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
+            value = str(time.mktime(value.timetuple())) 
+            try:
+                filter_value_dt = parser.parse(filter_value)
+                filter_value = str(time.mktime(filter_value_dt.timetuple()))
+            except ValueError:
+                pass
+        if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
+            filtered = False
+        if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
+            filtered = False
+        if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
+            filtered = False
+        if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
+            filtered = False
+        if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'range' and value in [int(x) for x in filter_value]:
+            filtered = False
+        if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
+            filtered = False
+        if filter_type == 'isnull' and value == None:
+            filtered = False
+        if filter_type == 'regex' and re.search(filter_value, value):
+            filtered = False
+        if filter_type == 'iregex' and re.search(filter_value, value, re.I):
+            filtered = False
+    except:
+        pass
 
     if filter_field.exclude:
         return not filtered
@@ -398,7 +403,11 @@ def report_to_list(report, user, preview=False):
         final_list = []
         for df in report.displayfield_set.all():
             if df.choices:
-                choice_lists.update({df.position: df.choices_dict}) 
+                df_choices = df.choices_dict
+                # Insert blank and None as valid choices
+                df_choices[''] = ''
+                df_choices[None] = ''
+                choice_lists.update({df.position: df_choices}) 
         if choice_lists:
             for row in values_and_properties_list:
                 row = list(row)
@@ -465,7 +474,8 @@ class ReportUpdateView(UpdateView):
         ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
         model_class = self.object.root_model.model_class()
         model_ct = ContentType.objects.get_for_model(model_class)
-        
+        properties = get_properties_from_model(model_class)
+
         direct_fields = get_direct_fields_from_model(model_class)
         relation_fields = get_relation_fields_from_model(model_class)
         
@@ -492,6 +502,7 @@ class ReportUpdateView(UpdateView):
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
+        ctx['properties'] = properties
         ctx['model_ct'] = model_ct
         ctx['root_model'] = model_ct.model
         

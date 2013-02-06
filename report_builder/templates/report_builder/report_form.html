@@ -1,13 +1,15 @@
 {% load url from future %}
 
-<link rel="stylesheet" type="text/css" href="/static/report_builder/css/report_form.css" />
-<script src="/static/report_builder/js/jquery-1.8.2.min.js" type="text/javascript" ></script>
-<script src="/static/report_builder/js/report_form.js" type="text/javascript" ></script>
+{% block report_header %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}report_builder/css/report_form.css" />
+<script src="{{ STATIC_URL }}report_builder/js/jquery-1.8.2.min.js" type="text/javascript" ></script>
+<script src="{{ STATIC_URL }}report_builder/js/report_form.js" type="text/javascript" ></script>
 
-<link rel="stylesheet" href="/static/jquery-ui-1.9.1/css/smoothness/jquery-ui-1.9.1.custom.min.css" />
-<script src="/static/jquery-ui-1.9.1/js/jquery-ui-1.9.1.custom.min.js"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}jquery-ui-1.9.1/css/smoothness/jquery-ui-1.9.1.custom.min.css" />
+<script src="{{ STATIC_URL }}jquery-ui-1.9.1/js/jquery-ui-1.9.1.custom.min.js"></script>
+{% endblock %}
 
-<body>
+{% block report_form %}
 <div id="container">
   <form action="" method="post">{% csrf_token %}
     <header>
@@ -145,4 +147,4 @@
     </section>
   </form>
 </div>
-</body>
+{% endblock %}

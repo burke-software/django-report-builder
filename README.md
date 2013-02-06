@@ -13,12 +13,12 @@ What's finished?
 - Preview and create xlsx reports
 - Very simple security, user must have change or "view" permission to view 
 reports. Unprivileged users can still build reports and see database schema.
+- Model properties (thanks yekibud)
 
 What isn't
 - "or" filters together
 - More exports, views
 - Decent form validation
-- Functions in display fields
 - Support for django-custom-fields
 
 # Installation
