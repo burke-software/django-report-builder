@@ -1,11 +1,10 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db.models import Avg, Max, Min, Count, Sum, CharField
-from django.db.models.manager import Manager
 from django.forms.models import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
@@ -93,6 +92,18 @@ def get_direct_fields_from_model(model_class):
         if field[2] and not field[3] and field[0].__class__.__name__ != "ForeignKey":
             direct_fields += [field[0]]
     return direct_fields
+
+def get_custom_fields_from_model(model_class):
+    """ django-custom-fields support
+    """
+    if 'custom_field' in settings.INSTALLED_APPS:
+        from custom_field.models import CustomField
+        try:
+            content_type = ContentType.objects.get(model=model_class._meta.module_name,app_label=model_class._meta.app_label)
+        except ContentType.DoesNotExist:
+            content_type = None
+        custom_fields = CustomField.objects.filter(content_type=content_type)
+        return custom_fields
 
 def get_properties_from_model(model_class):
     properties = []
@@ -213,13 +224,21 @@ def ajax_get_fields(request):
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
-    properties = get_properties_from_model(model)
+    if path:
+        # If there is a path, properties are not allowed as it will
+        # break things. See issues #10 and #11
+        properties = None
+        custom_fields = None
+    else:
+        properties = get_properties_from_model(model)
+        custom_fields = get_custom_fields_from_model(model)
     root_model = model.__name__.lower()
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
             'properties': properties,
+            'custom_fields': custom_fields,
             'root_model': root_model,
         }, RequestContext(request, {}),)
     
@@ -228,7 +247,7 @@ def ajax_get_fields(request):
         path_verbose += "::"
     # TODO: need actual model name to generate choice list (not pluralized field name)
     # - maybe store this as a separate value?
-    if field[3]:
+    if field[3] and hasattr(field[0], 'm2m_reverse_field_name'):
         path_verbose += field[0].m2m_reverse_field_name()
     else:
         path_verbose += field[0].name
@@ -245,10 +264,13 @@ def ajax_get_fields(request):
         path_verbose = new_model.__name__.lower()
    
     fields = get_direct_fields_from_model(new_model)
-    properties = get_properties_from_model(new_model)
+    if not path:
+        custom_fields = get_custom_fields_from_model(new_model)
+        properties = get_properties_from_model(new_model)
     
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
+        'custom_fields': custom_fields,
         'properties': properties,
         'path': path,
         'path_verbose': path_verbose,
@@ -289,7 +311,8 @@ def report_to_list(report, user, preview=False):
 
     # Display Values
     display_field_paths = []
-    property_list = {} 
+    property_list = {}
+    custom_list = {}
     display_totals = {}
     def append_display_total(display_totals, display_field, display_field_key):
         if display_field.total:
@@ -304,6 +327,9 @@ def report_to_list(report, user, preview=False):
             display_field_key = display_field.path + display_field.field
             if '[property]' in display_field.field_verbose:
                 property_list[i] = display_field_key 
+                append_display_total(display_totals, display_field, display_field_key)
+            elif '[custom' in display_field.field_verbose:
+                custom_list[i] = display_field_key 
                 append_display_total(display_totals, display_field, display_field_key)
             elif display_field.aggregate == "Avg":
                 display_field_key += '__avg'
@@ -383,6 +409,10 @@ def report_to_list(report, user, preview=False):
                             val = reduce(getattr, display_property.split('__'), obj)
                             values_and_properties_list[-1].insert(position, val)
                             increment_total(display_property, display_totals, val)
+                        for position, display_custom in custom_list.iteritems(): 
+                            val = obj.get_custom_value(display_custom)
+                            values_and_properties_list[-1].insert(position, val)
+                            increment_total(display_custom, display_totals, val)
                         filtered_report_rows += [values_and_properties_list[-1]]
                     if preview and len(filtered_report_rows) == 50:
                         break
@@ -475,6 +505,7 @@ class ReportUpdateView(UpdateView):
         model_class = self.object.root_model.model_class()
         model_ct = ContentType.objects.get_for_model(model_class)
         properties = get_properties_from_model(model_class)
+        custom_fields = get_custom_fields_from_model(model_class)
 
         direct_fields = get_direct_fields_from_model(model_class)
         relation_fields = get_relation_fields_from_model(model_class)
@@ -502,6 +533,7 @@ class ReportUpdateView(UpdateView):
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
+        ctx['custom_fields'] = custom_fields
         ctx['properties'] = properties
         ctx['model_ct'] = model_ct
         ctx['root_model'] = model_ct.model

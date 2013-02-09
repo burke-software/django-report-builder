@@ -19,7 +19,7 @@ class Report(models.Model):
         return models
     
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(verbose_name="Short Name")
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
@@ -56,6 +56,8 @@ class Report(models.Model):
             try:
                 # exclude properties from standard ORM filtering 
                 if '[property]' in filter_field.field_verbose:
+                    continue
+                if '[custom' in filter_field.field_verbose:
                     continue
 
                 filter_string = str(filter_field.path + filter_field.field)
