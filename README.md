@@ -14,12 +14,12 @@ What's finished?
 - Very simple security, user must have change or "view" permission to view 
 reports. Unprivileged users can still build reports and see database schema.
 - Model properties (thanks yekibud)
+- Support for [django-custom-fields](http://code.google.com/p/django-custom-field/)
 
 What isn't
 - "or" filters together
 - More exports, views
 - Decent form validation
-- Support for django-custom-fields
 
 # Installation
 
