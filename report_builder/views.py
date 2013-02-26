@@ -66,6 +66,8 @@ class FilterFieldForm(forms.ModelForm):
         # override the filter_value field with the models native ChoiceField
         if self.instance.choices:
             self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
+        if 'DateField' in self.instance.field_verbose:
+            self.fields['filter_value'].widget.attrs['class'] = 'datepicker';
 
 
 class ReportCreateView(CreateView):
