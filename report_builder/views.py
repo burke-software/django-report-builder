@@ -226,14 +226,8 @@ def ajax_get_fields(request):
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
-    if path:
-        # If there is a path, properties are not allowed as it will
-        # break things. See issues #10 and #11
-        properties = None
-        custom_fields = None
-    else:
-        properties = get_properties_from_model(model)
-        custom_fields = get_custom_fields_from_model(model)
+    properties = get_properties_from_model(model)
+    custom_fields = get_custom_fields_from_model(model)
     root_model = model.__name__.lower()
 
     if field_name == '':
