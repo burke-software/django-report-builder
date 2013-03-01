@@ -3,6 +3,7 @@ from django.core import exceptions
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
+from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -112,6 +113,7 @@ def get_properties_from_model(model_class):
     for attr_name, attr in dict(model_class.__dict__).iteritems():
         if type(attr) == property:
             properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
+    print properties, model_class
     return sorted(properties)
 
 def filter_property(filter_field, value):
@@ -369,8 +371,17 @@ def report_to_list(report, user, preview=False):
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
 
-            # get pk in order to retrieve object for adding properties to report rows
+            # get pk for primary and m2m relations in order to retrieve objects 
+            # for adding properties to report rows
             display_field_paths.insert(0, 'pk')
+            m2m_relations = []
+            for position, property_path in property_list.iteritems():
+                property_root = property_path.split('__')[0]
+                root_class = report.root_model.model_class()
+                property_root_class = getattr(root_class, property_root)
+                if type(property_root_class) == ReverseManyRelatedObjectsDescriptor:
+                    display_field_paths.insert(1, '%s__pk' % property_root)
+                    m2m_relations.append(property_root)
             values_and_properties_list = []
             filtered_report_rows = []
             group = None 
@@ -387,6 +398,7 @@ def report_to_list(report, user, preview=False):
                 for row in values_list:
                     row = list(row)
                     obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
+                    #related_objects
                     remove_row = False
                     values_and_properties_list.append(row)
                     # filter properties (remove rows with excluded properties)
@@ -402,7 +414,18 @@ def report_to_list(report, user, preview=False):
                             if field in display_totals.keys():
                                 increment_total(field, display_totals, row[i])
                         for position, display_property in property_list.iteritems(): 
-                            val = reduce(getattr, display_property.split('__'), obj)
+                            relations = display_property.split('__')
+                            root_relation = relations[0]
+                            if root_relation in m2m_relations: 
+                                pk = row.pop(0)
+                                if pk is not None:
+                                    # a related object exists
+                                    m2m_obj = getattr(obj, root_relation).get(pk=pk)
+                                    val = reduce(getattr, relations[1:], m2m_obj)
+                                else:
+                                    val = None
+                            else:
+                                val = reduce(getattr, relations, obj)
                             values_and_properties_list[-1].insert(position, val)
                             increment_total(display_property, display_totals, val)
                         for position, display_custom in custom_list.iteritems(): 
