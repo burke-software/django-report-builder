@@ -262,10 +262,9 @@ def ajax_get_fields(request):
         path_verbose = new_model.__name__.lower()
    
     fields = get_direct_fields_from_model(new_model)
-    if not path:
-        custom_fields = get_custom_fields_from_model(new_model)
-        properties = get_properties_from_model(new_model)
-    
+    custom_fields = get_custom_fields_from_model(new_model)
+    properties = get_properties_from_model(new_model)
+
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
         'custom_fields': custom_fields,
