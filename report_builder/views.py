@@ -113,7 +113,6 @@ def get_properties_from_model(model_class):
     for attr_name, attr in dict(model_class.__dict__).iteritems():
         if type(attr) == property:
             properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
-    print properties, model_class
     return sorted(properties)
 
 def filter_property(filter_field, value):
@@ -402,7 +401,17 @@ def report_to_list(report, user, preview=False):
                     values_and_properties_list.append(row)
                     # filter properties (remove rows with excluded properties)
                     for property_filter_label, property_filter in property_filters.iteritems():
-                        val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
+                        root_relation = property_filter.path.split('__')[0]
+                        if root_relation in m2m_relations: 
+                            pk = row[0]
+                            if pk is not None:
+                                # a related object exists
+                                m2m_obj = getattr(obj, root_relation).get(pk=pk)
+                                val = reduce(getattr, [property_filter.field], m2m_obj)
+                            else:
+                                val = None
+                        else:
+                            val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
                         if filter_property(property_filter, val):
                             remove_row = True
                             values_and_properties_list.pop()
