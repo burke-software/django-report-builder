@@ -385,13 +385,13 @@ def report_to_list(report, user, preview=False):
             group = None 
             for df in report.displayfield_set.all():
                 if df.group:
-                    group = df.field
+                    group = df.path + df.field
                     break
             if group:
                 filtered_report_rows = report.add_aggregates(objects.values_list(group))
             else:
                 values_list = objects.values_list(*display_field_paths)
-
+                
             if not group: 
                 for row in values_list:
                     row = list(row)
@@ -451,6 +451,8 @@ def report_to_list(report, user, preview=False):
                     filtered_report_rows,
                     key=lambda x: get_key(x).lower() if isinstance(get_key(x), basestring) else get_key(x)
                 )
+            else:
+                values_and_properties_list = filtered_report_rows
         else:
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
