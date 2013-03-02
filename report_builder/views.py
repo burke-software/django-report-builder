@@ -611,7 +611,12 @@ def download_xlsx(request, pk):
     
     objects_list, message = report_to_list(report, request.user)
     for row in objects_list:
-        ws.append(row)
+        try:
+            ws.append(row)
+        except ValueError as e:
+            ws.append([e.message])
+        except:
+            ws.append(['Unknown Error'])
     
     myfile = StringIO.StringIO()
     myfile.write(save_virtual_workbook(wb))
