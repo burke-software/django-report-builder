@@ -3,6 +3,7 @@ from django.core import exceptions
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
+from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -66,6 +67,8 @@ class FilterFieldForm(forms.ModelForm):
         # override the filter_value field with the models native ChoiceField
         if self.instance.choices:
             self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
+        if 'DateField' in self.instance.field_verbose:
+            self.fields['filter_value'].widget.attrs['class'] = 'datepicker';
 
 
 class ReportCreateView(CreateView):
@@ -224,14 +227,8 @@ def ajax_get_fields(request):
     model = ContentType.objects.get(pk=request.GET['model']).model_class()
     path = request.GET['path']
     path_verbose = request.GET.get('path_verbose')
-    if path:
-        # If there is a path, properties are not allowed as it will
-        # break things. See issues #10 and #11
-        properties = None
-        custom_fields = None
-    else:
-        properties = get_properties_from_model(model)
-        custom_fields = get_custom_fields_from_model(model)
+    properties = get_properties_from_model(model)
+    custom_fields = get_custom_fields_from_model(model)
     root_model = model.__name__.lower()
 
     if field_name == '':
@@ -264,10 +261,9 @@ def ajax_get_fields(request):
         path_verbose = new_model.__name__.lower()
    
     fields = get_direct_fields_from_model(new_model)
-    if not path:
-        custom_fields = get_custom_fields_from_model(new_model)
-        properties = get_properties_from_model(new_model)
-    
+    custom_fields = get_custom_fields_from_model(new_model)
+    properties = get_properties_from_model(new_model)
+
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
         'custom_fields': custom_fields,
@@ -373,29 +369,49 @@ def report_to_list(report, user, preview=False):
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
 
-            # get pk in order to retrieve object for adding properties to report rows
+            # get pk for primary and m2m relations in order to retrieve objects 
+            # for adding properties to report rows
             display_field_paths.insert(0, 'pk')
+            m2m_relations = []
+            for position, property_path in property_list.iteritems():
+                property_root = property_path.split('__')[0]
+                root_class = report.root_model.model_class()
+                property_root_class = getattr(root_class, property_root)
+                if type(property_root_class) == ReverseManyRelatedObjectsDescriptor:
+                    display_field_paths.insert(1, '%s__pk' % property_root)
+                    m2m_relations.append(property_root)
             values_and_properties_list = []
             filtered_report_rows = []
             group = None 
             for df in report.displayfield_set.all():
                 if df.group:
-                    group = df.field
+                    group = df.path + df.field
                     break
             if group:
                 filtered_report_rows = report.add_aggregates(objects.values_list(group))
             else:
                 values_list = objects.values_list(*display_field_paths)
-
+                
             if not group: 
                 for row in values_list:
                     row = list(row)
                     obj = report.root_model.model_class().objects.get(pk=row.pop(0)) 
+                    #related_objects
                     remove_row = False
                     values_and_properties_list.append(row)
                     # filter properties (remove rows with excluded properties)
                     for property_filter_label, property_filter in property_filters.iteritems():
-                        val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
+                        root_relation = property_filter.path.split('__')[0]
+                        if root_relation in m2m_relations: 
+                            pk = row[0]
+                            if pk is not None:
+                                # a related object exists
+                                m2m_obj = getattr(obj, root_relation).get(pk=pk)
+                                val = reduce(getattr, [property_filter.field], m2m_obj)
+                            else:
+                                val = None
+                        else:
+                            val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
                         if filter_property(property_filter, val):
                             remove_row = True
                             values_and_properties_list.pop()
@@ -406,7 +422,18 @@ def report_to_list(report, user, preview=False):
                             if field in display_totals.keys():
                                 increment_total(field, display_totals, row[i])
                         for position, display_property in property_list.iteritems(): 
-                            val = reduce(getattr, display_property.split('__'), obj)
+                            relations = display_property.split('__')
+                            root_relation = relations[0]
+                            if root_relation in m2m_relations: 
+                                pk = row.pop(0)
+                                if pk is not None:
+                                    # a related object exists
+                                    m2m_obj = getattr(obj, root_relation).get(pk=pk)
+                                    val = reduce(getattr, relations[1:], m2m_obj)
+                                else:
+                                    val = None
+                            else:
+                                val = reduce(getattr, relations, obj)
                             values_and_properties_list[-1].insert(position, val)
                             increment_total(display_property, display_totals, val)
                         for position, display_custom in custom_list.iteritems(): 
@@ -424,6 +451,8 @@ def report_to_list(report, user, preview=False):
                     filtered_report_rows,
                     key=lambda x: get_key(x).lower() if isinstance(get_key(x), basestring) else get_key(x)
                 )
+            else:
+                values_and_properties_list = filtered_report_rows
         else:
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
