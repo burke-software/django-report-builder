@@ -298,8 +298,8 @@ def get_model_from_path_string(root_model, path):
 
 
 def sort_helper(x, sort_key):
-    return x[sort_key] or datetime.date(datetime.MINYEAR, 1, 1)
-
+    result = x[sort_key] or datetime.date(datetime.MINYEAR, 1, 1)    
+    return result.lower() if isinstance(result, basestring) else result
 
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
