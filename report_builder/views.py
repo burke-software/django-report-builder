@@ -297,6 +297,10 @@ def get_model_from_path_string(root_model, path):
     return root_model
 
 
+def sort_helper(x, sort_key):
+    return x[sort_key] or datetime.date(datetime.MINYEAR, 1, 1)
+
+
 def report_to_list(report, user, preview=False):
     """ Create list from a report with all data filtering
     Returns list, message in case of issues
@@ -443,16 +447,11 @@ def report_to_list(report, user, preview=False):
                         filtered_report_rows += [values_and_properties_list[-1]]
                     if preview and len(filtered_report_rows) == 50:
                         break
-            sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('sort').\
-                values_list('position', flat=True)
-            if sort_fields:
-                get_key = itemgetter(*[s-1 for s in sort_fields])
-                values_and_properties_list = sorted(
-                    filtered_report_rows,
-                    key=lambda x: get_key(x).lower() if isinstance(get_key(x), basestring) else get_key(x)
-                )
-            else:
-                values_and_properties_list = filtered_report_rows
+            sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('-sort').\
+                values_list('position', 'sort_reverse')
+            for sort_field in sort_fields:
+                filtered_report_rows.sort(key=lambda x: sort_helper(x, sort_field[0]-1), reverse=sort_field[1])
+            values_and_properties_list = filtered_report_rows
         else:
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
