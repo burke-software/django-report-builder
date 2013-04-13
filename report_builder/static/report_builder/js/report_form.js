@@ -1,9 +1,37 @@
+// place this in your static files folder, in:
+//    <static>/report_builder/js/report_form.js
+
+// initialize path prefix.
+path_prefix = ""
+
+// get current path
+current_path =  window.location.pathname;
+
+// where is "/report_builder"?
+root_index = current_path.indexOf( "/report_builder" );
+
+// other than 0?
+if ( root_index > 0 )
+{
+
+    // yes.  Get all text from start to that location, store it as path_prefix.
+    path_prefix = current_path.substring( 0, root_index );
+
+}
+else
+{
+
+    // no - set path_prefix to "".
+    path_prefix = "";
+
+}
+
 function expand_related(event, model, field, path, path_verbose) {
     if (event.target.tagName != 'LI') return;
     var element = $(event.target);
     if ( $(element).hasClass('tree_closed') ){
         $.get(  
-            "/report_builder/ajax_get_related/",  
+            path_prefix + "/report_builder/ajax_get_related/",  
             {model: model, field: field, path: path, path_verbose: path_verbose},
             function(data){
                 $(element).addClass('tree_expanded');
@@ -22,7 +50,7 @@ function show_fields(event, model, field, path, path_verbose){
     $('.highlight').removeClass('highlight');
     $(event.target).addClass('highlight');
     $.get(  
-        "/report_builder/ajax_get_fields/",  
+        path_prefix + "/report_builder/ajax_get_fields/",  
         {model: model, field: field, path: path, path_verbose: path_verbose},
         function(data){
             $('#field_selection_div').html(data);
@@ -77,7 +105,7 @@ function enable_drag() {
 
 
     $("span.button[data-choices='true']").mousedown(function() {
-        $.get('/report_builder/ajax_get_choices/', {
+        $.get( path_prefix + '/report_builder/ajax_get_choices/', {
             'path_verbose': $(this).data('path_verbose'),
             'label': $(this).data('label'),
             'root_model': $(this).data('root_model'),
@@ -187,7 +215,7 @@ function set_check_value(event) {
 
 function refresh_preview() {
     $.post(  
-        "/report_builder/ajax_preview/",  
+        path_prefix + "/report_builder/ajax_preview/",  
         {
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
             report_id: $('#report_id').data('id'),
