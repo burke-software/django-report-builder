@@ -37,10 +37,10 @@ class ReportAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(obj.get_absolute_url())
         return super(ReportAdmin, self).response_add(request, obj, post_url_continue)
     
-    def response_change(self, request, obj, post_url_continue=None):
+    def response_change(self, request, obj):
         if '_easy' in request.POST:
             return HttpResponseRedirect(obj.get_absolute_url())
-        return super(ReportAdmin, self).response_change(request, obj, post_url_continue)
+        return super(ReportAdmin, self).response_change(request, obj)
         
     def easy_edit(self, obj):
         return '<a href="%s">Edit</a>' % obj.get_absolute_url()
