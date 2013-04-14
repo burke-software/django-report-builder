@@ -28,7 +28,7 @@ class FilterFieldInline(admin.StackedInline):
     sortable_field_name = "position"
     
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('easy_edit', 'admin_edit', 'name', 'download_xlsx', 'root_model', 'created', 'modified')
+    list_display = ('easy_edit', 'admin_edit', 'name', 'download_xlsx', 'root_model', 'created', 'modified', 'user_created')
     inlines = [DisplayFieldInline, FilterFieldInline]
     list_display_links = ['admin_edit']
     
@@ -50,5 +50,11 @@ class ReportAdmin(admin.ModelAdmin):
     def download_xlsx(self, obj):
         return '<a href="%s">Download</a>' % reverse('report_builder.views.download_xlsx', args=[obj.id])
     download_xlsx.allow_tags = True
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.id:
+            obj.user_created = request.user
+        obj.user_modified = request.user
+        obj.save()
     
 admin.site.register(Report, ReportAdmin)

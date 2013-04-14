@@ -17,7 +17,6 @@ from django import forms
 import datetime
 import time
 import re
-from operator import itemgetter
 from decimal import Decimal
 from numbers import Number
 from types import BooleanType

@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils import timezone
 from django.utils.safestring import mark_safe
@@ -23,6 +24,8 @@ class Report(models.Model):
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
+    user_created = models.ForeignKey(User, editable=False, blank=True, null=True)
+    user_modified = models.ForeignKey(User, editable=False, blank=True, null=True, related_name="report_modified_set")
     distinct = models.BooleanField()
 
 
