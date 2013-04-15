@@ -315,8 +315,8 @@ def report_to_list(report, user, preview=False):
     display_totals = {}
     def append_display_total(display_totals, display_field, display_field_key):
         if display_field.total:
-            display_totals[display_field_key] = {'label': display_field.name, 'val': Decimal('0.00')}
-        
+            display_totals[display_field_key] = {'val': Decimal('0.00')}
+       
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
@@ -371,6 +371,7 @@ def report_to_list(report, user, preview=False):
                         display_totals[display_field_key]['val'] += Decimal(str(val))
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
+
 
             # get pk for primary and m2m relations in order to retrieve objects 
             # for adding properties to report rows
@@ -482,15 +483,20 @@ def report_to_list(report, user, preview=False):
                         increment_total(field, display_totals, row[i])
 
         if display_totals:
-            display_totals_row = ['TOTALS'] + [
-                '%s: %s' % (
-                    display_totals[t]['label'],
-                    display_totals[t]['val']
-                ) for t in display_totals
-            ]
+            display_totals_row = []
+            for display_field in report.displayfield_set.all():
+                if display_field.field in display_totals.keys():
+                    display_totals_row += [display_totals[display_field.field]['val']]
+                else:
+                    display_totals_row += ['']
+
 
         if display_totals:
-            values_and_properties_list = values_and_properties_list + [display_totals_row]
+            values_and_properties_list = (
+                values_and_properties_list + [
+                    ['TOTALS'] + (len(display_totals_row) - 1) * ['']
+                    ] + [display_totals_row]
+                )
                 
 
     except exceptions.FieldError:
