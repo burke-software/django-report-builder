@@ -395,7 +395,7 @@ def report_to_list(report, user, preview=False):
                 filtered_report_rows = report.add_aggregates(objects.values_list(group))
             else:
                 values_list = objects.values_list(*display_field_paths)
-                
+
             if not group: 
                 for row in values_list:
                     row = list(row)
@@ -484,12 +484,12 @@ def report_to_list(report, user, preview=False):
 
         if display_totals:
             display_totals_row = []
-            for display_field in report.displayfield_set.all():
-                if display_field.field in display_totals.keys():
-                    display_totals_row += [display_totals[display_field.field]['val']]
+
+            for i, field in enumerate(display_field_paths[1:]):
+                if field in display_totals.keys():
+                    display_totals_row += [display_totals[field]['val']]
                 else:
                     display_totals_row += ['']
-
 
         if display_totals:
             values_and_properties_list = (
