@@ -316,7 +316,7 @@ def report_to_list(report, user, preview=False):
     def append_display_total(display_totals, display_field, display_field_key):
         if display_field.total:
             display_totals[display_field_key] = {'val': Decimal('0.00')}
-       
+
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
@@ -484,8 +484,11 @@ def report_to_list(report, user, preview=False):
 
         if display_totals:
             display_totals_row = []
-
-            for i, field in enumerate(display_field_paths[1:]):
+            
+            fields_and_properties = list(display_field_paths[1:])
+            for position, value in property_list.iteritems(): 
+                fields_and_properties.insert(position, value)
+            for i, field in enumerate(fields_and_properties): 
                 if field in display_totals.keys():
                     display_totals_row += [display_totals[field]['val']]
                 else:
@@ -494,7 +497,7 @@ def report_to_list(report, user, preview=False):
         if display_totals:
             values_and_properties_list = (
                 values_and_properties_list + [
-                    ['TOTALS'] + (len(display_totals_row) - 1) * ['']
+                    ['TOTALS'] + (len(fields_and_properties) - 1) * ['']
                     ] + [display_totals_row]
                 )
                 
