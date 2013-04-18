@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
+from report_builder.utils import javascript_date_format
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
@@ -66,8 +67,10 @@ class FilterFieldForm(forms.ModelForm):
         # override the filter_value field with the models native ChoiceField
         if self.instance.choices:
             self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
-        if 'DateField' in self.instance.field_verbose:
-            self.fields['filter_value'].widget.attrs['class'] = 'datepicker';
+        if 'DateField' or 'DateTimeField' in self.instance.field_verbose:
+            widget = self.fields['filter_value'].widget
+            widget.attrs['class'] = 'datepicker'
+            widget.attrs['data-date-format'] = javascript_date_format(settings.DATE_FORMAT)
 
 
 class ReportCreateView(CreateView):
