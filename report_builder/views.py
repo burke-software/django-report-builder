@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField
+from report_builder.utils import javascript_date_format
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
@@ -66,8 +67,10 @@ class FilterFieldForm(forms.ModelForm):
         # override the filter_value field with the models native ChoiceField
         if self.instance.choices:
             self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
-        if 'DateField' in self.instance.field_verbose:
-            self.fields['filter_value'].widget.attrs['class'] = 'datepicker';
+        if ('DateField' or 'DateTimeField') in self.instance.field_verbose:
+            widget = self.fields['filter_value'].widget
+            widget.attrs['class'] = 'datepicker'
+            widget.attrs['data-date-format'] = javascript_date_format(settings.DATE_FORMAT)
 
 
 class ReportCreateView(CreateView):
@@ -315,8 +318,8 @@ def report_to_list(report, user, preview=False):
     display_totals = {}
     def append_display_total(display_totals, display_field, display_field_key):
         if display_field.total:
-            display_totals[display_field_key] = {'label': display_field.name, 'val': Decimal('0.00')}
-        
+            display_totals[display_field_key] = {'val': Decimal('0.00')}
+
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
@@ -372,6 +375,7 @@ def report_to_list(report, user, preview=False):
                     else:
                         display_totals[display_field_key]['val'] += Decimal('1.00')
 
+
             # get pk for primary and m2m relations in order to retrieve objects 
             # for adding properties to report rows
             display_field_paths.insert(0, 'pk')
@@ -394,7 +398,7 @@ def report_to_list(report, user, preview=False):
                 filtered_report_rows = report.add_aggregates(objects.values_list(group))
             else:
                 values_list = objects.values_list(*display_field_paths)
-                
+
             if not group: 
                 for row in values_list:
                     row = list(row)
@@ -482,15 +486,23 @@ def report_to_list(report, user, preview=False):
                         increment_total(field, display_totals, row[i])
 
         if display_totals:
-            display_totals_row = ['TOTALS'] + [
-                '%s: %s' % (
-                    display_totals[t]['label'],
-                    display_totals[t]['val']
-                ) for t in display_totals
-            ]
+            display_totals_row = []
+            
+            fields_and_properties = list(display_field_paths[1:])
+            for position, value in property_list.iteritems(): 
+                fields_and_properties.insert(position, value)
+            for i, field in enumerate(fields_and_properties): 
+                if field in display_totals.keys():
+                    display_totals_row += [display_totals[field]['val']]
+                else:
+                    display_totals_row += ['']
 
         if display_totals:
-            values_and_properties_list = values_and_properties_list + [display_totals_row]
+            values_and_properties_list = (
+                values_and_properties_list + [
+                    ['TOTALS'] + (len(fields_and_properties) - 1) * ['']
+                    ] + [display_totals_row]
+                )
                 
 
     except exceptions.FieldError:
