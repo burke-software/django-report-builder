@@ -2,9 +2,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils import timezone
-from django.utils.safestring import mark_safe
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
+from report_builder.unique_slugify import unique_slugify
 
 from dateutil import parser
 
@@ -27,6 +27,12 @@ class Report(models.Model):
     user_created = models.ForeignKey(User, editable=False, blank=True, null=True)
     user_modified = models.ForeignKey(User, editable=False, blank=True, null=True, related_name="report_modified_set")
     distinct = models.BooleanField()
+    
+    
+    def save(self, *args, **kwargs):
+        if not self.id:
+            unique_slugify(self, self.name)
+        super(Report, self).save(*args, **kwargs)
 
 
     def add_aggregates(self, queryset):
