@@ -145,6 +145,16 @@ class DisplayField(models.Model):
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
+    # TODO: format field
+    #format = models.CharField(
+    #    max_length=255,
+    #    choices = (
+    #        ('currency', 'Currency'),
+    #        ('trunc-10', 'Truncate to 10'),
+    #        ('custom', 'Custom'),
+    #    )
+    #    blank=True
+    #)
 
     class Meta:
         ordering = ['position']

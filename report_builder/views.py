@@ -362,10 +362,6 @@ def report_to_list(report, user, preview=False):
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
 
-            property_filters = {} 
-            for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
-                property_filters[property_filter.field] = property_filter 
-
             def increment_total(display_field_key, display_totals, val):
                 if display_totals.has_key(display_field_key):
                     # Booleans are Numbers - blah
@@ -407,7 +403,10 @@ def report_to_list(report, user, preview=False):
                     remove_row = False
                     values_and_properties_list.append(row)
                     # filter properties (remove rows with excluded properties)
-                    for property_filter_label, property_filter in property_filters.iteritems():
+                    property_filters = report.filterfield_set.filter(
+                        field_verbose__contains='[property]'
+                        )
+                    for property_filter in property_filters: 
                         root_relation = property_filter.path.split('__')[0]
                         if root_relation in m2m_relations: 
                             pk = row[0]
