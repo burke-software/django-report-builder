@@ -67,7 +67,7 @@ class FilterFieldForm(forms.ModelForm):
         # override the filter_value field with the models native ChoiceField
         if self.instance.choices:
             self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
-        if ('DateField' or 'DateTimeField') in self.instance.field_verbose:
+        if 'DateField' in self.instance.field_verbose or 'DateTimeField' in self.instance.field_verbose:
             widget = self.fields['filter_value'].widget
             widget.attrs['class'] = 'datepicker'
             widget.attrs['data-date-format'] = javascript_date_format(settings.DATE_FORMAT)
