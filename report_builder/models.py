@@ -118,7 +118,17 @@ class Report(models.Model):
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
     
+
+class Format(models.Model):
+    """ A specifies a Python string format for e.g. `DisplayField`s. 
+    """
+    name = models.CharField(max_length=50, blank=True, default='')
+    string = models.CharField(max_length=300, blank=True, default='')
+
+    def __unicode__(self):
+        return self.name
     
+
 class DisplayField(models.Model):
     """ A display field to show in a report. Always belongs to a Report
     """
@@ -145,16 +155,7 @@ class DisplayField(models.Model):
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
-    # TODO: format field
-    format = models.CharField(
-        max_length=255,
-        choices = (
-            ('currency', 'Currency'),
-            ('trunc-10', 'Truncate to 10'),
-            ('custom', 'Custom'),
-        ),
-        blank=True,
-    )
+    display_format = models.OneToOneField(Format, blank=True, null=True)
 
     class Meta:
         ordering = ['position']
