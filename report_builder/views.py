@@ -8,7 +8,7 @@ from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from report_builder.models import Report, DisplayField, FilterField
+from report_builder.models import Report, DisplayField, FilterField, Format
 from report_builder.utils import javascript_date_format
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
@@ -280,8 +280,14 @@ def ajax_get_choices(request):
     label = request.GET.get('label')
     root_model = request.GET.get('root_model')
     choices = FilterField().get_choices(path_verbose or root_model, label)
-    select_widget = forms.Select(choices=choices)
-    options_html = select_widget.render_options(select_widget.choices, [0])
+    select_widget = forms.Select(choices=[('','---------')] + list(choices))
+    options_html = select_widget.render_options([], [0])
+    return HttpResponse(options_html)
+
+def ajax_get_formats(request):
+    choices = Format.objects.values_list('pk', 'name')
+    select_widget = forms.Select(choices=[('','---------')] + list(choices))
+    options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
 
 def get_model_from_path_string(root_model, path):
