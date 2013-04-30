@@ -21,12 +21,16 @@ class Report(models.Model):
     
     name = models.CharField(max_length=255)
     slug = models.SlugField(verbose_name="Short Name")
+    description = models.TextField(blank=True)
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(User, editable=False, blank=True, null=True)
     user_modified = models.ForeignKey(User, editable=False, blank=True, null=True, related_name="report_modified_set")
     distinct = models.BooleanField()
+    starred = models.ManyToManyField(User, blank=True,
+                                     help_text="These users have starred this report for easy reference.",
+                                     related_name="report_starred_set")
     
     
     def save(self, *args, **kwargs):

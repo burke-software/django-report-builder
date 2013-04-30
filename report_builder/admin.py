@@ -29,9 +29,10 @@ class FilterFieldInline(admin.StackedInline):
     
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('easy_edit', 'admin_edit', 'name', 'download_xlsx', 'root_model', 'created', 'modified', 'user_created')
+    readonly_fields = ['slug']
     inlines = [DisplayFieldInline, FilterFieldInline]
     list_display_links = ['admin_edit']
-    prepopulated_fields = {'slug': ('name',)}
+    #prepopulated_fields = {'slug': ('name',)}
     
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
