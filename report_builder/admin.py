@@ -32,7 +32,6 @@ class ReportAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
     inlines = [DisplayFieldInline, FilterFieldInline]
     list_display_links = ['admin_edit']
-    #prepopulated_fields = {'slug': ('name',)}
     
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
