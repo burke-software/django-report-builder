@@ -464,8 +464,10 @@ def report_to_list(report, user, preview=False):
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
 
-        # add choice list display
+
+        # add choice list display and display field formatting
         choice_lists = {} 
+        display_formats = {} 
         final_list = []
         for df in report.displayfield_set.all():
             if df.choices:
@@ -474,13 +476,17 @@ def report_to_list(report, user, preview=False):
                 df_choices[''] = ''
                 df_choices[None] = ''
                 choice_lists.update({df.position: df_choices}) 
-        if choice_lists:
-            for row in values_and_properties_list:
-                row = list(row)
-                for position, choice_list in choice_lists.iteritems():
-                    row[position-1] = choice_list[row[position-1]]
-                    final_list.append(row)
-            values_and_properties_list = final_list
+            if df.display_format:
+                display_formats.update({df.position: df.display_format}) 
+        for row in values_and_properties_list:
+            row = list(row)
+            for position, choice_list in choice_lists.iteritems():
+                row[position-1] = choice_list[row[position-1]]
+            for position, display_format in display_formats.iteritems():
+                row[position-1] = display_format.string.format(str(row[position-1]))
+            final_list.append(row)
+        values_and_properties_list = final_list
+
 
         # add display totals for grouped result sets
         if group:
