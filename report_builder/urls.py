@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     ('^ajax_get_related/$', views.ajax_get_related),
     ('^ajax_get_fields/$', views.ajax_get_fields),
     url('^ajax_get_choices/$', views.ajax_get_choices, name="ajax_get_choices"),
+    url('^ajax_get_formats/$', views.ajax_get_formats, name="ajax_get_formats"),
     ('^ajax_preview/$', views.ajax_preview),
 )

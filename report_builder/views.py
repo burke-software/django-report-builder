@@ -8,7 +8,7 @@ from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from report_builder.models import Report, DisplayField, FilterField
+from report_builder.models import Report, DisplayField, FilterField, Format
 from report_builder.utils import javascript_date_format
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
@@ -67,7 +67,7 @@ class FilterFieldForm(forms.ModelForm):
         # override the filter_value field with the models native ChoiceField
         if self.instance.choices:
             self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
-        if ('DateField' or 'DateTimeField') in self.instance.field_verbose:
+        if 'DateField' in self.instance.field_verbose or 'DateTimeField' in self.instance.field_verbose:
             widget = self.fields['filter_value'].widget
             widget.attrs['class'] = 'datepicker'
             widget.attrs['data-date-format'] = javascript_date_format(settings.DATE_FORMAT)
@@ -280,8 +280,14 @@ def ajax_get_choices(request):
     label = request.GET.get('label')
     root_model = request.GET.get('root_model')
     choices = FilterField().get_choices(path_verbose or root_model, label)
-    select_widget = forms.Select(choices=choices)
-    options_html = select_widget.render_options(select_widget.choices, [0])
+    select_widget = forms.Select(choices=[('','---------')] + list(choices))
+    options_html = select_widget.render_options([], [0])
+    return HttpResponse(options_html)
+
+def ajax_get_formats(request):
+    choices = Format.objects.values_list('pk', 'name')
+    select_widget = forms.Select(choices=[('','---------')] + list(choices))
+    options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
 
 def get_model_from_path_string(root_model, path):
@@ -362,10 +368,6 @@ def report_to_list(report, user, preview=False):
         if user.has_perm(report.root_model.app_label + '.change_' + report.root_model.model) \
         or user.has_perm(report.root_model.app_label + '.view_' + report.root_model.model):
 
-            property_filters = {} 
-            for property_filter in report.filterfield_set.filter(field_verbose__contains='[property]'):
-                property_filters[property_filter.field] = property_filter 
-
             def increment_total(display_field_key, display_totals, val):
                 if display_totals.has_key(display_field_key):
                     # Booleans are Numbers - blah
@@ -407,7 +409,10 @@ def report_to_list(report, user, preview=False):
                     remove_row = False
                     values_and_properties_list.append(row)
                     # filter properties (remove rows with excluded properties)
-                    for property_filter_label, property_filter in property_filters.iteritems():
+                    property_filters = report.filterfield_set.filter(
+                        field_verbose__contains='[property]'
+                        )
+                    for property_filter in property_filters: 
                         root_relation = property_filter.path.split('__')[0]
                         if root_relation in m2m_relations: 
                             pk = row[0]
@@ -459,8 +464,10 @@ def report_to_list(report, user, preview=False):
             values_and_properties_list = []
             message = "Permission Denied on %s" % report.root_model.name
 
-        # add choice list display
+
+        # add choice list display and display field formatting
         choice_lists = {} 
+        display_formats = {} 
         final_list = []
         for df in report.displayfield_set.all():
             if df.choices:
@@ -469,13 +476,17 @@ def report_to_list(report, user, preview=False):
                 df_choices[''] = ''
                 df_choices[None] = ''
                 choice_lists.update({df.position: df_choices}) 
-        if choice_lists:
-            for row in values_and_properties_list:
-                row = list(row)
-                for position, choice_list in choice_lists.iteritems():
-                    row[position-1] = choice_list[row[position-1]]
-                    final_list.append(row)
-            values_and_properties_list = final_list
+            if df.display_format:
+                display_formats.update({df.position: df.display_format}) 
+        for row in values_and_properties_list:
+            row = list(row)
+            for position, choice_list in choice_lists.iteritems():
+                row[position-1] = choice_list[row[position-1]]
+            for position, display_format in display_formats.iteritems():
+                row[position-1] = display_format.string.format(str(row[position-1]))
+            final_list.append(row)
+        values_and_properties_list = final_list
+
 
         # add display totals for grouped result sets
         if group:

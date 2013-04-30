@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from report_builder.models import DisplayField, Report, FilterField
+from report_builder.models import DisplayField, Report, FilterField, Format
 
 
 class DisplayFieldForm(forms.ModelForm):
@@ -60,3 +60,4 @@ class ReportAdmin(admin.ModelAdmin):
         obj.save()
     
 admin.site.register(Report, ReportAdmin)
+admin.site.register(Format)
