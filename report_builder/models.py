@@ -159,7 +159,7 @@ class DisplayField(models.Model):
     position = models.PositiveSmallIntegerField(blank = True, null = True)
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
-    display_format = models.OneToOneField(Format, blank=True, null=True)
+    display_format = models.ForeignKey(Format, blank=True, null=True)
 
     class Meta:
         ordering = ['position']

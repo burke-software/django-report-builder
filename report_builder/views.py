@@ -326,6 +326,7 @@ def report_to_list(report, user, preview=False):
         if display_field.total:
             display_totals[display_field_key] = {'val': Decimal('0.00')}
 
+
     for i, display_field in enumerate(report.displayfield_set.all()):
         model = get_model_from_path_string(model_class, display_field.path)
         if user.has_perm(model._meta.app_label + '.change_' + model._meta.module_name) \
@@ -479,6 +480,13 @@ def report_to_list(report, user, preview=False):
             if df.display_format:
                 display_formats.update({df.position: df.display_format}) 
         for row in values_and_properties_list:
+            # add display totals for grouped result sets
+            # TODO: dry this up, duplicated logic in non-grouped total routine 
+            if group:
+                # increment totals for fields
+                for i, field in enumerate(display_field_paths[1:]):
+                    if field in display_totals.keys():
+                        increment_total(field, display_totals, row[i])
             row = list(row)
             for position, choice_list in choice_lists.iteritems():
                 row[position-1] = choice_list[row[position-1]]
@@ -487,14 +495,6 @@ def report_to_list(report, user, preview=False):
             final_list.append(row)
         values_and_properties_list = final_list
 
-
-        # add display totals for grouped result sets
-        if group:
-            # increment totals for fields
-            for row in values_and_properties_list: 
-                for i, field in enumerate(display_field_paths[1:]):
-                    if field in display_totals.keys():
-                        increment_total(field, display_totals, row[i])
 
         if display_totals:
             display_totals_row = []
@@ -508,12 +508,20 @@ def report_to_list(report, user, preview=False):
                 else:
                     display_totals_row += ['']
 
+        # add formatting to display totals
+        for df in report.displayfield_set.all():
+            if df.display_format:
+                display_totals_row[df.position-1] = df.display_format.string.format(
+                    str(display_totals_row[df.position-1])
+                    )
+
         if display_totals:
             values_and_properties_list = (
                 values_and_properties_list + [
                     ['TOTALS'] + (len(fields_and_properties) - 1) * ['']
                     ] + [display_totals_row]
                 )
+
                 
 
     except exceptions.FieldError:
