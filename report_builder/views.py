@@ -491,7 +491,7 @@ def report_to_list(report, user, preview=False):
             for position, choice_list in choice_lists.iteritems():
                 row[position-1] = choice_list[row[position-1]]
             for position, display_format in display_formats.iteritems():
-                row[position-1] = display_format.string.format(str(row[position-1]))
+                row[position-1] = display_format.string.format(row[position-1])
             final_list.append(row)
         values_and_properties_list = final_list
 
@@ -512,7 +512,7 @@ def report_to_list(report, user, preview=False):
         for df in report.displayfield_set.all():
             if df.display_format:
                 display_totals_row[df.position-1] = df.display_format.string.format(
-                    str(display_totals_row[df.position-1])
+                    display_totals_row[df.position-1]
                     )
 
         if display_totals:
