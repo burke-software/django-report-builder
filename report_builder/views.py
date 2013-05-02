@@ -306,7 +306,12 @@ def get_model_from_path_string(root_model, path):
 
 
 def sort_helper(x, sort_key):
-    result = x[sort_key] or datetime.date(datetime.MINYEAR, 1, 1)    
+    # TODO: explain what's going on here - I think this is meant to deal with
+    # null comparisons for datetimes? 
+    if x[sort_key] == None:
+        result = datetime.date(datetime.MINYEAR, 1, 1)
+    else:
+        result = x[sort_key]     
     return result.lower() if isinstance(result, basestring) else result
 
 def report_to_list(report, user, preview=False):
@@ -459,7 +464,11 @@ def report_to_list(report, user, preview=False):
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('-sort').\
                 values_list('position', 'sort_reverse')
             for sort_field in sort_fields:
-                filtered_report_rows.sort(key=lambda x: sort_helper(x, sort_field[0]-1), reverse=sort_field[1])
+                filtered_report_rows = sorted(
+                        filtered_report_rows,
+                        key=lambda x: sort_helper(x, sort_field[0]-1),
+                        reverse=sort_field[1]
+                        )
             values_and_properties_list = filtered_report_rows
         else:
             values_and_properties_list = []
