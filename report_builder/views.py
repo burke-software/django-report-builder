@@ -500,7 +500,13 @@ def report_to_list(report, user, preview=False):
             for position, choice_list in choice_lists.iteritems():
                 row[position-1] = choice_list[row[position-1]]
             for position, display_format in display_formats.iteritems():
-                row[position-1] = display_format.string.format(row[position-1])
+                # convert value to be formatted into Decimal in order to apply
+                # numeric formats
+                try:
+                    value = Decimal(row[position-1])
+                except:
+                    value = row[position-1]
+                row[position-1] = display_format.string.format(value)
             final_list.append(row)
         values_and_properties_list = final_list
 
@@ -520,9 +526,12 @@ def report_to_list(report, user, preview=False):
         # add formatting to display totals
         for df in report.displayfield_set.all():
             if df.display_format:
-                display_totals_row[df.position-1] = df.display_format.string.format(
-                    display_totals_row[df.position-1]
-                    )
+                try:
+                    value = Decimal(display_totals_row[df.position-1])
+                except:
+                    value = display_totals_row[df.position-1]
+                display_totals_row[df.position-1] = df.display_format.string.\
+                    format(value)
 
         if display_totals:
             values_and_properties_list = (
