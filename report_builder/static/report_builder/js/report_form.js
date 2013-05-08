@@ -82,6 +82,7 @@ function enable_drag() {
             total_forms.val(parseInt(i)+1);
             
             row_html = '<tr><td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>';
+            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-DELETE" id="id_displayfield_set-'+i+'-DELETE">';
             row_html += '<td><input id="id_displayfield_set-'+i+'-path_verbose" name="displayfield_set-'+i+'-path_verbose" readonly="readonly" type="text" value="' + path_verbose + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field_verbose" name="displayfield_set-'+i+'-field_verbose" readonly="readonly" type="text" value="' + field + '"/><input id="id_displayfield_set-'+i+'-path" name="displayfield_set-'+i+'-path" type="hidden" value="' + path + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + label + '"/>'
@@ -97,7 +98,6 @@ function enable_drag() {
             row_html += '<td><select id="id_displayfield_set-'+i+'-display_format" name="displayfield_set-'+i+'-display_format"> /* populate options from DB on drop */ </select></td>';
             row_html += '<td><input type="checkbox" class="small_input" name="displayfield_set-'+i+'-total" id="id_displayfield_set-'+i+'-total"></td>';
             row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-group" id="id_displayfield_set-'+i+'-group"></td>';
-            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-DELETE" id="id_displayfield_set-'+i+'-DELETE">';
             row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="'+total_forms.val()+'" id="id_displayfield_set-'+i+'-position"></span></td>';
             row_html += '</tr>';
             $('#field_list_table > tbody:last').append(row_html);
@@ -288,3 +288,16 @@ $(function() {
     });
     window.onbeforeunload = "Are you sure you want to leave?";
 });
+
+function filter(element, list) {
+    var value = $(element).val();
+
+    $("#"+list+" li").each(function() {
+        if ($(this).text().search(value) > -1) {
+            $(this).show();
+        }
+        else {
+            $(this).hide();
+        }
+    });
+}

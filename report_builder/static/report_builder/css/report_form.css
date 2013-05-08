@@ -1,13 +1,10 @@
 div#container {
     position: relative;
     width: 100%;
-    height: 99%;
-    border: 1px solid black;
-    border-radius: 15px;
+    height: 100%;
 }
 div#container header {
     height: 2.6em;
-    border-bottom: 1px solid black;
     padding-left: 1em;
  }
 
@@ -21,13 +18,18 @@ div#container .sidebar {
 }
 div#container .top_half {
     height: 40%;
-    border-bottom: 1px solid black;
     overflow: auto;
+    background: #f4f4f4;
+    border: solid #CCCCCC 1px;
+    padding: 4px;
 }
 div#container .bottom_half {
     padding-top: 0.5em;
     overflow: auto;
     height: 59%;
+    background: #f4f4f4;
+    border: solid #CCCCCC 1px;
+    padding: 4px;
 }
 div#container .main_area {
     position: absolute;
@@ -37,7 +39,6 @@ div#container .main_area {
     bottom: 0;
     padding-top: 0.5em;
     padding-left: 0.5em;
-    border-left: 1px solid black;
     overflow: auto;
 }
 
@@ -60,19 +61,22 @@ div#container li.tree_expanded {
 }
 
 div#container span.button {
-  background: #e3e3e3;
-  border: 1px solid #bbb;
+  background: #C1C1C1;
+  border: 1px solid #999999;
   border-radius: 3px;
   box-shadow: inset 0 0 1px 1px #f6f6f6;
   color: #333;
   font: bold 12px/1 "helvetica neue", helvetica, arial, sans-serif;
-  padding: 1 px;
+  padding: 1px;
   padding-left: 3px;
+  padding-bottom: 2px;
   text-align: center;
   text-shadow: 0 1px 0 #fff;
   display: inline-block;
   min-width: 50%;
   text-align: left;
+  margin-top: 2px;
+  margin-bottom: 1px;
   }
   span.button:hover {
     background: #d9d9d9;
@@ -136,8 +140,6 @@ div#container .hide_me {
 
 div#container input[readonly="readonly"]
 {
-    background-color:transparent;
-    border: 0px solid;
     height:20px;
     width: 100%;
     
@@ -153,3 +155,38 @@ div#container #tip_area {
     display: none;
 }
 
+
+input.search_box {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+/*Adjust jquery ui theme*/
+.ui-tabs ul.ui-tabs-nav {
+  background: none;
+  border: none;
+  padding: 0px;
+}
+div.ui-tabs {
+  border: none;
+  padding: 0px;
+}
+.ui-tabs ul.ui-tabs-nav li{
+  border-radius: 0px;
+  padding: 0px;
+  margin: 0px;
+  border: 1px solid #d3d3d3;
+  border-bottom: 0px;
+}
+.ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+.ui-tabs div.ui-tabs-panel {
+  border: 1px solid #d3d3d3;
+}
+div#container .ui-tabs div.ui-droppable {
+  margin: 0px;
+  border: 1px solid #d3d3d3;
+  border-radius: 0px;
+}

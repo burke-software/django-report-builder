@@ -28,14 +28,16 @@ from dateutil import parser
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct', 'root_model', 'slug']
+        fields = ['name', 'distinct', 'root_model']
 
 
 class ReportEditForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['name', 'distinct']
-    
+        fields = ['name', 'distinct', 'description',]
+        widgets = {
+            'description': forms.TextInput(attrs={'style': 'width:99%;'}),
+        }
     
 class DisplayFieldForm(forms.ModelForm):
     class Meta:

@@ -1,12 +1,12 @@
 {% load url from future %}
 
 {% block report_header %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}report_builder/css/report_form.css" />
 <script src="{{ STATIC_URL }}report_builder/js/jquery-1.8.2.min.js" type="text/javascript" ></script>
 <script src="{{ STATIC_URL }}report_builder/js/report_form.js" type="text/javascript" ></script>
 
 <link rel="stylesheet" href="{{ STATIC_URL }}jquery-ui-1.9.1/css/smoothness/jquery-ui-1.9.1.custom.min.css" />
 <script src="{{ STATIC_URL }}jquery-ui-1.9.1/js/jquery-ui-1.9.1.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}report_builder/css/report_form.css" />
 {% endblock %}
 
 {% block report_form %}
@@ -14,17 +14,25 @@
   <form action="" method="post">{% csrf_token %}
     <header>
       <div id="report_id" data-id="{{ object.id }}">
-      Report Builder: {{ form.name }}
-      Last updated: {{ object.modified }}
-      Model: {{ object.root_model }}
-      <span style="float: right; padding-right: 5%;">
-        <input type="submit" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
-      </span>
+        <div style="display:table; width:100%;">
+          <div style="display:table-cell; width:25em;">
+            Set report fields for {{ form.name }} Description:  
+          </div>
+          <div style="display:table-cell;">
+            {{ form.description }}
+          </div>
+          <div style="display:table-cell; width:20em;">
+            Last updated: {{ object.modified }}
+            Model: {{ object.root_model }}
+          </div>
+        </div>
+      </div>
     </header>
     <section class="sidebar">
       <section class="top_half">
         Expand Related Fields:
-        <ol class="tree" style="padding-left: 0px; margin: 0px;">
+        <input type="text" class="search_box" onkeyup="filter(this, 'related_fields_ol')" placeholder="Search Fields"/>
+        <ol class="tree" id="related_fields_ol" style="padding-left: 0px; margin: 0px;">
           <li class="tree_expanded">
             <span class="button" onclick="show_fields(event, '{{ object.root_model_id }}', '', '');">
               {{ object.root_model }}
@@ -34,8 +42,9 @@
         </ol>
       </section>
       <section class="bottom_half">
-        Fields:
+        Fields - drag fields to add
         <div id="field_selection_div">
+          <input type="text" class="search_box" onkeyup="filter(this, 'field_selection_div')" placeholder="Search Fields"/>
           {% include "report_builder/report_form_fields_li.html" %}
         </div>
       </section>
@@ -44,11 +53,59 @@
     <section class="main_area">
       <div id="tabs">
         <ul>
-          <li><a href="#tabs-1">Search Criteria</a></li>
-          <li><a href="#tabs-2">Display Fields</a></li>
-          <li><a href="#tabs-3">Preview (requires save)</a></li>
+          <li><a href="#tabs-1">Report Display Fields</a></li>
+          <li><a href="#tabs-2">Report Filters</a></li>
+          <li><a href="#tabs-3">Preview Report</a></li>
         </ul>
         <div id="tabs-1">
+          <div id="field_list_droppable" class="droppable">
+            {{ field_list_formset.management_form }}
+            {% for form in field_list_formset %}
+              {{ form.errors }}
+            {% endfor %}
+            <table id="field_list_table" class="simple_table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Delete</th>
+                  <th>Field</th>
+                  <th>Name</th>
+                  <th>Sort<span style="padding-left: 1.2em;">Desc?</span></th>
+                  <th>Width</th>
+                  <th>Aggregate</th>
+                  <th>Format</th>
+                  <th>Total</th>
+                  <th>Group</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for form in field_list_formset %}
+                  <tr>
+                    <td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                    <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
+                    <td>
+                      {{ form.id }}
+                      {{ form.path_verbose }}
+                      {{ form.field }}
+                      {{ form.field_verbose }}
+                      {{ form.path }}
+                    </td>
+                    <td>{{ form.name }}</td>
+                    <td>{{ form.sort }}{{ form.sort_reverse }}</td>
+                    <td>{{ form.width }}</td>
+                    <td onclick="aggregate_tip()">{{ form.aggregate }}</td>
+                    <td>{{ form.display_format }}</td>
+                    <td>{{ form.total }}</td>
+                    <td>{{ form.group }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            Drag fields here
+            <div id="tip_area"></div>
+          </div>
+        </div>
+        <div id="tabs-2">
           {{ form.distinct }}{{ form.distinct.label}} (Removes duplicates)
           <div id="field_filter_droppable" class="droppable">
             {{ field_filter_formset.management_form }}
@@ -94,58 +151,12 @@
             <div id="tip_area"></div>
           </div>
         </div>
-        <div id="tabs-2">
-          <div id="field_list_droppable" class="droppable">
-            {{ field_list_formset.management_form }}
-            {% for form in field_list_formset %}
-              {{ form.errors }}
-            {% endfor %}
-            <table id="field_list_table" class="simple_table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Path</th>
-                  <th>Field</th>
-                  <th>Name</th>
-                  <th>Sort<span style="padding-left: 1.2em;">Desc?</span></th>
-                  <th>Width</th>
-                  <th>Aggregate</th>
-                  <th>Format</th>
-                  <th>Total</th>
-                  <th>Group</th>
-                  <th>Delete?</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for form in field_list_formset %}
-                  <tr>
-                    <td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
-                    <td>
-                      {{ form.id }}{{ form.path_verbose }}
-                    </td>
-                    <td>{{ form.field }}{{ form.field_verbose }}{{ form.path }}</td>
-                    <td>{{ form.name }}</td>
-                    <td>{{ form.sort }}{{ form.sort_reverse }}</td>
-                    <td>{{ form.width }}</td>
-                    <td onclick="aggregate_tip()">{{ form.aggregate }}</td>
-                    <td>{{ form.display_format }}</td>
-                    <td>{{ form.total }}</td>
-                    <td>{{ form.group }}</td>
-                    <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            Drag fields here
-            <div id="tip_area"></div>
-          </div>
-        </div>
         <div id="tabs-3">
           <a href="{% url "report_builder.views.download_xlsx" object.id %}">Download full xlsx</a>
           <div id="preview_area"></div>
         </div>
       </div>
-      
+        <input type="submit" value="Save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
     </section>
   </form>
 </div>
