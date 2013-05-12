@@ -308,7 +308,12 @@ def get_model_from_path_string(root_model, path):
 
 
 def sort_helper(x, sort_key):
-    result = x[sort_key] or datetime.date(datetime.MINYEAR, 1, 1)    
+    # TODO: explain what's going on here - I think this is meant to deal with
+    # null comparisons for datetimes? 
+    if x[sort_key] == None:
+        result = datetime.date(datetime.MINYEAR, 1, 1)
+    else:
+        result = x[sort_key]     
     return result.lower() if isinstance(result, basestring) else result
 
 def report_to_list(report, user, preview=False):
@@ -461,7 +466,11 @@ def report_to_list(report, user, preview=False):
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('-sort').\
                 values_list('position', 'sort_reverse')
             for sort_field in sort_fields:
-                filtered_report_rows.sort(key=lambda x: sort_helper(x, sort_field[0]-1), reverse=sort_field[1])
+                filtered_report_rows = sorted(
+                        filtered_report_rows,
+                        key=lambda x: sort_helper(x, sort_field[0]-1),
+                        reverse=sort_field[1]
+                        )
             values_and_properties_list = filtered_report_rows
         else:
             values_and_properties_list = []
@@ -493,7 +502,13 @@ def report_to_list(report, user, preview=False):
             for position, choice_list in choice_lists.iteritems():
                 row[position-1] = choice_list[row[position-1]]
             for position, display_format in display_formats.iteritems():
-                row[position-1] = display_format.string.format(row[position-1])
+                # convert value to be formatted into Decimal in order to apply
+                # numeric formats
+                try:
+                    value = Decimal(row[position-1])
+                except:
+                    value = row[position-1]
+                row[position-1] = display_format.string.format(value)
             final_list.append(row)
         values_and_properties_list = final_list
 
@@ -513,9 +528,12 @@ def report_to_list(report, user, preview=False):
         # add formatting to display totals
         for df in report.displayfield_set.all():
             if df.display_format:
-                display_totals_row[df.position-1] = df.display_format.string.format(
-                    display_totals_row[df.position-1]
-                    )
+                try:
+                    value = Decimal(display_totals_row[df.position-1])
+                except:
+                    value = display_totals_row[df.position-1]
+                display_totals_row[df.position-1] = df.display_format.string.\
+                    format(value)
 
         if display_totals:
             values_and_properties_list = (
