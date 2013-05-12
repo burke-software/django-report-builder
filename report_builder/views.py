@@ -508,7 +508,11 @@ def report_to_list(report, user, preview=False):
                     value = Decimal(row[position-1])
                 except:
                     value = row[position-1]
-                row[position-1] = display_format.string.format(value)
+                # Try to format the value, let it go without formatting for ValueErrors
+                try:
+                    row[position-1] = display_format.string.format(value)
+                except ValueError:
+                    row[position-1] = value
             final_list.append(row)
         values_and_properties_list = final_list
 
@@ -525,15 +529,15 @@ def report_to_list(report, user, preview=False):
                 else:
                     display_totals_row += ['']
 
-        # add formatting to display totals
-        for df in report.displayfield_set.all():
-            if df.display_format:
-                try:
-                    value = Decimal(display_totals_row[df.position-1])
-                except:
-                    value = display_totals_row[df.position-1]
-                display_totals_row[df.position-1] = df.display_format.string.\
-                    format(value)
+            # add formatting to display totals
+            for df in report.displayfield_set.all():
+                if df.display_format:
+                    try:
+                        value = Decimal(display_totals_row[df.position-1])
+                    except:
+                        value = display_totals_row[df.position-1]
+                    display_totals_row[df.position-1] = df.display_format.string.\
+                        format(value)
 
         if display_totals:
             values_and_properties_list = (

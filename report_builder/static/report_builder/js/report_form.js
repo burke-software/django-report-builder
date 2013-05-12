@@ -97,7 +97,7 @@ function enable_drag() {
             }
             row_html += '<td><select id="id_displayfield_set-'+i+'-display_format" name="displayfield_set-'+i+'-display_format"> /* populate options from DB on drop */ </select></td>';
             row_html += '<td><input type="checkbox" class="small_input" name="displayfield_set-'+i+'-total" id="id_displayfield_set-'+i+'-total"></td>';
-            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-group" id="id_displayfield_set-'+i+'-group"></td>';
+            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-group" id="id_displayfield_set-'+i+'-group">';
             row_html += '<span class="hide_me"><input type="text" name="displayfield_set-'+i+'-position" value="'+total_forms.val()+'" id="id_displayfield_set-'+i+'-position"></span></td>';
             row_html += '</tr>';
             $('#field_list_table > tbody:last').append(row_html);
