@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
+from django.db.models.signals import post_save
 from report_builder.unique_slugify import unique_slugify
 
 from dateutil import parser
@@ -122,6 +123,14 @@ class Report(models.Model):
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
     
+    def check_report_display_field_positions(self):
+        """ After report is saved, make sure positions are sane
+        """
+        for i, display_field in enumerate(self.displayfield_set.all()):
+            if display_field.position != i+1:
+                display_field.position = i+1
+                display_field.save()
+
 
 class Format(models.Model):
     """ A specifies a Python string format for e.g. `DisplayField`s. 

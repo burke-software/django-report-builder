@@ -633,6 +633,7 @@ class ReportUpdateView(UpdateView):
             field_list_formset.save()
             field_filter_formset.report = self.object
             field_filter_formset.save()
+            self.object.check_report_display_field_positions()
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form))
