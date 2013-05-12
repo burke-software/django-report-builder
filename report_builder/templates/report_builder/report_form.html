@@ -21,7 +21,7 @@
           <div style="display:table-cell;">
             {{ form.description }}
           </div>
-          <div style="display:table-cell; width:20em;">
+          <div style="display:table-cell; width:25em;">
             Last updated: {{ object.modified }}
             Model: {{ object.root_model }}
           </div>
@@ -85,10 +85,15 @@
                     <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
                     <td>
                       {{ form.id }}
-                      {{ form.path_verbose }}
+                      {{ form.path_verbose.as_hidden }}
                       {{ form.field }}
-                      {{ form.field_verbose }}
+                      {{ form.field_verbose.as_hidden }}
                       {{ form.path }}
+                      
+                      {% if form.path_verbose.value %}
+                        ({{ form.path_verbose.value }})
+                      {% endif %}
+                      {{ form.field_verbose.value }}
                     </td>
                     <td>{{ form.name }}</td>
                     <td>{{ form.sort }}{{ form.sort_reverse }}</td>
