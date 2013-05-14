@@ -11,8 +11,8 @@ from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField, Format
 from report_builder.utils import javascript_date_format
 from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import ListView
 from django import forms
 
 import datetime
@@ -322,7 +322,11 @@ def report_to_list(report, user, preview=False):
     """
     message= ""
     model_class = report.root_model.model_class()
-    objects = report.get_query()
+    try:
+        objects = report.get_query()
+    except exceptions.ValidationError, e:
+        message += "Validation Error: {0!s}".format(e)
+        return [], message
 
     # Display Values
     display_field_paths = []
@@ -681,5 +685,17 @@ def download_xlsx(request, pk):
     response['Content-Length'] = myfile.tell()
     return response
     
-    
-    
+
+@staff_member_required
+def ajax_add_star(request, pk):
+    """ Star or unstar report for user
+    """
+    report = get_object_or_404(Report, pk=pk)
+    user = request.user
+    if user in report.starred.all():
+        added = False
+        report.starred.remove(request.user)
+    else:
+        added = True
+        report.starred.add(request.user)
+    return HttpResponse(added)
