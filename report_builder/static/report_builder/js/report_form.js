@@ -149,7 +149,9 @@ function enable_drag() {
             
             row_html = '<tr>'
             row_html += '<td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>'
-            row_html += '<td><input id="id_fil-'+i+'-path_verbose" value="'+ path_verbose +'" readonly="readonly" type="text" name="fil-'+i+'-path_verbose" maxlength="2000"></td>'
+            row_html += '<td><input type="checkbox" name="fil-'+i+'-DELETE" id="id_fil-'+i+'-DELETE">'
+            row_html += '<span class="hide_me"><input type="text" name="fil-'+i+'-position" value="0" id="id_fil-'+i+'-position"></span>'
+            row_html += '<input id="id_fil-'+i+'-path_verbose" value="'+ path_verbose +'" readonly="readonly" type="hidden" name="fil-'+i+'-path_verbose" maxlength="2000"></td>'
             row_html += '<td><input type="hidden" name="fil-'+i+'-field" value="'+ label +'" id="id_fil-'+i+'-field">'
             row_html += '<input name="fil-'+i+'-field_verbose" value="'+ field +'" readonly="readonly" maxlength="2000" type="text" id="id_fil-'+i+'-field_verbose">'
             row_html += '<input type="hidden" value="'+ path +'" name="fil-'+i+'-path" id="id_fil-'+i+'-path"></td>'
@@ -182,8 +184,6 @@ function enable_drag() {
                 row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
             }
             row_html += '<td><input type="checkbox" name="fil-'+i+'-exclude" id="id_fil-'+i+'-exclude"></td>'
-            row_html += '<td><input type="checkbox" name="fil-'+i+'-DELETE" id="id_fil-'+i+'-DELETE">'
-            row_html += '<span class="hide_me"><input type="text" name="fil-'+i+'-position" value="0" id="id_fil-'+i+'-position"></span></td>'
             row_html += '</tr>'
             $('#field_filter_table > tbody:last').append(row_html);
             $( ".datepicker" ).datepicker();
@@ -293,7 +293,7 @@ function filter(element, list) {
     var value = $(element).val();
 
     $("#"+list+" li").each(function() {
-        if ($(this).text().search(value) > -1) {
+        if ($(this).text().toUpperCase().search(value.toUpperCase()) > -1) {
             $(this).show();
         }
         else {
@@ -301,3 +301,4 @@ function filter(element, list) {
         }
     });
 }
+

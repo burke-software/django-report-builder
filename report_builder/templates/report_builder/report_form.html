@@ -34,7 +34,7 @@
         <input type="text" class="search_box" onkeyup="filter(this, 'related_fields_ol')" placeholder="Search Fields"/>
         <ol class="tree" id="related_fields_ol" style="padding-left: 0px; margin: 0px;">
           <li class="tree_expanded">
-            <span class="button" onclick="show_fields(event, '{{ object.root_model_id }}', '', '');">
+            <span class="button highlight" onclick="show_fields(event, '{{ object.root_model_id }}', '', '');">
               {{ object.root_model }}
             </span>
           </li>
@@ -43,8 +43,8 @@
       </section>
       <section class="bottom_half">
         Fields - drag fields to add
+        <input type="text" class="search_box" onkeyup="filter(this, 'field_selection_div')" placeholder="Search Fields"/>
         <div id="field_selection_div">
-          <input type="text" class="search_box" onkeyup="filter(this, 'field_selection_div')" placeholder="Search Fields"/>
           {% include "report_builder/report_form_fields_li.html" %}
         </div>
       </section>
@@ -121,22 +121,27 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th>Path</th>
+                  <th>Delete?</th>
                   <th>Field</th>
                   <th>Filter Type</th>
                   <th>Value</th>
                   <th>Exclude?</th>
-                  <th>Delete?</th>
                 </tr>
               </thead>
               <tbody>
                 {% for form in field_filter_formset %}
                   <tr>
                     <td><span style="cursor: move;" class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                    <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
                     <td>
-                      {{ form.id }}{{ form.path_verbose }}
+                      {{ form.id }}
+                      {{ form.path_verbose.as_hidden }}
+                      {% if form.path_verbose.value %}
+                        ({{ form.path_verbose.value }})
+                      {% endif %}
+                      {{ form.field }}
+                      {{ form.field_verbose.as_hidden }}{{ form.field_verbose.value }}{{ form.path }}
                     </td>
-                    <td>{{ form.field }}{{ form.field_verbose }}{{ form.path }}</td>
                     <td>{{ form.filter_type }}</td>
                     {% if "DateField" in form.field_verbose.value %}
                         <td class="datepicker">{{ form.filter_value }}</td>
@@ -147,7 +152,6 @@
                         <td>{{ form.filter_value }}</td>
                     {% endif %}
                     <td>{{ form.exclude }}</td>
-                    <td>{{ form.DELETE }}<span class="hide_me">{{ form.position }}</span></td>
                   </tr>
                 {% endfor %}
               </tbody>

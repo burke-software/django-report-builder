@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url('^ajax_get_choices/$', views.ajax_get_choices, name="ajax_get_choices"),
     url('^ajax_get_formats/$', views.ajax_get_formats, name="ajax_get_formats"),
     ('^ajax_preview/$', views.ajax_preview),
+    ('^report/(?P<pk>\d+)/add_star/$', views.ajax_add_star),
 )
