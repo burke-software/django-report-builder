@@ -33,9 +33,9 @@ function ajax_add_star(event, url) {
 	{},
         function(data){
 	    if (data == 'True' ) {
-		$(event).html('UNST');
+		$(event).html('<img style="width: 35em; margin: -5em;" src="/static/report_builder/img/star.png">');
 	    } else {
-		$(event).html('STAR');
+		$(event).html('<img style="width: 35em; margin: -5em;" src="/static/report_builder/img/unstar.png">');
 	    }
         }
     );}

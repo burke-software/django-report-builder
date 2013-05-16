@@ -17,7 +17,7 @@ div#container .sidebar {
     padding: 0.5em;
 }
 div#container .top_half {
-    height: 40%;
+    height: 38%;
     overflow: auto;
     background: #f4f4f4;
     border: solid #CCCCCC 1px;
@@ -26,7 +26,7 @@ div#container .top_half {
 div#container .bottom_half {
     padding-top: 0.5em;
     overflow: auto;
-    height: 59%;
+    height: 55%;
     background: #f4f4f4;
     border: solid #CCCCCC 1px;
     padding: 4px;
