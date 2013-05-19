@@ -91,10 +91,14 @@ class ReportAdmin(admin.ModelAdmin):
     ajax_starred.short_description = "Starred"
     
     def save_model(self, request, obj, form, change):
+        star_user = False
         if not obj.id:
             obj.user_created = request.user
+            star_user = True
         obj.user_modified = request.user
         obj.save()
+        if star_user: # Star created reports automatically
+            obj.starred.add(request.user)
     
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
