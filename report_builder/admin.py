@@ -70,11 +70,11 @@ class ReportAdmin(admin.ModelAdmin):
         return super(ReportAdmin, self).changelist_view(request, extra_context=extra_context)
     
     def edit(self, obj):
-        return '<a href="%s"><img style="width: 35em; margin: -5em" src="/static/report_builder/img/edit.png"/></a>' % obj.get_absolute_url()
+        return '<a href="%s"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/edit.png"/></a>' % obj.get_absolute_url()
     edit.allow_tags = True
     
     def download_xlsx(self, obj):
-        return '<a href="{0}"><img style="width: 35em; margin: -5em" src="/static/report_builder/img/arrow.png"/></a>'.format(
+        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/arrow.png"/></a>'.format(
             reverse('report_builder.views.download_xlsx', args=[obj.id]))
     download_xlsx.allow_tags = True    
     download_xlsx.short_description = "Download"
@@ -84,7 +84,7 @@ class ReportAdmin(admin.ModelAdmin):
             img = '/static/report_builder/img/star.png'
         else:
             img = '/static/report_builder/img/unstar.png'
-        return '<a href="javascript:void(0)" onclick="ajax_add_star(this, \'{0}\')"><img style="width: 35em; margin: -5em;" src="{1}"/></a>'.format(
+        return '<a href="javascript:void(0)" onclick="ajax_add_star(this, \'{0}\')"><img style="width: 26px; margin: -6px;" src="{1}"/></a>'.format(
             reverse('report_builder.views.ajax_add_star', args=[obj.id]),
             img)
     ajax_starred.allow_tags = True
