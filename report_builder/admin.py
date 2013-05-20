@@ -53,7 +53,7 @@ class ReportAdmin(admin.ModelAdmin):
 
     class Media:
         media_url = getattr(settings, 'STATIC_URL', '/media')
-        js = [ media_url+'/report_builder/js/report_list.js', ]
+        js = [ media_url+'/report_builder/js/jquery-1.8.2.min.js', media_url+'/report_builder/js/report_list.js',]
 
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
