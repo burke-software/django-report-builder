@@ -47,7 +47,7 @@ class ReportAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
     fields = ['name', 'description', 'root_model', 'slug']
     search_fields = ('name', 'description')
-    list_filter = (StarredFilter, 'root_model', 'created', 'modified', 'user_created', 'user_modified')
+    list_filter = (StarredFilter, 'root_model', 'created', 'modified',)
     #inlines = [DisplayFieldInline, FilterFieldInline]
     list_display_links = []
 
