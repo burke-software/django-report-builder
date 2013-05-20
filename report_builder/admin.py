@@ -69,15 +69,6 @@ class ReportAdmin(admin.ModelAdmin):
         self.user = request.user
         return super(ReportAdmin, self).changelist_view(request, extra_context=extra_context)
     
-    def edit(self, obj):
-        return '<a href="%s"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/edit.png"/></a>' % obj.get_absolute_url()
-    edit.allow_tags = True
-    
-    def download_xlsx(self, obj):
-        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/arrow.png"/></a>'.format(
-            reverse('report_builder.views.download_xlsx', args=[obj.id]))
-    download_xlsx.allow_tags = True    
-    download_xlsx.short_description = "Download"
     
     def ajax_starred(self, obj):
         if obj.starred.filter(id=self.user.id):

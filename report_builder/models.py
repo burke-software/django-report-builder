@@ -1,6 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
@@ -122,6 +124,14 @@ class Report(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
+    
+    def edit(self):
+        return mark_safe('<a href="%s"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/edit.png"/></a>' % self.get_absolute_url())
+    
+    def download_xlsx(self):
+        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/arrow.png"/></a>'.format(
+            reverse('report_builder.views.download_xlsx', args=[self.id])))
+    download_xlsx.short_description = "Download"
     
     def check_report_display_field_positions(self):
         """ After report is saved, make sure positions are sane
