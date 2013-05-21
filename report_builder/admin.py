@@ -69,7 +69,6 @@ class ReportAdmin(admin.ModelAdmin):
         self.user = request.user
         return super(ReportAdmin, self).changelist_view(request, extra_context=extra_context)
     
-    
     def ajax_starred(self, obj):
         if obj.starred.filter(id=self.user.id):
             img = '/static/report_builder/img/star.png'
