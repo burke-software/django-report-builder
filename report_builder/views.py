@@ -6,10 +6,10 @@ from django.contrib.auth.decorators import permission_required
 from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField, Format
-from report_builder.utils import javascript_date_format
+from report_builder.utils import javascript_date_format, duplicate
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView
@@ -21,7 +21,7 @@ import re
 from decimal import Decimal
 from numbers import Number
 from types import BooleanType
-
+import copy
 from dateutil import parser
 
 
@@ -699,3 +699,25 @@ def ajax_add_star(request, pk):
         added = True
         report.starred.add(request.user)
     return HttpResponse(added)
+    
+@staff_member_required
+def create_copy(request, pk):
+    """ Copy a report including related fields """
+    report = get_object_or_404(Report, pk=pk)
+    new_report = duplicate(report, changes=(
+        ('name', '{} (copy)'.format(report.name)),
+        ('user_created', request.user),
+        ('user_modified', request.user),
+    ))
+    # duplicate does not get related
+    for display in report.displayfield_set.all():
+        new_display = copy.copy(display)
+        new_display.pk = None
+        new_display.report = new_report
+        new_display.save()
+    for report_filter in report.filterfield_set.all():
+        new_filter = copy.copy(report_filter)
+        new_filter.pk = None
+        new_filter.report = new_report
+        new_filter.save()
+    return redirect(new_report)
