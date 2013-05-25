@@ -129,7 +129,7 @@ class Report(models.Model):
     edit.allow_tags = True
     
     def download_xlsx(self):
-        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/arrow.png"/></a>'.format(
+        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/download.svg"/></a>'.format(
             reverse('report_builder.views.download_xlsx', args=[self.id])))
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
