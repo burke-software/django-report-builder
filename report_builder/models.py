@@ -136,7 +136,7 @@ class Report(models.Model):
     
 
     def copy_report(self):
-        return '<a href="{0}">Copy</a>'.format(
+        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/copy.svg"/></a>'.format(
             reverse('report_builder.views.create_copy', args=[self.id]))
     copy_report.short_description = "Copy"
     copy_report.allow_tags = True
