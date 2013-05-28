@@ -5,7 +5,7 @@ A GUI for Django ORM. Build custom queries and display results. Targets sys admi
 not be able to program or gain direct interactive shell access.
 
 
-![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/report.png)
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderscreen.png)
 
 What's finished?
 - Add filters
@@ -37,7 +37,9 @@ REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
 
 # Django-SIS Usage
 
-Access the admin report builder site (sampleurl/admin/report_builder). The following report builder dashboard screen appears: IMAGE
+Access the admin report builder site (sampleurl/admin/report_builder). The following report builder dashboard screen appears:
+
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderdash.png)
 
 This dashboard will allow the user to view any reports that have previously been created. Additionally, users will have the option of utilizing the available filter to quickly access, sort, and view previous reports by status, date, and root model.
 
@@ -49,12 +51,11 @@ Creating a New Report
 ----------------------
 From the report builder main screen described above, select **Add Report** located at the top right-hand corner of the dash. The *Add Report* screen displays- **name** and **root model** (students, applicants, workers, etc.) are required fields.
 
-IMAGE
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/addreportscreen.png)
 
 It may also be helpful to include an extended description as shown above to provide other users with a more clear direction of how the report is used. Once the information has been entered, select **Save** Your newly created report will now show as the most recent report in the dash, where you can then edit accordingly: 
 
-IMAGE
-
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/newreportindash.png)
 
 -------------------
 Editing a Report
@@ -62,7 +63,7 @@ Editing a Report
 
 All created reports have the option of being edited. Using the newly created report from above, to begin editing, select the pencil icon located under the **Edit** column by the respective report, in this instance: Basic Student-Worker Information.
 
-IMAGE
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/editreportscreen.png)
 
 With the **Report Display Fields** tab selected, click and drag the fields from the list of available options located at the bottom-left side of the screen into the empty area located directly to the right while the appropiate tab is still selected. **Save** your selection.
 
@@ -70,7 +71,7 @@ With the **Report Display Fields** tab selected, click and drag the fields from 
 
 After dragging your specified fields and saving, users then have the option to preview the report by selecting the **Preview Report** tab. This will generate a preview, where users can then export into an Excel/Libre-Calc document, as shown below:
 
-IMAGE
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/previewreport.png)
 
 
 
@@ -85,7 +86,7 @@ Using the example above, consider the use case of a user wanting to pull the stu
 2. Under the **value** header, select Monday, and Male accordingly.
 3. Click **Save** then enter preview tab to view and download into Excel.
 
-IMAGE
+![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportfilterstab.png)
 
 
 
