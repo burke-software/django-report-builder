@@ -3,10 +3,11 @@ from django.core import exceptions
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, redirect, get_object_or_404, render
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField, Format
 from report_builder.utils import javascript_date_format, duplicate
@@ -316,17 +317,22 @@ def sort_helper(x, sort_key):
         result = x[sort_key]     
     return result.lower() if isinstance(result, basestring) else result
 
-def report_to_list(report, user, preview=False):
+def report_to_list(report, user, preview=False, queryset=None):
     """ Create list from a report with all data filtering
+    preview: Return only first 50
+    objects: Provide objects for list, instead of running filters
     Returns list, message in case of issues
     """
     message= ""
     model_class = report.root_model.model_class()
-    try:
-        objects = report.get_query()
-    except exceptions.ValidationError, e:
-        message += "Validation Error: {0!s}. This probably means something is wrong with the report's filters.".format(e)
-        return [], message
+    if queryset != None:
+        objects = report.add_aggregates(queryset)
+    else:
+        try:
+            objects = report.get_query()
+        except exceptions.ValidationError, e:
+            message += "Validation Error: {0!s}. This probably means something is wrong with the report's filters.".format(e)
+            return [], message
 
     # Display Values
     display_field_paths = []
@@ -643,9 +649,11 @@ class ReportUpdateView(UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
         
 @staff_member_required
-def download_xlsx(request, pk):
+def download_xlsx(request, pk, queryset=None):
     """ Download the full report in xlsx format
-    Why xlsx? Because there is no decent ods library for python and xls has limitations """
+    Why xlsx? Because there is no decent ods library for python and xls has limitations 
+    queryset: predefined queryset to bypass filters
+    """
     import cStringIO as StringIO
     from openpyxl.workbook import Workbook
     from openpyxl.writer.excel import save_virtual_workbook
@@ -667,7 +675,7 @@ def download_xlsx(request, pk):
         ws.column_dimensions[get_column_letter(i+1)].width = field.width
         i += 1
     
-    objects_list, message = report_to_list(report, request.user)
+    objects_list, message = report_to_list(report, request.user, queryset=queryset)
     for row in objects_list:
         try:
             ws.append(row)
@@ -721,3 +729,29 @@ def create_copy(request, pk):
         new_filter.report = new_report
         new_filter.save()
     return redirect(new_report)
+
+
+@staff_member_required
+def export_to_report(request):
+    """ Export objects (by ID and content type) to an existing or new report
+    In effect this runs the report with it's display fields. It ignores 
+    filters and filters instead the provided ID's. It can be select
+    as a global admin action.
+    """
+    admin_url = request.GET.get('admin_url', '/')
+    ct = ContentType.objects.get_for_id(request.GET['ct'])
+    ids = request.GET['ids'].split(',')
+    number_objects = len(ids)
+    reports = Report.objects.filter(root_model=ct).order_by('-modified')
+    
+    if 'download' in request.GET:
+        report = get_object_or_404(Report, pk=request.GET['download'])
+        queryset = ct.model_class().objects.filter(pk__in=ids)
+        return download_xlsx(request, report.id, queryset=queryset)
+    
+    return render(request, 'report_builder/export_to_report.html', {
+        'object_list': reports,
+        'admin_url': admin_url,
+        'number_objects': number_objects,
+        'model': ct.model_class()._meta.verbose_name,
+        })

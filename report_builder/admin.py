@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
+from django.contrib.contenttypes.models import ContentType
 from django import forms
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -92,3 +93,15 @@ class ReportAdmin(admin.ModelAdmin):
     
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
+
+def export_to_report(modeladmin, request, queryset):
+    admin_url = request.get_full_path()
+    selected_int = queryset.values_list('id', flat=True)
+    selected = []
+    for s in selected_int:
+        selected.append(str(s))
+    ct = ContentType.objects.get_for_model(queryset.model)
+    return HttpResponseRedirect(reverse('report_builder.views.export_to_report') + "?ct=%s&admin_url=%s&ids=%s" % (ct.pk, admin_url, ",".join(selected)))
+
+if getattr(settings, 'REPORT_BUILDER_GLOBAL_EXPORT', False):
+    admin.site.add_action(export_to_report, 'Export to Report')
