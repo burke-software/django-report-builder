@@ -15,6 +15,7 @@ What's finished?
 reports. Unprivileged users can still build reports and see database schema.
 - Model properties (thanks yekibud)
 - Support for [django-custom-fields](http://code.google.com/p/django-custom-field/)
+- Export to Report global admin action
 
 What isn't
 - "or" filters together
@@ -34,6 +35,9 @@ Optional - limit which models can be used by adding in settings.py
 REPORT_BUILDER_INCLUDE = []
 
 REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
+
+Export to Report action is disabled by default. To enable set
+REPORT_BUILDER_GLOBAL_EXPORT = True
 
 # Django-SIS Usage
 
