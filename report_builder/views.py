@@ -190,6 +190,7 @@ def filter_property(filter_field, value):
     return filtered 
 
             
+@staff_member_required
 def ajax_get_related(request):
     """ Get related model and fields
     Requires get variables model and field
@@ -225,6 +226,7 @@ def ajax_get_related(request):
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
 
+@staff_member_required
 def ajax_get_fields(request):
     """ Get fields and properties for a particular model
     """
@@ -278,6 +280,7 @@ def ajax_get_fields(request):
         'root_model': root_model,
     }, RequestContext(request, {}),)
 
+@staff_member_required
 def ajax_get_choices(request):
     path_verbose = request.GET.get('path_verbose')
     label = request.GET.get('label')
@@ -287,6 +290,7 @@ def ajax_get_choices(request):
     options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
 
+@staff_member_required
 def ajax_get_formats(request):
     choices = Format.objects.values_list('pk', 'name')
     select_widget = forms.Select(choices=[('','---------')] + list(choices))
