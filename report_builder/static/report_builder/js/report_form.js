@@ -177,11 +177,11 @@ function enable_drag() {
 <option value="iregex">Regular Expression (case-insensitive)</option>\
 </select></td>'
             if ( field.indexOf("DateField") > 0 ) {
-            	row_html += '<td><input class="datepicker" id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
+            	row_html += '<td><input class="datepicker" id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"><input class="datepicker" id="id_fil-'+i+'-filter_value2" style="display: none;" type="text" name="fil-'+i+'-filter_value2" value="" maxlength="2000"></td>'
             } else if (choices) {
                 row_html += '<td><select id="id_fil-'+i+'-filter_value" name="fil-'+i+'-filter_value">'+choices+'</select></td>'
             } else {
-                row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"></td>'
+                row_html += '<td><input id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"><input id="id_fil-'+i+'-filter_value2" style="display: none;" type="text" name="fil-'+i+'-filter_value2" value="" maxlength="2000"></td>'
             }
             row_html += '<td><input type="checkbox" name="fil-'+i+'-exclude" id="id_fil-'+i+'-exclude"></td>'
             row_html += '</tr>'
@@ -196,6 +196,7 @@ function check_filter_type(element){
     selected_type = element.find(":selected").val();
     element.closest('tr').find('input[name=check_value]').remove();
     filter_value = element.closest('tr').find('input[id$=filter_value]');
+    filter_value2 = element.closest('tr').find('input[id$=filter_value2]');
     switch (selected_type) { 
         case 'isnull':
             if ( filter_value.val() && filter_value.val() != '0'  ) {
@@ -207,9 +208,15 @@ function check_filter_type(element){
                 }
             }
             filter_value.hide();
+            filter_value2.hide()
+            break;
+        case 'range':
+            filter_value.show();
+            filter_value2.show();
             break;
         default:
             filter_value.show();
+            filter_value2.hide();
     }
 }
 

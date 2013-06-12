@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.db import models
@@ -92,8 +93,17 @@ class Report(models.Model):
                                 filter_value,
                                 timezone.get_current_timezone()
                             )
+                        if filter_field.filter_type == 'range':
+                            filter_value = [filter_value, parser.parse(filter_field.filter_value2)]
+                            if settings.USE_TZ:
+                                filter_value[1] = timezone.make_aware(
+                                    filter_value[1],
+                                    timezone.get_current_timezone()
+                                )
                     else:
                         filter_value = filter_field.filter_value
+                        if filter_field.filter_type == 'range':
+                            filter_value = [filter_value, filter_field.filter_value2]
                     filter_ = {filter_string: filter_value}
 
                 if not filter_field.exclude:
@@ -259,6 +269,13 @@ class FilterField(models.Model):
 
     class Meta:
         ordering = ['position']
+    
+    def clean(self):
+        if self.filter_type == "range":
+            if self.filter_value2 in [None, ""]:
+                raise ValidationError('Range filters must have two values')
+        return super(FilterField, self).clean()
+
 
     def get_choices(self, path, field_name):
         model_name = path.split(':')[-1]
