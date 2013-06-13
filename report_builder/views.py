@@ -17,6 +17,7 @@ from django.views.generic import ListView
 from django import forms
 
 import datetime
+import inspect
 import time
 import re
 from decimal import Decimal
@@ -113,11 +114,14 @@ def get_custom_fields_from_model(model_class):
         custom_fields = CustomField.objects.filter(content_type=content_type)
         return custom_fields
 
+def isprop(v):
+    return isinstance(v, property)
+
 def get_properties_from_model(model_class):
     properties = []
-    for attr_name, attr in dict(model_class.__dict__).iteritems():
-        if type(attr) == property:
-            properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
+    attr_names = [name for (name, value) in inspect.getmembers(model_class, isprop)]
+    for attr_name in attr_names:
+        properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
     return sorted(properties)
 
 def filter_property(filter_field, value):
