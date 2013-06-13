@@ -259,7 +259,7 @@ class FilterField(models.Model):
             ('week_day','Week day'),
             ('isnull','Is null'),
             ('regex','Regular Expression'),
-            ('iregex','Reg. Express. (case-insensitive)'),
+            ('iregex','Reg. Exp. (case-insensitive)'),
         ),
         blank=True,
         default = 'icontains',

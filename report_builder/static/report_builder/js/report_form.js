@@ -161,7 +161,7 @@ function enable_drag() {
 <option value="iexact">Equals (case-insensitive)</option>\
 <option value="contains">Contains</option>\
 <option value="icontains" selected="selected">Contains (case-insensitive)</option>\
-<option value="in">in (must be array like [1,2,3])</option>\
+<option value="in">in (comma seperated 1,2,3)</option>\
 <option value="gt">Greater than</option>\
 <option value="gte">Greater than equals</option>\
 <option value="lt">Less than</option>\
@@ -174,7 +174,7 @@ function enable_drag() {
 <option value="week_day">Week day</option>\
 <option value="isnull">Is null</option>\
 <option value="regex">Regular Expression</option>\
-<option value="iregex">Regular Expression (case-insensitive)</option>\
+<option value="iregex">Reg. Exp. (case-insensitive)</option>\
 </select></td>'
             if ( field.indexOf("DateField") > 0 ) {
             	row_html += '<td><input class="datepicker" id="id_fil-'+i+'-filter_value" type="text" name="fil-'+i+'-filter_value" value="" maxlength="2000"><input class="datepicker" id="id_fil-'+i+'-filter_value2" style="display: none;" type="text" name="fil-'+i+'-filter_value2" value="" maxlength="2000"></td>'
