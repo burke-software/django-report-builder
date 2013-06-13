@@ -339,7 +339,10 @@ def report_to_list(report, user, preview=False, queryset=None):
         try:
             objects = report.get_query()
         except exceptions.ValidationError, e:
-            message += "Validation Error: {0!s}. This probably means something is wrong with the report's filters.".format(e)
+            message += "Validation Error: {0!s}. Something may be wrong with the report's filters.".format(e)
+            return [], message
+        except ValueError, e:
+            message += "Value Error: {0!s}. Something may be wrong with the report's filters. For example it may be expecting a number but received a character.".format(e)
             return [], message
 
     # Display Values

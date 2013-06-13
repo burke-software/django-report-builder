@@ -84,6 +84,8 @@ class Report(models.Model):
                 # Check for special types such as isnull
                 if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
                     filter_ = {filter_string: False}
+                elif filter_field.filter_type == "in":
+                    filter_ = {filter_string: filter_field.filter_value.split(',')}
                 else:
                     # All filter values are stored as strings, but may need to be converted
                     if '[Date' in filter_field.field_verbose:
@@ -244,7 +246,7 @@ class FilterField(models.Model):
             ('iexact','Equals (case-insensitive)'),
             ('contains','Contains'),
             ('icontains','Contains (case-insensitive)'),
-            ('in','in (must be array like [1,2,3])'),
+            ('in','in (comma seperated 1,2,3)'),
             ('gt','Greater than'),
             ('gte','Greater than equals'),
             ('lt','Less than'),
