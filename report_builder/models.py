@@ -137,19 +137,26 @@ class Report(models.Model):
         return ("report_update_view", [str(self.id)])
     
     def edit(self):
-        return mark_safe('<a href="%s"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/edit.png"/></a>' % self.get_absolute_url())
+        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/edit.png"/></a>'.format(
+            self.get_absolute_url(),
+            getattr(settings, 'STATIC_URL', '/static/')   
+        ))
     edit.allow_tags = True
     
     def download_xlsx(self):
-        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/download.svg"/></a>'.format(
-            reverse('report_builder.views.download_xlsx', args=[self.id])))
+        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+            reverse('report_builder.views.download_xlsx', args=[self.id]),
+            getattr(settings, 'STATIC_URL', '/static/'),
+        )
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
     
 
     def copy_report(self):
-        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="/static/report_builder/img/copy.svg"/></a>'.format(
-            reverse('report_builder.views.create_copy', args=[self.id]))
+        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/copy.svg"/></a>'.format(
+            reverse('report_builder.views.create_copy', args=[self.id]),
+            getattr(settings, 'STATIC_URL', '/static/'),
+        )
     copy_report.short_description = "Copy"
     copy_report.allow_tags = True
 

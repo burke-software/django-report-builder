@@ -41,7 +41,7 @@
           <li>{% include "report_builder/report_form_related_li.html" %}</li>
         </ol>
       </section>
-      <div style="text-align: center;"><img style="width: 2.5em;" src="/static/report_builder/img/arrow_down.png"/></div>
+      <div style="text-align: center;"><img style="width: 2.5em;" src="{{ STATIC_URL }}report_builder/img/arrow_down.png"/></div>
       <section class="bottom_half">
         Fields - drag fields to add
         <input type="text" class="search_box" onkeyup="filter(this, 'field_selection_div')" placeholder="Search Fields"/>
