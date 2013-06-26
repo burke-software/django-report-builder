@@ -724,7 +724,7 @@ def create_copy(request, pk):
     """ Copy a report including related fields """
     report = get_object_or_404(Report, pk=pk)
     new_report = duplicate(report, changes=(
-        ('name', '{} (copy)'.format(report.name)),
+        ('name', '{0} (copy)'.format(report.name)),
         ('user_created', request.user),
         ('user_modified', request.user),
     ))
