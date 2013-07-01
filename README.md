@@ -41,6 +41,9 @@ REPORT_BUILDER_GLOBAL_EXPORT = True
 
 # Django-SIS Usage
 
+Django-SIS is a good example integration of report_builder. Note we've given report_builder a grappelli theme by modifying
+templates.
+
 Access the admin report builder site (sampleurl/admin/report_builder). The following report builder dashboard screen appears:
 
 ![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderdash.png)
