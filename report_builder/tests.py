@@ -1,10 +1,15 @@
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
 from report_builder.models import Report, DisplayField
 from report_builder.views import *
 from django.conf import settings
+
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except ImportError:
+    from django.contrib.auth.models import User
 
 class UtilityFunctionTests(TestCase):
     def setUp(self):
