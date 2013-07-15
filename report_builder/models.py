@@ -114,7 +114,9 @@ class Report(models.Model):
                 else:
                     excludes.update(filter_) 
 
-            except Exception, e:
+            except Exception:
+                import sys
+                e = sys.exc_info()[1]
                 message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
                 message += "you found a bug! "
                 message += "If you made this in admin, then you probably did something wrong."
