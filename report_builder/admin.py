@@ -49,7 +49,6 @@ class ReportAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'root_model', 'slug']
     search_fields = ('name', 'description')
     list_filter = (StarredFilter, 'root_model', 'created', 'modified',)
-    #inlines = [DisplayFieldInline, FilterFieldInline]
     list_display_links = []
 
     class Media:
@@ -80,6 +79,11 @@ class ReportAdmin(admin.ModelAdmin):
             img)
     ajax_starred.allow_tags = True
     ajax_starred.short_description = "Starred"
+    
+    def lookup_allowed(self, lookup, *args, **kwargs):
+        if lookup in ('root_model__app_label',):
+            return True
+        return super(ReportAdmin, self).lookup_allowed(lookup, *args, **kwargs)
     
     def save_model(self, request, obj, form, change):
         star_user = False
