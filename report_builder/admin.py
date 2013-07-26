@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from report_builder.models import DisplayField, Report, FilterField, Format
 from django.conf import settings
 
+static_url = getattr(settings, 'STATIC_URL', '/static/')
 
 class DisplayFieldForm(forms.ModelForm):
     position = forms.IntegerField(widget=forms.HiddenInput, required=False)
@@ -53,8 +54,7 @@ class ReportAdmin(admin.ModelAdmin):
     list_display_links = []
 
     class Media:
-        media_url = getattr(settings, 'STATIC_URL', '/media')
-        js = [ media_url+'/report_builder/js/jquery-1.8.2.min.js', media_url+'/report_builder/js/report_list.js',]
+        js = [ static_url+'report_builder/js/jquery-1.8.2.min.js', static_url+'report_builder/js/report_list.js',]
 
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
@@ -72,9 +72,9 @@ class ReportAdmin(admin.ModelAdmin):
     
     def ajax_starred(self, obj):
         if obj.starred.filter(id=self.user.id):
-            img = '/static/report_builder/img/star.png'
+            img = static_url+'report_builder/img/star.png'
         else:
-            img = '/static/report_builder/img/unstar.png'
+            img = static_url+'report_builder/img/unstar.png'
         return '<a href="javascript:void(0)" onclick="ajax_add_star(this, \'{0}\')"><img style="width: 26px; margin: -6px;" src="{1}"/></a>'.format(
             reverse('report_builder.views.ajax_add_star', args=[obj.id]),
             img)
