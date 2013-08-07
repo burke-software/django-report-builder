@@ -112,6 +112,8 @@ function enable_drag() {
     $("span.button[data-choices='true']").mousedown(function() {
         $.get( path_prefix + '/report_builder/ajax_get_choices/', {
             'path_verbose': $(this).data('path_verbose'),
+            'path': $(this).data('path'),
+            'app_label': $(this).data('app_label'),
             'label': $(this).data('label'),
             'root_model': $(this).data('root_model'),
             },

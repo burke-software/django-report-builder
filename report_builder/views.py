@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404, render
 from django.template import RequestContext
 from report_builder.models import Report, DisplayField, FilterField, Format
-from report_builder.utils import javascript_date_format, duplicate
+from report_builder.utils import javascript_date_format, duplicate, get_model_from_path_string
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView
@@ -241,6 +241,7 @@ def ajax_get_fields(request):
     properties = get_properties_from_model(model)
     custom_fields = get_custom_fields_from_model(model)
     root_model = model.__name__.lower()
+    app_label = model._meta.app_label
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
@@ -248,6 +249,7 @@ def ajax_get_fields(request):
             'properties': properties,
             'custom_fields': custom_fields,
             'root_model': root_model,
+            'app_label': app_label,
         }, RequestContext(request, {}),)
     
     field = model._meta.get_field_by_name(field_name)
@@ -274,7 +276,8 @@ def ajax_get_fields(request):
     fields = get_direct_fields_from_model(new_model)
     custom_fields = get_custom_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
-
+    app_label = new_model._meta.app_label
+    
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
         'custom_fields': custom_fields,
@@ -282,6 +285,7 @@ def ajax_get_fields(request):
         'path': path,
         'path_verbose': path_verbose,
         'root_model': root_model,
+        'app_label': app_label,        
     }, RequestContext(request, {}),)
 
 @staff_member_required
@@ -289,7 +293,11 @@ def ajax_get_choices(request):
     path_verbose = request.GET.get('path_verbose')
     label = request.GET.get('label')
     root_model = request.GET.get('root_model')
-    choices = FilterField().get_choices(path_verbose or root_model, label)
+    app_label = request.GET.get('app_label')
+    model_name = path_verbose or root_model
+    model_name = model_name.split(':')[-1]
+    model = ContentType.objects.get(model=model_name, app_label=app_label).model_class()
+    choices = FilterField().get_choices(model, label)
     select_widget = forms.Select(choices=[('','---------')] + list(choices))
     options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
@@ -300,21 +308,6 @@ def ajax_get_formats(request):
     select_widget = forms.Select(choices=[('','---------')] + list(choices))
     options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
-
-def get_model_from_path_string(root_model, path):
-    """ Return a model class for a related model
-    root_model is the class of the initial model
-    path is like foo__bar where bar is related to foo
-    """
-    for path_section in path.split('__'):
-        if path_section:
-            field = root_model._meta.get_field_by_name(path_section)
-            if field[2]:
-                root_model = field[0].related.parent_model()
-            else:
-                root_model = field[0].model
-    return root_model
-
 
 def sort_helper(x, sort_key):
     # TODO: explain what's going on here - I think this is meant to deal with
@@ -510,7 +503,8 @@ def report_to_list(report, user, preview=False, queryset=None):
                 df_choices[None] = ''
                 choice_lists.update({df.position: df_choices}) 
             if df.display_format:
-                display_formats.update({df.position: df.display_format}) 
+                display_formats.update({df.position: df.display_format})
+
         for row in values_and_properties_list:
             # add display totals for grouped result sets
             # TODO: dry this up, duplicated logic in non-grouped total routine 
@@ -521,7 +515,7 @@ def report_to_list(report, user, preview=False, queryset=None):
                         increment_total(field, display_totals, row[i])
             row = list(row)
             for position, choice_list in choice_lists.iteritems():
-                row[position-1] = choice_list[row[position-1]]
+                row[position-1] = unicode(choice_list[row[position-1]])
             for position, display_format in display_formats.iteritems():
                 # convert value to be formatted into Decimal in order to apply
                 # numeric formats
@@ -640,6 +634,7 @@ class ReportUpdateView(UpdateView):
         ctx['properties'] = properties
         ctx['model_ct'] = model_ct
         ctx['root_model'] = model_ct.model
+        ctx['app_label'] = model_ct.app_label
         
         return ctx
 

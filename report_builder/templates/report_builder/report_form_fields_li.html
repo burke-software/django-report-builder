@@ -7,6 +7,7 @@
               data-path_verbose="{{ path_verbose }}"
               data-choices="{% if field.choices %}true{% endif %}"
               data-root_model="{{ root_model }}"
+              data-app_label="{{ app_label }}"
               >
             {{ field.verbose_name }} [{{ field.get_internal_type }}]
         </span>
@@ -23,6 +24,7 @@
               data-label="{{ custom_field.name }}"
               data-path="{{ path }}"
               data-path_verbose="{{ path_verbose }}"
+              data-app_label="{{ app_label }}"
               >
             {{ custom_field.name }} [custom {{ custom_field.get_field_type_display }}]
         </span>
@@ -39,6 +41,7 @@
               data-label="{{ property.label }}"
               data-path="{{ path }}"
               data-path_verbose="{{ path_verbose }}"
+              data-app_label="{{ app_label }}"
               >
             {{ property.label }} [property]
         </span>
