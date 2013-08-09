@@ -17,6 +17,10 @@ class Migration(SchemaMigration):
                 name = "US Currency",
                 string = "${:20,.2f}",
             )
+            Format.objects.create(
+                name = "ISO Date",
+                string = "{:%Y-%m-%d}",
+            )
         Format.objects.create(
             name = "Percent",
             string = "{0:.0f}%",
