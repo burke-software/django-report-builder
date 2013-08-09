@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import sys
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -10,10 +11,12 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         from report_builder.models import Format
         # Create some initial data
-        Format.objects.create(
-            name = "US Currency",
-            string = "${:20,.2f}",
-        )
+        if sys.version_info > (2,7):
+            # Doesn't work in 2.6
+            Format.objects.create(
+                name = "US Currency",
+                string = "${:20,.2f}",
+            )
         Format.objects.create(
             name = "Percent",
             string = "{0:.0f}%",
