@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.signals import post_save
 from report_builder.unique_slugify import unique_slugify
+from report_builder.utils import get_model_from_path_string
 from dateutil import parser
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -213,9 +214,7 @@ class DisplayField(models.Model):
     class Meta:
         ordering = ['position']
     
-    def get_choices(self, path, field_name):
-        model_name = path.split(':')[-1]
-        model = ContentType.objects.get(model=model_name).model_class()
+    def get_choices(self, model, field_name):
         try:
             model_field = model._meta.get_field_by_name(field_name)[0]
         except:
@@ -235,8 +234,8 @@ class DisplayField(models.Model):
     @property
     def choices(self):
         if self.pk:
-            path = self.path_verbose or self.report.root_model.model
-            return self.get_choices(path, self.field)
+            model = get_model_from_path_string(self.report.root_model.model_class(), self.path)
+            return self.get_choices(model, self.field)
 
     def __unicode__(self):
         return self.name
@@ -289,9 +288,7 @@ class FilterField(models.Model):
         return super(FilterField, self).clean()
 
 
-    def get_choices(self, path, field_name):
-        model_name = path.split(':')[-1]
-        model = ContentType.objects.get(model=model_name).model_class()
+    def get_choices(self, model, field_name):
         try:
             model_field = model._meta.get_field_by_name(field_name)[0]
         except:
@@ -302,8 +299,8 @@ class FilterField(models.Model):
     @property
     def choices(self):
         if self.pk:
-            path = self.path_verbose or self.report.root_model.model
-            return self.get_choices(path, self.field)
+            model = get_model_from_path_string(self.report.root_model.model_class(), self.path)
+            return self.get_choices(model, self.field)
 
     def __unicode__(self):
         return self.field
