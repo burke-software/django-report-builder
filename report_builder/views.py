@@ -467,7 +467,10 @@ def report_to_list(report, user, preview=False, queryset=None):
                                 else:
                                     val = None
                             else:
-                                val = reduce(getattr, relations, obj)
+                                try:
+                                    val = reduce(getattr, relations, obj)
+                                except AttributeError:
+                                    val = None
                             values_and_properties_list[-1].insert(position, val)
                             increment_total(display_property, display_totals, val)
                         for position, display_custom in custom_list.iteritems(): 
