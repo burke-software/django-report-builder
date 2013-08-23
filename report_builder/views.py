@@ -309,10 +309,9 @@ def ajax_get_formats(request):
     options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
 
-def sort_helper(x, sort_key):
-    # TODO: explain what's going on here - I think this is meant to deal with
-    # null comparisons for datetimes? 
-    if x[sort_key] == None:
+def sort_helper(x, sort_key, date_field=False):
+    # If comparing datefields, assume null is the min year
+    if date_field and x[sort_key] == None:
         result = datetime.date(datetime.MINYEAR, 1, 1)
     else:
         result = x[sort_key]     
@@ -467,7 +466,7 @@ def report_to_list(report, user, preview=False, queryset=None):
                                 else:
                                     val = None
                             else:
-                                try:
+                                try: # Could error if a related field doesn't exist
                                     val = reduce(getattr, relations, obj)
                                 except AttributeError:
                                     val = None
@@ -483,9 +482,16 @@ def report_to_list(report, user, preview=False, queryset=None):
             sort_fields = report.displayfield_set.filter(sort__gt=0).order_by('-sort').\
                 values_list('position', 'sort_reverse')
             for sort_field in sort_fields:
-                filtered_report_rows = sorted(
+                try:
+                    filtered_report_rows = sorted(
                         filtered_report_rows,
                         key=lambda x: sort_helper(x, sort_field[0]-1),
+                        reverse=sort_field[1]
+                        )
+                except TypeError: # Sorry crappy way to determine if date is being sorted
+                    filtered_report_rows = sorted(
+                        filtered_report_rows,
+                        key=lambda x: sort_helper(x, sort_field[0]-1, date_field=True),
                         reverse=sort_field[1]
                         )
             values_and_properties_list = filtered_report_rows
