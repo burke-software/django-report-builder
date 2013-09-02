@@ -32,7 +32,7 @@ class Report(models.Model):
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
     user_modified = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True, related_name="report_modified_set")
-    distinct = models.BooleanField()
+    distinct = models.NullBooleanField()
     starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
                                      help_text="These users have starred this report for easy reference.",
                                      related_name="report_starred_set")
