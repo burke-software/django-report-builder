@@ -36,6 +36,10 @@ REPORT_BUILDER_INCLUDE = []
 
 REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
 
+You may also limit which fields in a model can be used. Just add the property:
+
+    report_builder_exclude_fields = () # Lists or tuple of excluded fields
+
 Export to Report action is disabled by default. To enable set
 REPORT_BUILDER_GLOBAL_EXPORT = True
 

@@ -274,6 +274,14 @@ def ajax_get_fields(request):
         path_verbose = new_model.__name__.lower()
    
     fields = get_direct_fields_from_model(new_model)
+    if hasattr(new_model, 'report_builder_exclude_fields'):
+        good_fields = []
+        for field in fields:
+            if not field.name in new_model.report_builder_exclude_fields:
+                good_fields += [field]
+        fields = good_fields
+
+    
     custom_fields = get_custom_fields_from_model(new_model)
     properties = get_properties_from_model(new_model)
     app_label = new_model._meta.app_label
