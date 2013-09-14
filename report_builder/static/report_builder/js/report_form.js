@@ -290,6 +290,11 @@ $(function() {
         element = $(value).closest('tr').find('select[id$=filter_type]');
         check_filter_type(element);
     });
+    // Don't forget selects
+    $('select[id$=filter_value]').each(function(index, value) {
+        element = $(value).closest('tr').find('select[id$=filter_type]');
+        check_filter_type(element);
+    });
     $( ".datepicker" ).datepicker();
     $('input').change(function() {
         if( $(this).val() != "" )
