@@ -38,7 +38,8 @@ class ReportEditForm(forms.ModelForm):
         model = Report
         fields = ['name', 'distinct', 'description',]
         widgets = {
-            'description': forms.TextInput(attrs={'style': 'width:99%;'}),
+            'description': forms.TextInput(
+                attrs={'style': 'width:99%;', 'placeholder': 'Description'}),
         }
     
 class DisplayFieldForm(forms.ModelForm):
