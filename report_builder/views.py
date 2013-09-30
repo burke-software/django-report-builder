@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
+from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404, render
@@ -440,7 +441,7 @@ def report_to_list(report, user, preview=False, queryset=None):
                     values_and_properties_list.append(row)
                     # filter properties (remove rows with excluded properties)
                     property_filters = report.filterfield_set.filter(
-                        field_verbose__contains='[property]'
+                        Q(field_verbose__contains='[property]') | Q(field_verbose__contains='[custom')
                         )
                     for property_filter in property_filters: 
                         root_relation = property_filter.path.split('__')[0]
@@ -453,7 +454,13 @@ def report_to_list(report, user, preview=False, queryset=None):
                             else:
                                 val = None
                         else:
-                            val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
+                            if '[custom' in property_filter.field_verbose:
+                                for relation in property_filter.path.split('__'):
+                                    if hasattr(obj, root_relation):
+                                        obj = getattr(obj, root_relation)
+                                val = obj.get_custom_value(property_filter.field)
+                            else:
+                                val = reduce(getattr, (property_filter.path + property_filter.field).split('__'), obj)
                         if filter_property(property_filter, val):
                             remove_row = True
                             values_and_properties_list.pop()
