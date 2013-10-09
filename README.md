@@ -27,7 +27,9 @@ What isn't
 1. pip install django-report-builder
 1. Add report_builder to INSTALLED_APPS
 1. Add url(r'^report_builder/', include('report_builder.urls')) to url.py url patterns
-1. syncdb (you may use south)
+1. Sync your database, we don't recommend running migrations on the initial install. 
+    ./manage.py syncdb --all
+    ./manage.py migrate --fake report_builder
 1. Use admin access
 
 Optional - limit which models can be used by adding in settings.py
