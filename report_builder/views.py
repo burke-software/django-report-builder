@@ -339,7 +339,8 @@ def report_to_list(report, user, preview=False, queryset=None):
         objects = report.add_aggregates(queryset)
     else:
         try:
-            objects = report.get_query()
+            objects, query_message = report.get_query()
+            message += query_message
         except exceptions.ValidationError, e:
             message += "Validation Error: {0!s}. Something may be wrong with the report's filters.".format(e)
             return [], message

@@ -134,7 +134,7 @@ class Report(models.Model):
         if report.distinct:
             objects = objects.distinct()
 
-        return objects
+        return objects, message
     
     @models.permalink
     def get_absolute_url(self):
