@@ -28,22 +28,24 @@ What isn't
 1. Add report_builder to INSTALLED_APPS
 1. Add url(r'^report_builder/', include('report_builder.urls')) to url.py url patterns
 1. Sync your database, we don't recommend running migrations on the initial install. 
+
     ./manage.py syncdb --all
+    
     ./manage.py migrate --fake report_builder
 1. Use admin access
+1. (Optional) Limit which models can be used by adding in settings.py
 
-Optional - limit which models can be used by adding in settings.py
-
-REPORT_BUILDER_INCLUDE = []
-
-REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
+    REPORT_BUILDER_INCLUDE = []
+    
+    REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
 
 You may also limit which fields in a model can be used. Just add the property:
 
     report_builder_exclude_fields = () # Lists or tuple of excluded fields
 
 Export to Report action is disabled by default. To enable set
-REPORT_BUILDER_GLOBAL_EXPORT = True
+    
+    REPORT_BUILDER_GLOBAL_EXPORT = True
 
 # Django-SIS Example
 
