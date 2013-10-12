@@ -15,6 +15,7 @@ setup(
     tests_require=(
         'django-setuptest',
         'south',
+        'argparse',
     ),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
