@@ -3,9 +3,6 @@ python:
   - "2.6"
   - "2.7"
   - "3.3"
-evn:
-  - DJANGO=1.4
-  - DJANGO=1.5
 # command to install dependencies
 install:
   - pip install -q Django==$DJANGO --use-mirrors
