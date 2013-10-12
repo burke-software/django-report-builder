@@ -341,10 +341,10 @@ def report_to_list(report, user, preview=False, queryset=None):
         try:
             objects, query_message = report.get_query()
             message += query_message
-        except exceptions.ValidationError, e:
+        except exceptions.ValidationError as e:
             message += "Validation Error: {0!s}. Something may be wrong with the report's filters.".format(e)
             return [], message
-        except ValueError, e:
+        except ValueError as e:
             message += "Value Error: {0!s}. Something may be wrong with the report's filters. For example it may be expecting a number but received a character.".format(e)
             return [], message
 
