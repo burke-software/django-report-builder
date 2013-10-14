@@ -122,7 +122,10 @@ def get_properties_from_model(model_class):
     properties = []
     attr_names = [name for (name, value) in inspect.getmembers(model_class, isprop)]
     for attr_name in attr_names:
-        properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
+        if attr_name.endswith('pk'):
+            attr_names.remove(attr_name)
+        else:
+            properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
     return sorted(properties)
 
 def filter_property(filter_field, value):
