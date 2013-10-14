@@ -23,7 +23,6 @@ import time
 import re
 from decimal import Decimal
 from numbers import Number
-from types import BooleanType
 import copy
 from dateutil import parser
 
@@ -403,7 +402,7 @@ def report_to_list(report, user, preview=False, queryset=None):
             def increment_total(display_field_key, display_totals, val):
                 if display_totals.has_key(display_field_key):
                     # Booleans are Numbers - blah
-                    if isinstance(val, Number) and not isinstance(val, BooleanType):
+                    if isinstance(val, Number) and not isinstance(val, bool):
                         # do decimal math for all numbers
                         display_totals[display_field_key]['val'] += Decimal(str(val))
                     else:
