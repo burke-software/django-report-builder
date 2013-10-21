@@ -6,6 +6,17 @@ not be able to program or gain direct interactive shell access.
 
 [![Build Status](https://travis-ci.org/burke-software/django-report-builder.png?branch=master)](https://travis-ci.org/burke-software/django-report-builder)
 
+# News
+
+I'm starting another report related Django project to create a framework for more customized, less flexible, and 
+easier to use reports. Interested? Check it out this:
+https://github.com/burke-software/django-report-builder/issues/77
+
+Of course Report Builder is still dear to my heart. The two projects are doing very seperate use cases.
+Hopefully I'll have time to update soon. Pull requests are always welcome :)
+
+# What is Django Report Builder?
+
 ![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderscreen.png)
 
 What's finished?
