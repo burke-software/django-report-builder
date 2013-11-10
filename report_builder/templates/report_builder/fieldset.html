@@ -1,0 +1,13 @@
+<li class="draggable" style="list-style: none">
+    <span class="button"
+        data-name="{% if verbose_name %}{{ verbose_name }}{% else %}{{ field.verbose_name }}{% endif %}"
+          data-label="{{ field.name }}"
+          data-path="{{ path }}"
+          data-path_verbose="{{ path_verbose }}"
+          data-choices="{% if field.choices %}true{% endif %}"
+          data-root_model="{{ root_model }}"
+          data-app_label="{{ app_label }}"
+          >
+        {% if verbose_name %}{{ verbose_name }}{% else %}{{ field.verbose_name }}{% endif %} [{% if custom %}custom {% endif %}{{ verbose_name_extra }}]
+    </span>
+</li>

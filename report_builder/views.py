@@ -17,6 +17,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView
 from django import forms
 
+import warnings
 import datetime
 import inspect
 import time
@@ -234,6 +235,19 @@ def ajax_get_related(request):
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
 
+def get_fieldsets(model):
+    """ fieldsets are optional, they are defined in the Model.
+    """
+    fieldsets = getattr(model, 'report_builder_fieldsets', None)
+    if fieldsets:
+        for fieldset_name, fieldset_dict in model.report_builder_fieldsets:
+            fieldset_dict['field_objects'] = []
+            if 'collapse' in fieldset_dict.get('classes', []):
+                fieldset_dict['collapse'] = True
+            for fieldset_field_name in fieldset_dict['fields']:
+                fieldset_dict['field_objects'].append(model._meta.get_field_by_name(fieldset_field_name)[0])
+    return fieldsets
+
 @staff_member_required
 def ajax_get_fields(request):
     """ Get fields and properties for a particular model
@@ -246,10 +260,12 @@ def ajax_get_fields(request):
     custom_fields = get_custom_fields_from_model(model)
     root_model = model.__name__.lower()
     app_label = model._meta.app_label
+    fieldsets = get_fieldsets(model)
 
     if field_name == '':
         return render_to_response('report_builder/report_form_fields_li.html', {
             'fields': get_direct_fields_from_model(model),
+            'fieldsets': fieldsets,
             'properties': properties,
             'custom_fields': custom_fields,
             'root_model': root_model,
@@ -292,6 +308,7 @@ def ajax_get_fields(request):
     
     return render_to_response('report_builder/report_form_fields_li.html', {
         'fields': fields,
+        'fieldsets': fieldsets,
         'custom_fields': custom_fields,
         'properties': properties,
         'path': path,
@@ -591,7 +608,8 @@ def report_to_list(report, user, preview=False, queryset=None):
 
                 
 
-    except exceptions.FieldError:
+    except exceptions.FieldError as e:
+        warnings.warn('Error {0}'.format(str(e)))
         message += "Field Error. If you are using the report builder then you found a bug!"
         message += "If you made this in admin, then you probably did something wrong."
         values_and_properties_list = None
@@ -658,6 +676,7 @@ class ReportUpdateView(UpdateView):
         
         ctx['related_fields'] = relation_fields
         ctx['fields'] = direct_fields
+        ctx['fieldsets'] = get_fieldsets(model_class)
         ctx['custom_fields'] = custom_fields
         ctx['properties'] = properties
         ctx['model_ct'] = model_ct

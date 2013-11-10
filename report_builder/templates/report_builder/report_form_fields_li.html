@@ -1,49 +1,44 @@
-{% for field in fields %}
-    <li class="draggable" style="list-style: none">
-        <span class="button"
-              data-name="{{ field.verbose_name }}"
-              data-label="{{ field.name }}"
-              data-path="{{ path }}"
-              data-path_verbose="{{ path_verbose }}"
-              data-choices="{% if field.choices %}true{% endif %}"
-              data-root_model="{{ root_model }}"
-              data-app_label="{{ app_label }}"
-              >
-            {{ field.verbose_name }} [{{ field.get_internal_type }}]
-        </span>
-    </li>
-{% endfor %}
-{% for custom_field in custom_fields %}
-    {% if forloop.first %}
-        <br/>
-        Custom Fields:
-    {% endif %}
-    <li class="draggable" style="list-style: none">
-        <span class="button"
-              data-name="{{ custom_field.name }}"
-              data-label="{{ custom_field.name }}"
-              data-path="{{ path }}"
-              data-path_verbose="{{ path_verbose }}"
-              data-app_label="{{ app_label }}"
-              >
-            {{ custom_field.name }} [custom {{ custom_field.get_field_type_display }}]
-        </span>
-    </li>
-{% endfor %}
-<br/>
-{% for property in properties %}
-    {% if forloop.first %}
-        Properties:
-    {% endif %}
-    <li class="draggable" style="list-style: none">
-        <span class="button"
-              data-name="{{ property.name }}"
-              data-label="{{ property.label }}"
-              data-path="{{ path }}"
-              data-path_verbose="{{ path_verbose }}"
-              data-app_label="{{ app_label }}"
-              >
-            {{ property.label }} [property]
-        </span>
-    </li>
-{% endfor %}
+{% if fieldsets %}
+    {% for fieldset in fieldsets %}
+    <div class="fieldset">
+        <h4>
+            {% if fieldset.1.collapse %}
+                <a href="">{{ fieldset.0 }}</a>
+            {% else %}
+                {{ fieldset.0 }}
+            {% endif %}
+        </h4>
+        <ul class="{% if fieldset.1.collapse %}collapsed{% endif %}">
+            {% for field in fieldset.1.field_objects %}
+                  {% include "report_builder/fieldset.html" with verbose_name_extra=field.get_internal_type %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+{% else %}
+    <ul>
+    {% for field in fields %}
+      {% include "report_builder/fieldset.html" with verbose_name_extra=field.get_internal_type %}
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% if custom_fields %}
+    <h4>Custom Fields</h4>
+    <ul>
+        {% for custom_field in custom_fields %}
+            {% include "report_builder/fieldset.html" with field=custom_field verbose_name_extra=custom_field.get_field_type_display verbose_name=custom_field.name custom=True %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if properties %}
+    <h4>Properties</h4>
+    <ul>
+        {% for property in properties %}
+            {% if forloop.first %}
+            {% endif %}
+            {% include "report_builder/fieldset.html" with field=property verbose_name_extra='property' verbose_name=property.label %}
+        {% endfor %}
+    </ul>
+{% endif %}

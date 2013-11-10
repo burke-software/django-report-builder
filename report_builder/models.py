@@ -32,7 +32,7 @@ class Report(models.Model):
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
     user_modified = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True, related_name="report_modified_set")
-    distinct = models.BooleanField()
+    distinct = models.BooleanField(default=False)
     starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
                                      help_text="These users have starred this report for easy reference.",
                                      related_name="report_starred_set")
@@ -193,7 +193,7 @@ class DisplayField(models.Model):
     field_verbose = models.CharField(max_length=2000)
     name = models.CharField(max_length=2000)
     sort = models.IntegerField(blank=True, null=True)
-    sort_reverse = models.BooleanField(verbose_name="Reverse")
+    sort_reverse = models.BooleanField(verbose_name="Reverse", default=False)
     width = models.IntegerField(default=15)
     aggregate = models.CharField(
         max_length=5,
@@ -275,7 +275,7 @@ class FilterField(models.Model):
     )
     filter_value = models.CharField(max_length=2000)
     filter_value2 = models.CharField(max_length=2000, blank=True)
-    exclude = models.BooleanField()
+    exclude = models.BooleanField(default=False)
     position = models.PositiveSmallIntegerField(blank = True, null = True)
 
     class Meta:
