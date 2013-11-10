@@ -596,8 +596,14 @@ def report_to_list(report, user, preview=False, queryset=None):
                         value = Decimal(display_totals_row[df.position-1])
                     except:
                         value = display_totals_row[df.position-1]
-                    display_totals_row[df.position-1] = df.display_format.string.\
-                        format(value)
+                    # Fall back to original value if format string and value
+                    # aren't compatible, e.g. a numerically-oriented format
+                    # string with value which is not numeric.
+                    try:
+                        value = df.display_format.string.format(value)
+                    except ValueError:
+                        pass
+                    display_totals_row[df.position-1] = value
 
         if display_totals:
             values_and_properties_list = (
