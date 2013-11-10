@@ -104,7 +104,6 @@ class ViewTests(TestCase):
             'path': '',
             'path_verbose': '',
             })
-        print response
         self.assertContains(response, 'data-name="aggregate"')
         self.assertContains(response, 'data-path="displayfield__"')
         self.assertContains(response, "field")
