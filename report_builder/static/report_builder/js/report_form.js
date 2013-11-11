@@ -316,3 +316,6 @@ function filter(element, list) {
     });
 }
 
+function toggle_collapse(element) {
+    $(element).parent().parent('div.fieldset').children('ul').toggleClass('collapsed');
+}

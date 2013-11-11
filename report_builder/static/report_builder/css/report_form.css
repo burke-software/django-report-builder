@@ -190,3 +190,7 @@ div#container .ui-tabs div.ui-droppable {
   border: 1px solid #d3d3d3;
   border-radius: 0px;
 }
+
+div#container .collapsed {
+    display: none;
+}

@@ -3,7 +3,7 @@
     <div class="fieldset">
         <h4>
             {% if fieldset.1.collapse %}
-                <a href="">{{ fieldset.0 }}</a>
+                <a onclick="toggle_collapse(this);" href="javascript:void(0)">{{ fieldset.0 }}</a>
             {% else %}
                 {{ fieldset.0 }}
             {% endif %}
