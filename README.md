@@ -51,14 +51,42 @@ What isn't
     
     REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
 
+## Optional Settings
+
+### Exclude Fields
+
 You may also limit which fields in a model can be used. Just add the property:
 
     report_builder_exclude_fields = () # Lists or tuple of excluded fields
+    
+### Fieldsets
+
+It's possible to group fields together in fieldsets. This might be useful if you have many fields in a model.
+It follows syntax like Django Admin [fieldsets](https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.fieldsets) 
+
+Add `report_builder_fieldsets` to your model in models.py. Classes are optional. Right now the only functional
+class is 'collapse' which will hide the fields until clicked on.
+
+Example:
+
+```
+report_builder_fieldsets = (
+    ('Names', {
+        'fields': ('first_name', 'last_name'),
+    }),
+    ('More', {
+        'fields': ('id', 'city'),
+        'classes': ('collapse',),
+    }),
+)
+```
+
+### Export to Report Action
 
 Export to Report action is disabled by default. To enable set
     
     REPORT_BUILDER_GLOBAL_EXPORT = True
-
+    
 # Django-SIS Example
 
 Django-SIS is a good example integration of report_builder. Note we've given report_builder a grappelli theme by modifying
