@@ -8,29 +8,6 @@ from report_builder.models import DisplayField, Report, FilterField, Format
 from django.conf import settings
 
 static_url = getattr(settings, 'STATIC_URL', '/static/')
-
-class DisplayFieldForm(forms.ModelForm):
-    position = forms.IntegerField(widget=forms.HiddenInput, required=False)
-    class Meta:
-        model = DisplayField
-
-class DisplayFieldInline(admin.StackedInline):
-    model = DisplayField
-    form = DisplayFieldForm
-    extra = 0
-    sortable_field_name = "position"
-
-class FilterFieldForm(forms.ModelForm):
-    position = forms.IntegerField(widget=forms.HiddenInput)
-    class Meta:
-        model = FilterField
-
-class FilterFieldInline(admin.StackedInline):
-    model = FilterField
-    form = FilterFieldForm
-    extra = 0
-    sortable_field_name = "position"
-    
     
 class StarredFilter(SimpleListFilter):
     title = 'Your starred reports'

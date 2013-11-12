@@ -46,6 +46,7 @@ class ReportEditForm(forms.ModelForm):
 class DisplayFieldForm(forms.ModelForm):
     class Meta:
         model = DisplayField
+        fields = '__all__'
         widgets = {
             'path': forms.HiddenInput(),
             'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
@@ -60,6 +61,7 @@ class DisplayFieldForm(forms.ModelForm):
 class FilterFieldForm(forms.ModelForm):
     class Meta:
         model = FilterField
+        fields = '__all__'
         widgets = {
             'path': forms.HiddenInput(),
             'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
