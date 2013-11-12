@@ -46,7 +46,8 @@ class ReportEditForm(forms.ModelForm):
 class DisplayFieldForm(forms.ModelForm):
     class Meta:
         model = DisplayField
-        fields = '__all__'
+        fields = ('name', 'path', 'path_verbose', 'field_verbose', 'field', 'position',
+                  'width', 'total', 'sort', 'aggregate', 'group', 'display_format')
         widgets = {
             'path': forms.HiddenInput(),
             'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
@@ -61,7 +62,8 @@ class DisplayFieldForm(forms.ModelForm):
 class FilterFieldForm(forms.ModelForm):
     class Meta:
         model = FilterField
-        fields = '__all__'
+        fields = ('path', 'path_verbose', 'field_verbose', 'field', 'filter_type',
+                 'filter_value', 'filter_value2', 'exclude', 'position')
         widgets = {
             'path': forms.HiddenInput(),
             'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
