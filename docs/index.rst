@@ -10,15 +10,13 @@ A GUI for Django ORM. Build custom queries and display results.
 Targets sys admins and capable end users who might not be able to program or gain 
 direct interactive shell access.
 
-Installation & Setup
+Quickstart
 -------------------
 
 .. toctree::
    :maxdepth: 2
    
-   installation
-   configuration
-   customization
+   quickstart
    
 Help
 ----
