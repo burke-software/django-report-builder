@@ -3,20 +3,38 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to django-report-builder's documentation!
+django-report-builder Documentation
 =================================================
 
-Contents:
+A GUI for Django ORM. Build custom queries and display results. 
+Targets sys admins and capable end users who might not be able to program or gain 
+direct interactive shell access.
+
+Installation & Setup
+-------------------
 
 .. toctree::
    :maxdepth: 2
+   
+   installation
+   configuration
+   customization
+   
+Help
+----
 
+.. toctree::
+   :maxdepth: 2
+   
+   how_to
 
+Code
+----
 
-Indices and tables
-==================
+https://github.com/burke-software/django-report-builder
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Discussion
+--------
 
+Let us know your thoughts at https://google.com/+Burkesoftware or consider sending some pull 
+requests our way!
