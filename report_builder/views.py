@@ -239,17 +239,27 @@ def ajax_get_related(request):
         'path_verbose': path_verbose,
     }, RequestContext(request, {}),)
 
+def fieldset_string_to_field(fieldset_dict, model):
+    if isinstance(fieldset_dict['fields'], tuple):
+        fieldset_dict['fields'] = list(fieldset_dict['fields'])
+    i = 0
+    for dict_field in fieldset_dict['fields']:
+        print dict_field
+        if isinstance(dict_field, basestring):
+            fieldset_dict['fields'][i] = model._meta.get_field_by_name(dict_field)[0]
+        elif isinstance(dict_field, list) or isinstance(dict_field, tuple):
+            dict_field[1]['recursive'] = True
+            fieldset_string_to_field(dict_field[1], model)
+        i += 1
+
 def get_fieldsets(model):
     """ fieldsets are optional, they are defined in the Model.
     """
     fieldsets = getattr(model, 'report_builder_fieldsets', None)
     if fieldsets:
         for fieldset_name, fieldset_dict in model.report_builder_fieldsets:
-            fieldset_dict['field_objects'] = []
-            if 'collapse' in fieldset_dict.get('classes', []):
-                fieldset_dict['collapse'] = True
-            for fieldset_field_name in fieldset_dict['fields']:
-                fieldset_dict['field_objects'].append(model._meta.get_field_by_name(fieldset_field_name)[0])
+            fieldset_string_to_field(fieldset_dict, model)
+    print fieldsets
     return fieldsets
 
 @staff_member_required

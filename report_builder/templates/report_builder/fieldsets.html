@@ -1,0 +1,20 @@
+<div class="fieldset">
+    <h4>
+        {% if 'collapse' in fieldset.1.classes %}
+            <a onclick="toggle_collapse(this);" href="javascript:void(0)">{{ fieldset.0 }}</a>
+        {% else %}
+            {{ fieldset.0 }}
+        {% endif %}
+    </h4>
+    <ul class="{% if 'collapse' in fieldset.1.classes %}collapsed{% endif %}">
+        {% for field in fieldset.1.fields %}
+            {% if field.1.recursive %}
+              {% with template_name="report_builder/fieldsets.html" %}
+                  {% include template_name with fieldset=field %}
+              {% endwith %}
+            {% else %}
+              {% include "report_builder/fieldset.html" with verbose_name_extra=field.get_internal_type %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
