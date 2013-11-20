@@ -17,6 +17,7 @@ Quickstart
    :maxdepth: 2
    
    quickstart
+   extend
    
 Help
 ----
