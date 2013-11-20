@@ -244,7 +244,6 @@ def fieldset_string_to_field(fieldset_dict, model):
         fieldset_dict['fields'] = list(fieldset_dict['fields'])
     i = 0
     for dict_field in fieldset_dict['fields']:
-        print dict_field
         if isinstance(dict_field, basestring):
             fieldset_dict['fields'][i] = model._meta.get_field_by_name(dict_field)[0]
         elif isinstance(dict_field, list) or isinstance(dict_field, tuple):
@@ -259,7 +258,6 @@ def get_fieldsets(model):
     if fieldsets:
         for fieldset_name, fieldset_dict in model.report_builder_fieldsets:
             fieldset_string_to_field(fieldset_dict, model)
-    print fieldsets
     return fieldsets
 
 @staff_member_required
