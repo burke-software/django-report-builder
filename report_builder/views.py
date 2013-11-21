@@ -735,7 +735,7 @@ def download_xlsx(request, pk, queryset=None):
     
     wb = Workbook()
     ws = wb.worksheets[0]
-    ws.title = report.name[:30]
+    ws.title = re.sub(r'\W+', '', report.name)[:30]
     filename = re.sub(r'\W+', '', report.name) + '.xlsx'
     
     i = 0
