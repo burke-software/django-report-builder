@@ -233,6 +233,8 @@ function set_check_value(event) {
 }
 
 function refresh_preview() {
+    $('#preview_area').html('<div style="height: 16px" id="preview_spinner"></div>');
+    $('#preview_spinner').spin('large');
     $.post(  
         path_prefix + "/report_builder/ajax_preview/",  
         {
@@ -242,7 +244,12 @@ function refresh_preview() {
         function(data){
             $('#preview_area').html(data);
         }
-    );
+    )
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        var error_message = "<h3>Sorry, there was an error generating your report. Details appear below.</h3>"
+        error_message += '<pre>' + jqXHR.responseText + '</pre>';
+        $('#preview_area').html(error_message);
+    });
 }
 
 function aggregate_tip() {
