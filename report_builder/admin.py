@@ -63,6 +63,8 @@ class ReportAdmin(admin.ModelAdmin):
             obj.user_created = request.user
             star_user = True
         obj.user_modified = request.user
+        if obj.distinct == None:
+            obj.distinct = False
         obj.save()
         if star_user: # Star created reports automatically
             obj.starred.add(request.user)
