@@ -28,6 +28,7 @@ class ReportAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     list_filter = (StarredFilter, 'root_model', 'created', 'modified', 'root_model__app_label')
     list_display_links = []
+    show_save = False
 
     class Media:
         js = [ static_url+'report_builder/js/jquery-1.8.2.min.js', static_url+'report_builder/js/report_list.js',]

@@ -3,9 +3,9 @@
 {% block submit_buttons_bottom %}
  {{ block.super }}
  <script>
-    (function($) {$('<input type="submit" name="_easy" value="Save and continue to easy edit"/>').appendTo('.submit-row');})(django.jQuery);
-    
-    $('<li><input type="submit" class="grp-button grp-default" name="_easy" value="Save and Start Building Report"/></li>').appendTo('footer ul');
-    
+    (function($) {$('.submit-row').html('<input type="submit" class="default" name="_easy" value="Save and Start Building Report"/>');})(django.jQuery);
+
+    {# Grappelli #}
+    $('footer ul').html('<li><input type="submit" class="grp-button grp-default" name="_easy" value="Save and Start Building Report"/></li>');
 </script>
 {% endblock %}
