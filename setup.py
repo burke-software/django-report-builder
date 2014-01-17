@@ -13,6 +13,7 @@ setup(
     include_package_data=True,
     test_suite='setuptest.setuptest.SetupTestSuite',
     tests_require=(
+        'django',
         'django-setuptest',
         'south',
         'argparse',
@@ -26,5 +27,5 @@ setup(
         'Intended Audience :: System Administrators',
         "License :: OSI Approved :: BSD License",
     ],
-    install_requires=['django', 'openpyxl','python-dateutil']
+    install_requires=['openpyxl','python-dateutil']
 )
