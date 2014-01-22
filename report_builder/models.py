@@ -220,7 +220,7 @@ class DisplayField(models.Model):
         except:
             model_field = None
         if model_field and model_field.choices:
-            return model_field.choices
+            return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
 
     @property
     def choices_dict(self):
