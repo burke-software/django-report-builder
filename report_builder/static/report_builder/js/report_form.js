@@ -87,8 +87,8 @@ function enable_drag() {
             row_html += '<input id="id_displayfield_set-'+i+'-field_verbose" name="displayfield_set-'+i+'-field_verbose" readonly="readonly" type="hidden" value="' + field + '"/><input id="id_displayfield_set-'+i+'-path" name="displayfield_set-'+i+'-path" type="hidden" value="' + path + '"/></td>';
             row_html += '<td><input id="id_displayfield_set-'+i+'-field" name="displayfield_set-'+i+'-field" type="hidden" value="' + label + '"/>'
             row_html += '<input id="id_displayfield_set-'+i+'-name" name="displayfield_set-'+i+'-name" type="text" value="' + name + '"/></td>';
-            row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" class="small_input" id="id_displayfield_set-'+i+'-sort">';
-            row_html += '<input type="checkbox" name="displayfield_set-'+i+'-sort_reverse" id="id_displayfield_set-'+i+'-sort_reverse"></td>';
+            row_html += '<td><input type="text" name="displayfield_set-'+i+'-sort" class="small_input" id="id_displayfield_set-'+i+'-sort"></td>';
+            row_html += '<td><input type="checkbox" name="displayfield_set-'+i+'-sort_reverse" id="id_displayfield_set-'+i+'-sort_reverse"></td>';
             row_html += '<td><input type="text" name="displayfield_set-'+i+'-width" class="small_input" value="15" id="id_displayfield_set-'+i+'-width"></td>';
             if ( field.indexOf("[custom") == -1 && field.indexOf("[property") == -1 ) {
                 row_html += '<td onclick="aggregate_tip(event)"><select id="id_displayfield_set-'+i+'-aggregate" name="displayfield_set-'+i+'-aggregate"><option selected="selected" value="">---------</option><option value="Sum">Sum</option><option value="Count">Count</option><option value="Avg">Avg</option><option value="Max">Max</option><option value="Min">Min</option></select></td>';
