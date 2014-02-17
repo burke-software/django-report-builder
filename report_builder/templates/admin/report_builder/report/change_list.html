@@ -2,6 +2,14 @@
 
 {% load url from future %}
 
+{% block extrahead %}
+type="text/javascript"
+<script type="text/javascript">
+  window.STATIC_URL = '{{STATIC_URL}}';
+</script>
+{{ block.super }}
+{% endblock extrahead %}
+
 {% block content_title %}
   Need a report? Here is where you can download and create custom reports
   based on current information.
