@@ -10,7 +10,7 @@ from django.forms.models import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404, render
 from django.template import RequestContext
-from report_builder.models import Report, DisplayField, FilterField, Format
+from report_builder.models import Report, TabbedReport, DisplayField, FilterField, Format
 from report_builder.utils import javascript_date_format, duplicate, get_model_from_path_string
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
@@ -726,18 +726,55 @@ def download_xlsx(request, pk, queryset=None):
     Why xlsx? Because there is no decent ods library for python and xls has limitations
     queryset: predefined queryset to bypass filters
     """
-    import cStringIO as StringIO
     from openpyxl.workbook import Workbook
-    from openpyxl.writer.excel import save_virtual_workbook
-    from openpyxl.cell import get_column_letter
     import re
 
     report = get_object_or_404(Report, pk=pk)
 
     wb = Workbook()
-    ws = wb.worksheets[0]
-    ws.title = re.sub(r'\W+', '', report.name)[:30]
+    report_to_worksheet(wb, report, request.user, queryset=queryset)
     filename = re.sub(r'\W+', '', report.name) + '.xlsx'
+    return get_workbook_result(wb, filename)
+
+@staff_member_required
+def download_tabbed_xlsx(request, pk, queryset=None):
+    """ Download the full report in xlsx format
+    Why xlsx? Because there is no decent ods library for python and xls has limitations
+    queryset: predefined queryset to bypass filters
+    """
+    from openpyxl.workbook import Workbook
+    import re
+
+    report = get_object_or_404(TabbedReport, pk=pk)
+
+    wb = Workbook()
+
+    for tab in report.tabs.all():
+        add_report_to_workbook(wb, tab, request.user, queryset=queryset)
+
+    filename = re.sub(r'\W+', '', report.name) + '.xlsx'
+    return get_workbook_result(wb, filename)
+
+def get_workbook_result(wb, filename):
+    import cStringIO as StringIO
+    from openpyxl.writer.excel import save_virtual_workbook
+
+    myfile = StringIO.StringIO()
+    myfile.write(save_virtual_workbook(wb))
+    response = HttpResponse(
+        myfile.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response['Content-Length'] = myfile.tell()
+    return response
+
+def add_report_to_workbook(wb, report, user, queryset=None):
+    """ Generate a worksheet for a report
+    """
+    from openpyxl.cell import get_column_letter
+    import re
+
+    ws = wb.create_sheet(title=re.sub(r'\W+', '', report.name)[:30])
     auto_width_columns = {}
 
     for i, field in enumerate(report.displayfield_set.all()):
@@ -749,7 +786,7 @@ def download_xlsx(request, pk, queryset=None):
             auto_width_columns[i] = 1
         ws.column_dimensions[get_column_letter(i+1)].width = field.width
 
-    objects_list, message = report_to_list(report, request.user, queryset=queryset)
+    objects_list, message = report_to_list(report, user, queryset=queryset)
     for row in objects_list:
         try:
             ws.append(row)
@@ -765,14 +802,8 @@ def download_xlsx(request, pk, queryset=None):
     for col, width in auto_width_columns.items():
         ws.column_dimensions[get_column_letter(col+1)].width = width
 
-    myfile = StringIO.StringIO()
-    myfile.write(save_virtual_workbook(wb))
-    response = HttpResponse(
-        myfile.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    response['Content-Length'] = myfile.tell()
-    return response
+    return ws
+
 
 
 @staff_member_required

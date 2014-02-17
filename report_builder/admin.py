@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import forms
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from report_builder.models import DisplayField, Report, FilterField, Format
+from report_builder.models import DisplayField, Report, TabbedReport, FilterField, Format
 from django.conf import settings
 
 static_url = getattr(settings, 'STATIC_URL', '/static/')
@@ -20,6 +20,11 @@ class StarredFilter(SimpleListFilter):
         if self.value() == 'Starred':
             return queryset.filter(starred=request.user)
 
+class TabbedReportAdmin(admin.ModelAdmin):
+    list_display = ('name', 'download_xlsx',)
+    filter_horizontal = ('tabs', )
+
+admin.site.register(TabbedReport, TabbedReportAdmin)
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('ajax_starred', 'edit', 'name', 'description', 'root_model', 'created', 'modified', 'user_created', 'download_xlsx','copy_report',)
