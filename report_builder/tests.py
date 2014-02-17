@@ -13,7 +13,7 @@ except ImportError:
 
 class UtilityFunctionTests(TestCase):
     def setUp(self):
-        self.report_ct = ContentType.objects.get_for_model(Report) 
+        self.report_ct = ContentType.objects.get_for_model(Report)
         self.report = Report.objects.create(
             name="foo report",
             root_model=self.report_ct)
@@ -67,6 +67,24 @@ class UtilityFunctionTests(TestCase):
         # Not a very complete test - only tests one type of filter
         result = filter_property(self.filter_field, 'spam')
         self.assertTrue(result)
+
+    def test_custom_global_model_manager(self):
+        #test for custom global model manager
+        if getattr(settings, 'REPORT_BUILDER_MODEL_MANAGER', False):
+            self.assertEquals(self.report._get_model_manager(), settings.REPORT_BUILDER_MODEL_MANAGER)
+
+    def test_custom_model_manager(self):
+        #test for custom model manager
+        if getattr(self.report.root_model.model_class(), 'report_builder_model_manager', True):
+            #change setup to use actual field and value
+            self.filter_field.field = 'name'
+            self.filter_field.filter_value = 'foo'
+            self.filter_field.save()
+            #coverage of get_query
+            objects, message = self.report.get_query()
+            #expect custom manager to return correct object with filters
+            self.assertEquals(objects[0], self.report)
+
 
 class ViewTests(TestCase):
     def setUp(self):
