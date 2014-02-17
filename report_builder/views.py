@@ -131,7 +131,7 @@ def get_properties_from_model(model_class):
         if attr_name.endswith('pk'):
             attr_names.remove(attr_name)
         else:
-            properties.append(dict(label=attr_name, name=attr_name.strip('_').replace('_',' ')))
+            properties.append(dict(name=attr_name, label=attr_name.strip('_').replace('_',' ')))
     return sorted(properties, key=lambda k: k['label'])
 
 def filter_property(filter_field, value):
