@@ -738,23 +738,32 @@ def download_xlsx(request, pk, queryset=None):
     ws = wb.worksheets[0]
     ws.title = re.sub(r'\W+', '', report.name)[:30]
     filename = re.sub(r'\W+', '', report.name) + '.xlsx'
+    auto_width_columns = {}
 
-    i = 0
-    for field in report.displayfield_set.all():
+    for i, field in enumerate(report.displayfield_set.all()):
         cell = ws.cell(row=0, column=i)
         cell.value = field.name
         cell.style.font.bold = True
+        if field.width == 0:
+            # Auto width
+            auto_width_columns[i] = 1
         ws.column_dimensions[get_column_letter(i+1)].width = field.width
-        i += 1
 
     objects_list, message = report_to_list(report, request.user, queryset=queryset)
     for row in objects_list:
         try:
             ws.append(row)
+            for col in auto_width_columns.keys():
+                size = len(row[col])
+                if size > auto_width_columns[col]:
+                    auto_width_columns[col] = size
         except ValueError as e:
             ws.append([e.message])
         except:
             ws.append(['Unknown Error'])
+
+    for col, width in auto_width_columns.items():
+        ws.column_dimensions[get_column_letter(col+1)].width = width
 
     myfile = StringIO.StringIO()
     myfile.write(save_virtual_workbook(wb))
