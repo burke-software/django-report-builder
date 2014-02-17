@@ -35,6 +35,8 @@ class ReportAdmin(admin.ModelAdmin):
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
             return HttpResponseRedirect(obj.get_absolute_url())
+        if post_url_continue is None:
+            return super(ReportAdmin, self).response_add(request, obj)
         return super(ReportAdmin, self).response_add(request, obj, post_url_continue)
     
     def response_change(self, request, obj):
