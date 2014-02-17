@@ -732,7 +732,7 @@ def download_xlsx(request, pk, queryset=None):
     report = get_object_or_404(Report, pk=pk)
 
     wb = Workbook()
-    report_to_worksheet(wb, report, request.user, queryset=queryset)
+    add_report_to_workbook(wb, report, request.user, queryset=queryset)
     filename = re.sub(r'\W+', '', report.name) + '.xlsx'
     return get_workbook_result(wb, filename)
 
