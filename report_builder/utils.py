@@ -1,5 +1,6 @@
 import copy
 
+
 def javascript_date_format(python_date_format):
     format = python_date_format.replace(r'Y', 'yyyy')
     format = format.replace(r'm', 'mm')
@@ -7,6 +8,7 @@ def javascript_date_format(python_date_format):
     if not format:
         format = 'yyyy-mm-dd'
     return format
+
 
 def duplicate(obj, changes=None):
     """ Duplicates any object including m2m fields
@@ -24,9 +26,10 @@ def duplicate(obj, changes=None):
         source = getattr(obj, field.attname)
         destination = getattr(duplicate, field.attname)
         for item in source.all():
-            try: # m2m, through fields will fail.
+            try:  # m2m, through fields will fail.
                 destination.add(item)
-            except: pass
+            except:
+                pass
     return duplicate
 
 
@@ -43,4 +46,3 @@ def get_model_from_path_string(root_model, path):
             else:
                 root_model = field[0].model
     return root_model
-    

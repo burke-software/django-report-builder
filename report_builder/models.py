@@ -36,7 +36,7 @@ class Report(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(verbose_name="Short Name")
     description = models.TextField(blank=True)
-    root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
+    root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in': _get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
@@ -54,7 +54,6 @@ class Report(models.Model):
             unique_slugify(self, self.name)
         super(Report, self).save(*args, **kwargs)
 
-
     def add_aggregates(self, queryset):
         for display_field in self.displayfield_set.filter(aggregate__isnull=False):
             if display_field.aggregate == "Avg":
@@ -69,11 +68,10 @@ class Report(models.Model):
                 queryset = queryset.annotate(Sum(display_field.path + display_field.field))
         return queryset
 
-
     def get_query(self):
         report = self
         model_class = report.root_model.model_class()
-        message= ""
+        message = ""
 
         # Check for report_builder_model_manger property on the model
         if getattr(model_class, 'report_builder_model_manager', False):
@@ -173,7 +171,6 @@ class Report(models.Model):
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
 
-
     def copy_report(self):
         return '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/copy.svg"/></a>'.format(
             reverse('report_builder.views.create_copy', args=[self.id]),
@@ -186,8 +183,8 @@ class Report(models.Model):
         """ After report is saved, make sure positions are sane
         """
         for i, display_field in enumerate(self.displayfield_set.all()):
-            if display_field.position != i+1:
-                display_field.position = i+1
+            if display_field.position != i + 1:
+                display_field.position = i + 1
                 display_field.save()
 
 
@@ -231,16 +228,16 @@ class DisplayField(models.Model):
     width = models.IntegerField(default=15)
     aggregate = models.CharField(
         max_length=5,
-        choices = (
-            ('Sum','Sum'),
-            ('Count','Count'),
-            ('Avg','Avg'),
-            ('Max','Max'),
-            ('Min','Min'),
+        choices=(
+            ('Sum', 'Sum'),
+            ('Count', 'Count'),
+            ('Avg', 'Avg'),
+            ('Max', 'Max'),
+            ('Min', 'Min'),
         ),
-        blank = True
+        blank=True
     )
-    position = models.PositiveSmallIntegerField(blank = True, null = True)
+    position = models.PositiveSmallIntegerField(blank=True, null=True)
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
     display_format = models.ForeignKey(Format, blank=True, null=True)
@@ -274,6 +271,7 @@ class DisplayField(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class FilterField(models.Model):
     """ A display field to show in a report. Always belongs to a Report
     """
@@ -284,33 +282,33 @@ class FilterField(models.Model):
     field_verbose = models.CharField(max_length=2000)
     filter_type = models.CharField(
         max_length=20,
-        choices = (
-            ('exact','Equals'),
-            ('iexact','Equals (case-insensitive)'),
-            ('contains','Contains'),
-            ('icontains','Contains (case-insensitive)'),
-            ('in','in (comma seperated 1,2,3)'),
-            ('gt','Greater than'),
-            ('gte','Greater than equals'),
-            ('lt','Less than'),
-            ('lte','Less than equals'),
-            ('startswith','Starts with'),
-            ('istartswith','Starts with (case-insensitive)'),
-            ('endswith','Ends with'),
-            ('iendswith','Ends with  (case-insensitive)'),
-            ('range','range'),
-            ('week_day','Week day'),
-            ('isnull','Is null'),
-            ('regex','Regular Expression'),
-            ('iregex','Reg. Exp. (case-insensitive)'),
+        choices=(
+            ('exact', 'Equals'),
+            ('iexact', 'Equals (case-insensitive)'),
+            ('contains', 'Contains'),
+            ('icontains', 'Contains (case-insensitive)'),
+            ('in', 'in (comma seperated 1,2,3)'),
+            ('gt', 'Greater than'),
+            ('gte', 'Greater than equals'),
+            ('lt', 'Less than'),
+            ('lte', 'Less than equals'),
+            ('startswith', 'Starts with'),
+            ('istartswith', 'Starts with (case-insensitive)'),
+            ('endswith', 'Ends with'),
+            ('iendswith', 'Ends with  (case-insensitive)'),
+            ('range', 'range'),
+            ('week_day', 'Week day'),
+            ('isnull', 'Is null'),
+            ('regex', 'Regular Expression'),
+            ('iregex', 'Reg. Exp. (case-insensitive)'),
         ),
         blank=True,
-        default = 'icontains',
+        default='icontains',
     )
     filter_value = models.CharField(max_length=2000)
     filter_value2 = models.CharField(max_length=2000, blank=True)
     exclude = models.BooleanField(default=False)
-    position = models.PositiveSmallIntegerField(blank = True, null = True)
+    position = models.PositiveSmallIntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ['position']
@@ -320,7 +318,6 @@ class FilterField(models.Model):
             if self.filter_value2 in [None, ""]:
                 raise ValidationError('Range filters must have two values')
         return super(FilterField, self).clean()
-
 
     def get_choices(self, model, field_name):
         try:
@@ -338,4 +335,3 @@ class FilterField(models.Model):
 
     def __unicode__(self):
         return self.field
-

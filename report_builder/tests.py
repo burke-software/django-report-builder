@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.test.client import Client
-from report_builder.models import Report, TabbedReport,  DisplayField
+from report_builder.models import Report, TabbedReport, DisplayField
 from report_builder.views import *
 from django.conf import settings
 
@@ -10,6 +10,7 @@ try:
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
+
 
 class UtilityFunctionTests(TestCase):
     def setUp(self):
@@ -21,9 +22,9 @@ class UtilityFunctionTests(TestCase):
             report=self.report,
             field="X",
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'Lots of spam')
-    
+            filter_type='contains',
+            filter_value='Lots of spam')
+
     def get_fields_names(self, fields):
         names = []
         for field in fields:
@@ -52,7 +53,7 @@ class UtilityFunctionTests(TestCase):
         if 'custom_field' in settings.INSTALLED_APPS:
             from custom_field.models import CustomField
             cf = CustomField.objects.create(
-                name="foo", 
+                name="foo",
                 content_type=self.report_ct,
                 field_type='t',)
             fields = get_custom_fields_from_model(Report)
@@ -94,7 +95,7 @@ class ViewTests(TestCase):
         self.user.save()
         self.c = Client()
         self.c.login(username="user", password="user")
-        self.report_ct = ContentType.objects.get_for_model(Report) 
+        self.report_ct = ContentType.objects.get_for_model(Report)
         self.report = Report.objects.create(
             name="foo report",
             root_model=self.report_ct)
@@ -102,8 +103,8 @@ class ViewTests(TestCase):
             report=self.report,
             field="slug",
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'Lots of spam')
+            filter_type='contains',
+            filter_value='Lots of spam')
 
     def test_ajax_get_related(self):
         response = self.c.get('/report_builder/ajax_get_related/', {
@@ -111,7 +112,7 @@ class ViewTests(TestCase):
             'model': self.report_ct.id,
             'path': '',
             'path_verbose': '',
-            })
+        })
         self.assertContains(response, "report_starred_set")
         self.assertContains(response, "user_permissions")
         self.assertContains(response, "report_modified_set")
@@ -122,7 +123,7 @@ class ViewTests(TestCase):
             'field': 'displayfield',
             'path': '',
             'path_verbose': '',
-            })
+        })
         self.assertContains(response, 'data-name="aggregate"')
         self.assertContains(response, 'data-path="displayfield__"')
         self.assertContains(response, "field")
@@ -131,6 +132,7 @@ class ViewTests(TestCase):
         self.assertContains(response, "ID [AutoField]")
         self.assertContains(response, "name [CharField]")
         self.assertContains(response, "path [CharField]")
+
 
 class TabbedViewTests(ViewTests):
     def setUp(self):
@@ -149,7 +151,7 @@ class TabbedViewTests(ViewTests):
         from openpyxl.reader.excel import load_workbook
 
         response = self.c.get('/report_builder/tabbedreport/{}/download_xlsx'
-            .format(self.tabbed_report.pk))
+                              .format(self.tabbed_report.pk))
         wb = load_workbook(StringIO(response.content))
         names = wb.get_sheet_names()
 
