@@ -35,8 +35,9 @@ class UtilityFunctionTests(TestCase):
         names = self.get_fields_names(fields)
         self.assertTrue('report_builder:displayfield' in names)
         self.assertTrue('report_builder:filterfield' in names)
+        self.assertTrue('report_builder:tabbedreport' in names)
         self.assertTrue('root_model' in names)
-        self.assertEquals(len(names), 6)
+        self.assertEquals(len(names), 7)
 
     def test_get_direct_fields_from_model(self):
         fields = get_direct_fields_from_model(Report)
@@ -61,7 +62,7 @@ class UtilityFunctionTests(TestCase):
     def test_get_properties_from_model(self):
         properties = get_properties_from_model(DisplayField)
         self.assertEquals(properties[0]['label'], 'choices')
-        self.assertEquals(properties[1]['label'], 'choices_dict')
+        self.assertEquals(properties[1]['label'], 'choices dict')
 
     def test_filter_property(self):
         # Not a very complete test - only tests one type of filter
@@ -130,4 +131,3 @@ class ViewTests(TestCase):
         self.assertContains(response, "ID [AutoField]")
         self.assertContains(response, "name [CharField]")
         self.assertContains(response, "path [CharField]")
-
