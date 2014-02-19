@@ -747,7 +747,7 @@ def download_tabbed_xlsx(request, pk, queryset=None):
 
     report = get_object_or_404(TabbedReport, pk=pk)
 
-    wb = Workbook()
+    wb = Workbook(optimized_write=True, encoding='utf-8')
 
     for tab in report.tabs.all():
         add_report_to_workbook(wb, tab, request.user, queryset=queryset)

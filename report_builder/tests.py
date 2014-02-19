@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.test.client import Client
-from report_builder.models import Report, DisplayField
+from report_builder.models import Report, TabbedReport,  DisplayField
 from report_builder.views import *
 from django.conf import settings
 
@@ -100,7 +100,7 @@ class ViewTests(TestCase):
             root_model=self.report_ct)
         self.filter_field = FilterField.objects.create(
             report=self.report,
-            field="X",
+            field="slug",
             field_verbose="stuff",
             filter_type = 'contains',
             filter_value = 'Lots of spam')
@@ -131,3 +131,34 @@ class ViewTests(TestCase):
         self.assertContains(response, "ID [AutoField]")
         self.assertContains(response, "name [CharField]")
         self.assertContains(response, "path [CharField]")
+
+class TabbedViewTests(ViewTests):
+    def setUp(self):
+        super(TabbedViewTests, self).setUp()
+        self.bar_report = Report.objects.create(
+            name='bar report',
+            root_model=self.report_ct,
+        )
+        self.tabbed_report = TabbedReport.objects.create(
+            name='tab report',
+        )
+        self.tabbed_report.tabs.add(self.report, self.bar_report)
+
+    def test_workbook(self):
+        from cStringIO import StringIO
+        from openpyxl.reader.excel import load_workbook
+
+        response = self.c.get('/report_builder/tabbedreport/{}/download_xlsx'
+            .format(self.tabbed_report.pk))
+        wb = load_workbook(StringIO(response.content))
+        names = wb.get_sheet_names()
+
+        self.assertEquals(
+            response.get('content-disposition'),
+            'attachment; filename=tabreport.xlsx')
+        self.assertEquals(
+            response.get('content-type'),
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        self.assertEquals(len(wb.worksheets), 2)
+        self.assertIn('fooreport', names)
+        self.assertIn('barreport', names)
