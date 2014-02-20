@@ -30,5 +30,6 @@ setup(
         'Django>=1.4',
         'openpyxl',
         'python-dateutil',
+        'six',
     ],
 )

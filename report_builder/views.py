@@ -772,14 +772,10 @@ def download_tabbed_xlsx(request, pk, queryset=None):
 
 
 def get_workbook_result(wb, filename):
-    try:
-        from cStringIO import StringIO
-    except ImportError:
-        #python 3.3
-        from io import StringIO
+    from six import BytesIO
     from openpyxl.writer.excel import save_virtual_workbook
 
-    myfile = StringIO()
+    myfile = BytesIO()
     myfile.write(save_virtual_workbook(wb))
     response = HttpResponse(
         myfile.getvalue(),
