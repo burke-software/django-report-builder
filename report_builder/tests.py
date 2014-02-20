@@ -147,10 +147,14 @@ class TabbedViewTests(ViewTests):
         self.tabbed_report.tabs.add(self.report, self.bar_report)
 
     def test_workbook(self):
-        from cStringIO import StringIO
+        try:
+            from cStringIO import StringIO
+        except ImportError:
+            #python 3.3
+            from io import StringIO
         from openpyxl.reader.excel import load_workbook
 
-        response = self.c.get('/report_builder/tabbedreport/{}/download_xlsx'
+        response = self.c.get('/report_builder/tabbedreport/{0}/download_xlsx'
                               .format(self.tabbed_report.pk))
         wb = load_workbook(StringIO(response.content))
         names = wb.get_sheet_names()
