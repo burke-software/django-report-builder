@@ -1,3 +1,9 @@
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except ImportError:
+    from django.contrib.auth.models import User
+
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -10,8 +16,6 @@ from django.db.models.signals import post_save
 from report_builder.unique_slugify import unique_slugify
 from report_builder.utils import get_model_from_path_string
 from dateutil import parser
-
-AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 class Report(models.Model):
@@ -39,10 +43,10 @@ class Report(models.Model):
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in': _get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
-    user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
-    user_modified = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True, related_name="report_modified_set")
+    user_created = models.ForeignKey(User, editable=False, blank=True, null=True)
+    user_modified = models.ForeignKey(User, editable=False, blank=True, null=True, related_name="report_modified_set")
     distinct = models.BooleanField(default=False)
-    starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
+    starred = models.ManyToManyField(User, blank=True,
                                      help_text="These users have starred this report for easy reference.",
                                      related_name="report_starred_set")
 
