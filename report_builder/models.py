@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.signals import post_save
 from report_builder.unique_slugify import unique_slugify
-from report_builder.utils import get_model_from_path_string
+from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -43,7 +43,6 @@ class Report(models.Model):
             unique_slugify(self, self.name)
         super(Report, self).save(*args, **kwargs)
 
-
     def add_aggregates(self, queryset):
         for display_field in self.displayfield_set.filter(aggregate__isnull=False):
             if display_field.aggregate == "Avg":
@@ -57,7 +56,6 @@ class Report(models.Model):
             elif display_field.aggregate == "Sum":
                 queryset = queryset.annotate(Sum(display_field.path + display_field.field))
         return queryset
-
     
     def get_query(self):
         report = self
