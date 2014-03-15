@@ -19,7 +19,7 @@ from report_builder.utils import (
 )
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django import forms
 
 from report_utils.model_introspection import get_relation_fields_from_model
@@ -351,50 +351,33 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
         else:
             return self.render_to_response(self.get_context_data(form=form))
         
-@staff_member_required
-def download_xlsx(request, pk, queryset=None):
-    """ Download the full report in xlsx format
-    Why xlsx? Because there is no decent ods library for python and xls has limitations 
-    queryset: predefined queryset to bypass filters
-    """
-    import cStringIO as StringIO
-    from openpyxl.workbook import Workbook
-    from openpyxl.writer.excel import save_virtual_workbook
-    from openpyxl.cell import get_column_letter
-    import re
-
-    report = get_object_or_404(Report, pk=pk)
+class DownloadXlsxView(DataExportMixin, View):
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DownloadXlsxView, self).dispatch(*args, **kwargs)
     
-    wb = Workbook()
-    ws = wb.worksheets[0]
-    ws.title = re.sub(r'\W+', '', report.name)[:30]
-    filename = re.sub(r'\W+', '', report.name) + '.xlsx'
-    
-    i = 0
-    for field in report.displayfield_set.all():
-        cell = ws.cell(row=0, column=i)
-        cell.value = field.name
-        cell.style.font.bold = True
-        ws.column_dimensions[get_column_letter(i+1)].width = field.width
-        i += 1
-    
-    objects_list, message = report_to_list(report, request.user, queryset=queryset)
-    for row in objects_list:
-        try:
-            ws.append(row)
-        except ValueError as e:
-            ws.append([e.message])
-        except:
-            ws.append(['Unknown Error'])
-    
-    myfile = StringIO.StringIO()
-    myfile.write(save_virtual_workbook(wb))
-    response = HttpResponse(
-        myfile.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    response['Content-Length'] = myfile.tell()
-    return response
+    def get(self, request, *args, **kwargs):
+        report = get_object_or_404(Report, pk=kwargs['pk'])
+        queryset, message = report.get_query()
+        property_filters = report.filterfield_set.filter(
+            Q(field_verbose__contains='[property]') | Q(field_verbose__contains='[custom')
+        )
+        objects_list, message = self.report_to_list(
+            queryset,
+            report.displayfield_set.all(),
+            self.request.user,
+            property_filters=property_filters,
+            preview=True,)
+        title = re.sub(r'\W+', '', report.name)[:30]
+        header = []
+        widths = []
+        for field in report.displayfield_set.all():
+            header.append(field.name)
+            widths.append(field.width)
+        return self.list_to_xlsx_response(objects_list,
+                                          title=title,
+                                          header=header,
+                                          widths=widths)
     
 
 @staff_member_required
