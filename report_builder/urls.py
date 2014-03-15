@@ -5,7 +5,7 @@ from report_builder import views
 urlpatterns = patterns('',
     url('^report/add/$',  views.ReportCreateView.as_view(), name="report_create"),
     url('^report/(?P<pk>\d+)/$', views.ReportUpdateView.as_view(), name="report_update_view"),
-    url('^report/(?P<pk>\d+)/download_xlsx$',  views.DownloadXlsxView.as_view()),
+    url('^report/(?P<pk>\d+)/download_xlsx$',  views.DownloadXlsxView.as_view(), name="report_download_xlsx"),
     url('^ajax_get_related/$', staff_member_required(views.AjaxGetRelated.as_view())),
     url('^ajax_get_fields/$', staff_member_required(views.AjaxGetFields.as_view())),
     url('^ajax_get_choices/$', views.ajax_get_choices, name="ajax_get_choices"),

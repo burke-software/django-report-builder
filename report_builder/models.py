@@ -147,7 +147,7 @@ class Report(models.Model):
     
     def download_xlsx(self):
         return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
-            reverse('report_builder.views.download_xlsx', args=[self.id]),
+            reverse('report_download_xlsx', args=[self.id]),
             getattr(settings, 'STATIC_URL', '/static/'),
         ))
     download_xlsx.short_description = "Download"
