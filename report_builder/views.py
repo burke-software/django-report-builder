@@ -244,13 +244,6 @@ def ajax_get_formats(request):
     options_html = select_widget.render_options([], [0])
     return HttpResponse(options_html)
 
-def sort_helper(x, sort_key, date_field=False):
-    # If comparing datefields, assume null is the min year
-    if date_field and x[sort_key] == None:
-        result = datetime.date(datetime.MINYEAR, 1, 1)
-    else:
-        result = x[sort_key]     
-    return result.lower() if isinstance(result, basestring) else result
 
 
 class AjaxPreview(DataExportMixin, TemplateView):
