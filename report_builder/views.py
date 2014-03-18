@@ -360,7 +360,7 @@ class DownloadXlsxView(DataExportMixin, View):
             report.displayfield_set.all(),
             self.request.user,
             property_filters=property_filters,
-            preview=True,)
+            preview=False,)
         title = re.sub(r'\W+', '', report.name)[:30]
         header = []
         widths = []
