@@ -23,8 +23,8 @@ class StarredFilter(SimpleListFilter):
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('ajax_starred', 'edit', 'name', 'description', 'root_model', 'created', 'modified', 'user_created', 'download_xlsx','copy_report',)
-    readonly_fields = ['slug']
-    fields = ['name', 'description', 'root_model', 'slug']
+    readonly_fields = ['slug', ]
+    fields = ['name', 'description', 'root_model', 'slug',]
     search_fields = ('name', 'description')
     list_filter = (StarredFilter, 'root_model', 'created', 'modified', 'root_model__app_label')
     list_display_links = []
@@ -43,6 +43,11 @@ class ReportAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(obj.get_absolute_url())
         return super(ReportAdmin, self).response_change(request, obj)
         
+    def change_view(self, request, object_id, extra_context=None):
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False) and 'report_file' not in self.fields:
+            self.fields += ['report_file', 'report_file_creation']
+        return super(ReportAdmin, self).change_view(request, object_id, extra_context=None)    
+    
     def changelist_view(self, request, extra_context=None):
         self.user = request.user
         return super(ReportAdmin, self).changelist_view(request, extra_context=extra_context)

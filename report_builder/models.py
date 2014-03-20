@@ -33,6 +33,8 @@ class Report(models.Model):
     user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
     user_modified = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True, related_name="report_modified_set")
     distinct = models.BooleanField(default=False)
+    report_file = models.FileField(upload_to="report_files", blank=True)
+    report_file_creation = models.DateTimeField(blank=True, null=True)
     starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
                                      help_text="These users have starred this report for easy reference.",
                                      related_name="report_starred_set")

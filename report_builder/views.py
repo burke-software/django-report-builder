@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from django.core.files.base import ContentFile
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Q
@@ -12,8 +13,8 @@ from django.shortcuts import (
     get_object_or_404,
     render)
 from django.template import RequestContext
-from report_builder.models import Report, DisplayField, FilterField, Format
-from report_builder.utils import (
+from .models import Report, DisplayField, FilterField, Format
+from .utils import (
     javascript_date_format,
     duplicate,
 )
@@ -349,6 +350,14 @@ class DownloadXlsxView(DataExportMixin, View):
     def dispatch(self, *args, **kwargs):
         return super(DownloadXlsxView, self).dispatch(*args, **kwargs)
     
+    def async_report_save(self, report, objects_list, title, header, widths):
+        xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
+        if not title.endswith('.xlsx'):
+            title += '.xlsx'
+        report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
+        report.report_file_creation = datetime.datetime.today()
+        report.save()
+    
     def get(self, request, *args, **kwargs):
         report = get_object_or_404(Report, pk=kwargs['pk'])
         queryset, message = report.get_query()
@@ -367,6 +376,13 @@ class DownloadXlsxView(DataExportMixin, View):
         for field in report.displayfield_set.all():
             header.append(field.name)
             widths.append(field.width)
+            
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
+            from .tasks import report_builder_async_report_save
+            shit = report_builder_async_report_save.delay(self, report, objects_list, title, header, widths)
+            print shit
+            print shit.get()
+            return None
         return self.list_to_xlsx_response(objects_list,
                                           title=title,
                                           header=header,
