@@ -153,7 +153,11 @@
           </div>
         </div>
         <div id="tabs-3">
-          <a href="{% url "report_download_xlsx" object.id %}">Download full xlsx</a>
+          {% if async_report %}
+            <a href="#" onclick="get_async_report({{ object.id }})">Download full xlsx</a>
+          {% else %}
+            <a href="{% url "report_download_xlsx" object.id %}">Download full xlsx</a>
+          {% endif %}
           <div id="preview_area"></div>
         </div>
       </div>

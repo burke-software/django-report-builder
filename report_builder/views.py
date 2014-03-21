@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Q
 from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
@@ -34,6 +35,7 @@ from decimal import Decimal
 from numbers import Number
 import copy
 from dateutil import parser
+import json
 
 
 class ReportForm(forms.ModelForm):
@@ -324,6 +326,10 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
         ctx['root_model'] = model_ct.model
         ctx['app_label'] = model_ct.app_label
         
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
+            print "TRUE"
+            ctx['async_report'] = True
+            
         field_context = self.get_fields(model_class)
         ctx = dict(ctx.items() + field_context.items())
         
@@ -350,16 +356,9 @@ class DownloadXlsxView(DataExportMixin, View):
     def dispatch(self, *args, **kwargs):
         return super(DownloadXlsxView, self).dispatch(*args, **kwargs)
     
-    def async_report_save(self, report, objects_list, title, header, widths):
-        xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
-        if not title.endswith('.xlsx'):
-            title += '.xlsx'
-        report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
-        report.report_file_creation = datetime.datetime.today()
-        report.save()
-    
-    def get(self, request, *args, **kwargs):
-        report = get_object_or_404(Report, pk=kwargs['pk'])
+    def process_report(self, report_id, user_id, to_response):
+        report = get_object_or_404(Report, pk=report_id)
+        user = get_user_model().objects.get(pk=user_id)
         queryset, message = report.get_query()
         property_filters = report.filterfield_set.filter(
             Q(field_verbose__contains='[property]') | Q(field_verbose__contains='[custom')
@@ -367,7 +366,7 @@ class DownloadXlsxView(DataExportMixin, View):
         objects_list, message = self.report_to_list(
             queryset,
             report.displayfield_set.all(),
-            self.request.user,
+            user,
             property_filters=property_filters,
             preview=False,)
         title = re.sub(r'\W+', '', report.name)[:30]
@@ -377,16 +376,28 @@ class DownloadXlsxView(DataExportMixin, View):
             header.append(field.name)
             widths.append(field.width)
             
+        if to_response:
+            return self.list_to_xlsx_response(objects_list, title, header, widths)
+        else:
+            self.async_report_save(report, objects_list, title, header, widths)
+        
+    def async_report_save(self, report, objects_list, title, header, widths):
+        xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
+        if not title.endswith('.xlsx'):
+            title += '.xlsx'
+        report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
+        report.report_file_creation = datetime.datetime.today()
+        report.save()
+    
+    def get(self, request, *args, **kwargs):
+        report_id = kwargs['pk']
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
             from .tasks import report_builder_async_report_save
-            shit = report_builder_async_report_save.delay(self, report, objects_list, title, header, widths)
-            print shit
-            print shit.get()
-            return None
-        return self.list_to_xlsx_response(objects_list,
-                                          title=title,
-                                          header=header,
-                                          widths=widths)
+            report_task = report_builder_async_report_save.delay(report_id, request.user.pk)
+            task_id = report_task.task_id
+            return HttpResponse(json.dumps({'task_id': task_id}), content_type="application/json")
+        else:
+            return self.process_report(report_id, request.user.pk, to_response=True)
     
 
 @staff_member_required
@@ -450,3 +461,15 @@ def export_to_report(request):
         'number_objects': number_objects,
         'model': ct.model_class()._meta.verbose_name,
         })
+
+@staff_member_required
+def check_status(request, pk, task_id):
+    """ Check if the asyncronous report is ready to download """
+    from celery.result import AsyncResult
+    res = AsyncResult(task_id)
+    link = ''
+    if res.state == 'SUCCESS':
+        report = get_object_or_404(Report, pk=pk)
+        link = report.report_file.url
+    return HttpResponse(json.dumps({'state': res.state, 'link': link }), content_type="application/json")
+
