@@ -26,8 +26,9 @@ What's finished?
 - Very simple security, user must have change or "view" permission to view 
 reports. Unprivileged users can still build reports and see database schema.
 - Model properties (thanks yekibud)
-- Support for [django-custom-fields](http://code.google.com/p/django-custom-field/)
+- Support for [django-custom-fields](https://github.com/burke-software/django-custom-field)
 - Export to Report global admin action
+- Optional asynchronous report generation
 
 What isn't
 - "or" filters together

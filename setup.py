@@ -26,5 +26,10 @@ setup(
         'Intended Audience :: System Administrators',
         "License :: OSI Approved :: BSD License",
     ],
-    install_requires=['django', 'openpyxl','python-dateutil', 'django-report-utils']
+    install_requires=[
+        'django',
+        'openpyxl',
+        'python-dateutil',
+        'django-report-utils >= 0.2',
+    ]
 )
