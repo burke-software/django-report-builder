@@ -27,9 +27,9 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        'django',
+        'django>=1.4',
         'openpyxl',
         'python-dateutil',
-        'django-report-utils >= 0.2',
+        'django-report-utils>=0.2',
     ]
 )

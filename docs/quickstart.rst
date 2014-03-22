@@ -27,7 +27,15 @@ You may include and exclude fields or entire models.::
 You may also limit which fields in a model can be used. Just add this property to a model::
 
     report_builder_exclude_fields = () # Lists or tuple of excluded fields
-    
+
+You may set a custom model manager for all models::
+
+    REPORT_BUILDER_MODEL_MANAGER = 'on_site' #name of custom model manager to use on all models
+
+You many also set a custom model manager per model. Just add the custom model manager and this property to a model::
+
+   report_builder_model_manager = on_site #reference to custom model manager to use for a model
+
 Export to Report action is disabled by default. To enable set::
     
     REPORT_BUILDER_GLOBAL_EXPORT = True

@@ -13,9 +13,18 @@ from dateutil import parser
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
+
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
     """
+    def _get_model_manager(self):
+        """ Get  manager from settings else use objects
+        """
+        model_manager = 'objects'
+        if getattr(settings, 'REPORT_BUILDER_MODEL_MANAGER', False):
+            model_manager = settings.REPORT_BUILDER_MODEL_MANAGER
+        return model_manager
+
     def _get_allowed_models():
         models = ContentType.objects.all()
         if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
@@ -38,8 +47,7 @@ class Report(models.Model):
     starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
                                      help_text="These users have starred this report for easy reference.",
                                      related_name="report_starred_set")
-    
-    
+
     def save(self, *args, **kwargs):
         if not self.id:
             unique_slugify(self, self.name)
@@ -63,7 +71,14 @@ class Report(models.Model):
         report = self
         model_class = report.root_model.model_class()
         message= ""
-        objects = model_class.objects.all()
+
+        # Check for report_builder_model_manger property on the model
+        if getattr(model_class, 'report_builder_model_manager', False):
+            objects = getattr(model_class, 'report_builder_model_manager').all()
+        else:
+            # Get global model manager
+            manager = report._get_model_manager()
+            objects = getattr(model_class, manager).all()
 
         # Filters
         # NOTE: group all the filters together into one in order to avoid 
@@ -226,7 +241,8 @@ class DisplayField(models.Model):
         except:
             model_field = None
         if model_field and model_field.choices:
-            return model_field.choices
+            # See https://github.com/burke-software/django-report-builder/pull/93
+            return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
 
     @property
     def choices_dict(self):
