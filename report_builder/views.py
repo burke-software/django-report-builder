@@ -327,7 +327,6 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
         ctx['app_label'] = model_ct.app_label
         
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
-            print "TRUE"
             ctx['async_report'] = True
             
         field_context = self.get_fields(model_class)

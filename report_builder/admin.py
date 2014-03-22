@@ -31,7 +31,7 @@ class ReportAdmin(admin.ModelAdmin):
     show_save = False
 
     class Media:
-        js = [ static_url+'report_builder/js/jquery-1.8.2.min.js', static_url+'report_builder/js/report_list.js',]
+        js = [ static_url+'report_builder/js/jquery-1.10.2.min.js', static_url+'report_builder/js/report_list.js', static_url+'report_builder/js/report_form.js']
 
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:

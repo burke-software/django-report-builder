@@ -148,10 +148,16 @@ class Report(models.Model):
     edit.allow_tags = True
     
     def download_xlsx(self):
-        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
-            reverse('report_download_xlsx', args=[self.id]),
-            getattr(settings, 'STATIC_URL', '/static/'),
-        ))
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
+            return mark_safe('<a href="#" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+                self.id,
+                getattr(settings, 'STATIC_URL', '/static/'),
+            ))
+        else:
+            return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+                reverse('report_download_xlsx', args=[self.id]),
+                getattr(settings, 'STATIC_URL', '/static/'),
+            ))
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
     

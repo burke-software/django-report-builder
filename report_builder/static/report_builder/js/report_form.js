@@ -23,9 +23,8 @@ else
 }
 
 var check_report;
-
 function check_if_report_done(report_id, task_id) {
-    $.get( path_prefix + "/report_builder/report/"+ report_id + "/check_status/" + task_id + "/", function( data ) {
+    $.get( "/report_builder/report/"+ report_id + "/check_status/" + task_id + "/", function( data ) {
 		console.log(data);
 		if (data.state == "SUCCESS") {
 			window.location.href = data.link;
@@ -33,9 +32,8 @@ function check_if_report_done(report_id, task_id) {
 		}
     })
 }
-
 function get_async_report(report_id) {
-	$.get( path_prefix + "/report_builder/report/"+ report_id + "/download_xlsx/", function( data ) {
+	$.get( "/report_builder/report/"+ report_id + "/download_xlsx/", function( data ) {
 	var task_id = data.task_id;
 	status = "loading"
 	check_report = setInterval( function(){ check_if_report_done(report_id, task_id); }, 2000 );
