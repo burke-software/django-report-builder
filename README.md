@@ -8,15 +8,20 @@ not be able to program or gain direct interactive shell access.
 
 # News
 
-In the develop branch I'm 
+Just pushed 2.0 changes to master. Code has been refactored, why don't you test it out now before 
+I push to pypi. Changes:
 
 - Changing the base templates slightly (could cause you trouble if customized)
 - Factoring out functions to django-report-utils
+- Added experimental support for asynchronous report generation
 
 The common functions will used in:
 
 - django-scaffold-report - a tool to streamline complex customized reports
 - django-admin-export - a super old tool I made that sucks and will be remade!
+
+If I don't hear any complaints I will push 2.0 to pypi soon. If you have an outstanding pull request you may need to
+resubmit it against the new code base.
 
 # What is Django Report Builder?
 
