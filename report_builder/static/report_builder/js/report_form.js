@@ -22,15 +22,18 @@ else
     path_prefix = "";
 }
 
-var check_report;
+var check_report = false;
 function check_if_report_done(report_id, task_id) {
-    $.get( "/report_builder/report/"+ report_id + "/check_status/" + task_id + "/", function( data ) {
-		console.log(data);
-		if (data.state == "SUCCESS") {
-			window.location.href = data.link;
-			clearInterval(check_report);
-		}
-    })
+	if (check_report != false ){
+		$.get( "/report_builder/report/"+ report_id + "/check_status/" + task_id + "/", function( data ) {
+			console.log(data);
+			if (data.state == "SUCCESS") {
+				window.location.href = data.link;
+				clearInterval(check_report);
+				check_report = false;
+			}
+		})
+	}
 }
 function get_async_report(report_id) {
 	$.get( "/report_builder/report/"+ report_id + "/download_xlsx/", function( data ) {
