@@ -745,8 +745,10 @@ def download_xlsx(request, pk, queryset=None):
 
     report = get_object_or_404(Report, pk=pk)
 
-    wb = Workbook()
+    wb = Workbook(encoding='utf-8')
     add_report_to_workbook(wb, report, request.user, queryset=queryset)
+    # Remove default sheet
+    wb.remove_sheet(wb.get_active_sheet())
     filename = re.sub(r'\W+', '', report.name) + '.xlsx'
     return get_workbook_result(wb, filename)
 
@@ -762,11 +764,13 @@ def download_tabbed_xlsx(request, pk, queryset=None):
 
     report = get_object_or_404(TabbedReport, pk=pk)
 
-    wb = Workbook(optimized_write=True, encoding='utf-8')
+    wb = Workbook(encoding='utf-8')
 
     for tab in report.tabs.all():
         add_report_to_workbook(wb, tab, request.user, queryset=queryset)
 
+    # Remove default sheet
+    wb.remove_sheet(wb.get_active_sheet())
     filename = re.sub(r'\W+', '', report.name) + '.xlsx'
     return get_workbook_result(wb, filename)
 
