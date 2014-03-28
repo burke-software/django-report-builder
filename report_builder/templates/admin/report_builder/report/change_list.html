@@ -1,7 +1,5 @@
 {% extends "admin/change_list.html" %}
 
-{% load url from future %}
-
 {% block extrahead %}
 <script type="text/javascript">
   window.STATIC_URL = '{{STATIC_URL}}';
@@ -16,7 +14,8 @@
 {% endblock %}
 
 {% block object-tools-items %}
-  {% if starred %}
+  {# Double check this, templates shouldn't look in request #}
+  {% if 'starred' in request.GET %}
     <li><a href="./">Manage all Reports</a></li>
   {% else %}
     <li><a href="./?starred=Starred">View Starred Reports</a></li>

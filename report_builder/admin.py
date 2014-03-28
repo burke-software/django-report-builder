@@ -32,15 +32,16 @@ admin.site.register(TabbedReport, TabbedReportAdmin)
 
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('ajax_starred', 'edit', 'name', 'description', 'root_model', 'created', 'modified', 'user_created', 'download_xlsx', 'copy_report',)
-    readonly_fields = ['slug']
-    fields = ['name', 'description', 'root_model', 'slug']
+    list_display = ('ajax_starred', 'edit', 'name', 'description', 'root_model', 'created', 'modified', 'user_created', 'download_xlsx','copy_report',)
+    readonly_fields = ['slug', ]
+    fields = ['name', 'description', 'root_model', 'slug',]
     search_fields = ('name', 'description')
     list_filter = (StarredFilter, 'root_model', 'created', 'modified', 'root_model__app_label')
     list_display_links = []
+    show_save = False
 
     class Media:
-        js = [static_url + 'report_builder/js/jquery-1.8.2.min.js', static_url + 'report_builder/js/report_list.js', ]
+        js = [ static_url+'report_builder/js/jquery-1.10.2.min.js', static_url+'report_builder/js/report_list.js', static_url+'report_builder/js/report_form.js']
 
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
@@ -54,12 +55,18 @@ class ReportAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(obj.get_absolute_url())
         return super(ReportAdmin, self).response_change(request, obj)
 
+    def change_view(self, request, object_id, extra_context=None):
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False) and 'report_file' not in self.fields:
+            self.fields += ['report_file', 'report_file_creation']
+        return super(ReportAdmin, self).change_view(request, object_id, extra_context=None)
+
     def changelist_view(self, request, extra_context=None):
         self.user = request.user
         return super(ReportAdmin, self).changelist_view(request, extra_context=extra_context)
 
     def ajax_starred(self, obj):
         if obj.starred.filter(id=self.user.id):
+            #FIXME: this should probably be os.path.join
             img = static_url + 'report_builder/img/star.png'
         else:
             img = static_url + 'report_builder/img/unstar.png'

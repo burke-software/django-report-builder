@@ -1,38 +1,27 @@
-{% load url from future %}
-
-{% block report_header %}
-<script src="{{ STATIC_URL|default:'/static/' }}report_builder/js/jquery-1.8.2.min.js" type="text/javascript" ></script>
-<script src="{{ STATIC_URL|default:'/static/' }}report_builder/js/report_form.js" type="text/javascript" ></script>
-<script src="{{ STATIC_URL|default:'/static/' }}report_builder/js/spin.js" type="text/javascript" ></script>
-<script src="{{ STATIC_URL|default:'/static/' }}report_builder/js/jquery.spin.js" type="text/javascript" ></script>
-
-<link rel="stylesheet" href="{{ STATIC_URL|default:'/static/' }}jquery-ui-1.9.1/css/smoothness/jquery-ui-1.9.1.custom.min.css" />
-<script src="{{ STATIC_URL|default:'/static/' }}jquery-ui-1.9.1/js/jquery-ui-1.9.1.custom.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL|default:'/static/' }}report_builder/css/report_form.css" />
-{% endblock %}
+{% extends "report_builder/base.html" %}
+{% load static from staticfiles %}
 
 {% block report_form %}
-<div id="container">
+<div id="report_container">
   <form action="" method="post">{% csrf_token %}
-    <header>
+    <header class="report_top">
       <div id="report_id" data-id="{{ object.id }}">
-        <div style="display:table; width:100%;">
-          <div style="display:table-cell; width:25em;">
-            Set report fields for {{ form.name }}   
-          </div>
-          <div style="display:table-cell;">
-            {{ form.description }}
-          </div>
-          <div style="display:table-cell; width:25em;">
+        <span class="pull_right">
             Last updated: {{ object.modified }}
             Model: {{ object.root_model }}
-          </div>
-        </div>
+        </span>
+        <span class="pull_left">
+            {{ form.name }}
+        </span>
+        <span class="fill_area">
+            {{ form.description }}
+        </span>
       </div>
     </header>
+
     <section class="sidebar">
       <section class="top_half">
-        Expand Related Fields:
+        Related Fields:
         <input type="text" class="search_box" onkeyup="filter(this, 'related_fields_ol')" placeholder="Search Fields"/>
         <ol class="tree" id="related_fields_ol" style="padding-left: 0px; margin: 0px;">
           <li class="tree_expanded">
@@ -43,15 +32,15 @@
           <li>{% include "report_builder/report_form_related_li.html" %}</li>
         </ol>
       </section>
-      <div style="text-align: center;"><img style="width: 2.5em;" src="{{ STATIC_URL|default:'/static/' }}report_builder/img/arrow_down.png"/></div>
+      <div style="text-align: center;"><img style="width: 2.5em;" src="{% static 'report_builder/img/arrow_down.png' %}"/></div>
       <section class="bottom_half">
-        Fields - drag fields to add
+        Fields-drag to add
         <input type="text" class="search_box" onkeyup="filter(this, 'field_selection_div')" placeholder="Search Fields"/>
         <div id="field_selection_div">
           {% include "report_builder/report_form_fields_li.html" %}
         </div>
       </section>
- 
+
     </section>
     <section class="main_area">
       <div id="tabs">
@@ -93,7 +82,7 @@
                       {{ form.field }}
                       {{ form.field_verbose.as_hidden }}
                       {{ form.path }}
-                      
+
                       {% if form.path_verbose.value %}
                         ({{ form.path_verbose.value }})
                       {% endif %}
@@ -166,7 +155,11 @@
           </div>
         </div>
         <div id="tabs-3">
-          <a href="{% url "report_builder.views.download_xlsx" object.id %}">Download full xlsx</a>
+          {% if async_report %}
+            <a href="#" onclick="get_async_report({{ object.id }})">Download full xlsx</a>
+          {% else %}
+            <a href="{% url "report_download_xlsx" object.id %}">Download full xlsx</a>
+          {% endif %}
           <div id="preview_area"></div>
         </div>
       </div>

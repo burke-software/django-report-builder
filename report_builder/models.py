@@ -1,9 +1,3 @@
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:
-    from django.contrib.auth.models import User
-
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -14,7 +8,7 @@ from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.signals import post_save
 from report_builder.unique_slugify import unique_slugify
-from report_builder.utils import get_model_from_path_string
+from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
 
 
@@ -43,10 +37,12 @@ class Report(models.Model):
     root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in': _get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
-    user_created = models.ForeignKey(User, editable=False, blank=True, null=True)
-    user_modified = models.ForeignKey(User, editable=False, blank=True, null=True, related_name="report_modified_set")
+    user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
+    user_modified = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True, related_name="report_modified_set")
     distinct = models.BooleanField(default=False)
-    starred = models.ManyToManyField(User, blank=True,
+    report_file = models.FileField(upload_to="report_files", blank=True)
+    report_file_creation = models.DateTimeField(blank=True, null=True)
+    starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
                                      help_text="These users have starred this report for easy reference.",
                                      related_name="report_starred_set")
 
@@ -168,10 +164,17 @@ class Report(models.Model):
     edit.allow_tags = True
 
     def download_xlsx(self):
-        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
-            reverse('report_builder.views.download_xlsx', args=[self.id]),
-            getattr(settings, 'STATIC_URL', '/static/'),
-        ))
+        # TODO: template tag might be better
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
+            return mark_safe('<a href="#" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+                self.id,
+                getattr(settings, 'STATIC_URL', '/static/'),
+            ))
+        else:
+            return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+                reverse('report_download_xlsx', args=[self.id]),
+                getattr(settings, 'STATIC_URL', '/static/'),
+            ))
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
 
@@ -197,6 +200,7 @@ class TabbedReport(models.Model):
     tabs = models.ManyToManyField(Report)
 
     def download_xlsx(self):
+        # TODO: add async option
         return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
             reverse('report_builder.views.download_tabbed_xlsx', args=[self.id]),
             getattr(settings, 'STATIC_URL', '/static/'),
@@ -255,7 +259,8 @@ class DisplayField(models.Model):
         except:
             model_field = None
         if model_field and model_field.choices:
-            return model_field.choices
+            # See https://github.com/burke-software/django-report-builder/pull/93
+            return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
 
     @property
     def choices_dict(self):

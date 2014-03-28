@@ -1,14 +1,10 @@
-div#container {
+div#report_container {
     position: relative;
     width: 100%;
     height: 100%;
 }
-div#container header {
-    height: 2.6em;
-    padding-left: 1em;
- }
 
-div#container .sidebar {
+div#report_container .sidebar {
     position: absolute;
     top: 2.6em;
     left: 0;
@@ -16,14 +12,14 @@ div#container .sidebar {
     bottom: 0;
     padding: 0.5em;
 }
-div#container .top_half {
+div#report_container .top_half {
     height: 38%;
     overflow: auto;
     background: #f4f4f4;
     border: solid #CCCCCC 1px;
     padding: 4px;
 }
-div#container .bottom_half {
+div#report_container .bottom_half {
     padding-top: 0.5em;
     overflow: auto;
     height: 55%;
@@ -31,7 +27,7 @@ div#container .bottom_half {
     border: solid #CCCCCC 1px;
     padding: 4px;
 }
-div#container .main_area {
+div#report_container .main_area {
     position: absolute;
     top: 2.6em;
     left: 20%;
@@ -42,25 +38,25 @@ div#container .main_area {
     overflow: auto;
 }
 
-div#container .tree ol {
+div#report_container .tree ol {
     padding-top: 0px;
 }
 
-div#container .tree li {
+div#report_container .tree li {
     padding-left: 14px;
     padding-bottom: 1px;
     list-style-type: none;
 }
 
-div#container li.tree_closed {
+div#report_container li.tree_closed {
     background: url(toggle-small-expand.png) no-repeat left top;
 }
 
-div#container li.tree_expanded {
+div#report_container li.tree_expanded {
     background: url(toggle-small.png) no-repeat left top;
 }
 
-div#container span.button {
+div#report_container span.button {
   background: #C1C1C1;
   border: 1px solid #999999;
   border-radius: 3px;
@@ -89,14 +85,14 @@ div#container span.button {
     color: #000;
 }
 
-div#container span.highlight {
+div#report_container span.highlight {
     background: #FED22F;
 }
-div#container span.highlight:hover {
+div#report_container span.highlight:hover {
     background: #FED22F;
 }
 
-div#container .droppable {
+div#report_container .droppable {
     border: 1px ridge;
     background: #F9F9F9;
     margin: 10px;
@@ -104,7 +100,7 @@ div#container .droppable {
     padding-bottom: 30px;
 }
 
-div#container .simple_table {
+div#report_container .simple_table {
 	border: 1px solid #DFDFDF;
 	background-color: #F9F9F9;
 	width: 100%;
@@ -114,12 +110,12 @@ div#container .simple_table {
 	font-family: Arial,"Bitstream Vera Sans",Helvetica,Verdana,sans-serif;
 	color: #333;
 }
-div#container .simple_table td, #table-3 th {
+div#report_container .simple_table td, #table-3 th {
 	border-top-color: white;
 	border-bottom: 1px solid #DFDFDF;
 	color: #555;
 }
-div#container .simple_table th {
+div#report_container .simple_table th {
 	text-shadow: rgba(255, 255, 255, 0.796875) 0px 1px 0px;
 	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 	font-weight: normal;
@@ -128,28 +124,28 @@ div#container .simple_table th {
 	line-height: 1.3em;
 	font-size: 14px;
 }
-div#container .simple_table td {
+div#report_container .simple_table td {
 	font-size: 12px;
 	padding: 4px 7px 2px;
 	vertical-align: top;
 }
 
-div#container .hide_me {
+div#report_container .hide_me {
     display: none;
 }
 
-div#container input[readonly="readonly"]
+div#report_container input[readonly="readonly"]
 {
     height:20px;
     width: 100%;
     
 }
 
-div#container .small_input {
+div#report_container .small_input {
     width: 50px;
 }
 
-div#container #tip_area {
+div#report_container #tip_area {
     border-radius: 5px;
     background-color: #B3C6F2;
     display: none;
@@ -185,12 +181,29 @@ div.ui-tabs {
 .ui-tabs div.ui-tabs-panel {
   border: 1px solid #d3d3d3;
 }
-div#container .ui-tabs div.ui-droppable {
+div#report_container .ui-tabs div.ui-droppable {
   margin: 0px;
   border: 1px solid #d3d3d3;
   border-radius: 0px;
 }
 
-div#container .collapsed {
+div#report_container .collapsed {
     display: none;
+}
+
+#field_selection_div > ul {
+    padding-left: 1em;
+    margin-top: 1;
+}
+
+.pull_left {
+    float: left;
+}
+.pull_right {
+    float: right;
+}
+.fill_area {
+    display: block;
+    overflow: hidden;
+    padding-left: 2px;
 }

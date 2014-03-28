@@ -39,6 +39,24 @@ You many also set a custom model manager per model. Just add the custom model ma
 Export to Report action is disabled by default. To enable set::
     
     REPORT_BUILDER_GLOBAL_EXPORT = True
+
+Asynchronous Report Generation
+------------------------------
+
+*This feature is experimental for now. It's main purpose at this time is heroku support.*
+
+Sometimes it's useful to generate long running reports with a background worker. Defaults to off. Advantages of this option
+
+- Works better with Heroku which limits requests to 30 seconds
+- Run a report, close your browser, come back later to a finished report
+- Download the last report that was run instead of regenerating
+- Nicer status messages about report status
+
+Installation
+^^^^^^^^^^^^
+
+1. Set up Celery
+2. Set REPORT_BUILDER_ASYNC_REPORT = True in settings.py
     
 Fieldsets
 ---------

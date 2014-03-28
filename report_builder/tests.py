@@ -1,9 +1,10 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.test.client import Client
-from report_builder.models import Report, TabbedReport, DisplayField
-from report_builder.views import *
+from .models import Report, TabbedReport, DisplayField
+from .views import *
 from django.conf import settings
+from report_utils.model_introspection import get_properties_from_model, get_direct_fields_from_model
 
 try:
     from django.contrib.auth import get_user_model
@@ -47,7 +48,7 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('description' in names)
         self.assertTrue('distinct' in names)
         self.assertTrue('id' in names)
-        self.assertEquals(len(names), 7)
+        self.assertEquals(len(names), 9)
 
     def test_get_custom_fields_from_model(self):
         if 'custom_field' in settings.INSTALLED_APPS:
@@ -63,6 +64,7 @@ class UtilityFunctionTests(TestCase):
     def test_get_properties_from_model(self):
         properties = get_properties_from_model(DisplayField)
         self.assertEquals(properties[0]['label'], 'choices')
+        # TODO: 'choices dict' or 'choices_dict' ??
         self.assertEquals(properties[1]['label'], 'choices dict')
 
     def test_filter_property(self):
@@ -101,7 +103,7 @@ class ViewTests(TestCase):
             root_model=self.report_ct)
         self.filter_field = FilterField.objects.create(
             report=self.report,
-            field="slug",
+            field='slug',
             field_verbose="stuff",
             filter_type='contains',
             filter_value='Lots of spam')

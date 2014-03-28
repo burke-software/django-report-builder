@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "django-report-builder",
-    version = "1.14",
+    version = "2.0",
     author = "David Burke",
     author_email = "david@burkesoftware.com",
     description = ("Query and Report builder for Django ORM"),
@@ -27,9 +27,10 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        'Django>=1.4',
+        'django>=1.4',
         'openpyxl',
         'python-dateutil',
         'six',
+        'django-report-utils>=0.2',
     ],
 )

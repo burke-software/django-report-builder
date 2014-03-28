@@ -8,12 +8,20 @@ not be able to program or gain direct interactive shell access.
 
 # News
 
-I'm starting another report related Django project to create a framework for more customized, less flexible, and 
-easier to use reports. Interested? Check it out this:
-https://github.com/burke-software/django-report-builder/issues/77
+Just pushed 2.0 changes to master. Code has been refactored, why don't you test it out now before 
+I push to pypi. Changes:
 
-Of course Report Builder is still dear to my heart. The two projects are doing very seperate use cases.
-Hopefully I'll have time to update soon. Pull requests are always welcome :)
+- Changing the base templates slightly (could cause you trouble if customized)
+- Factoring out functions to django-report-utils
+- Added experimental support for asynchronous report generation
+
+The common functions will used in:
+
+- django-scaffold-report - a tool to streamline complex customized reports
+- django-admin-export - a super old tool I made that sucks and will be remade!
+
+If I don't hear any complaints I will push 2.0 to pypi soon. If you have an outstanding pull request you may need to
+resubmit it against the new code base.
 
 # What is Django Report Builder?
 
@@ -26,8 +34,9 @@ What's finished?
 - Very simple security, user must have change or "view" permission to view 
 reports. Unprivileged users can still build reports and see database schema.
 - Model properties (thanks yekibud)
-- Support for [django-custom-fields](http://code.google.com/p/django-custom-field/)
+- Support for [django-custom-fields](https://github.com/burke-software/django-custom-field)
 - Export to Report global admin action
+- Optional asynchronous report generation
 
 What isn't
 - "or" filters together
