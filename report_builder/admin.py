@@ -32,16 +32,26 @@ admin.site.register(TabbedReport, TabbedReportAdmin)
 
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('ajax_starred', 'edit', 'name', 'description', 'root_model', 'created', 'modified', 'user_created', 'download_xlsx','copy_report',)
-    readonly_fields = ['slug', ]
-    fields = ['name', 'description', 'root_model', 'slug',]
+    list_display = (
+        'ajax_starred', 'edit', 'name', 'description', 'root_model', 'created',
+        'modified', 'user_created', 'download_xlsx', 'copy_report',
+    )
+    readonly_fields = ['slug']
+    fields = ['name', 'description', 'root_model', 'slug']
     search_fields = ('name', 'description')
-    list_filter = (StarredFilter, 'root_model', 'created', 'modified', 'root_model__app_label')
+    list_filter = (
+        StarredFilter, 'root_model', 'created', 'modified',
+        'root_model__app_label',
+    )
     list_display_links = []
     show_save = False
 
     class Media:
-        js = [ static_url+'report_builder/js/jquery-1.10.2.min.js', static_url+'report_builder/js/report_list.js', static_url+'report_builder/js/report_form.js']
+        js = [
+            static_url+'report_builder/js/jquery-1.10.2.min.js',
+            static_url+'report_builder/js/report_list.js',
+            static_url+'report_builder/js/report_form.js',
+        ]
 
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
@@ -66,7 +76,7 @@ class ReportAdmin(admin.ModelAdmin):
 
     def ajax_starred(self, obj):
         if obj.starred.filter(id=self.user.id):
-            #FIXME: this should probably be os.path.join
+            # FIXME: this should probably be os.path.join
             img = static_url + 'report_builder/img/star.png'
         else:
             img = static_url + 'report_builder/img/unstar.png'

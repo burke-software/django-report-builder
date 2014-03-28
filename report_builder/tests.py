@@ -64,8 +64,7 @@ class UtilityFunctionTests(TestCase):
     def test_get_properties_from_model(self):
         properties = get_properties_from_model(DisplayField)
         self.assertEquals(properties[0]['label'], 'choices')
-        # TODO: 'choices dict' or 'choices_dict' ??
-        self.assertEquals(properties[1]['label'], 'choices dict')
+        self.assertEquals(properties[1]['label'], 'choices_dict')
 
     def test_filter_property(self):
         # Not a very complete test - only tests one type of filter
@@ -73,20 +72,20 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue(result)
 
     def test_custom_global_model_manager(self):
-        #test for custom global model manager
+        # test for custom global model manager
         if getattr(settings, 'REPORT_BUILDER_MODEL_MANAGER', False):
             self.assertEquals(self.report._get_model_manager(), settings.REPORT_BUILDER_MODEL_MANAGER)
 
     def test_custom_model_manager(self):
-        #test for custom model manager
+        # test for custom model manager
         if getattr(self.report.root_model.model_class(), 'report_builder_model_manager', True):
-            #change setup to use actual field and value
+            # change setup to use actual field and value
             self.filter_field.field = 'name'
             self.filter_field.filter_value = 'foo'
             self.filter_field.save()
-            #coverage of get_query
+            # coverage of get_query
             objects, message = self.report.get_query()
-            #expect custom manager to return correct object with filters
+            # expect custom manager to return correct object with filters
             self.assertEquals(objects[0], self.report)
 
 

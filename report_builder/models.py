@@ -11,6 +11,8 @@ from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
 
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
 
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
