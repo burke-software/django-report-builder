@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.test.client import Client
-from .models import Report, DisplayField
+from .models import Report, TabbedReport, DisplayField
 from .views import *
 from django.conf import settings
 from report_utils.model_introspection import get_properties_from_model, get_direct_fields_from_model
@@ -11,6 +11,7 @@ try:
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
+
 
 class UtilityFunctionTests(TestCase):
     def setUp(self):
@@ -22,9 +23,9 @@ class UtilityFunctionTests(TestCase):
             report=self.report,
             field="X",
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'Lots of spam')
-    
+            filter_type='contains',
+            filter_value='Lots of spam')
+
     def get_fields_names(self, fields):
         names = []
         for field in fields:
@@ -36,8 +37,9 @@ class UtilityFunctionTests(TestCase):
         names = self.get_fields_names(fields)
         self.assertTrue('report_builder:displayfield' in names)
         self.assertTrue('report_builder:filterfield' in names)
+        self.assertTrue('report_builder:tabbedreport' in names)
         self.assertTrue('root_model' in names)
-        self.assertEquals(len(names), 6)
+        self.assertEquals(len(names), 7)
 
     def test_get_direct_fields_from_model(self):
         fields = get_direct_fields_from_model(Report)
@@ -52,7 +54,7 @@ class UtilityFunctionTests(TestCase):
         if 'custom_field' in settings.INSTALLED_APPS:
             from custom_field.models import CustomField
             cf = CustomField.objects.create(
-                name="foo", 
+                name="foo",
                 content_type=self.report_ct,
                 field_type='t',)
             fields = get_custom_fields_from_model(Report)
@@ -70,20 +72,20 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue(result)
 
     def test_custom_global_model_manager(self):
-        #test for custom global model manager
+        # test for custom global model manager
         if getattr(settings, 'REPORT_BUILDER_MODEL_MANAGER', False):
             self.assertEquals(self.report._get_model_manager(), settings.REPORT_BUILDER_MODEL_MANAGER)
 
     def test_custom_model_manager(self):
-        #test for custom model manager
+        # test for custom model manager
         if getattr(self.report.root_model.model_class(), 'report_builder_model_manager', True):
-            #change setup to use actual field and value
+            # change setup to use actual field and value
             self.filter_field.field = 'name'
             self.filter_field.filter_value = 'foo'
             self.filter_field.save()
-            #coverage of get_query
+            # coverage of get_query
             objects, message = self.report.get_query()
-            #expect custom manager to return correct object with filters
+            # expect custom manager to return correct object with filters
             self.assertEquals(objects[0], self.report)
 
 
@@ -94,16 +96,16 @@ class ViewTests(TestCase):
         self.user.save()
         self.c = Client()
         self.c.login(username="user", password="user")
-        self.report_ct = ContentType.objects.get_for_model(Report) 
+        self.report_ct = ContentType.objects.get_for_model(Report)
         self.report = Report.objects.create(
             name="foo report",
             root_model=self.report_ct)
         self.filter_field = FilterField.objects.create(
             report=self.report,
-            field="X",
+            field='slug',
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'Lots of spam')
+            filter_type='contains',
+            filter_value='Lots of spam')
 
     def test_ajax_get_related(self):
         response = self.c.get('/report_builder/ajax_get_related/', {
@@ -111,7 +113,7 @@ class ViewTests(TestCase):
             'model': self.report_ct.id,
             'path': '',
             'path_verbose': '',
-            })
+        })
         self.assertContains(response, "report_starred_set")
         self.assertContains(response, "user_permissions")
         self.assertContains(response, "report_modified_set")
@@ -122,7 +124,7 @@ class ViewTests(TestCase):
             'field': 'displayfield',
             'path': '',
             'path_verbose': '',
-            })
+        })
         self.assertContains(response, 'data-name="aggregate"')
         self.assertContains(response, 'data-path="displayfield__"')
         self.assertContains(response, "field")
@@ -132,3 +134,34 @@ class ViewTests(TestCase):
         self.assertContains(response, "name [CharField]")
         self.assertContains(response, "path [CharField]")
 
+
+class TabbedViewTests(ViewTests):
+    def setUp(self):
+        super(TabbedViewTests, self).setUp()
+        self.bar_report = Report.objects.create(
+            name='bar report',
+            root_model=self.report_ct,
+        )
+        self.tabbed_report = TabbedReport.objects.create(
+            name='tab report',
+        )
+        self.tabbed_report.tabs.add(self.report, self.bar_report)
+
+    def test_workbook(self):
+        from six import BytesIO
+        from openpyxl.reader.excel import load_workbook
+
+        response = self.c.get('/report_builder/tabbedreport/{0}/download_xlsx'
+                              .format(self.tabbed_report.pk))
+        wb = load_workbook(BytesIO(response.content))
+        names = wb.get_sheet_names()
+
+        self.assertEquals(
+            response.get('content-disposition'),
+            'attachment; filename=tabreport.xlsx')
+        self.assertEquals(
+            response.get('content-type'),
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        self.assertEquals(len(wb.worksheets), 2)
+        self.assertIn('fooreport', names)
+        self.assertIn('barreport', names)

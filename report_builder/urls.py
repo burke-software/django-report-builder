@@ -2,9 +2,12 @@ from django.conf.urls import patterns, url
 from django.contrib.admin.views.decorators import staff_member_required
 from report_builder import views
 
-urlpatterns = patterns('',
-    url('^report/add/$',  views.ReportCreateView.as_view(), name="report_create"),
+urlpatterns = patterns(
+    '',
+    url('^report/add/$', views.ReportCreateView.as_view(), name="report_create"),
     url('^report/(?P<pk>\d+)/$', views.ReportUpdateView.as_view(), name="report_update_view"),
+    # TODO: tabbed report to class view
+    url('^tabbedreport/(?P<pk>\d+)/download_xlsx$', views.download_tabbed_xlsx),
     url('^report/(?P<pk>\d+)/check_status/(?P<task_id>.+)/$', views.check_status, name="report_check_status"),
     url('^report/(?P<pk>\d+)/download_xlsx/$',  views.DownloadXlsxView.as_view(), name="report_download_xlsx"),
     url('^ajax_get_related/$', staff_member_required(views.AjaxGetRelated.as_view())),

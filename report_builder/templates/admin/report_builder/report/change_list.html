@@ -1,5 +1,12 @@
 {% extends "admin/change_list.html" %}
 
+{% block extrahead %}
+<script type="text/javascript">
+  window.STATIC_URL = '{{STATIC_URL}}';
+</script>
+{{ block.super }}
+{% endblock extrahead %}
+
 {% block content_title %}
   Need a report? Here is where you can download and create custom reports
   based on current information.
@@ -7,6 +14,7 @@
 {% endblock %}
 
 {% block object-tools-items %}
+  {# Double check this, templates shouldn't look in request #}
   {% if 'starred' in request.GET %}
     <li><a href="./">Manage all Reports</a></li>
   {% else %}

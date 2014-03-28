@@ -11,14 +11,14 @@
             Model: {{ object.root_model }}
         </span>
         <span class="pull_left">
-            {{ form.name }}   
+            {{ form.name }}
         </span>
         <span class="fill_area">
             {{ form.description }}
         </span>
       </div>
     </header>
-    
+
     <section class="sidebar">
       <section class="top_half">
         Related Fields:
@@ -40,7 +40,7 @@
           {% include "report_builder/report_form_fields_li.html" %}
         </div>
       </section>
- 
+
     </section>
     <section class="main_area">
       <div id="tabs">
@@ -62,7 +62,8 @@
                   <th>Delete</th>
                   <th>Field</th>
                   <th>Name</th>
-                  <th>Sort<span style="padding-left: 1.2em;">Desc?</span></th>
+                  <th>Sort</th>
+                  <th>Desc?</th>
                   <th>Width</th>
                   <th>Aggregate</th>
                   <th>Format</th>
@@ -81,14 +82,15 @@
                       {{ form.field }}
                       {{ form.field_verbose.as_hidden }}
                       {{ form.path }}
-                      
+
                       {% if form.path_verbose.value %}
                         ({{ form.path_verbose.value }})
                       {% endif %}
                       {{ form.field_verbose.value }}
                     </td>
                     <td>{{ form.name }}</td>
-                    <td>{{ form.sort }}{{ form.sort_reverse }}</td>
+                    <td>{{ form.sort }}</td>
+                    <td>{{ form.sort_reverse }}</td>
                     <td>{{ form.width }}</td>
                     <td onclick="aggregate_tip()">{{ form.aggregate }}</td>
                     <td>{{ form.display_format }}</td>
