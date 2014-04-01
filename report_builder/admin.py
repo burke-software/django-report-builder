@@ -85,7 +85,7 @@ def export_to_report(modeladmin, request, queryset):
     for s in selected_int:
         selected.append(str(s))
     ct = ContentType.objects.get_for_model(queryset.model)
-    return HttpResponseRedirect(reverse('report_builder.views.export_to_report') + "?ct=%s&admin_url=%s&ids=%s" % (ct.pk, admin_url, ",".join(selected)))
+    return HttpResponseRedirect(reverse('export_to_report') + "?ct=%s&admin_url=%s&ids=%s" % (ct.pk, admin_url, ",".join(selected)))
 
 if getattr(settings, 'REPORT_BUILDER_GLOBAL_EXPORT', False):
     admin.site.add_action(export_to_report, 'Export to Report')

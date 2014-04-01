@@ -355,10 +355,11 @@ class DownloadXlsxView(DataExportMixin, View):
     def dispatch(self, *args, **kwargs):
         return super(DownloadXlsxView, self).dispatch(*args, **kwargs)
     
-    def process_report(self, report_id, user_id, to_response):
+    def process_report(self, report_id, user_id, to_response, queryset=None):
         report = get_object_or_404(Report, pk=report_id)
         user = get_user_model().objects.get(pk=user_id)
-        queryset, message = report.get_query()
+        if not queryset:
+            queryset, message = report.get_query()
         property_filters = report.filterfield_set.filter(
             Q(field_verbose__contains='[property]') | Q(field_verbose__contains='[custom')
         )
@@ -436,30 +437,34 @@ def create_copy(request, pk):
     return redirect(new_report)
 
 
-@staff_member_required
-def export_to_report(request):
+class ExportToReport(DownloadXlsxView, TemplateView):
     """ Export objects (by ID and content type) to an existing or new report
     In effect this runs the report with it's display fields. It ignores 
     filters and filters instead the provided ID's. It can be select
     as a global admin action.
     """
-    admin_url = request.GET.get('admin_url', '/')
-    ct = ContentType.objects.get_for_id(request.GET['ct'])
-    ids = request.GET['ids'].split(',')
-    number_objects = len(ids)
-    reports = Report.objects.filter(root_model=ct).order_by('-modified')
+    template_name = "report_builder/export_to_report.html"
     
-    if 'download' in request.GET:
-        report = get_object_or_404(Report, pk=request.GET['download'])
-        queryset = ct.model_class().objects.filter(pk__in=ids)
-        return download_xlsx(request, report.id, queryset=queryset)
+    def get_context_data(self, **kwargs):
+        ctx = super(ExportToReport, self).get_context_data(**kwargs)
+        ctx['admin_url'] = self.request.GET.get('admin_url', '/')
+        ct = ContentType.objects.get_for_id(self.request.GET['ct'])
+        ids = self.request.GET['ids'].split(',')
+        ctx['number_objects'] = len(ids)
+        ctx['object_list'] = Report.objects.filter(root_model=ct).order_by('-modified')
+        ctx['mode'] = ct.model_class()._meta.verbose_name
+        return ctx
     
-    return render(request, 'report_builder/export_to_report.html', {
-        'object_list': reports,
-        'admin_url': admin_url,
-        'number_objects': number_objects,
-        'model': ct.model_class()._meta.verbose_name,
-        })
+    def get(self, request, *args, **kwargs):
+        if 'download' in request.GET:
+            ct = ContentType.objects.get_for_id(request.GET['ct'])
+            ids = self.request.GET['ids'].split(',')
+            report = get_object_or_404(Report, pk=request.GET['download'])
+            queryset = ct.model_class().objects.filter(pk__in=ids)
+            return self.process_report(report.id, request.user.pk, to_response=True, queryset=queryset)
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+    
 
 @staff_member_required
 def check_status(request, pk, task_id):

@@ -14,5 +14,5 @@ urlpatterns = patterns('',
     url('^ajax_preview/$', views.AjaxPreview.as_view()),
     url('^report/(?P<pk>\d+)/add_star/$', views.ajax_add_star),
     url('^report/(?P<pk>\d+)/create_copy/$', views.create_copy),
-    url('^export_to_report/$', views.export_to_report),
+    url('^export_to_report/$', views.ExportToReport.as_view(), name="export_to_report"),
 )
