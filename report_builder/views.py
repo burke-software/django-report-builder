@@ -332,7 +332,7 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
             ctx['async_report'] = True
             
         field_context = self.get_fields(model_class)
-        ctx = ctx.copy() #.update(field_context)
+        ctx = ctx.copy()
         ctx.update(field_context)        
         return ctx
 
