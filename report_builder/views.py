@@ -224,6 +224,8 @@ class AjaxGetFields(GetFieldsMixin, TemplateView):
         root_model = model_class.__name__.lower()
         
         field_data = self.get_fields(model_class, field_name, path, path_verbose)
+        ctx = context.copy()
+        ctx.update(field_data.items())
         return dict(context.items() + field_data.items())
 
 @staff_member_required
@@ -330,8 +332,8 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
             ctx['async_report'] = True
             
         field_context = self.get_fields(model_class)
-        ctx = dict(ctx.items() + field_context.items())
-        
+        ctx = ctx.copy() #.update(field_context)
+        ctx.update(field_context)        
         return ctx
 
     def form_valid(self, form):
