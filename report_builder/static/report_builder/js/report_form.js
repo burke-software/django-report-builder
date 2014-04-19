@@ -13,17 +13,34 @@ root_index = current_path.indexOf( "/report_builder" );
 // other than 0?
 if ( root_index > 0 )
 {
-
     // yes.  Get all text from start to that location, store it as path_prefix.
     path_prefix = current_path.substring( 0, root_index );
-
 }
 else
 {
-
     // no - set path_prefix to "".
     path_prefix = "";
+}
 
+var check_report = false;
+function check_if_report_done(report_id, task_id) {
+	if (check_report != false ){
+		$.get( "/report_builder/report/"+ report_id + "/check_status/" + task_id + "/", function( data ) {
+			console.log(data);
+			if (data.state == "SUCCESS") {
+				window.location.href = data.link;
+				clearInterval(check_report);
+				check_report = false;
+			}
+		})
+	}
+}
+function get_async_report(report_id) {
+	$.get( "/report_builder/report/"+ report_id + "/download_xlsx/", function( data ) {
+	var task_id = data.task_id;
+	status = "loading"
+	check_report = setInterval( function(){ check_if_report_done(report_id, task_id); }, 2000 );
+    });
 }
 
 function expand_related(event, model, field, path, path_verbose) {
@@ -112,6 +129,8 @@ function enable_drag() {
     $("span.button[data-choices='true']").mousedown(function() {
         $.get( path_prefix + '/report_builder/ajax_get_choices/', {
             'path_verbose': $(this).data('path_verbose'),
+            'path': $(this).data('path'),
+            'app_label': $(this).data('app_label'),
             'label': $(this).data('label'),
             'root_model': $(this).data('root_model'),
             },
@@ -231,6 +250,8 @@ function set_check_value(event) {
 }
 
 function refresh_preview() {
+    $('#preview_area').html('<div style="height: 16px" id="preview_spinner"></div>');
+    $('#preview_spinner').spin('large');
     $.post(  
         path_prefix + "/report_builder/ajax_preview/",  
         {
@@ -240,7 +261,12 @@ function refresh_preview() {
         function(data){
             $('#preview_area').html(data);
         }
-    );
+    )
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        var error_message = "<h3>Sorry, there was an error generating your report. Details appear below.</h3>"
+        error_message += '<pre>' + jqXHR.responseText + '</pre>';
+        $('#preview_area').html(error_message);
+    });
 }
 
 function aggregate_tip() {
@@ -288,6 +314,11 @@ $(function() {
         element = $(value).closest('tr').find('select[id$=filter_type]');
         check_filter_type(element);
     });
+    // Don't forget selects
+    $('select[id$=filter_value]').each(function(index, value) {
+        element = $(value).closest('tr').find('select[id$=filter_type]');
+        check_filter_type(element);
+    });
     $( ".datepicker" ).datepicker();
     $('input').change(function() {
         if( $(this).val() != "" )
@@ -307,5 +338,9 @@ function filter(element, list) {
             $(this).hide();
         }
     });
+}
+
+function toggle_collapse(element) {
+    $(element).parent().parent('div.fieldset').children('ul').toggleClass('collapsed');
 }
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
-import sys
+from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -9,26 +8,24 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        from report_builder.models import Format
-        # Create some initial data
-        if sys.version_info > (2,7):
-            # Doesn't work in 2.6
-            Format.objects.create(
-                name = "US Currency",
-                string = "${:20,.2f}",
-            )
-            Format.objects.create(
-                name = "ISO Date",
-                string = "{:%Y-%m-%d}",
-            )
-        Format.objects.create(
-            name = "Percent",
-            string = "{0:.0f}%",
-        )
+        # Adding field 'Report.report_file'
+        db.add_column(u'report_builder_report', 'report_file',
+                      self.gf('django.db.models.fields.files.FileField')(default='', max_length=100, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Report.report_file_creation'
+        db.add_column(u'report_builder_report', 'report_file_creation',
+                      self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        pass
+        # Deleting field 'Report.report_file'
+        db.delete_column(u'report_builder_report', 'report_file')
+
+        # Deleting field 'Report.report_file_creation'
+        db.delete_column(u'report_builder_report', 'report_file_creation')
+
 
     models = {
         u'auth.group': {
@@ -49,7 +46,7 @@ class Migration(SchemaMigration):
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -57,7 +54,7 @@ class Migration(SchemaMigration):
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         u'contenttypes.contenttype': {
@@ -70,7 +67,7 @@ class Migration(SchemaMigration):
         u'report_builder.displayfield': {
             'Meta': {'ordering': "['position']", 'object_name': 'DisplayField'},
             'aggregate': ('django.db.models.fields.CharField', [], {'max_length': '5', 'blank': 'True'}),
-            'display_format': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['report_builder.Format']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'display_format': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['report_builder.Format']", 'null': 'True', 'blank': 'True'}),
             'field': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
             'field_verbose': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
             'group': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -113,6 +110,8 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateField', [], {'auto_now': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'report_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'blank': 'True'}),
+            'report_file_creation': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'root_model': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
             'starred': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'report_starred_set'", 'blank': 'True', 'to': u"orm['auth.User']"}),
