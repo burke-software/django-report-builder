@@ -2,7 +2,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import get_user_model
+
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except ImportError:
+    from django.contrib.auth.models import User
+
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Q
 from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
@@ -359,7 +365,7 @@ class DownloadXlsxView(DataExportMixin, View):
     
     def process_report(self, report_id, user_id, to_response, queryset=None):
         report = get_object_or_404(Report, pk=report_id)
-        user = get_user_model().objects.get(pk=user_id)
+        user = User.objects.get(pk=user_id)
         if not queryset:
             queryset, message = report.get_query()
         property_filters = report.filterfield_set.filter(
