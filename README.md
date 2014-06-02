@@ -6,9 +6,9 @@ not be able to program or gain direct interactive shell access.
 
 [![Build Status](https://travis-ci.org/burke-software/django-report-builder.png?branch=master)](https://travis-ci.org/burke-software/django-report-builder)
 
-# News
+[Support development on gittip](www.gittip.com/bufke)
 
-We are hiring http://careers.stackoverflow.com/jobs/53040/open-source-django-web-developer-remote-full-burke-software-and-consulting
+# News
 
 Just pushed 2.0 changes to master and pypi. Code has been refactored. Report any bugs :)
 
