@@ -24,7 +24,7 @@ class UtilityFunctionTests(TestCase):
             field_verbose="stuff",
             filter_type = 'contains',
             filter_value = 'Lots of spam')
-    
+
     def get_fields_names(self, fields):
         names = []
         for field in fields:
@@ -37,7 +37,7 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('report_builder:displayfield' in names)
         self.assertTrue('report_builder:filterfield' in names)
         self.assertTrue('root_model' in names)
-        self.assertEquals(len(names), 6)
+        self.assertEquals(len(names), 7)
 
     def test_get_direct_fields_from_model(self):
         fields = get_direct_fields_from_model(Report)
@@ -46,13 +46,13 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('description' in names)
         self.assertTrue('distinct' in names)
         self.assertTrue('id' in names)
-        self.assertEquals(len(names), 9)
+        self.assertEquals(len(names), 7)
 
     def test_get_custom_fields_from_model(self):
         if 'custom_field' in settings.INSTALLED_APPS:
             from custom_field.models import CustomField
             cf = CustomField.objects.create(
-                name="foo", 
+                name="foo",
                 content_type=self.report_ct,
                 field_type='t',)
             fields = get_custom_fields_from_model(Report)
@@ -94,7 +94,7 @@ class ViewTests(TestCase):
         self.user.save()
         self.c = Client()
         self.c.login(username="user", password="user")
-        self.report_ct = ContentType.objects.get_for_model(Report) 
+        self.report_ct = ContentType.objects.get_for_model(Report)
         self.report = Report.objects.create(
             name="foo report",
             root_model=self.report_ct)
