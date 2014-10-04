@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='ReportDownload',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('report_file', models.FileField(upload_to=b'report_files', blank=True)),
+                ('report_file', models.FileField(upload_to='report_files', blank=True)),
                 ('started', models.DateTimeField(auto_now_add=True)),
                 ('finished', models.DateTimeField(null=True, blank=True)),
                 ('report', models.ForeignKey(to='report_builder.Report')),
