@@ -1,115 +1,107 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Report'
-        db.create_table('report_builder_report', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('root_model', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('created', self.gf('django.db.models.fields.DateField')(auto_now_add=True, blank=True)),
-            ('modified', self.gf('django.db.models.fields.DateField')(auto_now=True, blank=True)),
-            ('distinct', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('report_builder', ['Report'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('contenttypes', '0001_initial'),
+    ]
 
-        # Adding model 'DisplayField'
-        db.create_table('report_builder_displayfield', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('report', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['report_builder.Report'])),
-            ('path', self.gf('django.db.models.fields.CharField')(max_length=2000, blank=True)),
-            ('path_verbose', self.gf('django.db.models.fields.CharField')(max_length=2000, blank=True)),
-            ('field', self.gf('django.db.models.fields.CharField')(max_length=2000)),
-            ('field_verbose', self.gf('django.db.models.fields.CharField')(max_length=2000)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=2000)),
-            ('sort', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('sort_reverse', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('width', self.gf('django.db.models.fields.IntegerField')(default=120)),
-            ('aggregate', self.gf('django.db.models.fields.CharField')(max_length=5, blank=True)),
-            ('position', self.gf('django.db.models.fields.PositiveSmallIntegerField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('report_builder', ['DisplayField'])
-
-        # Adding model 'FilterField'
-        db.create_table('report_builder_filterfield', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('report', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['report_builder.Report'])),
-            ('path', self.gf('django.db.models.fields.CharField')(max_length=2000, blank=True)),
-            ('path_verbose', self.gf('django.db.models.fields.CharField')(max_length=2000, blank=True)),
-            ('field', self.gf('django.db.models.fields.CharField')(max_length=2000)),
-            ('field_verbose', self.gf('django.db.models.fields.CharField')(max_length=2000)),
-            ('filter_type', self.gf('django.db.models.fields.CharField')(default='icontains', max_length=20, blank=True)),
-            ('filter_value', self.gf('django.db.models.fields.CharField')(max_length=2000)),
-            ('filter_value2', self.gf('django.db.models.fields.CharField')(max_length=2000, blank=True)),
-            ('exclude', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('position', self.gf('django.db.models.fields.PositiveSmallIntegerField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('report_builder', ['FilterField'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Report'
-        db.delete_table('report_builder_report')
-
-        # Deleting model 'DisplayField'
-        db.delete_table('report_builder_displayfield')
-
-        # Deleting model 'FilterField'
-        db.delete_table('report_builder_filterfield')
-
-
-    models = {
-        'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'report_builder.displayfield': {
-            'Meta': {'ordering': "['position']", 'object_name': 'DisplayField'},
-            'aggregate': ('django.db.models.fields.CharField', [], {'max_length': '5', 'blank': 'True'}),
-            'field': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
-            'field_verbose': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
-            'path': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'path_verbose': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'position': ('django.db.models.fields.PositiveSmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'report': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['report_builder.Report']"}),
-            'sort': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'sort_reverse': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'width': ('django.db.models.fields.IntegerField', [], {'default': '120'})
-        },
-        'report_builder.filterfield': {
-            'Meta': {'ordering': "['position']", 'object_name': 'FilterField'},
-            'exclude': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'field': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
-            'field_verbose': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
-            'filter_type': ('django.db.models.fields.CharField', [], {'default': "'icontains'", 'max_length': '20', 'blank': 'True'}),
-            'filter_value': ('django.db.models.fields.CharField', [], {'max_length': '2000'}),
-            'filter_value2': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'path': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'path_verbose': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'position': ('django.db.models.fields.PositiveSmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'report': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['report_builder.Report']"})
-        },
-        'report_builder.report': {
-            'Meta': {'object_name': 'Report'},
-            'created': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'distinct': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('django.db.models.fields.DateField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'root_model': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"})
-        }
-    }
-
-    complete_apps = ['report_builder']
+    operations = [
+        migrations.CreateModel(
+            name='DisplayField',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('path', models.CharField(max_length=2000, blank=True)),
+                ('path_verbose', models.CharField(max_length=2000, blank=True)),
+                ('field', models.CharField(max_length=2000)),
+                ('field_verbose', models.CharField(max_length=2000)),
+                ('name', models.CharField(max_length=2000)),
+                ('sort', models.IntegerField(null=True, blank=True)),
+                ('sort_reverse', models.BooleanField(default=False, verbose_name=b'Reverse')),
+                ('width', models.IntegerField(default=15)),
+                ('aggregate', models.CharField(blank=True, max_length=5, choices=[(b'Sum', b'Sum'), (b'Count', b'Count'), (b'Avg', b'Avg'), (b'Max', b'Max'), (b'Min', b'Min')])),
+                ('position', models.PositiveSmallIntegerField(null=True, blank=True)),
+                ('total', models.BooleanField(default=False)),
+                ('group', models.BooleanField(default=False)),
+            ],
+            options={
+                'ordering': ['position'],
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='FilterField',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('path', models.CharField(max_length=2000, blank=True)),
+                ('path_verbose', models.CharField(max_length=2000, blank=True)),
+                ('field', models.CharField(max_length=2000)),
+                ('field_verbose', models.CharField(max_length=2000)),
+                ('filter_type', models.CharField(default=b'icontains', max_length=20, blank=True, choices=[(b'exact', b'Equals'), (b'iexact', b'Equals (case-insensitive)'), (b'contains', b'Contains'), (b'icontains', b'Contains (case-insensitive)'), (b'in', b'in (comma seperated 1,2,3)'), (b'gt', b'Greater than'), (b'gte', b'Greater than equals'), (b'lt', b'Less than'), (b'lte', b'Less than equals'), (b'startswith', b'Starts with'), (b'istartswith', b'Starts with (case-insensitive)'), (b'endswith', b'Ends with'), (b'iendswith', b'Ends with  (case-insensitive)'), (b'range', b'range'), (b'week_day', b'Week day'), (b'isnull', b'Is null'), (b'regex', b'Regular Expression'), (b'iregex', b'Reg. Exp. (case-insensitive)')])),
+                ('filter_value', models.CharField(max_length=2000)),
+                ('filter_value2', models.CharField(max_length=2000, blank=True)),
+                ('exclude', models.BooleanField(default=False)),
+                ('position', models.PositiveSmallIntegerField(null=True, blank=True)),
+            ],
+            options={
+                'ordering': ['position'],
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Format',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(default=b'', max_length=50, blank=True)),
+                ('string', models.CharField(default=b'', help_text=b'Python string format. Ex ${} would place a $ in front of the result.', max_length=300, blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Report',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+                ('slug', models.SlugField(verbose_name=b'Short Name')),
+                ('description', models.TextField(blank=True)),
+                ('created', models.DateField(auto_now_add=True)),
+                ('modified', models.DateField(auto_now=True)),
+                ('distinct', models.BooleanField(default=False)),
+                ('report_file', models.FileField(upload_to=b'report_files', blank=True)),
+                ('report_file_creation', models.DateTimeField(null=True, blank=True)),
+                ('root_model', models.ForeignKey(to='contenttypes.ContentType')),
+                ('starred', models.ManyToManyField(help_text=b'These users have starred this report for easy reference.', related_name=b'report_starred_set', to=settings.AUTH_USER_MODEL, blank=True)),
+                ('user_created', models.ForeignKey(blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name=b'report_modified_set', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='filterfield',
+            name='report',
+            field=models.ForeignKey(to='report_builder.Report'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='displayfield',
+            name='display_format',
+            field=models.ForeignKey(blank=True, to='report_builder.Format', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='displayfield',
+            name='report',
+            field=models.ForeignKey(to='report_builder.Report'),
+            preserve_default=True,
+        ),
+    ]

@@ -37,7 +37,11 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('report_builder:displayfield' in names)
         self.assertTrue('report_builder:filterfield' in names)
         self.assertTrue('root_model' in names)
+<<<<<<< HEAD
         self.assertEquals(len(names), 7)
+=======
+        self.assertEquals(len(names), 9)
+>>>>>>> ab360644da390997d62f9a48696f1ac4d1a77645
 
     def test_get_direct_fields_from_model(self):
         fields = get_direct_fields_from_model(Report)
