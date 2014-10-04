@@ -58,7 +58,7 @@ class ReportEditForm(forms.ModelForm):
             'description': forms.TextInput(
                 attrs={'style': 'width:99%;', 'placeholder': 'Description'}),
         }
-    
+
 class DisplayFieldForm(forms.ModelForm):
     class Meta:
         model = DisplayField
@@ -73,7 +73,7 @@ class DisplayFieldForm(forms.ModelForm):
             'total': forms.CheckboxInput(attrs={'class':'small_input'}),
             'sort': forms.TextInput(attrs={'class':'small_input'}),
         }
-        
+
 
 class FilterFieldForm(forms.ModelForm):
     class Meta:
@@ -102,12 +102,12 @@ class FilterFieldForm(forms.ModelForm):
 class ReportCreateView(CreateView):
     form_class = ReportForm
     template_name = 'report_new.html'
-    
+
 
 def filter_property(filter_field, value):
     filter_type = filter_field.filter_type
     filter_value = filter_field.filter_value
-    filtered = True 
+    filtered = True
     #TODO: i10n
     WEEKDAY_INTS = {
         'monday': 0,
@@ -133,8 +133,8 @@ def filter_property(filter_field, value):
         if filter_type == 'in' and value in filter_value:
             filtered = False
         # convert dates and datetimes to timestamps in order to compare digits and date/times the same
-        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date): 
-            value = str(time.mktime(value.timetuple())) 
+        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date):
+            value = str(time.mktime(value.timetuple()))
             try:
                 filter_value_dt = parser.parse(filter_value)
                 filter_value = str(time.mktime(filter_value_dt.timetuple()))
@@ -171,19 +171,19 @@ def filter_property(filter_field, value):
 
     if filter_field.exclude:
         return not filtered
-    return filtered 
+    return filtered
 
 
 class AjaxGetRelated(GetFieldsMixin, TemplateView):
     template_name = "report_builder/report_form_related_li.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super(AjaxGetRelated, self).get_context_data(**kwargs)
         request = self.request
         model_class = ContentType.objects.get(pk=request.GET['model']).model_class()
         path = request.GET['path']
         path_verbose = request.GET['path_verbose']
-        
+
         new_fields, model_ct, path = self.get_related_fields(
             model_class,
             request.GET['field'],
@@ -194,7 +194,7 @@ class AjaxGetRelated(GetFieldsMixin, TemplateView):
         context['path'] = path
         context['path_verbose'] = path_verbose
         return context
-    
+
 
 def fieldset_string_to_field(fieldset_dict, model):
     if isinstance(fieldset_dict['fields'], tuple):
@@ -220,7 +220,7 @@ def get_fieldsets(model):
 class AjaxGetFields(GetFieldsMixin, TemplateView):
     """ Get fields from a particular model """
     template_name = 'report_builder/report_form_fields_li.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super(AjaxGetFields, self).get_context_data(**kwargs)
         field_name = self.request.GET.get('field')
@@ -228,11 +228,11 @@ class AjaxGetFields(GetFieldsMixin, TemplateView):
         path = self.request.GET['path']
         path_verbose = self.request.GET.get('path_verbose')
         root_model = model_class.__name__.lower()
-        
+
         field_data = self.get_fields(model_class, field_name, path, path_verbose)
         ctx = context.copy()
         ctx.update(field_data.items())
-        return dict(context.items() + field_data.items())
+        return ctx
 
 @staff_member_required
 def ajax_get_choices(request):
@@ -265,7 +265,7 @@ class AjaxPreview(DataExportMixin, TemplateView):
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
         return super(AjaxPreview, self).dispatch(*args, **kwargs)
-    
+
     def post(self, request, *args, **kwargs):
         return self.get(self, request, *args, **kwargs)
 
@@ -282,12 +282,12 @@ class AjaxPreview(DataExportMixin, TemplateView):
             self.request.user,
             property_filters=property_filters,
             preview=True,)
-    
+
         context['report'] = report
         context['objects_dict'] = objects_list
         context['message'] = message
         return context
-    
+
 
 class ReportUpdateView(GetFieldsMixin, UpdateView):
     """ This view handles the edit report builder
@@ -296,7 +296,7 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
     model = Report
     form_class = ReportEditForm
     success_url = './'
-    
+
     @method_decorator(permission_required('report_builder.change_report'))
     def dispatch(self, request, *args, **kwargs):
         return super(ReportUpdateView, self).dispatch(request, *args, **kwargs)
@@ -306,47 +306,47 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
         model_class = self.object.root_model.model_class()
         model_ct = ContentType.objects.get_for_model(model_class)
         relation_fields = get_relation_fields_from_model(model_class)
-        
+
         DisplayFieldFormset = inlineformset_factory(
             Report,
             DisplayField,
             extra=0,
             can_delete=True,
             form=DisplayFieldForm)
-        
+
         FilterFieldFormset = inlineformset_factory(
             Report,
             FilterField,
             extra=0,
             can_delete=True,
             form=FilterFieldForm)
-        
+
         if self.request.POST:
             ctx['field_list_formset'] =  DisplayFieldFormset(self.request.POST, instance=self.object)
             ctx['field_filter_formset'] =  FilterFieldFormset(self.request.POST, instance=self.object, prefix="fil")
         else:
             ctx['field_list_formset'] =  DisplayFieldFormset(instance=self.object)
             ctx['field_filter_formset'] =  FilterFieldFormset(instance=self.object, prefix="fil")
-        
+
         ctx['related_fields'] = relation_fields
         ctx['fieldsets'] = get_fieldsets(model_class)
         ctx['model_ct'] = model_ct
         ctx['root_model'] = model_ct.model
         ctx['app_label'] = model_ct.app_label
-        
+
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
             ctx['async_report'] = True
-            
+
         field_context = self.get_fields(model_class)
         ctx = ctx.copy()
-        ctx.update(field_context)        
+        ctx.update(field_context)
         return ctx
 
     def form_valid(self, form):
         context = self.get_context_data()
         field_list_formset = context['field_list_formset']
         field_filter_formset = context['field_filter_formset']
-        
+
         if field_list_formset.is_valid() and field_filter_formset.is_valid():
             self.object = form.save()
             field_list_formset.report = self.object
@@ -357,12 +357,12 @@ class ReportUpdateView(GetFieldsMixin, UpdateView):
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form))
-        
+
 class DownloadXlsxView(DataExportMixin, View):
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
         return super(DownloadXlsxView, self).dispatch(*args, **kwargs)
-    
+
     def process_report(self, report_id, user_id, to_response, queryset=None):
         report = get_object_or_404(Report, pk=report_id)
         user = User.objects.get(pk=user_id)
@@ -383,12 +383,12 @@ class DownloadXlsxView(DataExportMixin, View):
         for field in report.displayfield_set.all():
             header.append(field.name)
             widths.append(field.width)
-            
+
         if to_response:
             return self.list_to_xlsx_response(objects_list, title, header, widths)
         else:
             self.async_report_save(report, objects_list, title, header, widths)
-        
+
     def async_report_save(self, report, objects_list, title, header, widths):
         xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
         if not title.endswith('.xlsx'):
@@ -396,7 +396,7 @@ class DownloadXlsxView(DataExportMixin, View):
         report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
         report.report_file_creation = datetime.datetime.today()
         report.save()
-    
+
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
@@ -406,7 +406,7 @@ class DownloadXlsxView(DataExportMixin, View):
             return HttpResponse(json.dumps({'task_id': task_id}), content_type="application/json")
         else:
             return self.process_report(report_id, request.user.pk, to_response=True)
-    
+
 
 @staff_member_required
 def ajax_add_star(request, pk):
@@ -421,7 +421,7 @@ def ajax_add_star(request, pk):
         added = True
         report.starred.add(request.user)
     return HttpResponse(added)
-    
+
 @staff_member_required
 def create_copy(request, pk):
     """ Copy a report including related fields """
@@ -447,12 +447,12 @@ def create_copy(request, pk):
 
 class ExportToReport(DownloadXlsxView, TemplateView):
     """ Export objects (by ID and content type) to an existing or new report
-    In effect this runs the report with it's display fields. It ignores 
+    In effect this runs the report with it's display fields. It ignores
     filters and filters instead the provided ID's. It can be select
     as a global admin action.
     """
     template_name = "report_builder/export_to_report.html"
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(ExportToReport, self).get_context_data(**kwargs)
         ctx['admin_url'] = self.request.GET.get('admin_url', '/')
@@ -462,7 +462,7 @@ class ExportToReport(DownloadXlsxView, TemplateView):
         ctx['object_list'] = Report.objects.filter(root_model=ct).order_by('-modified')
         ctx['mode'] = ct.model_class()._meta.verbose_name
         return ctx
-    
+
     def get(self, request, *args, **kwargs):
         if 'download' in request.GET:
             ct = ContentType.objects.get_for_id(request.GET['ct'])
@@ -472,7 +472,7 @@ class ExportToReport(DownloadXlsxView, TemplateView):
             return self.process_report(report.id, request.user.pk, to_response=True, queryset=queryset)
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
-    
+
 
 @staff_member_required
 def check_status(request, pk, task_id):
