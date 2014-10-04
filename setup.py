@@ -14,7 +14,6 @@ setup(
     test_suite='setuptest.setuptest.SetupTestSuite',
     tests_require=(
         'django-setuptest',
-        'south',
         'argparse',
     ),
     classifiers=[
