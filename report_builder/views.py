@@ -44,6 +44,10 @@ from dateutil import parser
 import json
 
 
+class ReportSPAView(TemplateView):
+    template_name = "report_builder/spa.html"
+
+
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report

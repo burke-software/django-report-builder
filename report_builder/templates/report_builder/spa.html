@@ -1,0 +1,36 @@
+{% extends "report_builder/base.html" %}
+{% load staticfiles %}
+
+{% block report_header %}
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <base href="/report_builder/">
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.0/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.0/angular-route.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/restangular/1.4.0/restangular.min.js"></script>
+
+    <script>
+      var STATIC_URL = '{{ STATIC_URL|escapejs }}';
+      var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
+    </script>
+
+    <script src="{% static 'report_builder/app.js' %}"></script>
+    <script src="{% static 'report_builder/controllers.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-material/angular-material.css' %}">
+    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-material/themes/default-theme.css' %}">
+    <script src="{% static 'report_builder/bower_components/angular-aria/angular-aria.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular-animate/angular-animate.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/hammerjs/hammer.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular-material/angular-material.js' %}"></script>
+
+    <script src="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css' %}">
+{% endblock %}
+
+{% block content %}
+<div ng-app="reportBuilderApp">
+    <div ng-view></div>
+</div>
+{% endblock %}

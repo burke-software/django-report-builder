@@ -30,5 +30,6 @@ setup(
         'openpyxl',
         'python-dateutil',
         'django-report-utils>=0.2.3',
+        'django-rest-framework',
     ]
 )

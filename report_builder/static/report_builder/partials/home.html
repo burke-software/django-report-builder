@@ -1,0 +1,61 @@
+<div layout="vertical" layout-fill>
+
+  <section layout="horizontal" flex>
+
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" component-id="left" is-locked-open="$media('lg')">
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Reports</h1>
+      </md-toolbar>
+      <md-content class="md-padding" ng-controller="LeftCtrl">
+        <ul>
+            <li ng-repeat="report in reports">
+                <a ng-click="openReport(report.id)">{{ report.name }}</a>
+            </li>
+        </ul>
+      </md-content>
+    </md-sidenav>
+
+
+
+
+
+    <md-content flex class="md-padding">
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">
+            <md-text-float label="Name" ng-model="report.name" class="long"> </md-text-float>
+            <span flex></span>
+            <span> 
+                Last Updated: {{ report.modified }} 
+            </span>
+        </h1>
+      </md-toolbar>
+
+        <md-content class="md-padding">
+
+            <md-tabs selected="data.selectedIndex" center>
+            <md-tab id="tab1" aria-controls="tab1-content">
+                Display
+            </md-tab>
+            <md-tab id="tab2" aria-controls="tab2-content" ng-disabled="data.secondLocked">
+                Filter
+            </md-tab>
+            <md-tab id="tab3" aria-controls="tab3-content">
+                Preview
+            </md-tab>
+            </md-tabs>
+
+        </md-content>
+
+
+    </md-content>
+
+
+
+    <md-sidenav ng-show="showFields" is-locked-open="$media('md')" class="md-sidenav-right md-whiteframe-z1" component-id="right">
+      <div ng-include="'/static/report_builder/partials/fields.html'"></div>
+
+    </md-sidenav>
+
+  </section>
+
+</div>
