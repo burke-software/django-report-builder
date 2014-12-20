@@ -5,7 +5,9 @@ reportBuilderApp.config(function(RestangularProvider) {
     return RestangularProvider.setRequestSuffix("/");
 });
 
-reportBuilderApp.config(function($routeProvider, $locationProvider) {
+reportBuilderApp.config(function($routeProvider, $httpProvider, $locationProvider) {
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $routeProvider.
         when("/", {
             controller: "homeCtrl",

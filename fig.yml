@@ -1,0 +1,12 @@
+db:
+  image: postgres
+web:
+  build: .
+  command: python manage.py runserver 0.0.0.0:8000
+  volumes:
+    - .:/code
+    - ../django-report-utils/report_utils:/usr/local/lib/python2.7/dist-packages/report_utils
+  ports:
+    - "8000:8000"
+  links:
+    - db
