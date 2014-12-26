@@ -2,14 +2,15 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ReportSerializer
+from .serializers import ReportNestedSerializer
 from report_builder.models import Report
 from report_utils.mixins import GetFieldsMixin
 
 
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
-    serializer_class = ReportSerializer
+    serializer_class = ReportNestedSerializer
+
 
 class RelatedFieldsView(GetFieldsMixin, APIView):
     """ Get related fields from an ORM model
@@ -34,9 +35,11 @@ class RelatedFieldsView(GetFieldsMixin, APIView):
             if verbose_name == None:
                 verbose_name = new_field.get_accessor_name()
             result += [{
-                'name': new_field.name,
+                'field_name': new_field.field_name,
                 'verbose_name': verbose_name,
-
+                'path': path,
+                'help_text': getattr(new_field, 'help_text', ''),
+                'model_id': model_ct.id,
             }]
         return Response(result)
 
@@ -58,6 +61,6 @@ class FieldsView(RelatedFieldsView):
             result += [{
                 'name': new_field.name,
                 'verbose_name': verbose_name,
-
+                'help_text': new_field.help_text,
             }]
         return Response(result)

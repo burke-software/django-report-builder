@@ -1,44 +1,45 @@
-<md-content ng-controller="FieldsCtrl" layout="vertical">
-    <div layout="vertical" layout-fill>
-    <md-toolbar class="md-theme-light" scroll-shrink>
-        <h2 class="md-toolbar-tools">Related Fields</h2>
-    </md-toolbar>
-
-    <md-content style="max-height: 300px;">
-    <md-list>
-        <md-item ng-repeat="related_field in related_fields">
-            <md-item-content>
-                {{ related_field.verbose_name }}
-            </md-item-content>
-        </md-item>
-    </md-list>
-    </md-content>
-    </div>
-
-    <div layout="vertical" layout-fill>
-    <md-toolbar class="md-theme-light" scroll-shrink>
-        <h2 class="md-toolbar-tools">Fields</h2>
-    </md-toolbar>
-    <md-content style="max-height: 300px;">
-    <md-list>
-        <md-item ng-repeat="field in fields">
-            <md-item-content>
-                {{ field.verbose_name }}
-            </md-item-content>
-        </md-item>
-    </md-list>
-    </md-content>
-
-    </div>
-    
-
-<div ui-tree data-drag-enabled="false">
-  <ol ui-tree-nodes="" ng-model="fields">
-    <li data-collapsed="false" ng-repeat="field in fields" ui-tree-node>
-      <div ui-tree-handle>
-        {{field.verbose_name}}
+<md-content ng-controller="FieldsCtrl">
+  <div style="overflow-y: auto; height:45%">
+    <md-toolbar md-scroll-shrink>
+      <div class="md-toolbar-tools">
+          <span class="caps">{{ report.root_model_name }} Relations</span>
       </div>
-    </li>
-  </ol>
-</div>
+    </md-toolbar>  
+    <md-content>
+      <div ui-tree data-drag-enabled="false">
+      <ol ui-tree-nodes="" ng-model="related_fields">
+        <li class="field" data-collapsed="false" ng-include="'/static/report_builder/partials/node_renderer.html'" ng-repeat="field in related_fields" ui-tree-node>
+        </li>
+      </ol>
+      </div>
+    </md-content>
+
+  </div>
+  <div style="overflow-y: auto; height:45%">
+    <md-toolbar md-scroll-shrink>
+      <div class="md-toolbar-tools">
+        <span class="caps">{{ fields_header }} Fields</span>
+      </div>
+    </md-toolbar>  
+    <md-content>
+      <div ui-tree data-drag-enabled="false">
+      <ol ui-tree-nodes="" ng-model="fields">
+        <li class="field" data-collapsed="false" ng-repeat="field in fields" ui-tree-node>
+          <div ui-tree-handle layout="row">
+            <div class="caps" flex ng-click="click_field(field)">
+              {{field.verbose_name}}
+            </div>
+            <div flex="10" style="min-width: 33px;">
+              <md-button class="add_button" ng-click="add_field(field)"> Add </md-button>
+            </div>
+          </div>
+        </li>
+      </ol>
+      </div>
+    </md-content>
+
+  </div>
+  <md-content style="overflow-y: auto; height:10%">
+    {{ help_text }}
+  </md-content>
 </md-content>

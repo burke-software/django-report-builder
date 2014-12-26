@@ -5,9 +5,6 @@
         <h1 class="md-toolbar-tools">Reports</h1>
       </md-toolbar>
       <md-content class="md-padding" ng-controller="LeftCtrl">
-        <div layout="row" layout-align="end center">
-          <md-button class="md-raised"><a href="/report_builder/report/add/">New Report</a></md-button>
-        </div>
         <ul>
           <li ng-repeat="report in reports">
             <a ng-click="openReport(report.id)">{{ report.name }}</a>
@@ -27,10 +24,10 @@
         <md-tabs class="md-accent md-hue-2" md-selected="tabData.selectedIndex">
           <md-tab id="tab1" aria-controls="tab1-content">Display</md-tab>
           <md-tab id="tab2" aria-controls="tab2-content">Filter</md-tab>
-          <md-tab id="tab3" aria-controls="tab3-content">Report</md-tab>
+          <md-tab id="tab3" aria-controls="tab3-content">Preview</md-tab>
         </md-tabs>
         <ng-switch on="tabData.selectedIndex" class="tabpanel-container">
-          <div style="height: calc(100% - 112px); overflow-y: auto;" role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+          <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
             <div ui-tree="" ng-controller="ReportDisplayCtrl">
               <div layout="row">
                 <div class="move_trash" flex=""></div>
@@ -42,31 +39,47 @@
                 <div class="col_checkbox" flex="">Total</div>
                 <div class="col_checkbox" flex="">Group</div>
               </div>
-              <div>
-                <ol ui-tree-nodes="" ng-model="displayFields">
-                  <li class="field" data-collapsed="false" ng-repeat="field in displayFields" ui-tree-node="">
-                    <div ng-include="'/static/report_builder/partials/display_field.html'"></div>
-                  </li>
-                </ol>
-              </div>
+              <ol ui-tree-nodes="" ng-model="displayFields">
+                <li class="field" data-collapsed="false" ng-repeat="field in displayFields" ui-tree-node="">
+                  <div layout="row">
+                    <div class="move_trash" flex="">
+                      <img ui-tree-handle="" src="/static/report_builder/img/reorder.svg"></img>
+                      <img src="/static/report_builder/img/delete.svg"></img>
+                    </div>
+                    <div flex="">{{ field.name }}</div>
+                    <div flex="">
+                      <input type="text" value="omg"></input>
+                    </div>
+                    <div class="col_sort" flex="">
+                      <input class="small_input" type="text" value="1"></input>
+                    </div>
+                    <div class="aggregate" flex="">
+                      <select>
+                        <option value="" selected="selected">---------</option>
+                        <option value="Sum">Sum</option>
+                        <option value="Count">Count</option>
+                        <option value="Avg">Avg</option>
+                        <option value="Max">Max</option>
+                        <option value="Min">Min</option>
+                      </select>
+                    </div>
+                    <div flex="">
+                      <select>
+                        <option value="" selected="selected">---------</option>
+                        <option value="3">US Currency</option>
+                        <option value="4">Percent</option>
+                      </select>
+                    </div>
+                    <div class="col_checkbox" flex="">
+                      <md-checkbox></md-checkbox>
+                    </div>
+                    <div class="col_checkbox" flex="">
+                      <md-checkbox></md-checkbox>
+                    </div>
+                  </div>
+                </li>
+              </ol>
             </div>
-            <div hide-gt-lg layout="row" layout-sm="column" layout-align="center center" style="height: 55px;">
-                <div class="fullscreen">
-                <md-button class="" ng-click="requestFullscreen()" aria-label="Fullscreen">
-                    Fullscreen
-                </md-button>
-                </div>
-            </div>
-            <section hide-gt-lg>
-                <md-button class="md-fab bottom_left" ng-click="reports_list_menu()" aria-label="Reports List">
-                    <md-icon icon="/static/report_builder/img/list.svg" style="width: 24px; height: 24px;"></md-icon>
-                </md-button>
-            </section>
-            <section hide-gt-md>
-                <md-button class="md-fab bottom_right" ng-click="field_menu()" aria-label="Add Field">
-                    <md-icon icon="/static/report_builder/img/add.svg" style="width: 24px; height: 24px;"></md-icon>
-                </md-button>
-            </section>
           </div>
           <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">TAB 2</div>
           <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">TAB 3</div>

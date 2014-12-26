@@ -13,6 +13,10 @@ reportBuilderApp.config(function($routeProvider, $httpProvider, $locationProvide
             controller: "homeCtrl",
             templateUrl: STATIC_URL + 'report_builder/partials/home.html'
         }).
+        when("/report/add", {
+            controller: "addCtrl",
+            templateUrl: STATIC_URL + 'report_builder/partials/add.html'
+        }).
         when("/report/:reportId", {
             controller: "homeCtrl",
             templateUrl: STATIC_URL + 'report_builder/partials/home.html'
