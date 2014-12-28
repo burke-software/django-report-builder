@@ -1,0 +1,32 @@
+{
+  "name": "ngHandsontable",
+  "version": "0.5.0",
+  "dependencies": {
+    "angular": "~1.2.25",
+    "handsontable": "~0.12"
+  },
+  "homepage": "https://github.com/handsontable/ngHandsontable",
+  "authors": [
+    "Marcin Warpechowski <hello@handsontable.com>"
+  ],
+  "description": "AngularJS directive for Handsontable",
+  "main": "dist/ngHandsontable.js",
+  "keywords": [
+    "angular",
+    "angularjs",
+    "handsontable",
+    "datagrid",
+    "grid",
+    "table"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "demo",
+    "node_modules",
+    "src",
+    "test",
+    "tests"
+  ]
+}

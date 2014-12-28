@@ -1,8 +1,10 @@
 db:
   image: postgres
+redis:
+  image: redis
 web:
   build: .
-  command: python manage.py runserver 0.0.0.0:8000
+  command: ./run.sh
   volumes:
     - .:/code
     - ../django-report-utils/report_utils:/usr/local/lib/python3.4/site-packages/report_utils
@@ -10,3 +12,4 @@ web:
     - "8000:8000"
   links:
     - db
+    - redis

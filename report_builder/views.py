@@ -48,66 +48,6 @@ class ReportSPAView(TemplateView):
     template_name = "report_builder/spa.html"
 
 
-class ReportForm(forms.ModelForm):
-    class Meta:
-        model = Report
-        fields = ['name', 'distinct', 'root_model']
-
-
-class ReportEditForm(forms.ModelForm):
-    class Meta:
-        model = Report
-        fields = ['name', 'distinct', 'description',]
-        widgets = {
-            'description': forms.TextInput(
-                attrs={'style': 'width:99%;', 'placeholder': 'Description'}),
-        }
-
-class DisplayFieldForm(forms.ModelForm):
-    class Meta:
-        model = DisplayField
-        fields = ('name', 'path', 'path_verbose', 'field_verbose', 'field', 'position',
-                  'width', 'total', 'sort', 'aggregate', 'group', 'display_format')
-        widgets = {
-            'path': forms.HiddenInput(),
-            'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
-            'field_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
-            'field': forms.HiddenInput(),
-            'width': forms.TextInput(attrs={'class':'small_input'}),
-            'total': forms.CheckboxInput(attrs={'class':'small_input'}),
-            'sort': forms.TextInput(attrs={'class':'small_input'}),
-        }
-
-
-class FilterFieldForm(forms.ModelForm):
-    class Meta:
-        model = FilterField
-        fields = ('path', 'path_verbose', 'field_verbose', 'field', 'filter_type',
-                 'filter_value', 'filter_value2', 'exclude', 'position')
-        widgets = {
-            'path': forms.HiddenInput(),
-            'path_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
-            'field_verbose': forms.TextInput(attrs={'readonly':'readonly'}),
-            'field': forms.HiddenInput(),
-            'filter_type': forms.Select(attrs={'onchange':'check_filter_type(event.target)'})
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(FilterFieldForm, self).__init__(*args, **kwargs)
-        # override the filter_value field with the models native ChoiceField
-        if self.instance.choices:
-            self.fields['filter_value'].widget = forms.Select(choices=self.instance.choices)
-        if 'DateField' in self.instance.field_verbose or 'DateTimeField' in self.instance.field_verbose:
-            widget = self.fields['filter_value'].widget
-            widget.attrs['class'] = 'datepicker'
-            widget.attrs['data-date-format'] = javascript_date_format(settings.DATE_FORMAT)
-
-
-class ReportCreateView(CreateView):
-    form_class = ReportForm
-    template_name = 'report_new.html'
-
-
 def filter_property(filter_field, value):
     filter_type = filter_field.filter_type
     filter_value = filter_field.filter_value
@@ -178,28 +118,6 @@ def filter_property(filter_field, value):
     return filtered
 
 
-class AjaxGetRelated(GetFieldsMixin, TemplateView):
-    template_name = "report_builder/report_form_related_li.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(AjaxGetRelated, self).get_context_data(**kwargs)
-        request = self.request
-        model_class = ContentType.objects.get(pk=request.GET['model']).model_class()
-        path = request.GET['path']
-        path_verbose = request.GET['path_verbose']
-
-        new_fields, model_ct, path = self.get_related_fields(
-            model_class,
-            request.GET['field'],
-            path,
-            path_verbose,)
-        context['model_ct'] = model_ct
-        context['related_fields'] = new_fields
-        context['path'] = path
-        context['path_verbose'] = path_verbose
-        return context
-
-
 def fieldset_string_to_field(fieldset_dict, model):
     if isinstance(fieldset_dict['fields'], tuple):
         fieldset_dict['fields'] = list(fieldset_dict['fields'])
@@ -212,6 +130,7 @@ def fieldset_string_to_field(fieldset_dict, model):
             fieldset_string_to_field(dict_field[1], model)
         i += 1
 
+
 def get_fieldsets(model):
     """ fieldsets are optional, they are defined in the Model.
     """
@@ -221,146 +140,6 @@ def get_fieldsets(model):
             fieldset_string_to_field(fieldset_dict, model)
     return fieldsets
 
-class AjaxGetFields(GetFieldsMixin, TemplateView):
-    """ Get fields from a particular model """
-    template_name = 'report_builder/report_form_fields_li.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(AjaxGetFields, self).get_context_data(**kwargs)
-        field_name = self.request.GET.get('field')
-        model_class = ContentType.objects.get(pk=self.request.GET['model']).model_class()
-        path = self.request.GET['path']
-        path_verbose = self.request.GET.get('path_verbose')
-        root_model = model_class.__name__.lower()
-
-        field_data = self.get_fields(model_class, field_name, path, path_verbose)
-        ctx = context.copy()
-        ctx.update(field_data.items())
-        return ctx
-
-@staff_member_required
-def ajax_get_choices(request):
-    path_verbose = request.GET.get('path_verbose')
-    label = request.GET.get('label')
-    root_model = request.GET.get('root_model')
-    app_label = request.GET.get('app_label')
-    model_name = path_verbose or root_model
-    model_name = model_name.split(':')[-1]
-    model = ContentType.objects.get(model=model_name, app_label=app_label).model_class()
-    choices = FilterField().get_choices(model, label)
-    select_widget = forms.Select(choices=[('','---------')] + list(choices))
-    options_html = select_widget.render_options([], [0])
-    return HttpResponse(options_html)
-
-@staff_member_required
-def ajax_get_formats(request):
-    choices = Format.objects.values_list('pk', 'name')
-    select_widget = forms.Select(choices=[('','---------')] + list(choices))
-    options_html = select_widget.render_options([], [0])
-    return HttpResponse(options_html)
-
-
-
-class AjaxPreview(DataExportMixin, TemplateView):
-    """ This view is intended for a quick preview useful when debugging
-    reports. It limits to 50 objects.
-    """
-    template_name = "report_builder/html_report.html"
-    @method_decorator(staff_member_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AjaxPreview, self).dispatch(*args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.get(self, request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(AjaxPreview, self).get_context_data(**kwargs)
-        report = get_object_or_404(Report, pk=self.request.POST['report_id'])
-        queryset, message = report.get_query()
-        property_filters = report.filterfield_set.filter(
-            Q(field_verbose__contains='[property]') | Q(field_verbose__contains='[custom')
-        )
-        objects_list, message = self.report_to_list(
-            queryset,
-            report.displayfield_set.all(),
-            self.request.user,
-            property_filters=property_filters,
-            preview=True,)
-
-        context['report'] = report
-        context['objects_dict'] = objects_list
-        context['message'] = message
-        return context
-
-
-class ReportUpdateView(GetFieldsMixin, UpdateView):
-    """ This view handles the edit report builder
-    It includes attached formsets for display and criteria fields
-    """
-    model = Report
-    form_class = ReportEditForm
-    success_url = './'
-
-    @method_decorator(permission_required('report_builder.change_report'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(ReportUpdateView, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ReportUpdateView, self).get_context_data(**kwargs)
-        model_class = self.object.root_model.model_class()
-        model_ct = ContentType.objects.get_for_model(model_class)
-        relation_fields = get_relation_fields_from_model(model_class)
-
-        DisplayFieldFormset = inlineformset_factory(
-            Report,
-            DisplayField,
-            extra=0,
-            can_delete=True,
-            form=DisplayFieldForm)
-
-        FilterFieldFormset = inlineformset_factory(
-            Report,
-            FilterField,
-            extra=0,
-            can_delete=True,
-            form=FilterFieldForm)
-
-        if self.request.POST:
-            ctx['field_list_formset'] =  DisplayFieldFormset(self.request.POST, instance=self.object)
-            ctx['field_filter_formset'] =  FilterFieldFormset(self.request.POST, instance=self.object, prefix="fil")
-        else:
-            ctx['field_list_formset'] =  DisplayFieldFormset(instance=self.object)
-            ctx['field_filter_formset'] =  FilterFieldFormset(instance=self.object, prefix="fil")
-
-        ctx['related_fields'] = relation_fields
-        ctx['fieldsets'] = get_fieldsets(model_class)
-        ctx['model_ct'] = model_ct
-        ctx['root_model'] = model_ct.model
-        ctx['app_label'] = model_ct.app_label
-
-        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
-            ctx['async_report'] = True
-
-        field_context = self.get_fields(model_class)
-        ctx = ctx.copy()
-        ctx.update(field_context)
-        return ctx
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        field_list_formset = context['field_list_formset']
-        field_filter_formset = context['field_filter_formset']
-
-        if field_list_formset.is_valid() and field_filter_formset.is_valid():
-            self.object = form.save()
-            field_list_formset.report = self.object
-            field_list_formset.save()
-            field_filter_formset.report = self.object
-            field_filter_formset.save()
-            self.object.check_report_display_field_positions()
-            return HttpResponseRedirect(self.get_success_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
 
 class DownloadXlsxView(DataExportMixin, View):
     @method_decorator(staff_member_required)

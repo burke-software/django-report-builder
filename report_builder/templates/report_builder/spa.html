@@ -7,8 +7,8 @@
     
     <script src="{% static 'report_builder/bower_components/angular/angular.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/restangular/1.4.0/restangular.min.js"></script>
+    <script src="{% static 'report_builder/bower_components/lodash/dist/lodash.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/restangular/dist/restangular.min.js' %}"></script>
 
     <script>
       var STATIC_URL = '{{ STATIC_URL|escapejs }}';
@@ -27,6 +27,10 @@
     <script src="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.js' %}"></script>
     <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css' %}">
     <link rel="stylesheet" href="{% static 'report_builder/css/angular_report.css' %}">
+
+    <link rel="stylesheet" media="screen" href="{% static 'report_builder/bower_components/handsontable/dist/handsontable.full.css' %}">
+    <script src="{% static 'report_builder/bower_components/handsontable/dist/handsontable.full.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/nghandsontable/dist/ngHandsontable.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}

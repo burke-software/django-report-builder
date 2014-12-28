@@ -1,9 +1,24 @@
-var reportBuilderApp = angular.module('reportBuilderApp', ['ngRoute', 'restangular', 'ngMaterial', 'ui.tree']);
+var reportBuilderApp = angular.module('reportBuilderApp', ['ngRoute', 'restangular', 'ngMaterial', 'ui.tree', 'ngHandsontable']);
 
 reportBuilderApp.config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/report_builder/api");
+    RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+      var extractedData;
+      if (operation === "getList" && _.has(data, 'meta')) {
+        extractedData = data.data;
+        extractedData.meta = data.meta;
+      } else {
+        extractedData = data;
+      }
+      return extractedData;
+    });
     return RestangularProvider.setRequestSuffix("/");
 });
+
+function static(path) {
+    /* Works like django static files - adds the static path */
+    return STATIC_URL + path;
+}
 
 reportBuilderApp.config(function($routeProvider, $httpProvider, $locationProvider) {
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -11,15 +26,15 @@ reportBuilderApp.config(function($routeProvider, $httpProvider, $locationProvide
     $routeProvider.
         when("/", {
             controller: "homeCtrl",
-            templateUrl: STATIC_URL + 'report_builder/partials/home.html'
+            templateUrl: static('report_builder/partials/home.html')
         }).
         when("/report/add", {
             controller: "addCtrl",
-            templateUrl: STATIC_URL + 'report_builder/partials/add.html'
+            templateUrl: static('report_builder/partials/add.html')
         }).
         when("/report/:reportId", {
             controller: "homeCtrl",
-            templateUrl: STATIC_URL + 'report_builder/partials/home.html'
+            templateUrl: static('report_builder/partials/home.html')
         })
     return $locationProvider.html5Mode(true);
 });

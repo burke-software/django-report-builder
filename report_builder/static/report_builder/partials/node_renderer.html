@@ -5,6 +5,6 @@
   </div>
 </div>
 <ol ui-tree-nodes="" ng-model="field.related_fields" ng-class="{hidden: collapsed}">
-  <li ng-repeat="field in field.related_fields" ui-tree-node ng-include="'/static/report_builder/partials/node_renderer.html'">
+  <li ng-repeat="field in field.related_fields" ui-tree-node ng-include="static('report_builder/partials/node_renderer.html')">
   </li>
 </ol>

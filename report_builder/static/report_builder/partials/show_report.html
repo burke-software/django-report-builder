@@ -1,0 +1,21 @@
+<md-content ng-controller="ReportShowCtrl">
+<div>
+    <md-button ng-click="save()">Save</md-button>
+    <md-button ng-click="getPreview()">Preview</md-button>
+    <md-button ng-click="getXlsx()"><a ng-href="">Download xlsx</a></md-button>
+</div>
+    <div layout="column" layout-margin style="padding:5px;">
+        <div ng-if="reportData.refresh == true">
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <div ng-if="reportData.refresh == false">
+            <hot-table id="previewTable"
+                columnHeaders="true"
+                settings="htSettings"
+                columns="reportData.columns"
+                datarows="reportData.items"
+                >
+            </hot-table>
+        </div>
+    </div>
+</md-content>

@@ -43,9 +43,9 @@
                 <div class="col_checkbox" flex="">Group</div>
               </div>
               <div>
-                <ol ui-tree-nodes="" ng-model="displayFields">
-                  <li class="field" data-collapsed="false" ng-repeat="field in displayFields" ui-tree-node="">
-                    <div ng-include="'/static/report_builder/partials/display_field.html'"></div>
+                <ol ui-tree-nodes="" ng-model="report.displayfield_set">
+                  <li class="field" data-collapsed="false" ng-repeat="field in report.displayfield_set" ui-tree-node="">
+                    <div ng-include="static('report_builder/partials/display_field.html')"></div>
                   </li>
                 </ol>
               </div>
@@ -59,23 +59,25 @@
             </div>
             <section hide-gt-lg>
                 <md-button class="md-fab bottom_left" ng-click="reports_list_menu()" aria-label="Reports List">
-                    <md-icon icon="/static/report_builder/img/list.svg" style="width: 24px; height: 24px;"></md-icon>
+                <md-icon icon="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
                 </md-button>
             </section>
             <section hide-gt-md>
                 <md-button class="md-fab bottom_right" ng-click="field_menu()" aria-label="Add Field">
-                    <md-icon icon="/static/report_builder/img/add.svg" style="width: 24px; height: 24px;"></md-icon>
+                <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
                 </md-button>
             </section>
           </div>
           <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">TAB 2</div>
-          <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">TAB 3</div>
+          <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">
+              <div ng-include="static('report_builder/partials/show_report.html')"></div>
+          </div>
         </ng-switch>
       </md-content>
     </div>
     <md-sidenav ng-show="showFields" md-is-locked-open="$media('gt-md')" class="md-sidenav-right md-whiteframe-z1" md-component-id="right">
       <div layout="column" layout-fill="">
-        <div ng-include="'/static/report_builder/partials/fields.html'"></div>
+        <div ng-include="static('report_builder/partials/fields.html')"></div>
       </div>
     </md-sidenav>
   </section>

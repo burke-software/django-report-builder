@@ -4,3 +4,6 @@ python-dateutil
 django-report-utils>=0.2.3
 djangorestframework==3.0.2
 psycopg2
+django-extensions
+Werkzeug
+celery[redis]
