@@ -68,10 +68,6 @@ reportBuilderApp.controller('homeCtrl', function ($scope, $routeParams, $locatio
         $scope.openReport($routeParams.reportId);
     }
 
-    $scope.save = function() {
-        $scope.report.save();
-    };
-
 });
 
 reportBuilderApp.service('reportService', ['Restangular', function(Restangular) {
@@ -157,7 +153,8 @@ reportBuilderApp.controller('ReportDisplayCtrl', function($scope){
         field.remove();
     };
 });
-reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, reportService){
+reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService){
+    $scope.lastSaved = null;
     $scope.reportData = {}
     $scope.getPreview = function() {
         $scope.reportData.refresh = true;
@@ -173,7 +170,50 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, reportSe
         });
     };
 
+    $scope.save = function() {
+        $scope.report.save().then(function (result) {
+            $scope.lastSaved = new Date();
+            $mdToast.show(
+              $mdToast.simple()
+                .content('Report Saved!')
+                .hideDelay(1000)
+            );
+        });
+    };
+
     $scope.getXlsx = function() {
-        $window.location.href = '/report_builder/report/' + $scope.report.id + '/download_xlsx/';
+        base_url = '/report_builder/report/' + $scope.report.id
+        url = base_url + '/download_xlsx/';
+        $scope.workerStatus = 'Requesting report';
+        if (ASYNC_REPORT === "True") {
+            $http.get(url).
+                success(function(data) {
+                    $scope.workerStatus = 'Report Requested';
+                    var attempts = 0;
+                    var task_id = data.task_id;
+                    var checkPoller = function() {
+                        $http.get(base_url + '/check_status/' + task_id + '/').success(function(check_data) {
+                            if (check_data.state === "SUCCESS") {
+                                $scope.workerStatus = null;
+                                $scope.workerState = null;
+                                $window.location.href = check_data.link;
+                                $mdToast.show(
+                                  $mdToast.simple()
+                                    .content('Report Ready!')
+                                    .hideDelay(4000)
+                                );
+                            } else {
+                                $scope.workerStatus = 'Waiting on worker. State is ' + check_data.state;
+                                $scope.workerState = check_data.state;
+                                attempts += 1;
+                                $timeout(checkPoller, 1000 + (500 * attempts));
+                            }
+                        })
+                    };
+                    $timeout(checkPoller, 100);
+                });
+        } else {
+          $window.location.href = url;
+        }
     }
 });

@@ -11,6 +11,7 @@ router.register(r'report', api_views.ReportNestedViewSet)
 
 urlpatterns = patterns('',
     url('^report/(?P<pk>\d+)/download_xlsx/$',  views.DownloadXlsxView.as_view(), name="report_download_xlsx"),
+    url('^report/(?P<pk>\d+)/check_status/(?P<task_id>.+)/$', views.check_status, name="report_check_status"),
     url(r'^api/', include(router.urls)),
     url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/related_fields',  staff_member_required(api_views.RelatedFieldsView.as_view()), name="related_fields"),

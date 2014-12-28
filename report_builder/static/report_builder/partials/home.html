@@ -28,6 +28,7 @@
           <md-tab id="tab1" aria-controls="tab1-content">Display</md-tab>
           <md-tab id="tab2" aria-controls="tab2-content">Filter</md-tab>
           <md-tab id="tab3" aria-controls="tab3-content">Report</md-tab>
+          <md-tab id="tab4" aria-controls="tab3-content">Options</md-tab>
         </md-tabs>
         <ng-switch on="tabData.selectedIndex" class="tabpanel-container">
           <div style="height: calc(100% - 112px); overflow-y: auto;" role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
@@ -71,6 +72,12 @@
           <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">TAB 2</div>
           <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">
               <div ng-include="static('report_builder/partials/show_report.html')"></div>
+          </div>
+          <div role="tabpanel" id="tab4-content" aria-labelledby="tab3" ng-switch-when="3" md-swipe-left="next()" md-swipe-right="previous()">
+            <md-checkbox ng-model="report.distinct" aria-label="Is Distinct">
+              Is Distinct (Maybe help reduce duplicates rows) 
+            </md-checkbox>
+            Read <a href="//docs.djangoproject.com/en/1.7/ref/models/querysets/#django.db.models.query.QuerySet.distinct">more.</a>
           </div>
         </ng-switch>
       </md-content>

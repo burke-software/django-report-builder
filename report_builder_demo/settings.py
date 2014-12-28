@@ -87,8 +87,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 REDIS_ADDR = os.environ.get('REDIS_1_PORT_6379_TCP_ADDR', 'localhost')
 REDIS_PORT = os.environ.get('REDIS_1_PORT_6379_TCP_PORT', '6379')
 BROKER_URL = 'redis://{}:{}/0'.format(REDIS_ADDR, REDIS_PORT)
 CELERY_RESULT_BACKEND = BROKER_URL
+
+REPORT_BUILDER_ASYNC_REPORT = True

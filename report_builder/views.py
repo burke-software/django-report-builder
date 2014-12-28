@@ -47,6 +47,10 @@ import json
 class ReportSPAView(TemplateView):
     template_name = "report_builder/spa.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(ReportSPAView, self).get_context_data(**kwargs)
+        context['ASYNC_REPORT'] = settings.REPORT_BUILDER_ASYNC_REPORT
+        return context
 
 def filter_property(filter_field, value):
     filter_type = filter_field.filter_type
