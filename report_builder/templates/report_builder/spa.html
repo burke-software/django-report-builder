@@ -1,0 +1,41 @@
+{% extends "report_builder/base.html" %}
+{% load staticfiles %}
+
+{% block report_header %}
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <base href="/report_builder/">
+    
+    <script src="{% static 'report_builder/bower_components/angular/angular.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/lodash/dist/lodash.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/restangular/dist/restangular.min.js' %}"></script>
+
+    <script>
+      var STATIC_URL = '{{ STATIC_URL|escapejs }}';
+      var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
+      var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
+    </script>
+
+    <script src="{% static 'report_builder/app.js' %}"></script>
+    <script src="{% static 'report_builder/controllers.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-material/angular-material.css' %}">
+    <script src="{% static 'report_builder/bower_components/angular-aria/angular-aria.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular-animate/angular-animate.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/hammerjs/hammer.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular-material/angular-material.js' %}"></script>
+
+    <script src="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css' %}">
+    <link rel="stylesheet" href="{% static 'report_builder/css/angular_report.css' %}">
+
+    <link rel="stylesheet" media="screen" href="{% static 'report_builder/bower_components/handsontable/dist/handsontable.full.css' %}">
+    <script src="{% static 'report_builder/bower_components/handsontable/dist/handsontable.full.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/nghandsontable/dist/ngHandsontable.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div ng-app="reportBuilderApp">
+    <div ng-view></div>
+</div>
+{% endblock %}

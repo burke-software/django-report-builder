@@ -1,5 +1,15 @@
+db:
+  image: postgres
+redis:
+  image: redis
 web:
   build: .
-  command: python setup.py test
+  command: ./run.sh
   volumes:
     - .:/code
+    - ../django-report-utils/report_utils:/usr/local/lib/python3.4/site-packages/report_utils
+  ports:
+    - "8000:8000"
+  links:
+    - db
+    - redis

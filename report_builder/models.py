@@ -32,21 +32,26 @@ class Report(models.Model):
         if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
             models = models.exclude(name__in=settings.REPORT_BUILDER_EXCLUDE)
         return models
-    
+
     name = models.CharField(max_length=255)
     slug = models.SlugField(verbose_name="Short Name")
     description = models.TextField(blank=True)
-    root_model = models.ForeignKey(ContentType, limit_choices_to={'pk__in':_get_allowed_models})
+    root_model = models.ForeignKey(
+        ContentType, limit_choices_to={'pk__in': _get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
-    user_created = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True)
-    user_modified = models.ForeignKey(AUTH_USER_MODEL, editable=False, blank=True, null=True, related_name="report_modified_set")
+    user_created = models.ForeignKey(
+        AUTH_USER_MODEL, editable=False, blank=True, null=True)
+    user_modified = models.ForeignKey(
+        AUTH_USER_MODEL, editable=False, blank=True, null=True,
+        related_name="report_modified_set")
     distinct = models.BooleanField(default=False)
     report_file = models.FileField(upload_to="report_files", blank=True)
     report_file_creation = models.DateTimeField(blank=True, null=True)
-    starred = models.ManyToManyField(AUTH_USER_MODEL, blank=True,
-                                     help_text="These users have starred this report for easy reference.",
-                                     related_name="report_starred_set")
+    starred = models.ManyToManyField(
+        AUTH_USER_MODEL, blank=True,
+        help_text="These users have starred this report for easy reference.",
+        related_name="report_starred_set")
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -66,7 +71,7 @@ class Report(models.Model):
             elif display_field.aggregate == "Sum":
                 queryset = queryset.annotate(Sum(display_field.path + display_field.field))
         return queryset
-    
+
     def get_query(self):
         report = self
         model_class = report.root_model.model_class()
@@ -81,23 +86,23 @@ class Report(models.Model):
             objects = getattr(model_class, manager).all()
 
         # Filters
-        # NOTE: group all the filters together into one in order to avoid 
+        # NOTE: group all the filters together into one in order to avoid
         # unnecessary joins
         filters = {}
         excludes = {}
         for filter_field in report.filterfield_set.all():
             try:
-                # exclude properties from standard ORM filtering 
+                # exclude properties from standard ORM filtering
                 if '[property]' in filter_field.field_verbose:
                     continue
                 if '[custom' in filter_field.field_verbose:
                     continue
 
                 filter_string = str(filter_field.path + filter_field.field)
-                
+
                 if filter_field.filter_type:
                     filter_string += '__' + filter_field.filter_type
-                
+
                 # Check for special types such as isnull
                 if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
                     filter_ = {filter_string: False}
@@ -126,9 +131,9 @@ class Report(models.Model):
                     filter_ = {filter_string: filter_value}
 
                 if not filter_field.exclude:
-                    filters.update(filter_) 
+                    filters.update(filter_)
                 else:
-                    excludes.update(filter_) 
+                    excludes.update(filter_)
 
             except Exception:
                 import sys
@@ -143,25 +148,25 @@ class Report(models.Model):
             objects = objects.exclude(**excludes)
 
         # Aggregates
-        objects = self.add_aggregates(objects) 
+        objects = self.add_aggregates(objects)
 
         # Distinct
         if report.distinct:
             objects = objects.distinct()
 
         return objects, message
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
-    
+
     def edit(self):
         return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/edit.svg"/></a>'.format(
             self.get_absolute_url(),
-            getattr(settings, 'STATIC_URL', '/static/')   
+            getattr(settings, 'STATIC_URL', '/static/')
         ))
     edit.allow_tags = True
-    
+
     def download_xlsx(self):
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
             return mark_safe('<a href="#" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
@@ -175,7 +180,7 @@ class Report(models.Model):
             ))
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
-    
+
 
     def copy_report(self):
         return '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/copy.svg"/></a>'.format(
@@ -195,14 +200,14 @@ class Report(models.Model):
 
 
 class Format(models.Model):
-    """ A specifies a Python string format for e.g. `DisplayField`s. 
+    """ A specifies a Python string format for e.g. `DisplayField`s.
     """
     name = models.CharField(max_length=50, blank=True, default='')
     string = models.CharField(max_length=300, blank=True, default='', help_text='Python string format. Ex ${} would place a $ in front of the result.')
 
     def __unicode__(self):
         return self.name
-    
+
 
 class DisplayField(models.Model):
     """ A display field to show in a report. Always belongs to a Report
@@ -234,7 +239,7 @@ class DisplayField(models.Model):
 
     class Meta:
         ordering = ['position']
-    
+
     def get_choices(self, model, field_name):
         try:
             model_field = model._meta.get_field_by_name(field_name)[0]
@@ -261,7 +266,7 @@ class DisplayField(models.Model):
 
     def __unicode__(self):
         return self.name
-        
+
 class FilterField(models.Model):
     """ A display field to show in a report. Always belongs to a Report
     """
@@ -302,7 +307,7 @@ class FilterField(models.Model):
 
     class Meta:
         ordering = ['position']
-    
+
     def clean(self):
         if self.filter_type == "range":
             if self.filter_value2 in [None, ""]:
@@ -326,4 +331,4 @@ class FilterField(models.Model):
 
     def __unicode__(self):
         return self.field
-    
+

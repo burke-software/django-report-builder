@@ -1,0 +1,219 @@
+reportBuilderApp.controller('addCtrl', function ($scope, $location, reportService) {
+  reportService.options().then(function(options){
+    $scope.options = options.actions.POST;
+  });
+  $scope.submitForm = function() {
+    if ($scope.reportForm.$valid) {
+      reportService.create($scope.report).then(function(result){ 
+        $location.path('/report/' + result.id, true);
+      });
+    }
+  }
+});
+
+reportBuilderApp.controller('homeCtrl', function ($scope, $routeParams, $location, $mdSidenav, reportService) {
+    $scope.static = static
+    $scope.tabData = {
+        selectedIndex: 0,
+    };
+    $scope.next = function() {
+        $scope.tabData.selectedIndex = Math.min($scope.tabData.selectedIndex + 1, 2) ;
+    };
+    $scope.previous = function() {
+        $scope.tabData.selectedIndex = Math.max($scope.tabData.selectedIndex - 1, 0);
+    };
+
+    $scope.reports_list_menu = function() {
+        $mdSidenav('left').open();
+    };
+    $scope.field_menu = function() {
+        $mdSidenav('right').open();
+    };
+
+    $scope.requestFullscreen = function() {
+        var
+        el = document.documentElement
+        , rfs =
+            el.requestFullScreen
+            || el.webkitRequestFullScreen
+            || el.mozRequestFullScreen
+        ;
+        rfs.call(el);
+    };
+
+    $scope.openReport = function(reportId) {
+        $mdSidenav('left').close();
+        $scope.showFields = true;
+        $location.path('/report/' + reportId, false);
+        reportService.getReport(reportId).then(function(report) {
+            $scope.fields_header = report.root_model_name;
+            $scope.report = report;
+            root_related_field = {
+                verbose_name: report.root_model_name,
+                field_name: '',
+                path: '',
+                model_id: report.root_model}
+            data = {"model": report.root_model, "path":"", "path_verbose": "", "field": ""}
+            $scope.related_fields = [root_related_field]
+            reportService.getRelatedFields(data).then(function (result) {
+                root_related_field.related_fields = result;
+            });
+            reportService.getFields(data).then(function (result) {
+                $scope.fields = result;
+            });
+        });
+    };
+
+    if ($routeParams.reportId) {
+        $scope.openReport($routeParams.reportId);
+    }
+
+});
+
+reportBuilderApp.service('reportService', ['Restangular', function(Restangular) {
+  var path = "report";
+  var reports = Restangular.all(path);
+
+  function getReport(reportId) {
+    return Restangular.one(path, reportId).get();
+  }
+  function getRelatedFields(data) {
+    return Restangular.all('related_fields').post(data);
+  }
+  function getFields(data) {
+    return Restangular.all('fields').post(data);
+  }
+  function options(){
+    return reports.options();
+  }
+  function create(data) {
+    return reports.post(data);
+  }
+  function getList() {
+    return Restangular.all('reports').getList();
+  }
+  function getPreview(reportId) {
+    return Restangular.one(path, reportId).getList('generate');
+  }
+
+  return {
+    getReport: getReport,
+    getRelatedFields: getRelatedFields,
+    getFields: getFields,
+    options: options,
+    create: create,
+    getList: getList,
+    getPreview: getPreview
+  };
+}]);
+
+reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidenav, $location, reportService) {
+    $scope.reports = reportService.getList().$object;
+    $scope.close = function() {
+        $mdSidenav('left').close();
+    };
+    if (!$routeParams.reportId) {
+        $mdSidenav('left').open();
+    }
+})
+
+reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportService) {
+    $scope.help_text = '';
+
+    $scope.load_fields = function(field) {
+        data = {"model": field.model_id, "path":field.path, "path_verbose": "", "field": field.field_name}
+        $scope.help_text = field.help_text;
+        $scope.fields_header = field.verbose_name;
+        reportService.getFields(data).then(function (result) {
+            $scope.fields = result;
+        });
+    }
+
+    $scope.toggle_related_fields = function(node){
+        field = node.$nodeScope.$modelValue;
+        parent_field = node.$parent.$modelValue;
+        data = {"model": field.model_id, "path": parent_field.path, "path_verbose": "", "field": field.field_name}
+        reportService.getRelatedFields(data).then(function (result) {
+            field.related_fields = result;
+        });
+    };
+
+    $scope.click_field = function(field) {
+        $scope.help_text = field.help_text;
+    };
+
+    $scope.add_field = function(field) {
+        field.report = $scope.report.id;
+        $scope.report.displayfield_set.push(field);
+    };
+});
+
+reportBuilderApp.controller('ReportDisplayCtrl', function($scope){
+    $scope.deleteField = function(field) {
+        field.remove();
+    };
+});
+reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService){
+    $scope.lastSaved = null;
+    $scope.reportData = {}
+    $scope.getPreview = function() {
+        $scope.reportData.refresh = true;
+        reportService.getPreview($scope.report.id).then(function(data) {
+            columns = [];
+            angular.forEach(data.meta.titles, function(value) {
+                columns.push({'title': value});
+            });
+
+            $scope.reportData.items = data;
+            $scope.reportData.columns = columns;
+            $scope.reportData.refresh = false;
+        });
+    };
+
+    $scope.save = function() {
+        $scope.report.save().then(function (result) {
+            $scope.lastSaved = new Date();
+            $mdToast.show(
+              $mdToast.simple()
+                .content('Report Saved!')
+                .hideDelay(1000)
+            );
+        });
+    };
+
+    $scope.getXlsx = function() {
+        base_url = '/report_builder/report/' + $scope.report.id
+        url = base_url + '/download_xlsx/';
+        $scope.workerStatus = 'Requesting report';
+        if (ASYNC_REPORT === "True") {
+            $http.get(url).
+                success(function(data) {
+                    $scope.workerStatus = 'Report Requested';
+                    var attempts = 0;
+                    var task_id = data.task_id;
+                    var checkPoller = function() {
+                        $http.get(base_url + '/check_status/' + task_id + '/').success(function(check_data) {
+                            if (check_data.state === "SUCCESS") {
+                                $scope.workerStatus = null;
+                                $scope.workerState = null;
+                                $window.location.href = check_data.link;
+                                $mdToast.show(
+                                  $mdToast.simple()
+                                    .content('Report Ready!')
+                                    .hideDelay(4000)
+                                );
+                            } else {
+                                $scope.workerStatus = 'Waiting on worker. State is ' + check_data.state;
+                                $scope.workerState = check_data.state;
+                                attempts += 1;
+                                $timeout(checkPoller, 1000 + (500 * attempts));
+                            }
+                        })
+                    };
+                    $timeout(checkPoller, 100);
+                });
+        } else {
+          $window.location.href = url;
+        }
+    }
+});

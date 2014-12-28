@@ -1,0 +1,20 @@
+<div class="form" layout="column">
+  <md-content>
+    <md-card>
+      <md-toolbar>
+        <h2 class="md-toolbar-tools">
+          <span>Add New Report {{ report.name }}</span>
+        </h2>
+      </md-toolbar>
+      <form style="padding: 20px;" name="reportForm" ng-submit="submitForm()">
+        <md-text-float label="Report Name" required="required" name="name" ng-model="report.name"></md-text-float>
+        <md-text-float type="textarea" label="Description" ng-model="report.description"></md-text-float>
+        <label for="root_model">Root Model</label>
+        <select id="root_model" required="required" ng-model="report.root_model" ng-options="item.value as item.display_name for item in options.root_model.choices">
+        </select>
+        <p>The "root model" will be the starting point for this report. In database terms this is the FROM table that others will be joined with. A spreadsheet approximation would a pivot table.</p>
+        <md-button type="submit" class="md-raised md-primary">Create Report</md-button>
+      </form>
+    </md-card>
+  </md-content>
+</div>
