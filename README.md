@@ -10,17 +10,7 @@ not be able to program or gain direct interactive shell access.
 
 # News
 
-Just pushed 2.0 changes to master and pypi. Code has been refactored. Report any bugs :)
-
-- Changing the base templates slightly (could cause you trouble if customized)
-- Factoring out functions to django-report-utils
-- Added experimental support for asynchronous report generation
-
-The common functions will used in:
-
-- django-scaffold-report - a tool to streamline complex customized reports
-- django-admin-export - a super old tool I made that sucks and will be remade!
-
+Welcome to the 2.X branch. This is no longer the latest version but is maintained for compatbility with django <1.7, django rest framework<3.0 and those who wish to keep using the older django template interface.
 
 # What is Django Report Builder?
 
@@ -44,7 +34,7 @@ What isn't
 
 # Documentation
 
-http://django-report-builder.readthedocs.org/
+http://django-report-builder.readthedocs.org/en/2.x/
 
 # Discussion
 
