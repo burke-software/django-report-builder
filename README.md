@@ -14,7 +14,7 @@ Welcome to the 2.X branch. This is no longer the latest version but is maintaine
 
 # What is Django Report Builder?
 
-![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderscreen.png)
+![](/screenshots/reportbuilderscreen.png)
 
 What's finished?
 - Add filters
