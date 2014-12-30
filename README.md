@@ -47,7 +47,8 @@ There's actually no schema changes at all - but you'll want to be in sync with t
 
 ![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderscreen.png)
 
-What's finished?
+## Features
+
 - Add filters
 - Add display fields
 - Preview and create xlsx reports
@@ -58,10 +59,6 @@ reports. Unprivileged users can still build reports and see database schema.
 - Support for django-hstore
 - Export to Report global admin action
 - Optional asynchronous report generation
-
-What isn't
-- "or" filters together
-- More exports, views
 
 # Documentation
 
