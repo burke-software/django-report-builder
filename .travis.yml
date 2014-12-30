@@ -6,4 +6,5 @@ python:
 install:
   - pip install -q -e . --use-mirrors
 # command to run tests
-script: python setup.py test 
+script: python manage.py test
+sudo: false
