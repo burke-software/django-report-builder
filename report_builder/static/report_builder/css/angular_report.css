@@ -53,15 +53,20 @@ div.col_checkbox {
 }
 
 input[type="text"].small_input {
-  width: 3em;
+  width: 2em;
 g}
 
 .move_trash {
   max-width: 53px;
 }
 
-.aggregate {
+.col_aggregate {
   max-width: 6em;
+  min-width: 5em;
+}
+
+.col_format {
+  min-width: 5em; 
 }
 
 input[type="text"] {

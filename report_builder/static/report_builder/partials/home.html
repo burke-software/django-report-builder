@@ -38,15 +38,15 @@
                 <div flex="">Field</div>
                 <div flex="">Name</div>
                 <div class="col_sort" flex="">Sort</div>
-                <div class="aggregate" flex="">Aggregate</div>
-                <div flex="">Format</div>
+                <div class="col_aggregate" flex="">Aggregate</div>
+                <div class="col_format" flex="">Format</div>
                 <div class="col_checkbox" flex="">Total</div>
                 <div class="col_checkbox" flex="">Group</div>
               </div>
               <div>
                 <ol ui-tree-nodes="" ng-model="report.displayfield_set">
                   <li class="field" data-collapsed="false" ng-repeat="field in report.displayfield_set" ui-tree-node="">
-                    <div ng-include="static('report_builder/partials/display_field.html')"></div>
+                    <div layout-align="center center" ng-include="static('report_builder/partials/display_field.html')"></div>
                   </li>
                 </ol>
               </div>
