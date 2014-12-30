@@ -1,7 +1,7 @@
 django==1.7.1
 openpyxl
 python-dateutil
-django-report-utils>=0.2.3
+django-report-utils>=0.2.7
 djangorestframework==3.0.2
 psycopg2
 django-extensions
