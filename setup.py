@@ -16,6 +16,8 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Django',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         "License :: OSI Approved :: BSD License",
@@ -24,7 +26,7 @@ setup(
         'django>=1.7',
         'openpyxl',
         'python-dateutil',
-        'django-report-utils>=0.2.3',
+        'django-report-utils>=0.2.6',
         'django-rest-framework>=3.0.0',
     ]
 )

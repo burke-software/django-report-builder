@@ -17,7 +17,7 @@ For the old see the 2.x branch.
 
 - Frontend redone in angular and material design.
 - Async report status
-- Requires Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the 2.x branch instead. I will continue to accept pull requests for 2.x however new features will be added only in 3.x.
+- Requires Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x branch](https://github.com/burke-software/django-report-builder/tree/2.x) instead. I will continue to accept pull requests for 2.x however new features will be added only in 3.x.
 - Responsive - Even works on mobile.
 - API built with DRF - in theory you could impliment your own frontend.
 
