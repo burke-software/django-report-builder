@@ -162,6 +162,11 @@ reportBuilderApp.controller('ReportDisplayCtrl', function($scope){
         field.remove();
     };
 });
+
+reportBuilderApp.controller('ReportFilterCtrl', function($scope){
+    
+});
+
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService){
     $scope.getPreview = function() {
         $scope.reportData.statusMessage = null;

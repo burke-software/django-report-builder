@@ -76,20 +76,19 @@ input[type="text"] {
   -moz-box-sizing: border-box;
 }
 
-.bottom_left {
-  position:absolute;
-  bottom:0;
-  margin: 10px;
+.md-button.md-fab.md-fab-bottom-left{
+      bottom: 16px;
+      left: 16px;
 }
-.bottom_right {
-  position:absolute;
-  bottom:0;
-  right:0;
-  margin: 10px;
+.md-button.md-fab.md-fab-bottom-right{
+      bottom: 16px;
+      right: 16px;
 }
+
 body {
   overflow:hidden;
 }
+
 .fullscreen:fullscreen {
   display: none;
 } 

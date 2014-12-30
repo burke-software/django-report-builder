@@ -52,24 +52,17 @@
               </div>
             </div>
             <div hide-gt-lg layout="row" layout-sm="column" layout-align="center center" style="height: 55px;">
-                <div class="fullscreen">
-                <md-button class="" ng-click="requestFullscreen()" aria-label="Fullscreen">
-                    Fullscreen
-                </md-button>
-                </div>
+              <md-button class="fullscreen" ng-click="requestFullscreen()" aria-label="Fullscreen">
+                Fullscreen
+              </md-button>
             </div>
-            <section hide-gt-lg>
-                <md-button class="md-fab bottom_left" ng-click="reports_list_menu()" aria-label="Reports List">
-                <md-icon icon="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
-                </md-button>
-            </section>
-            <section hide-gt-md>
-                <md-button class="md-fab bottom_right" ng-click="field_menu()" aria-label="Add Field">
-                <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
-                </md-button>
-            </section>
+            <md-button hide-gt-md class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
+              <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
+            </md-button>
           </div>
-          <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">TAB 2</div>
+          <div style="height: calc(100% - 112px); overflow-y: auto;" role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+            <div ng-include="static('report_builder/partials/filters.html')"></div>
+          </div>
           <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">
               <div ng-include="static('report_builder/partials/show_report.html')"></div>
           </div>
@@ -81,6 +74,9 @@
           </div>
         </ng-switch>
       </md-content>
+      <md-button hide-gt-lg class="md-fab md-fab-bottom-left" ng-click="reports_list_menu()" aria-label="Reports List">
+        <md-icon icon="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
+      </md-button>
     </div>
     <md-sidenav ng-show="showFields" md-is-locked-open="$media('gt-md')" class="md-sidenav-right md-whiteframe-z1" md-component-id="right">
       <div layout="column" layout-fill="">

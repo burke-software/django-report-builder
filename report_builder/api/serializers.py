@@ -22,6 +22,7 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
 class FilterFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = FilterField
+        read_only_fields = ('id',)
 
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,6 +37,7 @@ class ReportSerializer(serializers.HyperlinkedModelSerializer):
 
 class ReportNestedSerializer(ReportSerializer):
     displayfield_set = DisplayFieldSerializer(required=False, many=True)
+    filterfield_set = FilterFieldSerializer(required=False, many=True)
     user_created = serializers.PrimaryKeyRelatedField(read_only=True)
     user_modified = serializers.PrimaryKeyRelatedField(read_only=True)
 
@@ -43,7 +45,7 @@ class ReportNestedSerializer(ReportSerializer):
         model = Report
         fields = ('id', 'name', 'modified', 'root_model', 'root_model_name',
                   'displayfield_set', 'distinct', 'user_created',
-                  'user_modified')
+                  'user_modified', 'filterfield_set')
 
     def update(self, instance, validated_data):
         displayfields_data = validated_data.pop('displayfield_set')
