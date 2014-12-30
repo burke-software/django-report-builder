@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -96,3 +97,6 @@ CELERY_RESULT_BACKEND = BROKER_URL
 
 REPORT_BUILDER_ASYNC_REPORT = True
 REPORT_BUILDER_GLOBAL_EXPORT = True
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}

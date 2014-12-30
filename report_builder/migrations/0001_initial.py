@@ -7,8 +7,8 @@ from django.conf import settings
 
 def add_initial_data(apps, schema_editor):
     Format = apps.get_model("report_builder", "Format")
-    Format.objects.get_or_create(name="US Currency", sting="${:20,.2f}")
-    Format.objects.get_or_create(name="ISO Date", sting="{:%Y-%m-%d}")
+    Format.objects.get_or_create(name="US Currency", string="${:20,.2f}")
+    Format.objects.get_or_create(name="ISO Date", string="{:%Y-%m-%d}")
 
 
 class Migration(migrations.Migration):
