@@ -3,15 +3,15 @@
     <img ui-tree-handle="" src="/static/report_builder/img/reorder.svg"></img>
     <img ng-click="deleteField(this)" src="/static/report_builder/img/delete.svg"></img>
   </div>
-  <div flex="" class="caps">{{ field.field_verbose }}</div>
+  <div flex="" class="caps"><span ng-if="field.path_verbose">({{ field.path_verbose }})</span>{{ field.field_verbose }}</div>
   <div flex="">
     <input type="text" ng-model="field.name"></input>
   </div>
   <div class="col_sort" flex="">
-    <input class="small_input" type="text" value=""></input>
+    <input class="small_input" ng-model="field.sort" type="text" value=""></input>
   </div>
   <div class="aggregate" flex="">
-    <select>
+    <select ng-model="field.aggregate">
       <option value="" selected="selected">---------</option>
       <option value="Sum">Sum</option>
       <option value="Count">Count</option>
@@ -21,16 +21,14 @@
     </select>
   </div>
   <div flex="">
-    <select>
-      <option value="" selected="selected">---------</option>
-      <option value="3">US Currency</option>
-      <option value="4">Percent</option>
+    <select ng-model="field.display_format" ng-options="format.id as format.name for format in formats">
+        <option value=""></option>
     </select>
   </div>
   <div class="col_checkbox" flex="">
-    <md-checkbox aria-label="Total"></md-checkbox>
+    <md-checkbox aria-label="Total" ng-model="field.total"></md-checkbox>
   </div>
   <div class="col_checkbox" flex="">
-    <md-checkbox aria-label="Group"></md-checkbox>
+    <md-checkbox aria-label="Group" ng-model="field.group"></md-checkbox>
   </div>
 </ng-form>

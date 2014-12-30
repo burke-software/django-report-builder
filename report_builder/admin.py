@@ -8,7 +8,7 @@ from report_builder.models import DisplayField, Report, FilterField, Format
 from django.conf import settings
 
 static_url = getattr(settings, 'STATIC_URL', '/static/')
-    
+
 class StarredFilter(SimpleListFilter):
     title = 'Your starred reports'
     parameter_name = 'starred'
@@ -31,27 +31,29 @@ class ReportAdmin(admin.ModelAdmin):
     show_save = False
 
     class Media:
-        js = [ static_url+'report_builder/js/jquery-1.10.2.min.js', static_url+'report_builder/js/report_list.js', static_url+'report_builder/js/report_form.js']
+        js = [
+            static_url+'report_builder/js/report_list.js',
+            static_url+'report_builder/js/report_form.js']
 
     def response_add(self, request, obj, post_url_continue=None):
         if '_easy' in request.POST:
             return HttpResponseRedirect(obj.get_absolute_url())
         return super(ReportAdmin, self).response_add(request, obj, post_url_continue)
-    
+
     def response_change(self, request, obj):
         if '_easy' in request.POST:
             return HttpResponseRedirect(obj.get_absolute_url())
         return super(ReportAdmin, self).response_change(request, obj)
-        
+
     def change_view(self, request, object_id, extra_context=None):
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False) and 'report_file' not in self.fields:
             self.fields += ['report_file', 'report_file_creation']
-        return super(ReportAdmin, self).change_view(request, object_id, extra_context=None)    
-    
+        return super(ReportAdmin, self).change_view(request, object_id, extra_context=None)
+
     def changelist_view(self, request, extra_context=None):
         self.user = request.user
         return super(ReportAdmin, self).changelist_view(request, extra_context=extra_context)
-    
+
     def ajax_starred(self, obj):
         if obj.starred.filter(id=self.user.id):
             img = static_url+'report_builder/img/star.png'
@@ -62,7 +64,7 @@ class ReportAdmin(admin.ModelAdmin):
             img)
     ajax_starred.allow_tags = True
     ajax_starred.short_description = "Starred"
-    
+
     def save_model(self, request, obj, form, change):
         star_user = False
         if not obj.id:
@@ -74,7 +76,7 @@ class ReportAdmin(admin.ModelAdmin):
         obj.save()
         if star_user: # Star created reports automatically
             obj.starred.add(request.user)
-    
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
 

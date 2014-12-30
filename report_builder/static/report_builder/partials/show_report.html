@@ -3,11 +3,11 @@
     <md-button ng-click="save()">Save</md-button>
     <md-button ng-click="getPreview()">Preview</md-button>
     <md-button ng-click="getXlsx()"><a ng-href="">Download xlsx</a></md-button>
-    <span ng-if="lastSaved == null">
+    <span ng-if="report.lastSaved == null">
         Changes have not been saved
     </span>
-    <span ng-if="lastSaved">
-        Saved {{ lastSaved | date:"MM/dd/yyyy 'at' h:mma" }}
+    <span ng-if="report.lastSaved">
+        Saved {{ report.lastSaved | date:"MM/dd/yyyy 'at' h:mma" }}
     </span>
 </div>
     <div layout="column" layout-margin style="padding:5px;">
@@ -19,6 +19,9 @@
         </div>
         <div ng-if="reportData.refresh == true">
             <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <div ng-if="reportData.statusMessage">
+            {{ reportData.statusMessage }}
         </div>
         <div ng-if="reportData.refresh == false">
             <hot-table id="previewTable"

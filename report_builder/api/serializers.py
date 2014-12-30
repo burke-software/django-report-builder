@@ -1,8 +1,16 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from report_builder.models import Report, DisplayField, FilterField
+from django.contrib.auth import get_user_model
+from report_builder.models import Report, DisplayField, FilterField, Format
 from rest_framework import serializers
 import datetime
+
+User = get_user_model()
+
+
+class FormatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Format
 
 
 class DisplayFieldSerializer(serializers.ModelSerializer):
@@ -28,11 +36,14 @@ class ReportSerializer(serializers.HyperlinkedModelSerializer):
 
 class ReportNestedSerializer(ReportSerializer):
     displayfield_set = DisplayFieldSerializer(required=False, many=True)
+    user_created = serializers.PrimaryKeyRelatedField(read_only=True)
+    user_modified = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Report
         fields = ('id', 'name', 'modified', 'root_model', 'root_model_name',
-                  'displayfield_set', 'distinct')
+                  'displayfield_set', 'distinct', 'user_created',
+                  'user_modified')
 
     def update(self, instance, validated_data):
         displayfields_data = validated_data.pop('displayfield_set')

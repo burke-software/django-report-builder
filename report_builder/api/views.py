@@ -4,9 +4,14 @@ from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ReportNestedSerializer, ReportSerializer
-from report_builder.models import Report
+from .serializers import ReportNestedSerializer, ReportSerializer, FormatSerializer
+from report_builder.models import Report, Format
 from report_utils.mixins import GetFieldsMixin, DataExportMixin
+
+
+class FormatViewSet(viewsets.ModelViewSet):
+    queryset = Format.objects.all()
+    serializer_class = FormatSerializer
 
 
 class ReportViewSet(viewsets.ModelViewSet):
@@ -18,6 +23,12 @@ class ReportNestedViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportNestedSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user_created=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user_modified=self.request.user)
+
 
 class RelatedFieldsView(GetFieldsMixin, APIView):
     """ Get related fields from an ORM model
@@ -25,7 +36,7 @@ class RelatedFieldsView(GetFieldsMixin, APIView):
     def get_data_from_request(self, request):
         self.model = request.DATA['model']
         self.path = request.DATA['path']
-        self.path_verbose = request.DATA['path_verbose']
+        self.path_verbose = request.DATA.get('path_verbose', '')
         self.field = request.DATA['field']
         self.model_class = ContentType.objects.get(pk=self.model).model_class()
 
@@ -70,6 +81,8 @@ class FieldsView(RelatedFieldsView):
                 'name': new_field.name,
                 'field': new_field.name,
                 'field_verbose': verbose_name,
+                'path': field_data['path'],
+                'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,
             }]
         return Response(result)

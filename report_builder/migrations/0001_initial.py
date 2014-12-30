@@ -5,6 +5,12 @@ from django.db import models, migrations
 from django.conf import settings
 
 
+def add_initial_data(apps, schema_editor):
+    Format = apps.get_model("report_builder", "Format")
+    Format.objects.get_or_create(name="US Currency", sting="${:20,.2f}")
+    Format.objects.get_or_create(name="ISO Date", sting="{:%Y-%m-%d}")
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -104,4 +110,5 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(to='report_builder.Report'),
             preserve_default=True,
         ),
+        migrations.RunPython(add_initial_data),
     ]

@@ -245,6 +245,8 @@ class ExportToReport(DownloadXlsxView, TemplateView):
         ctx['admin_url'] = self.request.GET.get('admin_url', '/')
         ct = ContentType.objects.get_for_id(self.request.GET['ct'])
         ids = self.request.GET['ids'].split(',')
+        ctx['ids'] = ",".join(map(str, ids))
+        ctx['ct'] = ct.id
         ctx['number_objects'] = len(ids)
         ctx['object_list'] = Report.objects.filter(root_model=ct).order_by('-modified')
         ctx['mode'] = ct.model_class()._meta.verbose_name

@@ -13,6 +13,10 @@ reportBuilderApp.controller('addCtrl', function ($scope, $location, reportServic
 
 reportBuilderApp.controller('homeCtrl', function ($scope, $routeParams, $location, $mdSidenav, reportService) {
     $scope.static = static
+    $scope.reportData = {};
+    reportService.getFormats().then(function(data) {
+        $scope.formats = data;
+    });
     $scope.tabData = {
         selectedIndex: 0,
     };
@@ -48,6 +52,7 @@ reportBuilderApp.controller('homeCtrl', function ($scope, $routeParams, $locatio
         reportService.getReport(reportId).then(function(report) {
             $scope.fields_header = report.root_model_name;
             $scope.report = report;
+            $scope.report.lastSaved = null;
             root_related_field = {
                 verbose_name: report.root_model_name,
                 field_name: '',
@@ -83,6 +88,9 @@ reportBuilderApp.service('reportService', ['Restangular', function(Restangular) 
   function getFields(data) {
     return Restangular.all('fields').post(data);
   }
+  function getFormats(){
+    return Restangular.all('formats').getList();
+  }
   function options(){
     return reports.options();
   }
@@ -100,6 +108,7 @@ reportBuilderApp.service('reportService', ['Restangular', function(Restangular) 
     getReport: getReport,
     getRelatedFields: getRelatedFields,
     getFields: getFields,
+    getFormats: getFormats,
     options: options,
     create: create,
     getList: getList,
@@ -121,7 +130,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
     $scope.help_text = '';
 
     $scope.load_fields = function(field) {
-        data = {"model": field.model_id, "path":field.path, "path_verbose": "", "field": field.field_name}
+        data = {"model": field.model_id, "path":field.path, "path_verbose": field.path_verbose, "field": field.field_name}
         $scope.help_text = field.help_text;
         $scope.fields_header = field.verbose_name;
         reportService.getFields(data).then(function (result) {
@@ -132,7 +141,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
     $scope.toggle_related_fields = function(node){
         field = node.$nodeScope.$modelValue;
         parent_field = node.$parent.$modelValue;
-        data = {"model": field.model_id, "path": parent_field.path, "path_verbose": "", "field": field.field_name}
+        data = {"model": field.model_id, "path": parent_field.path, "field": field.field_name}
         reportService.getRelatedFields(data).then(function (result) {
             field.related_fields = result;
         });
@@ -154,25 +163,32 @@ reportBuilderApp.controller('ReportDisplayCtrl', function($scope){
     };
 });
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService){
-    $scope.lastSaved = null;
-    $scope.reportData = {}
     $scope.getPreview = function() {
+        $scope.reportData.statusMessage = null;
         $scope.reportData.refresh = true;
         reportService.getPreview($scope.report.id).then(function(data) {
             columns = [];
             angular.forEach(data.meta.titles, function(value) {
                 columns.push({'title': value});
             });
-
             $scope.reportData.items = data;
             $scope.reportData.columns = columns;
             $scope.reportData.refresh = false;
+        }, function(response) {
+            $scope.reportData.refresh = false; 
+            $scope.reportData.statusMessage = "Error with status code " + response.status;
         });
     };
 
     $scope.save = function() {
+        angular.forEach($scope.report.displayfield_set, function(value, index) {
+            value.position = index;   
+            if (value.sort === "") {
+                value.sort = null;
+            }
+        });
         $scope.report.save().then(function (result) {
-            $scope.lastSaved = new Date();
+            $scope.report.lastSaved = new Date();
             $mdToast.show(
               $mdToast.simple()
                 .content('Report Saved!')
@@ -206,7 +222,9 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
                                 $scope.workerStatus = 'Waiting on worker. State is ' + check_data.state;
                                 $scope.workerState = check_data.state;
                                 attempts += 1;
-                                $timeout(checkPoller, 1000 + (500 * attempts));
+                                if (check_data.state !== "FAILURE") {
+                                    $timeout(checkPoller, 1000 + (500 * attempts));
+                                }
                             }
                         })
                     };
