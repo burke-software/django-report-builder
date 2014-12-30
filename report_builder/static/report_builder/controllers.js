@@ -14,6 +14,9 @@ reportBuilderApp.controller('addCtrl', function ($scope, $location, reportServic
 reportBuilderApp.controller('homeCtrl', function ($scope, $routeParams, $location, $mdSidenav, reportService) {
     $scope.static = static
     $scope.reportData = {};
+    reportService.filterFieldOptions().then(function(options){
+      $scope.filterFieldOptions = options.actions.POST;
+    });
     reportService.getFormats().then(function(data) {
         $scope.formats = data;
     });
@@ -94,6 +97,9 @@ reportBuilderApp.service('reportService', ['Restangular', function(Restangular) 
   function options(){
     return reports.options();
   }
+  function filterFieldOptions(){
+    return Restangular.all('filterfields').options();
+  }
   function create(data) {
     return reports.post(data);
   }
@@ -110,6 +116,7 @@ reportBuilderApp.service('reportService', ['Restangular', function(Restangular) 
     getFields: getFields,
     getFormats: getFormats,
     options: options,
+    filterFieldOptions: filterFieldOptions,
     create: create,
     getList: getList,
     getPreview: getPreview
@@ -153,7 +160,11 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
 
     $scope.add_field = function(field) {
         field.report = $scope.report.id;
-        $scope.report.displayfield_set.push(field);
+        if ($scope.tabData.selectedIndex === 0) {
+            $scope.report.displayfield_set.push(angular.copy(field));
+        } else if ($scope.tabData.selectedIndex === 1) {
+            $scope.report.filterfield_set.push(angular.copy(field));
+        }
     };
 });
 
@@ -164,7 +175,9 @@ reportBuilderApp.controller('ReportDisplayCtrl', function($scope){
 });
 
 reportBuilderApp.controller('ReportFilterCtrl', function($scope){
-    
+    $scope.deleteField = function(field) {
+        field.remove();
+    };
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService){
@@ -192,13 +205,24 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
                 value.sort = null;
             }
         });
+        angular.forEach($scope.report.filterfield_set, function(value, index) {
+            value.position = index;   
+        });
         $scope.report.save().then(function (result) {
             $scope.report.lastSaved = new Date();
+            $scope.reportData.reportErrors = null;
             $mdToast.show(
               $mdToast.simple()
                 .content('Report Saved!')
                 .hideDelay(1000)
             );
+        }, function(response) {
+            $mdToast.show(
+              $mdToast.simple()
+                .content('Unable to Save!')
+                .hideDelay(1000)
+            );
+            $scope.reportData.reportErrors = response.data;
         });
     };
 

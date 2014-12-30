@@ -9,6 +9,7 @@ router = routers.DefaultRouter()
 router.register(r'reports', api_views.ReportViewSet)
 router.register(r'report', api_views.ReportNestedViewSet)
 router.register(r'formats', api_views.FormatViewSet)
+router.register(r'filterfields', api_views.FilterFieldViewSet)
 
 urlpatterns = patterns('',
     url('^report/(?P<pk>\d+)/download_xlsx/$',  views.DownloadXlsxView.as_view(), name="report_download_xlsx"),

@@ -49,6 +49,7 @@ class ReportNestedSerializer(ReportSerializer):
 
     def update(self, instance, validated_data):
         displayfields_data = validated_data.pop('displayfield_set')
+        filterfields_data = validated_data.pop('filterfield_set')
 
         with transaction.atomic():
             instance.name = validated_data.get('name', instance.name)
@@ -61,4 +62,10 @@ class ReportNestedSerializer(ReportSerializer):
                 for key, value in displayfield_data.items():
                     setattr(display_field, key, value)
                 display_field.save()
+            instance.filterfield_set.all().delete()
+            for filterfield_data in filterfields_data:
+                filter_field = FilterField()
+                for key, value in filterfield_data.items():
+                    setattr(filter_field, key, value)
+                filter_field.save()
         return instance

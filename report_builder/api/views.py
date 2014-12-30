@@ -4,8 +4,10 @@ from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ReportNestedSerializer, ReportSerializer, FormatSerializer
-from report_builder.models import Report, Format
+from .serializers import (
+    ReportNestedSerializer, ReportSerializer, FormatSerializer,
+    FilterFieldSerializer)
+from report_builder.models import Report, Format, FilterField
 from report_utils.mixins import GetFieldsMixin, DataExportMixin
 
 
@@ -13,6 +15,11 @@ class FormatViewSet(viewsets.ModelViewSet):
     queryset = Format.objects.all()
     serializer_class = FormatSerializer
 
+
+class FilterFieldViewSet(viewsets.ModelViewSet):
+    queryset = FilterField.objects.all()
+    serializer_class = FilterFieldSerializer
+    
 
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()

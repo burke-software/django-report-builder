@@ -20,13 +20,14 @@
                 {{ field.field_verbose }}
             </div>
             <div flex="">
-        
+              <select ng-model="field.filter_type" ng-options="item.value as item.display_name for item in filterFieldOptions.filter_type.choices">
+              </select>
              </div>
             <div flex="">
-        
+              <input type="text" ng-model="field.filter_value"></input>
              </div>
             <div flex="">
-        
+              <md-checkbox ng-model="field.exclude" aria-label="Exclude?"></md-checkbox>
              </div>
           </ng-form>
         </div>
