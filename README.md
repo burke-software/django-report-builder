@@ -11,13 +11,13 @@ Targets sys admins and capable end users who might not be able to program or gai
 # News
 
 3.0 has been released which features a rewritten user interface! 
-For the old see the 2.x branch.
+For the old see the [2.x] branch.
 
 ## 3.0 Changes
 
 - Frontend redone in angular and material design
 - Async report status
-- Requires Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x branch](https://github.com/burke-software/django-report-builder/tree/2.x) instead. I will continue to accept pull requests for 2.x however new features will be added only in 3.x
+- Requires Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x] branch instead. I will continue to accept pull requests for 2.x however new features will be added only in 3.x
 - Responsive
 - API built with DRF - in theory you could impliment your own frontend
  
@@ -45,7 +45,7 @@ There's actually no schema changes at all - but you'll want to be in sync with t
 
 # What is Django Report Builder?
 
-![](https://raw.github.com/burke-software/django-report-builder/master/screenshots/reportbuilderscreen.png)
+![](docs/screenshots/reportbuilderscreen.png)
 
 ## Features
 
@@ -73,3 +73,5 @@ You may want to edit fig.yml to comment/uncomment the django-report-utils line. 
 # Discussion
 
 Let us know your thoughts at https://google.com/+Burkesoftware
+
+[2.x]: https://github.com/burke-software/django-report-builder/tree/2.x
