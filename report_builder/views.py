@@ -2,43 +2,21 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.contrib.admin.views.decorators import staff_member_required
-
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:
-    from django.contrib.auth.models import User
-
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.db.models import Q
-from django.db.models.fields.related import ReverseManyRelatedObjectsDescriptor
-from django.forms.models import inlineformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import (
-    render_to_response,
-    redirect,
-    get_object_or_404,
-    render)
-from django.template import RequestContext
-from .models import Report, DisplayField, FilterField, Format
-from .utils import (
-    javascript_date_format,
-    duplicate,
-)
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import TemplateView, View
-from django import forms
 
-from report_utils.model_introspection import get_relation_fields_from_model
-from report_utils.mixins import GetFieldsMixin, DataExportMixin
+from .utils import duplicate
+from .models import Report
+from report_utils.mixins import DataExportMixin
 
-import warnings
 import datetime
 import time
 import re
 from decimal import Decimal
-from numbers import Number
 import copy
 from dateutil import parser
 import json
@@ -258,7 +236,8 @@ class ExportToReport(DownloadXlsxView, TemplateView):
             ids = self.request.GET['ids'].split(',')
             report = get_object_or_404(Report, pk=request.GET['download'])
             queryset = ct.model_class().objects.filter(pk__in=ids)
-            return self.process_report(report.id, request.user.pk, to_response=True, queryset=queryset)
+            return self.process_report(
+                report.id, request.user.pk, to_response=True, queryset=queryset)
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
 

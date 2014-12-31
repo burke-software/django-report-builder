@@ -1,19 +1,23 @@
 <div id="reportapp" layout="column" layout-fill="">
   <section layout="row" flex="">
     <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-lg')">
-      <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools">Reports</h1>
-      </md-toolbar>
-      <md-content class="md-padding" ng-controller="LeftCtrl">
-        <div layout="row" layout-align="end center">
-          <md-button class="md-raised"><a href="/report_builder/report/add/">New Report</a></md-button>
-        </div>
-        <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
-        <ul>
-          <li ng-repeat="report in reports | filter:searchReports">
-            <a ng-click="openReport(report.id)">{{ report.name }}</a>
-          </li>
-        </ul>
+      <md-content style="height: 100%; overflow-y: auto;">
+        <md-toolbar md-scroll-shrink>
+          <h1 class="md-toolbar-tools">Reports</h1>
+        </md-toolbar>
+        <md-content class="md-padding" ng-controller="LeftCtrl">
+          <div layout="row" layout-align="end center">
+            <md-button class="md-raised"><a href="/report_builder/report/add/">New Report</a></md-button>
+          </div>
+          <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
+          <md-list>
+            <md-item ng-repeat="report in reports | filter:searchReports">
+              <md-item-content>
+                <a ng-click="openReport(report.id)">{{ report.name }}</a>
+              </md-item-content>
+            </md-item>
+          </md-list>
+        </md-content>
       </md-content>
     </md-sidenav>
     <div flex="">
@@ -68,10 +72,7 @@
               <div ng-include="static('report_builder/partials/show_report.html')"></div>
           </div>
           <div role="tabpanel" id="tab4-content" aria-labelledby="tab3" ng-switch-when="3" md-swipe-left="next()" md-swipe-right="previous()">
-            <md-checkbox ng-model="report.distinct" aria-label="Is Distinct">
-              Is Distinct (Maybe help reduce duplicates rows) 
-            </md-checkbox>
-            Read <a href="//docs.djangoproject.com/en/1.7/ref/models/querysets/#django.db.models.query.QuerySet.distinct">more.</a>
+              <div ng-include="static('report_builder/partials/options.html')"></div>
           </div>
         </ng-switch>
       </md-content>

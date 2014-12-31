@@ -43,9 +43,11 @@ class ReportNestedSerializer(ReportSerializer):
 
     class Meta:
         model = Report
-        fields = ('id', 'name', 'modified', 'root_model', 'root_model_name',
-                  'displayfield_set', 'distinct', 'user_created',
-                  'user_modified', 'filterfield_set')
+        fields = (
+            'id', 'name', 'modified', 'root_model', 'root_model_name',
+            'displayfield_set', 'distinct', 'user_created', 'user_modified',
+            'filterfield_set', 'report_file', 'report_file_creation')
+        read_only_fields = ('report_file', 'report_file_creation')
 
     def update(self, instance, validated_data):
         displayfields_data = validated_data.pop('displayfield_set')

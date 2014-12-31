@@ -69,6 +69,9 @@ g}
   min-width: 5em; 
 }
 
+.col_filter_type {
+  min-width: 14em;
+}
 input[type="text"] {
   width: 100%; 
   box-sizing: border-box;
