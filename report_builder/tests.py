@@ -1,10 +1,12 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.test.client import Client
-from .models import Report, DisplayField
+from .models import Report, DisplayField, FilterField
 from .views import *
 from django.conf import settings
-from report_utils.model_introspection import get_properties_from_model, get_direct_fields_from_model
+from report_utils.model_introspection import (
+    get_properties_from_model, get_direct_fields_from_model,
+    get_relation_fields_from_model)
 
 try:
     from django.contrib.auth import get_user_model
