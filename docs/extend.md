@@ -1,7 +1,4 @@
-.. _extend:
-
-Extending and integrating django-report-builder
-===============================================
+#Extending and integrating django-report-builder
 
 Format 
 ------
@@ -17,9 +14,4 @@ a few formats for you.
 Integrations
 ------------
 
-Give django-report-builder a native look and feel. django-sis shows a good example of a django-grappelli
-like style.
-
-https://github.com/burke-software/django-sis/tree/master/templates/report_builder
-
-Note I use django-apptemplates in this example to specify which app template I'm extending.
+Coming Soon - but basically extend the django templates.
