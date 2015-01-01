@@ -1,6 +1,6 @@
-<div id="reportapp" layout="column" layout-fill="">
-  <section layout="row" flex="">
-    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-lg')">
+<div class="fullheight" id="reportapp" layout="column" layout-fill="">
+  <section class="fullheight" layout="row" flex="">
+    <md-sidenav class="fullheight" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-lg')">
       <md-content style="height: 100%; overflow-y: auto;">
         <md-toolbar md-scroll-shrink>
           <h1 class="md-toolbar-tools">Reports</h1>
@@ -20,7 +20,7 @@
         </md-content>
       </md-content>
     </md-sidenav>
-    <div flex="">
+    <div class="fullheight" flex="">
       <md-toolbar class="md-theme-indigo">
         <h1 class="md-toolbar-tools">
           <md-text-float label="Name" ng-model="report.name" class="long"></md-text-float>
@@ -28,61 +28,62 @@
           <span>Last Updated: {{ report.modified }}</span>
         </h1>
       </md-toolbar>
-      <md-content class="">
+      <md-content style="height: calc(100% - 64px)">
         <md-tabs class="md-accent md-hue-2" md-selected="tabData.selectedIndex">
           <md-tab id="tab1" aria-controls="tab1-content">Display</md-tab>
           <md-tab id="tab2" aria-controls="tab2-content">Filter</md-tab>
           <md-tab id="tab3" aria-controls="tab3-content">Report</md-tab>
           <md-tab id="tab4" aria-controls="tab3-content">Options</md-tab>
         </md-tabs>
-        <ng-switch on="tabData.selectedIndex" class="tabpanel-container">
-          <div style="height: calc(100% - 112px); overflow-y: auto;" role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
-            <div ui-tree="" ng-controller="ReportDisplayCtrl">
-              <div layout="row">
-                <div class="move_trash" flex=""></div>
-                <div flex="">Field</div>
-                <div flex="">Name</div>
-                <div class="col_sort" flex="">Sort</div>
-                <div class="col_aggregate" flex="">Aggregate</div>
-                <div class="col_format" flex="">Format</div>
-                <div class="col_checkbox" flex="">Total</div>
-                <div class="col_checkbox" flex="">Group</div>
+        <div style="height: calc(100% - 48px); overflow-y: auto;">
+          <ng-switch on="tabData.selectedIndex" class="tabpanel-container">
+            <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+              <div ui-tree="" ng-controller="ReportDisplayCtrl">
+                <div layout="row">
+                  <div class="move_trash" flex=""></div>
+                  <div flex="">Field</div>
+                  <div flex="">Name</div>
+                  <div class="col_sort" flex="">Sort</div>
+                  <div class="col_aggregate" flex="">Aggregate</div>
+                  <div class="col_format" flex="">Format</div>
+                  <div class="col_checkbox" flex="">Total</div>
+                  <div class="col_checkbox" flex="">Group</div>
+                </div>
+                <div>
+                  <ol ui-tree-nodes="" ng-model="report.displayfield_set">
+                    <li class="field" data-collapsed="false" ng-repeat="field in report.displayfield_set" ui-tree-node="">
+                      <div layout-align="center center" ng-include="static('report_builder/partials/display_field.html')"></div>
+                    </li>
+                  </ol>
+                </div>
               </div>
-              <div>
-                <ol ui-tree-nodes="" ng-model="report.displayfield_set">
-                  <li class="field" data-collapsed="false" ng-repeat="field in report.displayfield_set" ui-tree-node="">
-                    <div layout-align="center center" ng-include="static('report_builder/partials/display_field.html')"></div>
-                  </li>
-                </ol>
+              <div hide-gt-lg layout="row" layout-sm="column" layout-align="center center" style="height: 55px;">
+                <md-button class="fullscreen" ng-click="requestFullscreen()" aria-label="Fullscreen">
+                  Fullscreen
+                </md-button>
               </div>
-            </div>
-            <div hide-gt-lg layout="row" layout-sm="column" layout-align="center center" style="height: 55px;">
-              <md-button class="fullscreen" ng-click="requestFullscreen()" aria-label="Fullscreen">
-                Fullscreen
+              <md-button hide-gt-md class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
+                <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
               </md-button>
             </div>
-            <md-button hide-gt-md class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
-              <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
-            </md-button>
-          </div>
-          <div style="height: calc(100% - 112px); overflow-y: auto;" role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
-            <div ng-include="static('report_builder/partials/filters.html')"></div>
-          </div>
-          <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">
-              <div ng-include="static('report_builder/partials/show_report.html')"></div>
-          </div>
-          <div role="tabpanel" id="tab4-content" aria-labelledby="tab3" ng-switch-when="3" md-swipe-left="next()" md-swipe-right="previous()">
-              <div ng-include="static('report_builder/partials/options.html')"></div>
-          </div>
-        </ng-switch>
+            <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+              <div ng-include="static('report_builder/partials/filters.html')"></div>
+            </div>
+            <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">
+                <div ng-include="static('report_builder/partials/show_report.html')"></div>
+            </div>
+            <div role="tabpanel" id="tab4-content" aria-labelledby="tab3" ng-switch-when="3" md-swipe-left="next()" md-swipe-right="previous()">
+                <div ng-include="static('report_builder/partials/options.html')"></div>
+            </div>
+          </ng-switch>
+        </div>
       </md-content>
       <md-button hide-gt-lg class="md-fab md-fab-bottom-left" ng-click="reports_list_menu()" aria-label="Reports List">
         <md-icon icon="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
     </div>
-    <md-sidenav ng-show="showFields" md-is-locked-open="$media('gt-md')" class="md-sidenav-right md-whiteframe-z1" md-component-id="right">
-      <div layout="column" layout-fill="">
-        <div ng-include="static('report_builder/partials/fields.html')"></div>
+    <md-sidenav class="fullheight" ng-show="showFields" md-is-locked-open="$media('gt-md')" class="md-sidenav-right md-whiteframe-z1" md-component-id="right">
+      <div class="fullheight" layout="column" layout-fill="" ng-include="static('report_builder/partials/fields.html')">
       </div>
     </md-sidenav>
   </section>

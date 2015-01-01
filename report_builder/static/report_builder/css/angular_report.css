@@ -1,6 +1,6 @@
-html,body {
-      height:100%;
-    }
+html, body, .fullheight {
+   height: 100%;
+}
 .btn {
     margin-right: 8px;
 }
