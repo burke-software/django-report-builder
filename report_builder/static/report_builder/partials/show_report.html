@@ -1,4 +1,4 @@
-<md-content ng-controller="ReportShowCtrl">
+<md-content class="fullheight" ng-controller="ReportShowCtrl">
     <div>
         <md-button ng-click="save()">Save</md-button>
         <md-button ng-click="getPreview()">Preview</md-button>
@@ -10,7 +10,7 @@
             Saved {{ report.lastSaved | date:"MM/dd/yyyy 'at' h:mma" }}
         </span>
     </div>
-    <div layout="column" layout-margin style="padding:5px;">
+    <div style="height: calc(100% - 31px);">
         <div ng-if="workerStatus">
             {{ workerStatus }}
             <div ng-if="workerState == 'PENDING'">
@@ -53,7 +53,7 @@
                 </ul>
             </div>
         </div>
-        <div style="padding: 2px;" ng-if="reportData.refresh == false">
+        <div class="fullheight" style="width:100%; overflow: auto" ng-if="reportData.refresh == false">
             <hot-table id="previewTable"
                 columnHeaders="true"
                 settings="htSettings"

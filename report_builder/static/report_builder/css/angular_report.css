@@ -113,3 +113,11 @@ body {
 .searchInput {
     margin-top: 5px;
 }
+
+
+.handsontable table.htCore {
+    padding-top: 0px;
+}
+.ht_clone_top {
+    z-index: 58;
+}
