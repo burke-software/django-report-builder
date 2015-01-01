@@ -1,6 +1,6 @@
 <div class="fullheight" id="reportapp" layout="column" layout-fill="">
   <section class="fullheight" layout="row" flex="">
-    <md-sidenav class="fullheight" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-lg')">
+    <md-sidenav class="fullheight md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-lg')">
       <md-content style="height: 100%; overflow-y: auto;">
         <md-toolbar md-scroll-shrink>
           <h1 class="md-toolbar-tools">Reports</h1>
@@ -82,7 +82,7 @@
         <md-icon icon="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
     </div>
-    <md-sidenav class="fullheight" ng-show="showFields" md-is-locked-open="$media('gt-md')" class="md-sidenav-right md-whiteframe-z1" md-component-id="right">
+    <md-sidenav ng-show="showFields" md-is-locked-open="$media('gt-md')" class="fullheight md-sidenav-right md-whiteframe-z1" md-component-id="right">
       <div class="fullheight" layout="column" layout-fill="" ng-include="static('report_builder/partials/fields.html')">
       </div>
     </md-sidenav>
