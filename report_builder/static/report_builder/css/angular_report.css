@@ -9,7 +9,6 @@ html, body, .fullheight {
     background: #f8faff;
     border: 1px solid #dae2ea;
     color: #7c9eb2;
-    align-items: center;
 }
 
 .field:hover {
@@ -41,7 +40,6 @@ html, body, .fullheight {
 
 .angular-ui-tree-node {
   padding-left: 4px;
-  padding-right: 10px;
 }
 
 div.col_sort {

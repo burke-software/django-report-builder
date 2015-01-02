@@ -6,10 +6,8 @@
           <h1 class="md-toolbar-tools">Reports</h1>
         </md-toolbar>
         <md-content class="md-padding" ng-controller="LeftCtrl">
-          <div layout="row" layout-align="end center">
-            <md-button class="md-raised"><a href="/report_builder/report/add/">New Report</a></md-button>
-          </div>
           <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
+          <a ng-href="/report_builder/report/add/">New Report</a>
           <md-list>
             <md-item ng-repeat="report in reports | filter:searchReports">
               <md-item-content>

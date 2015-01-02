@@ -5,10 +5,11 @@
           <span class="caps">{{ report.root_model_name }} Relations</span>
       </div>
     </md-toolbar>  
+    <input placeholder="Search Relations" style="width: 100%" ng-model="searchRelations"></input>
     <md-content>
       <div ui-tree data-drag-enabled="false">
       <ol ui-tree-nodes="" ng-model="related_fields">
-        <li class="field" data-collapsed="false" ng-include="'/static/report_builder/partials/node_renderer.html'" ng-repeat="field in related_fields" ui-tree-node>
+        <li data-collapsed="false" ng-include="'/static/report_builder/partials/node_renderer.html'" ng-repeat="field in related_fields | filter:searchRelations" ui-tree-node>
         </li>
       </ol>
       </div>
@@ -21,11 +22,12 @@
         <span class="caps">{{ fields_header }} Fields</span>
       </div>
     </md-toolbar>  
+    <input placeholder="Search Fields" style="width: 100%" ng-model="searchFields"></input>
     <md-content>
       <div ui-tree data-drag-enabled="false">
       <ol ui-tree-nodes="" ng-model="fields">
-        <li class="field" data-collapsed="false" ng-repeat="field in fields" ui-tree-node>
-          <div ui-tree-handle layout="row">
+        <li class="field" data-collapsed="false" ng-repeat="field in fields | filter:searchFields" ui-tree-node>
+          <div ui-tree-handle layout="row" style="margin-right: 7px;">
             <div class="caps" flex ng-click="click_field(field)">
               {{field.field_verbose}}
             </div>
