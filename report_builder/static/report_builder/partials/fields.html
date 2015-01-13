@@ -9,7 +9,7 @@
     <md-content>
       <div ui-tree data-drag-enabled="false">
       <ol ui-tree-nodes="" ng-model="related_fields">
-        <li data-collapsed="false" ng-include="'/static/report_builder/partials/node_renderer.html'" ng-repeat="field in related_fields | filter:searchRelations" ui-tree-node>
+        <li data-collapsed="false" ng-include="static('report_builder/partials/node_renderer.html')" ng-repeat="field in related_fields | filter:searchRelations" ui-tree-node>
         </li>
       </ol>
       </div>
