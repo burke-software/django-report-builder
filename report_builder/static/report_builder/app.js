@@ -1,5 +1,9 @@
 var reportBuilder = angular.module('reportBuilder', ['ngRoute', 'restangular', 'ngMaterial', 'ui.tree', 'ngHandsontable']);
 
+reportBuilder.config(function($sceProvider) {
+   $sceProvider.enabled(false);
+});
+
 reportBuilder.config(function(RestangularProvider) {
     RestangularProvider.setBaseUrl("/report_builder/api");
     RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
