@@ -7,7 +7,7 @@
         </md-toolbar>
         <md-content class="md-padding" ng-controller="LeftCtrl">
           <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
-          <a ng-href="/report_builder/report/add/">New Report</a>
+          <a ng-href="{{BASE_URL + 'report/add/'}}">New Report</a>
           <md-list>
             <md-item ng-repeat="report in reports | filter:searchReports">
               <md-item-content>

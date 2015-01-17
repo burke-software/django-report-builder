@@ -3,7 +3,7 @@
 
 {% block report_header %}
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <base href="/report_builder/">
+    <base href="{% url 'report_builder' %}">
     
     <script src="{% static 'report_builder/bower_components/angular/angular.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
@@ -14,6 +14,7 @@
       var STATIC_URL = '{{ STATIC_URL|escapejs }}';
       var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
       var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
+      var BASE_URL = "{% url 'report_builder' %}";
     </script>
 
     <script src="{% static 'report_builder/app.js' %}"></script>

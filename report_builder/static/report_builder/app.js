@@ -5,7 +5,7 @@ reportBuilder.config(function($sceProvider) {
 });
 
 reportBuilder.config(function(RestangularProvider) {
-    RestangularProvider.setBaseUrl("/report_builder/api");
+    RestangularProvider.setBaseUrl(BASE_URL + "api");
     RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
       var extractedData;
       if (operation === "getList" && _.has(data, 'meta')) {
