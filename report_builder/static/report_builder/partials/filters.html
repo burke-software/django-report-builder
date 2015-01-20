@@ -8,38 +8,19 @@
   </div>
   <div>
     <ol ui-tree-nodes="" ng-model="report.filterfield_set">
-      <li class="field" data-collapsed="false" ng-repeat="field in report.filterfield_set" ui-tree-node="">
-        <div layout-align="center center">
-          <ng-form layout="row" layout-align="center center">
-            <div class="move_trash" flex="">
-                <img ui-tree-handle="" src="{{ static('report_builder/img/reorder.svg') }}"></img>
-                <img ng-click="deleteField(this)" src="{{ static('report_builder/img/delete.svg') }}"></img>
-            </div>
-            <div flex="" class="caps">
-                <span ng-if="field.path_verbose">({{ field.path_verbose }}) </span>
-                {{ field.field_verbose }}
-            </div>
-            <div class="col_filter_type" flex="">
-              <select ng-model="field.filter_type" ng-options="item.value as item.display_name for item in filterFieldOptions.filter_type.choices">
-              </select>
-             </div>
-            <div flex="">
-              <input type="text" ng-model="field.filter_value"></input>
-             </div>
-            <div class="col_checkbox" flex="">
-              <md-checkbox ng-model="field.exclude" aria-label="Exclude?"></md-checkbox>
-             </div>
-          </ng-form>
-        </div>
+      <li data-collapsed="false" ng-include="static('report_builder/partials/filter_renderer.html')" ng-repeat="field in report.filterfield_set" ui-tree-node>
       </li>
     </ol>
   </div>
-<div hide-gt-lg layout="row" layout-sm="column" layout-align="center center" style="height: 55px;">
-  <md-button class="fullscreen" ng-click="requestFullscreen()" aria-label="Fullscreen">
-    Fullscreen
+  <div>
+    <md-button ng-click="addFilterGroup()" class="md-raised">Add filter group</md-button>
+  </div>
+  <div hide-gt-lg layout="row" layout-sm="column" layout-align="center center" style="height: 55px;">
+    <md-button class="fullscreen" ng-click="requestFullscreen()" aria-label="Fullscreen">
+      Fullscreen
+    </md-button>
+  </div>
+  <md-button hide-gt-md class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
+      <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
   </md-button>
-</div>
-<md-button hide-gt-md class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
-    <md-icon icon="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
-</md-button>
 </div>
