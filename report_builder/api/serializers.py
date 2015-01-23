@@ -22,7 +22,10 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
 class FilterFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = FilterField
-        read_only_fields = ('id',)
+        fields = ('id', 'path', 'path_verbose', 'field', 'field_verbose',
+                  'field_type', 'filter_type', 'filter_value', 'filter_value2',
+                  'exclude', 'position', 'report')
+        read_only_fields = ('id', 'field_type')
 
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
@@ -49,13 +52,23 @@ class ReportNestedSerializer(ReportSerializer):
             'filterfield_set', 'report_file', 'report_file_creation')
         read_only_fields = ('report_file', 'report_file_creation')
 
+    def validate(self, data):
+        for filter_field_data in data['filterfield_set']:
+            filter_field = FilterField()
+            for key, value in filter_field_data.items():
+                setattr(filter_field, key, value)
+            filter_field.clean()
+            filter_field_data['filter_value'] = filter_field.filter_value
+        return data
+
     def update(self, instance, validated_data):
         displayfields_data = validated_data.pop('displayfield_set')
         filterfields_data = validated_data.pop('filterfield_set')
 
         with transaction.atomic():
             instance.name = validated_data.get('name', instance.name)
-            instance.distinct = validated_data.get('distinct', instance.distinct)
+            instance.distinct = validated_data.get(
+                'distinct', instance.distinct)
             instance.modified = datetime.date.today()
             instance.save()
             instance.displayfield_set.all().delete()

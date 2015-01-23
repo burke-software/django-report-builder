@@ -19,7 +19,7 @@ class FormatViewSet(viewsets.ModelViewSet):
 class FilterFieldViewSet(viewsets.ModelViewSet):
     queryset = FilterField.objects.all()
     serializer_class = FilterFieldSerializer
-    
+
 
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
@@ -88,6 +88,7 @@ class FieldsView(RelatedFieldsView):
                 'name': new_field.name,
                 'field': new_field.name,
                 'field_verbose': verbose_name,
+                'field_type': new_field.get_internal_type(),
                 'path': field_data['path'],
                 'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,

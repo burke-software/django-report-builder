@@ -53,6 +53,7 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
     reportService.getReport(reportId).then(function(report) {
       $scope.fields_header = report.root_model_name;
       $scope.report = report;
+      console.log(report);
       $scope.report.lastSaved = null;
       root_related_field = {
         verbose_name: report.root_model_name,
@@ -178,7 +179,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
   };
 
   $scope.click_field = function(field) {
-    $scope.help_text = field.help_text;
+    $scope.help_text = '[' + field.field_type + '] ' + field.help_text;
   };
 
   $scope.add_field = function(field) {

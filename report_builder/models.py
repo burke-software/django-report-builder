@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -6,7 +7,6 @@ from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
-from django.db.models.signals import post_save
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
@@ -72,9 +72,13 @@ class Report(models.Model):
                 queryset = queryset.annotate(Sum(display_field.path + display_field.field))
         return queryset
 
+    @property
+    def root_model_class(self):
+        return self.root_model.model_class()
+
     def get_query(self):
         report = self
-        model_class = report.root_model.model_class()
+        model_class = self.root_model_class
         message= ""
 
         # Check for report_builder_model_manger property on the model
@@ -267,6 +271,7 @@ class DisplayField(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class FilterField(models.Model):
     """ A display field to show in a report. Always belongs to a Report
     """
@@ -277,25 +282,25 @@ class FilterField(models.Model):
     field_verbose = models.CharField(max_length=2000)
     filter_type = models.CharField(
         max_length=20,
-        choices = (
-            ('exact','Equals'),
-            ('iexact','Equals (case-insensitive)'),
-            ('contains','Contains'),
-            ('icontains','Contains (case-insensitive)'),
-            ('in','in (comma seperated 1,2,3)'),
-            ('gt','Greater than'),
-            ('gte','Greater than equals'),
-            ('lt','Less than'),
-            ('lte','Less than equals'),
-            ('startswith','Starts with'),
-            ('istartswith','Starts with (case-insensitive)'),
-            ('endswith','Ends with'),
-            ('iendswith','Ends with  (case-insensitive)'),
-            ('range','range'),
-            ('week_day','Week day'),
-            ('isnull','Is null'),
-            ('regex','Regular Expression'),
-            ('iregex','Reg. Exp. (case-insensitive)'),
+        choices=(
+            ('exact', 'Equals'),
+            ('iexact', 'Equals (case-insensitive)'),
+            ('contains', 'Contains'),
+            ('icontains', 'Contains (case-insensitive)'),
+            ('in', 'in (comma seperated 1,2,3)'),
+            ('gt', 'Greater than'),
+            ('gte', 'Greater than equals'),
+            ('lt', 'Less than'),
+            ('lte', 'Less than equals'),
+            ('startswith', 'Starts with'),
+            ('istartswith', 'Starts with (case-insensitive)'),
+            ('endswith', 'Ends with'),
+            ('iendswith', 'Ends with  (case-insensitive)'),
+            ('range', 'range'),
+            ('week_day', 'Week day'),
+            ('isnull', 'Is null'),
+            ('regex', 'Regular Expression'),
+            ('iregex', 'Reg. Exp. (case-insensitive)'),
         ),
         blank=True,
         default = 'icontains',
@@ -303,7 +308,7 @@ class FilterField(models.Model):
     filter_value = models.CharField(max_length=2000)
     filter_value2 = models.CharField(max_length=2000, blank=True)
     exclude = models.BooleanField(default=False)
-    position = models.PositiveSmallIntegerField(blank = True, null = True)
+    position = models.PositiveSmallIntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ['position']
@@ -312,8 +317,12 @@ class FilterField(models.Model):
         if self.filter_type == "range":
             if self.filter_value2 in [None, ""]:
                 raise ValidationError('Range filters must have two values')
+        if self.field_type == "DateField":
+            date_form = forms.DateField()
+            date_value = parser.parse(self.filter_value).date()
+            date_form.clean(date_value)
+            self.filter_value = str(date_value)
         return super(FilterField, self).clean()
-
 
     def get_choices(self, model, field_name):
         try:
@@ -324,11 +333,18 @@ class FilterField(models.Model):
             return model_field.choices
 
     @property
+    def field_type(self):
+        model = get_model_from_path_string(
+            self.report.root_model_class, self.field)
+        return model._meta.get_field_by_name(
+            self.field)[0].get_internal_type()
+
+    @property
     def choices(self):
         if self.pk:
-            model = get_model_from_path_string(self.report.root_model.model_class(), self.path)
+            model = get_model_from_path_string(
+                self.report.root_model.model_class(), self.path)
             return self.get_choices(model, self.field)
 
     def __unicode__(self):
         return self.field
-

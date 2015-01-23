@@ -1,4 +1,4 @@
-var reportBuilder = angular.module('reportBuilder', ['ngRoute', 'restangular', 'ngMaterial', 'ui.tree', 'ngHandsontable']);
+var reportBuilder = angular.module('reportBuilder', ['ngRoute', 'restangular', 'ngMaterial', 'ui.tree', 'ngHandsontable', 'angularPikaday']);
 
 reportBuilder.config(function($sceProvider) {
    $sceProvider.enabled(false);
