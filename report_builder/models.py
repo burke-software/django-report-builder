@@ -108,30 +108,15 @@ class Report(models.Model):
                     filter_string += '__' + filter_field.filter_type
 
                 # Check for special types such as isnull
-                if filter_field.filter_type == "isnull" and filter_field.filter_value == "0":
+                if (filter_field.filter_type == "isnull"
+                        and filter_field.filter_value in ["0", "False"]):
                     filter_ = {filter_string: False}
                 elif filter_field.filter_type == "in":
                     filter_ = {filter_string: filter_field.filter_value.split(',')}
                 else:
-                    # All filter values are stored as strings, but may need to be converted
-                    if '[Date' in filter_field.field_verbose:
-                        filter_value = parser.parse(filter_field.filter_value)
-                        if settings.USE_TZ:
-                            filter_value = timezone.make_aware(
-                                filter_value,
-                                timezone.get_current_timezone()
-                            )
-                        if filter_field.filter_type == 'range':
-                            filter_value = [filter_value, parser.parse(filter_field.filter_value2)]
-                            if settings.USE_TZ:
-                                filter_value[1] = timezone.make_aware(
-                                    filter_value[1],
-                                    timezone.get_current_timezone()
-                                )
-                    else:
-                        filter_value = filter_field.filter_value
-                        if filter_field.filter_type == 'range':
-                            filter_value = [filter_value, filter_field.filter_value2]
+                    filter_value = filter_field.filter_value
+                    if filter_field.filter_type == 'range':
+                        filter_value = [filter_value, filter_field.filter_value2]
                     filter_ = {filter_string: filter_value}
 
                 if not filter_field.exclude:
