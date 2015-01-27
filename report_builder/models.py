@@ -158,7 +158,7 @@ class Report(models.Model):
 
     def download_xlsx(self):
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
-            return mark_safe('<a href="#" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+            return mark_safe('<a href="javascript:void(0)" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
                 self.id,
                 getattr(settings, 'STATIC_URL', '/static/'),
             ))
