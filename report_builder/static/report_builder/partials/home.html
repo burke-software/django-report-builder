@@ -9,7 +9,7 @@
           <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
           <a ng-href="{{BASE_URL + 'report/add/'}}">New Report</a>
           <md-list>
-            <md-item ng-repeat="report in reports | filter:searchReports">
+            <md-item ng-repeat="report in reports | filter:searchReports | orderBy:reportOrder">
               <md-item-content>
                 <a ng-click="openReport(report.id)">{{ report.name }}</a>
               </md-item-content>

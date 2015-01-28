@@ -140,6 +140,8 @@ reportBuilderApp.service('reportService', ['Restangular',
 
 reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidenav, $location, reportService) {
   $scope.reports = reportService.getList().$object;
+  $scope.reportOrder = "name";
+  
   $scope.close = function() {
     $mdSidenav('left').close();
   };
