@@ -120,3 +120,14 @@ body {
 .ht_clone_top {
     z-index: 58;
 }
+
+.sidenav-report-link {
+    text-transform: none !important;
+    border-radius: 0px !important;
+}
+
+.sidenav-report-link .report-meta-data {
+    font-size: 0.8em;
+    color: #bbb;
+    font-style: italic;
+}

@@ -5,13 +5,29 @@
         <md-toolbar md-scroll-shrink>
           <h1 class="md-toolbar-tools">Reports</h1>
         </md-toolbar>
-        <md-content class="md-padding" ng-controller="LeftCtrl">
-          <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
-          <a ng-href="{{BASE_URL + 'report/add/'}}">New Report</a>
+        <md-content ng-controller="LeftCtrl">
+          <div class="md-padding"> 
+            <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
+            <a ng-href="{{BASE_URL + 'report/add/'}}">New Report</a>
+          </div>
           <md-list>
             <md-item ng-repeat="report in reports | filter:searchReports | orderBy:reportOrder">
               <md-item-content>
-                <a ng-click="openReport(report.id)">{{ report.name }}</a>
+                <md-button layout-fill ng-click="openReport(report.id)" class="sidenav-report-link md-primary">
+                  <div layout="column" layout-align="center start">
+                    <div>{{ report.name }}</div>
+                    <div layout="row" layout-fill class="report-meta-data">
+                      <div layout="column" layout-align="center start" flex="50">
+                        <div>
+                          {{ report.user_created.first_name }} {{ report.user_created.last_name }}
+                        </div>
+                      </div>
+                      <div layout="column" layout-align="center end" flex="50">
+                        <div>edited: {{ report.modified }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </md-button>
               </md-item-content>
             </md-item>
           </md-list>
