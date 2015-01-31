@@ -53,12 +53,13 @@ class ReportNestedSerializer(ReportSerializer):
         read_only_fields = ('report_file', 'report_file_creation')
 
     def validate(self, data):
-        for filter_field_data in data['filterfield_set']:
-            filter_field = FilterField()
-            for key, value in filter_field_data.items():
-                setattr(filter_field, key, value)
-            filter_field.clean()
-            filter_field_data['filter_value'] = filter_field.filter_value
+        if 'filterfield_set' in data:
+            for filter_field_data in data['filterfield_set']:
+                filter_field = FilterField()
+                for key, value in filter_field_data.items():
+                    setattr(filter_field, key, value)
+                filter_field.clean()
+                filter_field_data['filter_value'] = filter_field.filter_value
         return data
 
     def update(self, instance, validated_data):

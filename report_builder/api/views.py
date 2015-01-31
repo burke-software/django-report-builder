@@ -80,6 +80,23 @@ class FieldsView(RelatedFieldsView):
             self.path,
             self.path_verbose,)
         result = []
+        meta = getattr(self.model_class, 'ReportBuilder', None)
+        if meta is not None:
+            fields = getattr(meta, 'fields', None)
+            exclude = getattr(meta, 'exclude', None)
+            extra = getattr(meta, 'extra', None)
+            if fields is not None:
+                fields = list(fields)
+                for field in field_data['fields']:
+                    if field.name not in fields:
+                        field_data['fields'].remove(field)
+            if exclude is not None:
+                for field in field_data['fields']:
+                    if field.name in exclude:
+                        field_data['fields'].remove(field)
+            if extra is not None:
+                extra = list(extra)
+
         for new_field in field_data['fields']:
             verbose_name = getattr(new_field, 'verbose_name', None)
             if verbose_name == None:
@@ -93,6 +110,28 @@ class FieldsView(RelatedFieldsView):
                 'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,
             }]
+        # Add properties
+        if fields is not None or extra is not None:
+            if fields and extra:
+                extra_fields = list(set(fields + extra))
+            elif fields is not None:
+                extra_fields = fields
+            else:
+                extra_fields = extra
+            for field in extra_fields:
+                field_attr = getattr(self.model_class, field, None)
+                if isinstance(field_attr, property):
+                    result += [{
+                        'name': field,
+                        'field': field,
+                        'field_verbose': field,
+                        'field_type': 'Property',
+                        'path': field_data['path'],
+                        'path_verbose': field_data['path_verbose'],
+                        'help_text': 'Adding this property will '
+                        'significantly increase the time it takes to run a '
+                        'report.'
+                    }]
         return Response(result)
 
 

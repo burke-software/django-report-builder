@@ -7,6 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
+from django.db.models.fields import FieldDoesNotExist
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
@@ -75,6 +76,24 @@ class Report(models.Model):
     @property
     def root_model_class(self):
         return self.root_model.model_class()
+
+    def get_field_type(self, field_name):
+        """ Get field type for given field name
+        """
+        model = get_model_from_path_string(
+            self.root_model_class, field_name)
+
+        # Is it a ORM field?
+        try:
+            return model._meta.get_field_by_name(
+                field_name)[0].get_internal_type()
+        except FieldDoesNotExist:
+            pass
+        # Is it a property?
+        field_attr = getattr(model, field_name, None)
+        if isinstance(field_attr, property):
+            return "Property"
+        return "Invalid"
 
     def get_query(self):
         report = self
@@ -239,6 +258,10 @@ class DisplayField(models.Model):
             return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
 
     @property
+    def field_type(self):
+        return self.report.get_field_type(self.field)
+
+    @property
     def choices_dict(self):
         choices = self.choices
         choices_dict = {}
@@ -319,10 +342,7 @@ class FilterField(models.Model):
 
     @property
     def field_type(self):
-        model = get_model_from_path_string(
-            self.report.root_model_class, self.field)
-        return model._meta.get_field_by_name(
-            self.field)[0].get_internal_type()
+        return self.report.get_field_type(self.field)
 
     @property
     def choices(self):

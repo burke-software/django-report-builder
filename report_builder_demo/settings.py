@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'report_builder_demo.demo_models',
     'report_builder',
     'report_utils',
     'django_extensions',
