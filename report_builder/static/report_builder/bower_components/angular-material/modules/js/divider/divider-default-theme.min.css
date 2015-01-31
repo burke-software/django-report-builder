@@ -2,5 +2,5 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
- */md-divider.md-default-theme{border-top-color:rgba(0,0,0,.12)}
+ * v0.7.0-rc3
+ */md-divider.md-THEME_NAME-theme{border-top-color:'{{foreground-4}}'}

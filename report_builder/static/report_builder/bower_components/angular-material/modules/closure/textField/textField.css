@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.1
  */
 md-input-group label, .md-input-group label {
   display: block;
@@ -35,14 +35,11 @@ md-input-group, .md-input-group {
             transform: translate3d(0, 22px, 0);
     -webkit-transform-origin: left center;
             transform-origin: left center;
-    -webkit-transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1);
-            transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1);
-    -webkit-transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1);
-            transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1); }
+    transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1);
+    transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1); }
   md-input-group input, md-input-group textarea, .md-input-group input, .md-input-group textarea {
     border-bottom-width: 1px;
-    -webkit-transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1);
-            transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1); }
+    transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1); }
   md-input-group.md-input-focused label, .md-input-group.md-input-focused label {
     -webkit-transform: translate3d(0, 4px, 0) scale(0.75);
             transform: translate3d(0, 4px, 0) scale(0.75); }
@@ -72,5 +69,4 @@ md-input-group, .md-input-group {
             transform: translate3d(0, 22px, 0);
     -webkit-transform-origin: left center;
             transform-origin: left center;
-    -webkit-transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1);
-            transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1); }
+    transition: all 0.15s cubic-bezier(0.35, 0, 0.25, 1); }

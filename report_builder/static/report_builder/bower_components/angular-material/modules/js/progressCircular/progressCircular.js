@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc3
  */
 (function() {
 'use strict';
@@ -40,7 +40,7 @@ angular.module('material.components.progressCircular', [
  *
  * <md-progress-circular md-mode="determinate" ng-value="..."></md-progress-circular>
  *
- * <md-progress-circular md-mode="determinate" value="..." diameter="100"></md-progress-circular>
+ * <md-progress-circular md-mode="determinate" value="..." md-diameter="100"></md-progress-circular>
  *
  * <md-progress-circular md-mode="indeterminate"></md-progress-circular>
  * </hljs>

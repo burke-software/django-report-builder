@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.1
  */
 @-webkit-keyframes outer-rotate {
   100% {
@@ -166,8 +166,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="0"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-135deg);
             transform: rotate(-135deg); }
   md-progress-circular[value="0"] .md-inner .md-gap {
@@ -178,8 +178,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="1"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-131.4deg);
             transform: rotate(-131.4deg); }
   md-progress-circular[value="1"] .md-inner .md-gap {
@@ -190,8 +190,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="2"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-127.8deg);
             transform: rotate(-127.8deg); }
   md-progress-circular[value="2"] .md-inner .md-gap {
@@ -202,8 +202,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="3"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-124.2deg);
             transform: rotate(-124.2deg); }
   md-progress-circular[value="3"] .md-inner .md-gap {
@@ -214,8 +214,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="4"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-120.6deg);
             transform: rotate(-120.6deg); }
   md-progress-circular[value="4"] .md-inner .md-gap {
@@ -226,8 +226,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="5"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-117deg);
             transform: rotate(-117deg); }
   md-progress-circular[value="5"] .md-inner .md-gap {
@@ -238,8 +238,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="6"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-113.4deg);
             transform: rotate(-113.4deg); }
   md-progress-circular[value="6"] .md-inner .md-gap {
@@ -250,8 +250,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="7"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-109.8deg);
             transform: rotate(-109.8deg); }
   md-progress-circular[value="7"] .md-inner .md-gap {
@@ -262,8 +262,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="8"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-106.2deg);
             transform: rotate(-106.2deg); }
   md-progress-circular[value="8"] .md-inner .md-gap {
@@ -274,8 +274,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="9"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-102.6deg);
             transform: rotate(-102.6deg); }
   md-progress-circular[value="9"] .md-inner .md-gap {
@@ -286,8 +286,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="10"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-99deg);
             transform: rotate(-99deg); }
   md-progress-circular[value="10"] .md-inner .md-gap {
@@ -298,8 +298,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="11"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-95.4deg);
             transform: rotate(-95.4deg); }
   md-progress-circular[value="11"] .md-inner .md-gap {
@@ -310,8 +310,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="12"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-91.8deg);
             transform: rotate(-91.8deg); }
   md-progress-circular[value="12"] .md-inner .md-gap {
@@ -322,8 +322,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="13"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-88.2deg);
             transform: rotate(-88.2deg); }
   md-progress-circular[value="13"] .md-inner .md-gap {
@@ -334,8 +334,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="14"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-84.6deg);
             transform: rotate(-84.6deg); }
   md-progress-circular[value="14"] .md-inner .md-gap {
@@ -346,8 +346,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="15"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-81deg);
             transform: rotate(-81deg); }
   md-progress-circular[value="15"] .md-inner .md-gap {
@@ -358,8 +358,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="16"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-77.4deg);
             transform: rotate(-77.4deg); }
   md-progress-circular[value="16"] .md-inner .md-gap {
@@ -370,8 +370,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="17"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-73.8deg);
             transform: rotate(-73.8deg); }
   md-progress-circular[value="17"] .md-inner .md-gap {
@@ -382,8 +382,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="18"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-70.2deg);
             transform: rotate(-70.2deg); }
   md-progress-circular[value="18"] .md-inner .md-gap {
@@ -394,8 +394,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="19"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-66.6deg);
             transform: rotate(-66.6deg); }
   md-progress-circular[value="19"] .md-inner .md-gap {
@@ -406,8 +406,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="20"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-63deg);
             transform: rotate(-63deg); }
   md-progress-circular[value="20"] .md-inner .md-gap {
@@ -418,8 +418,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="21"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-59.4deg);
             transform: rotate(-59.4deg); }
   md-progress-circular[value="21"] .md-inner .md-gap {
@@ -430,8 +430,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="22"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-55.8deg);
             transform: rotate(-55.8deg); }
   md-progress-circular[value="22"] .md-inner .md-gap {
@@ -442,8 +442,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="23"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-52.2deg);
             transform: rotate(-52.2deg); }
   md-progress-circular[value="23"] .md-inner .md-gap {
@@ -454,8 +454,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="24"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-48.6deg);
             transform: rotate(-48.6deg); }
   md-progress-circular[value="24"] .md-inner .md-gap {
@@ -466,8 +466,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="25"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-45deg);
             transform: rotate(-45deg); }
   md-progress-circular[value="25"] .md-inner .md-gap {
@@ -478,8 +478,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="26"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-41.4deg);
             transform: rotate(-41.4deg); }
   md-progress-circular[value="26"] .md-inner .md-gap {
@@ -490,8 +490,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="27"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-37.8deg);
             transform: rotate(-37.8deg); }
   md-progress-circular[value="27"] .md-inner .md-gap {
@@ -502,8 +502,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="28"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-34.2deg);
             transform: rotate(-34.2deg); }
   md-progress-circular[value="28"] .md-inner .md-gap {
@@ -514,8 +514,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="29"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-30.6deg);
             transform: rotate(-30.6deg); }
   md-progress-circular[value="29"] .md-inner .md-gap {
@@ -526,8 +526,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="30"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-27deg);
             transform: rotate(-27deg); }
   md-progress-circular[value="30"] .md-inner .md-gap {
@@ -538,8 +538,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="31"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-23.4deg);
             transform: rotate(-23.4deg); }
   md-progress-circular[value="31"] .md-inner .md-gap {
@@ -550,8 +550,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="32"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-19.8deg);
             transform: rotate(-19.8deg); }
   md-progress-circular[value="32"] .md-inner .md-gap {
@@ -562,8 +562,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="33"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-16.2deg);
             transform: rotate(-16.2deg); }
   md-progress-circular[value="33"] .md-inner .md-gap {
@@ -574,8 +574,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="34"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-12.6deg);
             transform: rotate(-12.6deg); }
   md-progress-circular[value="34"] .md-inner .md-gap {
@@ -586,8 +586,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="35"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-9deg);
             transform: rotate(-9deg); }
   md-progress-circular[value="35"] .md-inner .md-gap {
@@ -598,8 +598,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="36"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-5.4deg);
             transform: rotate(-5.4deg); }
   md-progress-circular[value="36"] .md-inner .md-gap {
@@ -610,8 +610,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="37"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(-1.8deg);
             transform: rotate(-1.8deg); }
   md-progress-circular[value="37"] .md-inner .md-gap {
@@ -622,8 +622,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="38"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(1.8deg);
             transform: rotate(1.8deg); }
   md-progress-circular[value="38"] .md-inner .md-gap {
@@ -634,8 +634,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="39"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(5.4deg);
             transform: rotate(5.4deg); }
   md-progress-circular[value="39"] .md-inner .md-gap {
@@ -646,8 +646,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="40"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(9deg);
             transform: rotate(9deg); }
   md-progress-circular[value="40"] .md-inner .md-gap {
@@ -658,8 +658,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="41"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(12.6deg);
             transform: rotate(12.6deg); }
   md-progress-circular[value="41"] .md-inner .md-gap {
@@ -670,8 +670,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="42"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(16.2deg);
             transform: rotate(16.2deg); }
   md-progress-circular[value="42"] .md-inner .md-gap {
@@ -682,8 +682,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="43"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(19.8deg);
             transform: rotate(19.8deg); }
   md-progress-circular[value="43"] .md-inner .md-gap {
@@ -694,8 +694,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="44"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(23.4deg);
             transform: rotate(23.4deg); }
   md-progress-circular[value="44"] .md-inner .md-gap {
@@ -706,8 +706,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="45"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(27deg);
             transform: rotate(27deg); }
   md-progress-circular[value="45"] .md-inner .md-gap {
@@ -718,8 +718,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="46"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(30.6deg);
             transform: rotate(30.6deg); }
   md-progress-circular[value="46"] .md-inner .md-gap {
@@ -730,8 +730,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="47"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(34.2deg);
             transform: rotate(34.2deg); }
   md-progress-circular[value="47"] .md-inner .md-gap {
@@ -742,8 +742,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="48"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(37.8deg);
             transform: rotate(37.8deg); }
   md-progress-circular[value="48"] .md-inner .md-gap {
@@ -754,8 +754,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="49"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(41.4deg);
             transform: rotate(41.4deg); }
   md-progress-circular[value="49"] .md-inner .md-gap {
@@ -766,8 +766,8 @@ md-progress-circular {
     -webkit-transform: rotate(135deg);
             transform: rotate(135deg); }
   md-progress-circular[value="50"] .md-inner .md-right .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(45deg);
             transform: rotate(45deg); }
   md-progress-circular[value="50"] .md-inner .md-gap {
@@ -775,8 +775,8 @@ md-progress-circular {
     border-bottom-style: solid;
     border-bottom-color: transparent !important; }
   md-progress-circular[value="51"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(138.6deg);
             transform: rotate(138.6deg); }
   md-progress-circular[value="51"] .md-inner .md-right .md-half-circle {
@@ -785,11 +785,10 @@ md-progress-circular {
   md-progress-circular[value="51"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="52"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(142.2deg);
             transform: rotate(142.2deg); }
   md-progress-circular[value="52"] .md-inner .md-right .md-half-circle {
@@ -798,11 +797,10 @@ md-progress-circular {
   md-progress-circular[value="52"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="53"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(145.8deg);
             transform: rotate(145.8deg); }
   md-progress-circular[value="53"] .md-inner .md-right .md-half-circle {
@@ -811,11 +809,10 @@ md-progress-circular {
   md-progress-circular[value="53"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="54"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(149.4deg);
             transform: rotate(149.4deg); }
   md-progress-circular[value="54"] .md-inner .md-right .md-half-circle {
@@ -824,11 +821,10 @@ md-progress-circular {
   md-progress-circular[value="54"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="55"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(153deg);
             transform: rotate(153deg); }
   md-progress-circular[value="55"] .md-inner .md-right .md-half-circle {
@@ -837,11 +833,10 @@ md-progress-circular {
   md-progress-circular[value="55"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="56"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(156.6deg);
             transform: rotate(156.6deg); }
   md-progress-circular[value="56"] .md-inner .md-right .md-half-circle {
@@ -850,11 +845,10 @@ md-progress-circular {
   md-progress-circular[value="56"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="57"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(160.2deg);
             transform: rotate(160.2deg); }
   md-progress-circular[value="57"] .md-inner .md-right .md-half-circle {
@@ -863,11 +857,10 @@ md-progress-circular {
   md-progress-circular[value="57"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="58"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(163.8deg);
             transform: rotate(163.8deg); }
   md-progress-circular[value="58"] .md-inner .md-right .md-half-circle {
@@ -876,11 +869,10 @@ md-progress-circular {
   md-progress-circular[value="58"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="59"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(167.4deg);
             transform: rotate(167.4deg); }
   md-progress-circular[value="59"] .md-inner .md-right .md-half-circle {
@@ -889,11 +881,10 @@ md-progress-circular {
   md-progress-circular[value="59"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="60"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(171deg);
             transform: rotate(171deg); }
   md-progress-circular[value="60"] .md-inner .md-right .md-half-circle {
@@ -902,11 +893,10 @@ md-progress-circular {
   md-progress-circular[value="60"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="61"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(174.6deg);
             transform: rotate(174.6deg); }
   md-progress-circular[value="61"] .md-inner .md-right .md-half-circle {
@@ -915,11 +905,10 @@ md-progress-circular {
   md-progress-circular[value="61"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="62"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(178.2deg);
             transform: rotate(178.2deg); }
   md-progress-circular[value="62"] .md-inner .md-right .md-half-circle {
@@ -928,11 +917,10 @@ md-progress-circular {
   md-progress-circular[value="62"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="63"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(181.8deg);
             transform: rotate(181.8deg); }
   md-progress-circular[value="63"] .md-inner .md-right .md-half-circle {
@@ -941,11 +929,10 @@ md-progress-circular {
   md-progress-circular[value="63"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="64"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(185.4deg);
             transform: rotate(185.4deg); }
   md-progress-circular[value="64"] .md-inner .md-right .md-half-circle {
@@ -954,11 +941,10 @@ md-progress-circular {
   md-progress-circular[value="64"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="65"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(189deg);
             transform: rotate(189deg); }
   md-progress-circular[value="65"] .md-inner .md-right .md-half-circle {
@@ -967,11 +953,10 @@ md-progress-circular {
   md-progress-circular[value="65"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="66"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(192.6deg);
             transform: rotate(192.6deg); }
   md-progress-circular[value="66"] .md-inner .md-right .md-half-circle {
@@ -980,11 +965,10 @@ md-progress-circular {
   md-progress-circular[value="66"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="67"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(196.2deg);
             transform: rotate(196.2deg); }
   md-progress-circular[value="67"] .md-inner .md-right .md-half-circle {
@@ -993,11 +977,10 @@ md-progress-circular {
   md-progress-circular[value="67"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="68"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(199.8deg);
             transform: rotate(199.8deg); }
   md-progress-circular[value="68"] .md-inner .md-right .md-half-circle {
@@ -1006,11 +989,10 @@ md-progress-circular {
   md-progress-circular[value="68"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="69"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(203.4deg);
             transform: rotate(203.4deg); }
   md-progress-circular[value="69"] .md-inner .md-right .md-half-circle {
@@ -1019,11 +1001,10 @@ md-progress-circular {
   md-progress-circular[value="69"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="70"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(207deg);
             transform: rotate(207deg); }
   md-progress-circular[value="70"] .md-inner .md-right .md-half-circle {
@@ -1032,11 +1013,10 @@ md-progress-circular {
   md-progress-circular[value="70"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="71"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(210.6deg);
             transform: rotate(210.6deg); }
   md-progress-circular[value="71"] .md-inner .md-right .md-half-circle {
@@ -1045,11 +1025,10 @@ md-progress-circular {
   md-progress-circular[value="71"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="72"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(214.2deg);
             transform: rotate(214.2deg); }
   md-progress-circular[value="72"] .md-inner .md-right .md-half-circle {
@@ -1058,11 +1037,10 @@ md-progress-circular {
   md-progress-circular[value="72"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="73"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(217.8deg);
             transform: rotate(217.8deg); }
   md-progress-circular[value="73"] .md-inner .md-right .md-half-circle {
@@ -1071,11 +1049,10 @@ md-progress-circular {
   md-progress-circular[value="73"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="74"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(221.4deg);
             transform: rotate(221.4deg); }
   md-progress-circular[value="74"] .md-inner .md-right .md-half-circle {
@@ -1084,11 +1061,10 @@ md-progress-circular {
   md-progress-circular[value="74"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="75"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(225deg);
             transform: rotate(225deg); }
   md-progress-circular[value="75"] .md-inner .md-right .md-half-circle {
@@ -1097,11 +1073,10 @@ md-progress-circular {
   md-progress-circular[value="75"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="76"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(228.6deg);
             transform: rotate(228.6deg); }
   md-progress-circular[value="76"] .md-inner .md-right .md-half-circle {
@@ -1110,11 +1085,10 @@ md-progress-circular {
   md-progress-circular[value="76"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="77"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(232.2deg);
             transform: rotate(232.2deg); }
   md-progress-circular[value="77"] .md-inner .md-right .md-half-circle {
@@ -1123,11 +1097,10 @@ md-progress-circular {
   md-progress-circular[value="77"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="78"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(235.8deg);
             transform: rotate(235.8deg); }
   md-progress-circular[value="78"] .md-inner .md-right .md-half-circle {
@@ -1136,11 +1109,10 @@ md-progress-circular {
   md-progress-circular[value="78"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="79"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(239.4deg);
             transform: rotate(239.4deg); }
   md-progress-circular[value="79"] .md-inner .md-right .md-half-circle {
@@ -1149,11 +1121,10 @@ md-progress-circular {
   md-progress-circular[value="79"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="80"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(243deg);
             transform: rotate(243deg); }
   md-progress-circular[value="80"] .md-inner .md-right .md-half-circle {
@@ -1162,11 +1133,10 @@ md-progress-circular {
   md-progress-circular[value="80"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="81"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(246.6deg);
             transform: rotate(246.6deg); }
   md-progress-circular[value="81"] .md-inner .md-right .md-half-circle {
@@ -1175,11 +1145,10 @@ md-progress-circular {
   md-progress-circular[value="81"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="82"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(250.2deg);
             transform: rotate(250.2deg); }
   md-progress-circular[value="82"] .md-inner .md-right .md-half-circle {
@@ -1188,11 +1157,10 @@ md-progress-circular {
   md-progress-circular[value="82"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="83"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(253.8deg);
             transform: rotate(253.8deg); }
   md-progress-circular[value="83"] .md-inner .md-right .md-half-circle {
@@ -1201,11 +1169,10 @@ md-progress-circular {
   md-progress-circular[value="83"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="84"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(257.4deg);
             transform: rotate(257.4deg); }
   md-progress-circular[value="84"] .md-inner .md-right .md-half-circle {
@@ -1214,11 +1181,10 @@ md-progress-circular {
   md-progress-circular[value="84"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="85"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(261deg);
             transform: rotate(261deg); }
   md-progress-circular[value="85"] .md-inner .md-right .md-half-circle {
@@ -1227,11 +1193,10 @@ md-progress-circular {
   md-progress-circular[value="85"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="86"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(264.6deg);
             transform: rotate(264.6deg); }
   md-progress-circular[value="86"] .md-inner .md-right .md-half-circle {
@@ -1240,11 +1205,10 @@ md-progress-circular {
   md-progress-circular[value="86"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="87"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(268.2deg);
             transform: rotate(268.2deg); }
   md-progress-circular[value="87"] .md-inner .md-right .md-half-circle {
@@ -1253,11 +1217,10 @@ md-progress-circular {
   md-progress-circular[value="87"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="88"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(271.8deg);
             transform: rotate(271.8deg); }
   md-progress-circular[value="88"] .md-inner .md-right .md-half-circle {
@@ -1266,11 +1229,10 @@ md-progress-circular {
   md-progress-circular[value="88"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="89"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(275.4deg);
             transform: rotate(275.4deg); }
   md-progress-circular[value="89"] .md-inner .md-right .md-half-circle {
@@ -1279,11 +1241,10 @@ md-progress-circular {
   md-progress-circular[value="89"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="90"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(279deg);
             transform: rotate(279deg); }
   md-progress-circular[value="90"] .md-inner .md-right .md-half-circle {
@@ -1292,11 +1253,10 @@ md-progress-circular {
   md-progress-circular[value="90"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="91"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(282.6deg);
             transform: rotate(282.6deg); }
   md-progress-circular[value="91"] .md-inner .md-right .md-half-circle {
@@ -1305,11 +1265,10 @@ md-progress-circular {
   md-progress-circular[value="91"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="92"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(286.2deg);
             transform: rotate(286.2deg); }
   md-progress-circular[value="92"] .md-inner .md-right .md-half-circle {
@@ -1318,11 +1277,10 @@ md-progress-circular {
   md-progress-circular[value="92"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="93"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(289.8deg);
             transform: rotate(289.8deg); }
   md-progress-circular[value="93"] .md-inner .md-right .md-half-circle {
@@ -1331,11 +1289,10 @@ md-progress-circular {
   md-progress-circular[value="93"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="94"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(293.4deg);
             transform: rotate(293.4deg); }
   md-progress-circular[value="94"] .md-inner .md-right .md-half-circle {
@@ -1344,11 +1301,10 @@ md-progress-circular {
   md-progress-circular[value="94"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="95"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(297deg);
             transform: rotate(297deg); }
   md-progress-circular[value="95"] .md-inner .md-right .md-half-circle {
@@ -1357,11 +1313,10 @@ md-progress-circular {
   md-progress-circular[value="95"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="96"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(300.6deg);
             transform: rotate(300.6deg); }
   md-progress-circular[value="96"] .md-inner .md-right .md-half-circle {
@@ -1370,11 +1325,10 @@ md-progress-circular {
   md-progress-circular[value="96"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="97"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(304.2deg);
             transform: rotate(304.2deg); }
   md-progress-circular[value="97"] .md-inner .md-right .md-half-circle {
@@ -1383,11 +1337,10 @@ md-progress-circular {
   md-progress-circular[value="97"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="98"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(307.8deg);
             transform: rotate(307.8deg); }
   md-progress-circular[value="98"] .md-inner .md-right .md-half-circle {
@@ -1396,11 +1349,10 @@ md-progress-circular {
   md-progress-circular[value="98"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="99"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(311.4deg);
             transform: rotate(311.4deg); }
   md-progress-circular[value="99"] .md-inner .md-right .md-half-circle {
@@ -1409,11 +1361,10 @@ md-progress-circular {
   md-progress-circular[value="99"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[value="100"] .md-inner .md-left .md-half-circle {
-    -webkit-transition: -webkit-transform 0.1s linear;
-            transition: transform 0.1s linear;
+    transition: -webkit-transform 0.1s linear;
+    transition: transform 0.1s linear;
     -webkit-transform: rotate(315deg);
             transform: rotate(315deg); }
   md-progress-circular[value="100"] .md-inner .md-right .md-half-circle {
@@ -1422,8 +1373,7 @@ md-progress-circular {
   md-progress-circular[value="100"] .md-inner .md-gap {
     border-bottom-width: 5px;
     border-bottom-style: solid;
-    -webkit-transition: border-bottom-color 0.1s linear;
-            transition: border-bottom-color 0.1s linear; }
+    transition: border-bottom-color 0.1s linear; }
   md-progress-circular[md-mode=indeterminate] .md-spinner-wrapper {
     -webkit-animation: outer-rotate 2.91667s linear infinite;
             animation: outer-rotate 2.91667s linear infinite; }

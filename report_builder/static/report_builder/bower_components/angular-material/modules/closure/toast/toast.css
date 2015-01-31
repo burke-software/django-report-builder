@@ -2,16 +2,14 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.1
  */
 md-toast {
-  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   position: absolute;
   box-sizing: border-box;
-  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
@@ -25,21 +23,18 @@ md-toast {
   max-width: 879px;
   max-height: 40px;
   height: 24px;
-  z-index: 80;
+  z-index: 90;
   opacity: 1;
   -webkit-transform: translate3d(0, 0, 0) rotateZ(0deg);
           transform: translate3d(0, 0, 0) rotateZ(0deg);
-  -webkit-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-          transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   /* Transition differently when swiping */ }
   md-toast.md-capsule {
     border-radius: 24px; }
   md-toast.ng-leave-active {
-    -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-            transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }
   md-toast.md-swipeleft, md-toast.md-swiperight, md-toast.md-swipeup, md-toast.md-swipedown {
-    -webkit-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
   md-toast.ng-enter {
     -webkit-transform: translate3d(0, 100%, 0);
             transform: translate3d(0, 100%, 0);
@@ -66,7 +61,7 @@ md-toast {
               transform: translate3d(100%, 0%, 0); }
   md-toast .md-action {
     line-height: 19px;
-    padding-left: 24px;
+    margin-left: 24px;
     cursor: pointer;
     text-transform: uppercase;
     float: right; }

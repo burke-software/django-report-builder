@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.1
  */
 goog.provide('ng.material.components.checkbox');
 goog.require('ng.material.core');
@@ -27,6 +27,10 @@ angular.module('material.components.checkbox', [
  *
  * @description
  * The checkbox directive is used like the normal [angular checkbox](https://docs.angularjs.org/api/ng/input/input%5Bcheckbox%5D).
+ *
+ * As per the [material design spec](http://www.google.com/design/spec/style/color.html#color-ui-color-application)
+ * the checkbox is in the accent color by default. The primary color palette may be used with
+ * the `md-primary` class.
  *
  * @param {string} ng-model Assignable angular expression to data-bind to.
  * @param {string=} name Property name of the form under which the control is published.
@@ -54,9 +58,8 @@ angular.module('material.components.checkbox', [
  * </hljs>
  *
  */
-function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant, $mdTheming) {
+function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant, $mdTheming, $mdUtil) {
   inputDirective = inputDirective[0];
-
   var CHECKED_CSS = 'md-checked';
 
   return {
@@ -82,19 +85,11 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
     tElement.attr('role', tAttrs.type);
 
     return function postLink(scope, element, attr, ngModelCtrl) {
+      ngModelCtrl = ngModelCtrl || $mdUtil.fakeNgModel();
       var checked = false;
       $mdTheming(element);
 
-      // Create a mock ngModel if the user doesn't provide one
-      ngModelCtrl = ngModelCtrl || {
-        $setViewValue: function(value) {
-          this.$viewValue = value;
-        },
-        $parsers: [],
-        $formatters: []
-      };
-
-      $mdAria.expectWithText(tElement, 'aria-label');
+      $mdAria.expectWithText(element, 'aria-label');
 
       // Reuse the original input[type=checkbox] directive from Angular core.
       // This is a bit hacky as we need our own event listener and own render
@@ -104,8 +99,8 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
         0: {}
       }, attr, [ngModelCtrl]);
 
-      element.on('click', listener);
-      element.on('keypress', keypressHandler);
+      element.on('click', listener)
+        .on('keypress', keypressHandler);
       ngModelCtrl.$render = render;
 
       function keypressHandler(ev) {
@@ -135,6 +130,6 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
     };
   }
 }
-MdCheckboxDirective.$inject = ["inputDirective", "$mdInkRipple", "$mdAria", "$mdConstant", "$mdTheming"];
+MdCheckboxDirective.$inject = ["inputDirective", "$mdInkRipple", "$mdAria", "$mdConstant", "$mdTheming", "$mdUtil"];
 
 })();

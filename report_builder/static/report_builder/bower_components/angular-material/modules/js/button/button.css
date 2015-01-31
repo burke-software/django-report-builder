@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc3
  */
 /**
  * Position a FAB button.
@@ -21,7 +21,7 @@
   white-space: nowrap;
   text-align: center;
   text-transform: uppercase;
-  font-weight: inherit;
+  font-weight: 500;
   font-style: inherit;
   font-variant: inherit;
   font-size: inherit;
@@ -30,8 +30,8 @@
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
-  -webkit-transition: box-shadow 0.5s cubic-bezier(0.35, 0, 0.25, 1), background-color 0.5s cubic-bezier(0.35, 0, 0.25, 1), -webkit-transform 0.5s cubic-bezier(0.35, 0, 0.25, 1);
-          transition: box-shadow 0.5s cubic-bezier(0.35, 0, 0.25, 1), background-color 0.5s cubic-bezier(0.35, 0, 0.25, 1), transform 0.5s cubic-bezier(0.35, 0, 0.25, 1); }
+  -webkit-transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+          transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
   .md-button.ng-hide {
     -webkit-transition: none;
             transition: none; }
@@ -58,27 +58,27 @@
             transition-property: transform, box-shadow; }
     .md-button.md-fab.md-fab-bottom-right {
       top: auto;
-      right: 28px;
-      bottom: 28px;
+      right: 20px;
+      bottom: 20px;
       left: auto;
       position: absolute; }
     .md-button.md-fab.md-fab-bottom-left {
       top: auto;
       right: auto;
-      bottom: 28px;
-      left: 28px;
+      bottom: 20px;
+      left: 20px;
       position: absolute; }
     .md-button.md-fab.md-fab-top-right {
-      top: 28px;
-      right: 28px;
+      top: 20px;
+      right: 20px;
       bottom: auto;
       left: auto;
       position: absolute; }
     .md-button.md-fab.md-fab-top-left {
-      top: 28px;
+      top: 20px;
       right: auto;
       bottom: auto;
-      left: 28px;
+      left: 20px;
       position: absolute; }
     .md-button.md-fab md-icon {
       line-height: 56px;
@@ -88,18 +88,18 @@
             transform: translate3d(0, -1px, 0); }
 
 .md-toast-open-top .md-button.md-fab-top-left, .md-toast-open-top .md-button.md-fab-top-right {
-  -webkit-transform: translate3d(0, 32px, 0);
-          transform: translate3d(0, 32px, 0); }
+  -webkit-transform: translate3d(0, 42px, 0);
+          transform: translate3d(0, 42px, 0); }
   .md-toast-open-top .md-button.md-fab-top-left:not([disabled]):focus, .md-toast-open-top .md-button.md-fab-top-left:not([disabled]):hover, .md-toast-open-top .md-button.md-fab-top-right:not([disabled]):focus, .md-toast-open-top .md-button.md-fab-top-right:not([disabled]):hover {
-    -webkit-transform: translate3d(0, 31px, 0);
-            transform: translate3d(0, 31px, 0); }
+    -webkit-transform: translate3d(0, 41px, 0);
+            transform: translate3d(0, 41px, 0); }
 
 .md-toast-open-bottom .md-button.md-fab-bottom-left, .md-toast-open-bottom .md-button.md-fab-bottom-right {
-  -webkit-transform: translate3d(0, -32px, 0);
-          transform: translate3d(0, -32px, 0); }
+  -webkit-transform: translate3d(0, -42px, 0);
+          transform: translate3d(0, -42px, 0); }
   .md-toast-open-bottom .md-button.md-fab-bottom-left:not([disabled]):focus, .md-toast-open-bottom .md-button.md-fab-bottom-left:not([disabled]):hover, .md-toast-open-bottom .md-button.md-fab-bottom-right:not([disabled]):focus, .md-toast-open-bottom .md-button.md-fab-bottom-right:not([disabled]):hover {
-    -webkit-transform: translate3d(0, -33px, 0);
-            transform: translate3d(0, -33px, 0); }
+    -webkit-transform: translate3d(0, -43px, 0);
+            transform: translate3d(0, -43px, 0); }
 
 .md-button-group {
   display: -webkit-box;

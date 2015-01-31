@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.1
  */
 md-radio-button, .md-switch-thumb {
   display: block;
@@ -33,8 +33,7 @@ md-radio-button, .md-switch-thumb {
     height: 16px;
     border: solid 2px;
     border-radius: 50%;
-    -webkit-transition: border-color ease 0.28s;
-            transition: border-color ease 0.28s; }
+    transition: border-color ease 0.28s; }
   md-radio-button .md-on, .md-switch-thumb .md-on {
     position: absolute;
     top: 0;
@@ -42,8 +41,8 @@ md-radio-button, .md-switch-thumb {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    -webkit-transition: -webkit-transform ease 0.28s;
-            transition: transform ease 0.28s;
+    transition: -webkit-transform ease 0.28s;
+    transition: transform ease 0.28s;
     -webkit-transform: scale(0);
             transform: scale(0); }
   md-radio-button.md-checked .md-on, .md-switch-thumb.md-checked .md-on {
@@ -53,6 +52,7 @@ md-radio-button, .md-switch-thumb {
     position: relative;
     display: inline-block;
     margin-left: 10px;
+    margin-right: 10px;
     vertical-align: middle;
     white-space: normal;
     pointer-events: none;

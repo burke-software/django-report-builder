@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc3
  */
 (function() {
 'use strict';
@@ -11,7 +11,7 @@
  * Initialization function that validates environment
  * requirements.
  */
-angular.module('material.core', [])
+angular.module('material.core', ['material.core.theming'])
   .run(MdCoreInitialize)
   .config(MdCoreConfigure);
 
@@ -21,10 +21,19 @@ function MdCoreInitialize() {
       'ngMaterial requires HammerJS to be preloaded.'
     );
   }
+  // By default, Hammer disables user selection on desktop if swipe is enabled.
+  // We don't want this, so we make sure Hammer doesn't set a user-select: none.
+  Hammer.defaults.cssProps.userSelect = '';
 }
 
-function MdCoreConfigure($provide) {
+function MdCoreConfigure($provide, $mdThemingProvider) {
   $provide.decorator('$$rAF', ['$delegate', '$rootScope', rAFDecorator]);
+
+  $mdThemingProvider.theme('default')
+    .primaryColor('blue')
+    .accentColor('green')
+    .warnColor('red')
+    .backgroundColor('grey');
 
   function rAFDecorator($$rAF, $rootScope) {
     /**
@@ -59,7 +68,7 @@ function MdCoreConfigure($provide) {
   }
 
 }
-MdCoreConfigure.$inject = ["$provide"];
+MdCoreConfigure.$inject = ["$provide", "$mdThemingProvider"];
 
 })();
 
@@ -114,28 +123,339 @@ MdConstantFactory.$inject = ["$$rAF", "$sniffer"];
 
 })();
 
+(function(){
+
+  angular
+    .module('material.core')
+    .config( ["$provide", function($provide){
+       $provide.decorator('$mdUtil', ['$delegate', function ($delegate){
+           /**
+            * Inject the iterator facade to easily support iteration and accessors
+            * @see iterator below
+            */
+           $delegate.iterator = Iterator;
+
+           return $delegate;
+         }
+       ]);
+     }]);
+
+  /**
+   * iterator is a list facade to easily support iteration and accessors
+   *
+   * @param items Array list which this iterator will enumerate
+   * @param reloop Boolean enables iterator to consider the list as an endless reloop
+   */
+  function Iterator(items, reloop) {
+    var trueFn = function() { return true; };
+
+    reloop = !!reloop;
+    var _items = items || [ ];
+
+    // Published API
+    return {
+      items: getItems,
+      count: count,
+
+      inRange: inRange,
+      contains: contains,
+      indexOf: indexOf,
+      itemAt: itemAt,
+
+      findBy: findBy,
+
+      add: add,
+      remove: remove,
+
+      first: first,
+      last: last,
+      next: angular.bind(null, findSubsequentItem, false),
+      previous: angular.bind(null, findSubsequentItem, true),
+
+      hasPrevious: hasPrevious,
+      hasNext: hasNext
+
+    };
+
+    /**
+     * Publish copy of the enumerable set
+     * @returns {Array|*}
+     */
+    function getItems() {
+      return [].concat(_items);
+    }
+
+    /**
+     * Determine length of the list
+     * @returns {Array.length|*|number}
+     */
+    function count() {
+      return _items.length;
+    }
+
+    /**
+     * Is the index specified valid
+     * @param index
+     * @returns {Array.length|*|number|boolean}
+     */
+    function inRange(index) {
+      return _items.length && ( index > -1 ) && (index < _items.length );
+    }
+
+    /**
+     * Can the iterator proceed to the next item in the list; relative to
+     * the specified item.
+     *
+     * @param item
+     * @returns {Array.length|*|number|boolean}
+     */
+    function hasNext(item) {
+      return item ? inRange(indexOf(item) + 1) : false;
+    }
+
+    /**
+     * Can the iterator proceed to the previous item in the list; relative to
+     * the specified item.
+     *
+     * @param item
+     * @returns {Array.length|*|number|boolean}
+     */
+    function hasPrevious(item) {
+      return item ? inRange(indexOf(item) - 1) : false;
+    }
+
+    /**
+     * Get item at specified index/position
+     * @param index
+     * @returns {*}
+     */
+    function itemAt(index) {
+      return inRange(index) ? _items[index] : null;
+    }
+
+    /**
+     * Find all elements matching the key/value pair
+     * otherwise return null
+     *
+     * @param val
+     * @param key
+     *
+     * @return array
+     */
+    function findBy(key, val) {
+      return _items.filter(function(item) {
+        return item[key] === val;
+      });
+    }
+
+    /**
+     * Add item to list
+     * @param item
+     * @param index
+     * @returns {*}
+     */
+    function add(item, index) {
+      if ( !item ) return -1;
+
+      if (!angular.isNumber(index)) {
+        index = _items.length;
+      }
+
+      _items.splice(index, 0, item);
+
+      return indexOf(item);
+    }
+
+    /**
+     * Remove item from list...
+     * @param item
+     */
+    function remove(item) {
+      if ( contains(item) ){
+        _items.splice(indexOf(item), 1);
+      }
+    }
+
+    /**
+     * Get the zero-based index of the target item
+     * @param item
+     * @returns {*}
+     */
+    function indexOf(item) {
+      return _items.indexOf(item);
+    }
+
+    /**
+     * Boolean existence check
+     * @param item
+     * @returns {boolean}
+     */
+    function contains(item) {
+      return item && (indexOf(item) > -1);
+    }
+
+    /**
+     * Return first item in the list
+     * @returns {*}
+     */
+    function first() {
+      return _items.length ? _items[0] : null;
+    }
+
+    /**
+     * Return last item in the list...
+     * @returns {*}
+     */
+    function last() {
+      return _items.length ? _items[_items.length - 1] : null;
+    }
+
+    /**
+     * Find the next item. If reloop is true and at the end of the list, it will
+     * go back to the first item. If given ,the `validate` callback will be used
+     * determine whether the next item is valid. If not valid, it will try to find the
+     * next item again.
+     * @param item
+     * @param {optional} validate function
+     * @param {optional} recursion limit
+     * @returns {*}
+     */
+    function findSubsequentItem(backwards, item, validate, limit) {
+      validate = validate || trueFn;
+
+      var curIndex = indexOf(item);
+      if (!inRange(curIndex)) {
+        return null;
+      }
+
+      var nextIndex = curIndex + (backwards ? -1 : 1);
+      var foundItem = null;
+      if (inRange(nextIndex)) {
+        foundItem = _items[nextIndex];
+      } else if (reloop) {
+        foundItem = backwards ? last() : first();
+        nextIndex = indexOf(foundItem);
+      }
+
+      if ((foundItem === null) || (nextIndex === limit)) {
+        return null;
+      }
+
+      if (angular.isUndefined(limit)) {
+        limit = nextIndex;
+      }
+
+      return validate(foundItem) ? foundItem : findSubsequentItem(backwards, foundItem, validate, limit);
+    }
+  }
+
+})();
+
+angular.module('material.core')
+.factory('$mdMedia', mdMediaFactory);
+
+/**
+ * Exposes a function on the '$mdMedia' service which will return true or false,
+ * whether the given media query matches. Re-evaluates on resize. Allows presets
+ * for 'sm', 'md', 'lg'.
+ *
+ * @example $mdMedia('sm') == true if device-width <= sm
+ * @example $mdMedia('(min-width: 1200px)') == true if device-width >= 1200px
+ * @example $mdMedia('max-width: 300px') == true if device-width <= 300px (sanitizes input, adding parens)
+ */
+function mdMediaFactory($mdConstant, $mdUtil, $rootScope, $window) {
+  var queriesCache = $mdUtil.cacheFactory('$mdMedia:queries', {capacity: 15});
+  var resultsCache = $mdUtil.cacheFactory('$mdMedia:results', {capacity: 15});
+
+  angular.element($window).on('resize', updateAll);
+
+  return $mdMedia;
+
+  function $mdMedia(query) {
+    var validated = queriesCache.get(query);
+    if (angular.isUndefined(validated)) {
+      validated = queriesCache.put(query, validate(query));
+    }
+
+    var result = resultsCache.get(validated);
+    if (angular.isUndefined(result)) {
+      result = add(validated);
+    }
+
+    return result;
+  }
+
+  function validate(query) {
+    return $mdConstant.MEDIA[query] ||
+           ((query.charAt(0) !== '(') ? ('(' + query + ')') : query);
+  }
+
+  function add(query) {
+    return resultsCache.put(query, !!$window.matchMedia(query).matches);
+  }
+
+  function updateAll() {
+    var keys = resultsCache.keys();
+    var len = keys.length;
+
+    if (len) {
+      for (var i = 0; i < len; i++) {
+        add(keys[i]);
+      }
+
+      // Trigger a $digest() if not already in progress
+      $rootScope.$evalAsync();
+    }
+  }
+}
+mdMediaFactory.$inject = ["$mdConstant", "$mdUtil", "$rootScope", "$window"];
+
 (function() {
 'use strict';
 
-/* 
+/*
  * This var has to be outside the angular factory, otherwise when
  * there are multiple material apps on the same page, each app
- * will create its own instance of this array and the app's IDs 
+ * will create its own instance of this array and the app's IDs
  * will not be unique.
  */
 var nextUniqueId = ['0','0','0'];
 
 angular.module('material.core')
-.factory('$mdUtil', ['$cacheFactory', function($cacheFactory) {
+.factory('$mdUtil', ["$cacheFactory", "$document", "$timeout", function($cacheFactory, $document, $timeout) {
   var Util;
   return Util = {
     now: window.performance ? angular.bind(window.performance, window.performance.now) : Date.now,
 
-    /**
-     * Publish the iterator facade to easily support iteration and accessors
-     * @see iterator below
-     */
-    iterator: iterator,
+    attachDragBehavior: attachDragBehavior,
+
+    elementRect: function(element, offsetParent) {
+      var node = element[0];
+      offsetParent = offsetParent || node.offsetParent || document.body;
+      offsetParent = offsetParent[0] || offsetParent;
+      var nodeRect = node.getBoundingClientRect();
+      var parentRect = offsetParent.getBoundingClientRect();
+      return {
+        left: nodeRect.left - parentRect.left + offsetParent.scrollLeft,
+        top: nodeRect.top - parentRect.top + offsetParent.scrollTop,
+        width: nodeRect.width,
+        height: nodeRect.height
+      };
+    },
+
+    fakeNgModel: function() {
+      return {
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+          this.$render(value);
+          this.$viewChangeListeners.forEach(function(cb) { cb(); });
+        },
+        $parsers: [],
+        $formatters: [],
+        $viewChangeListeners: [],
+        $render: angular.noop
+      };
+    },
 
     /**
      * @see cacheFactory below
@@ -144,18 +464,23 @@ angular.module('material.core')
 
     // Returns a function, that, as long as it continues to be invoked, will not
     // be triggered. The function will be called after it stops being called for
-    // N milliseconds. If `immediate` is passed, trigger the function on the
-    // leading edge, instead of the trailing.
-    debounce: function debounce(func, wait, immediate) {
-      var timeout;
+    // N milliseconds.
+    // @param wait Integer value of msecs to delay (since last debounce reset); default value 10 msecs
+    // @param invokeApply should the $timeout trigger $digest() dirty checking
+    debounce: function (func, wait, scope, invokeApply) {
+      var timer;
+
       return function debounced() {
-        var context = this, args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-          timeout = null;
-          if (!immediate) func.apply(context, args);
-        }, wait);
-        if (immediate && !timeout) func.apply(context, args);
+        var context = scope,
+          args = Array.prototype.slice.call(arguments);
+
+        $timeout.cancel(timer);
+        timer = $timeout(function() {
+
+          timer = undefined;
+          func.apply(context, args);
+
+        }, wait || 10, invokeApply );
       };
     },
 
@@ -169,7 +494,7 @@ angular.module('material.core')
         var args = arguments;
         var now = Util.now();
 
-        if (!recent || recent - now > delay) {
+        if (!recent || (now - recent > delay)) {
           func.apply(context, args);
           recent = now;
         }
@@ -249,241 +574,155 @@ angular.module('material.core')
       } else {
         parent.$$childHead = parent.$$childTail = child;
       }
+    },
+  /*
+   * getClosest replicates jQuery.closest() to walk up the DOM tree until it finds a matching nodeName
+   *
+   * @param el Element to start walking the DOM from
+   * @param tagName Tag name to find closest to el, such as 'form'
+   */
+    getClosest: function getClosest(el, tagName) {
+      tagName = tagName.toUpperCase();
+      do {
+        if (el.nodeName === tagName) {
+          return el;
+        }
+      } while (el = el.parentNode);
+      return null;
     }
   };
 
-  /*
-   * iterator is a list facade to easily support iteration and accessors
-   *
-   * @param items Array list which this iterator will enumerate
-   * @param reloop Boolean enables iterator to consider the list as an endless reloop
-   */
-  function iterator(items, reloop) {
-    var trueFn = function() { return true; };
 
-    reloop = !!reloop;
-    var _items = items || [ ];
+  function attachDragBehavior(scope, element, options) {
+    // The state of the current drag & previous drag
+    var drag;
+    var previousDrag;
+    // Whether the pointer is currently down on this element.
+    var pointerIsDown;
+    var START_EVENTS = 'mousedown touchstart pointerdown';
+    var MOVE_EVENTS = 'mousemove touchmove pointermove';
+    var END_EVENTS = 'mouseup mouseleave touchend touchcancel pointerup pointercancel';
 
-    // Published API
-    return {
-      items: getItems,
-      count: count,
+    // Listen to move and end events on document. End events especially could have bubbled up
+    // from the child.
+    element.on(START_EVENTS, startDrag);
+    $document.on(MOVE_EVENTS, doDrag)
+      .on(END_EVENTS, endDrag);
 
-      inRange: inRange,
-      contains: contains,
-      indexOf: indexOf,
-      itemAt: itemAt,
+    scope.$on('$destroy', cleanup);
 
-      findBy: findBy,
+    return cleanup;
 
-      add: add,
-      remove: remove,
+    function cleanup() {
+      if (cleanup.called) return;
+      cleanup.called = true;
 
-      first: first,
-      last: last,
-      next: next,
-      previous: previous,
-
-      hasPrevious: hasPrevious,
-      hasNext: hasNext
-
-    };
-
-    /*
-     * Publish copy of the enumerable set
-     * @returns {Array|*}
-     */
-    function getItems() {
-      return [].concat(_items);
+      element.off(START_EVENTS, startDrag);
+      $document.off(MOVE_EVENTS, doDrag)
+        .off(END_EVENTS, endDrag);
+      drag = pointerIsDown = false;
     }
 
-    /*
-     * Determine length of the list
-     * @returns {Array.length|*|number}
-     */
-    function count() {
-      return _items.length;
-    }
+    function startDrag(ev) {
+      var eventType = ev.type.charAt(0);
+      var now = Util.now();
+      // iOS & old android bug: after a touch event, iOS sends a click event 350 ms later.
+      // Don't allow a drag of a different pointerType than the previous drag if it has been
+      // less than 400ms.
+      if (previousDrag && previousDrag.pointerType !== eventType &&
+          (now - previousDrag.endTime < 400)) {
+        return;
+      }
+      if (pointerIsDown) return;
+      pointerIsDown = true;
 
-    /*
-     * Is the index specified valid
-     * @param index
-     * @returns {Array.length|*|number|boolean}
-     */
-    function inRange(index) {
-      return _items.length && ( index > -1 ) && (index < _items.length );
-    }
+      drag = {
+        // Restrict this drag to whatever started it: if a mousedown started the drag,
+        // don't let anything but mouse events continue it.
+        pointerType: eventType,
+        startX: getPosition(ev),
+        startTime: now
+      };
 
-    /*
-     * Can the iterator proceed to the next item in the list; relative to
-     * the specified item.
-     *
-     * @param item
-     * @returns {Array.length|*|number|boolean}
-     */
-    function hasNext(item) {
-      return item ? inRange(indexOf(item) + 1) : false;
-    }
-
-    /*
-     * Can the iterator proceed to the previous item in the list; relative to
-     * the specified item.
-     *
-     * @param item
-     * @returns {Array.length|*|number|boolean}
-     */
-    function hasPrevious(item) {
-      return item ? inRange(indexOf(item) - 1) : false;
-    }
-
-    /*
-     * Get item at specified index/position
-     * @param index
-     * @returns {*}
-     */
-    function itemAt(index) {
-      return inRange(index) ? _items[index] : null;
-    }
-
-    /*
-     * Find all elements matching the key/value pair
-     * otherwise return null
-     *
-     * @param val
-     * @param key
-     *
-     * @return array
-     */
-    function findBy(key, val) {
-      return _items.filter(function(item) {
-        return item[key] === val;
+      element.one('$md.dragstart', function(ev) {
+        // Allow user to cancel by preventing default
+        if (ev.defaultPrevented) drag = null;
       });
+      element.triggerHandler('$md.dragstart', drag);
     }
+    function doDrag(ev) {
+      if (!drag || !isProperEventType(ev, drag)) return;
 
-    /*
-     * Add item to list
-     * @param item
-     * @param index
-     * @returns {*}
-     */
-    function add(item, index) {
-      if ( !item ) return -1;
-
-      if (!angular.isNumber(index)) {
-        index = _items.length;
+      if (drag.pointerType === 't' || drag.pointerType === 'p') {
+        // No scrolling for touch/pointer events
+        ev.preventDefault();
       }
+      updateDragState(ev);
+      element.triggerHandler('$md.drag', drag);
+    }
+    function endDrag(ev) {
+      pointerIsDown = false;
+      if (!drag || !isProperEventType(ev, drag)) return;
 
-      _items.splice(index, 0, item);
+      drag.endTime = Util.now();
+      updateDragState(ev);
 
-      return indexOf(item);
+      element.triggerHandler('$md.dragend', drag);
+
+      previousDrag = drag;
+      drag = null;
     }
 
-    /*
-     * Remove item from list...
-     * @param item
-     */
-    function remove(item) {
-      if ( contains(item) ){
-        _items.splice(indexOf(item), 1);
-      }
+    function updateDragState(ev) {
+      var x = getPosition(ev);
+      drag.distance = drag.startX - x;
+      drag.direction = drag.distance > 0 ? 'left' : (drag.distance < 0 ? 'right' : '');
+      drag.duration = drag.startTime - Util.now();
+      drag.velocity = Math.abs(drag.duration) / drag.time;
     }
-
-    /*
-     * Get the zero-based index of the target item
-     * @param item
-     * @returns {*}
-     */
-    function indexOf(item) {
-      return _items.indexOf(item);
+    function getPosition(ev) {
+      ev = ev.originalEvent || ev; //support jQuery events
+      var point = (ev.touches && ev.touches[0]) ||
+        (ev.changedTouches && ev.changedTouches[0]) ||
+        ev;
+      return point.pageX;
     }
-
-    /*
-     * Boolean existence check
-     * @param item
-     * @returns {boolean}
-     */
-    function contains(item) {
-      return item && (indexOf(item) > -1);
-    }
-
-    /*
-     * Find the next item. If reloop is true and at the end of the list, it will 
-     * go back to the first item. If given ,the `validate` callback will be used
-     * determine whether the next item is valid. If not valid, it will try to find the
-     * next item again.
-     * @param item
-     * @param {optional} validate
-     * @returns {*}
-     */
-    function next(item, validate) {
-      validate = validate || trueFn;
-
-      if (contains(item)) {
-        var index = indexOf(item) + 1,
-        found = inRange(index) ? _items[ index ] : (reloop ? first() : null);
-
-        return validate(found) ? found : next(found, validate);
-      }
-
-      return null;
-    }
-
-    /*
-     * Find the previous item. If reloop is true and at the beginning of the list, it will 
-     * go back to the last item. If given ,the `validate` callback will be used
-     * determine whether the previous item is valid. If not valid, it will try to find the
-     * previous item again.
-     * @param item
-     * @param {optional} validate
-     * @returns {*}
-     */
-    function previous(item, validate) {
-      validate = validate || trueFn;
-
-      if (contains(item)) {
-        var index = indexOf(item) - 1,
-        found = inRange(index) ? _items[ index ] : (reloop ? last() : null);
-
-        return validate(found) ? found : previous(found, validate);
-      }
-
-      return null;
-    }
-
-    /*
-     * Return first item in the list
-     * @returns {*}
-     */
-    function first() {
-      return _items.length ? _items[0] : null;
-    }
-
-    /*
-     * Return last item in the list...
-     * @returns {*}
-     */
-    function last() {
-      return _items.length ? _items[_items.length - 1] : null;
+    function isProperEventType(ev, drag) {
+      return drag && ev && (ev.type || '').charAt(0) === drag.pointerType;
     }
   }
 
   /*
-   * Angular's $cacheFactory doesn't have a keys() method,
-   * so we add one ourself.
+   * Inject a 'keys()' method into Angular's $cacheFactory. Then
+   * head-hook all other methods
+   *
    */
   function cacheFactory(id, options) {
     var cache = $cacheFactory(id, options);
-
     var keys = {};
+
     cache._put = cache.put;
     cache.put = function(k,v) {
       keys[k] = true;
       return cache._put(k, v);
     };
+
     cache._remove = cache.remove;
     cache.remove = function(k) {
       delete keys[k];
       return cache._remove(k);
+    };
+
+    cache._removeAll = cache.removeAll;
+    cache.removeAll = function() {
+      keys = {};
+      return cache._removeAll();
+    };
+
+    cache._destroy = cache.destroy;
+    cache.destroy = function() {
+      keys = {};
+      return cache._destroy();
     };
 
     cache.keys = function() {
@@ -494,7 +733,7 @@ angular.module('material.core')
   }
 }]);
 
-/* 
+/*
  * Since removing jQuery from the demos, some code that uses `element.focus()` is broken.
  *
  * We need to add `element.focus()`, because it's testable unlike `element[0].focus`.
@@ -600,6 +839,7 @@ angular.module('material.core')
   .service('$mdCompiler', mdCompilerService);
 
 function mdCompilerService($q, $http, $injector, $compile, $controller, $templateCache) {
+  /* jshint validthis: true */
 
   /*
    * @ngdoc service
@@ -764,7 +1004,7 @@ angular.module('material.core')
 
 function InterimElementProvider() {
   createInterimElementProvider.$get = InterimElementFactory;
-  InterimElementFactory.$inject = ["$document", "$q", "$rootScope", "$timeout", "$rootElement", "$animate", "$mdCompiler", "$mdTheming"];
+  InterimElementFactory.$inject = ["$document", "$q", "$rootScope", "$timeout", "$rootElement", "$animate", "$interpolate", "$mdCompiler", "$mdTheming"];
   return createInterimElementProvider;
 
   /**
@@ -883,6 +1123,15 @@ function InterimElementProvider() {
           };
         });
 
+        // Create shortcut method for one-linear methods
+        if (definition.argOption) {
+          var methodName = 'show' + name.charAt(0).toUpperCase() + name.slice(1);
+          publicService[methodName] = function(arg) {
+            var config = publicService[name](arg);
+            return publicService.show(config);
+          };
+        }
+
         // eg $mdDialog.alert() will return a new alert preset
         publicService[name] = function(arg) {
           // If argOption is supplied, eg `argOption: 'content'`, then we assume
@@ -929,7 +1178,12 @@ function InterimElementProvider() {
   }
 
   /* @ngInject */
-  function InterimElementFactory($document, $q, $rootScope, $timeout, $rootElement, $animate, $mdCompiler, $mdTheming) {
+  function InterimElementFactory($document, $q, $rootScope, $timeout, $rootElement, $animate,
+                                 $interpolate, $mdCompiler, $mdTheming ) {
+    var startSymbol = $interpolate.startSymbol(),
+        endSymbol = $interpolate.endSymbol(),
+        usesStandardSymbols = ((startSymbol === '{{') && (endSymbol === '}}')),
+        processTemplate  = usesStandardSymbols ? angular.identity : replaceInterpolationSymbols;
 
     return function createInterimElementService() {
       /*
@@ -1038,6 +1292,10 @@ function InterimElementProvider() {
           }
         }, options);
 
+        if (options.template) {
+          options.template = processTemplate(options.template);
+        }
+
         return self = {
           options: options,
           deferred: $q.defer(),
@@ -1086,9 +1344,149 @@ function InterimElementProvider() {
         };
       }
     };
+
+    /*
+     * Replace `{{` and `}}` in a string (usually a template) with the actual start-/endSymbols used
+     * for interpolation. This allows pre-defined templates (for components such as dialog, toast etc)
+     * to continue to work in apps that use custom interpolation start-/endSymbols.
+     *
+     * @param {string} text The text in which to replace `{{` / `}}`
+     * @returns {string} The modified string using the actual interpolation start-/endSymbols
+     */
+    function replaceInterpolationSymbols(text) {
+      if (!text || !angular.isString(text)) return text;
+      return text.replace(/\{\{/g, startSymbol).replace(/}}/g, endSymbol);
+    }
   }
 
 }
+
+})();
+
+(function() {
+  'use strict';
+
+  /**
+   * @ngdoc module
+   * @name material.core.componentRegistry
+   *
+   * @description
+   * A component instance registration service.
+   * Note: currently this as a private service in the SideNav component.
+   */
+  angular.module('material.core')
+    .factory('$mdComponentRegistry', ComponentRegistry);
+
+  /*
+   * @private
+   * @ngdoc factory
+   * @name ComponentRegistry
+   * @module material.core.componentRegistry
+   *
+   */
+  function ComponentRegistry($log, $q) {
+
+    var self;
+    var instances = [ ];
+    var pendings = { };
+
+    return self = {
+      /**
+       * Used to print an error when an instance for a handle isn't found.
+       */
+      notFoundError: function(handle) {
+        $log.error('No instance found for handle', handle);
+      },
+      /**
+       * Return all registered instances as an array.
+       */
+      getInstances: function() {
+        return instances;
+      },
+
+      /**
+       * Get a registered instance.
+       * @param handle the String handle to look up for a registered instance.
+       */
+      get: function(handle) {
+        if ( !isValidID(handle) ) return null;
+
+        var i, j, instance;
+        for(i = 0, j = instances.length; i < j; i++) {
+          instance = instances[i];
+          if(instance.$$mdHandle === handle) {
+            return instance;
+          }
+        }
+        return null;
+      },
+
+      /**
+       * Register an instance.
+       * @param instance the instance to register
+       * @param handle the handle to identify the instance under.
+       */
+      register: function(instance, handle) {
+        if ( !handle ) return angular.noop;
+
+        instance.$$mdHandle = handle;
+        instances.push(instance);
+        resolveWhen();
+
+        return deregister;
+
+        /**
+         * Remove registration for an instance
+         */
+        function deregister() {
+          var index = instances.indexOf(instance);
+          if (index !== -1) {
+            instances.splice(index, 1);
+          }
+        }
+
+        /**
+         * Resolve any pending promises for this instance
+         */
+        function resolveWhen() {
+          var dfd = pendings[handle];
+          if ( dfd ) {
+            dfd.resolve( instance );
+            delete pendings[handle];
+          }
+        }
+      },
+
+      /**
+       * Async accessor to registered component instance
+       * If not available then a promise is created to notify
+       * all listeners when the instance is registered.
+       */
+      when : function(handle) {
+        if ( isValidID(handle) ) {
+          var deferred = $q.defer();
+          var instance = self.get(handle);
+
+          if ( instance )  {
+            deferred.resolve( instance );
+          } else {
+            pendings[handle] = deferred;
+          }
+
+          return deferred.promise;
+        }
+        return $q.reject("Invalid `md-component-id` value.");
+      }
+
+    };
+
+    function isValidID(handle){
+      return handle && (handle !== "");
+    }
+
+  }
+  ComponentRegistry.$inject = ["$log", "$q"];
+
 
 })();
 
@@ -1177,6 +1575,9 @@ function InkRippleService($window, $timeout) {
         hammertime = new Hammer(node),
         color = parseColor(element.attr('md-ink-ripple')) || parseColor($window.getComputedStyle(options.colorElement[0]).color || 'rgb(0, 0, 0)');
 
+    // expose onInput for ripple testing
+    scope._onInput = onInput;
+
     options.mousedown && hammertime.on('hammer.input', onInput);
 
     controller.createRipple = createRipple;
@@ -1185,9 +1586,7 @@ function InkRippleService($window, $timeout) {
       scope.$watch(isActiveExpr, function watchActive(newValue) {
         isActive = newValue;
         if (isActive && !ripples.length) {
-          $timeout(function () {
-            createRipple(0, 0);
-          }, 0, false);
+          $timeout(function () { createRipple(0, 0); }, 0, false);
         }
         angular.forEach(ripples, updateElement);
       });
@@ -1201,7 +1600,7 @@ function InkRippleService($window, $timeout) {
 
     function parseColor(color) {
       if (!color) return;
-      if (color.indexOf('rgba') === 0) return color;
+      if (color.indexOf('rgba') === 0) return color.replace(/\d?\.?\d*\s*\)\s*$/, '0.1)');
       if (color.indexOf('rgb')  === 0) return rgbToRGBA(color);
       if (color.indexOf('#')    === 0) return hexToRGBA(color);
 
@@ -1234,7 +1633,7 @@ function InkRippleService($window, $timeout) {
        * @returns {string} rgba color with 0.1 alpha
        */
       function rgbToRGBA(color) {
-        return color.replace(')', ', 0.1)').replace('(', 'a(')
+        return color.replace(')', ', 0.1)').replace('(', 'a(');
       }
 
     }
@@ -1410,7 +1809,8 @@ function InkRippleService($window, $timeout) {
        */
       function getRippleContainer() {
         if (rippleContainer) return rippleContainer;
-        var container = rippleContainer = angular.element('<div class="md-ripple-container">');
+        var container = angular.element('<div class="md-ripple-container"></div>');
+        rippleContainer = container;
         element.append(container);
         return container;
       }
@@ -1430,9 +1830,7 @@ function InkRippleService($window, $timeout) {
         isHeld = false;
         index = ripples.length - 1;
         ripple = ripples[index];
-        $timeout(function () {
-          updateElement(ripple);
-        }, 0, false);
+        $timeout(function () { updateElement(ripple); }, 0, false);
       }
 
       /**
@@ -1442,7 +1840,12 @@ function InkRippleService($window, $timeout) {
        */
       function isRippleAllowed() {
         var parent = node.parentNode;
-        return !node.hasAttribute('disabled') && !(parent && parent.hasAttribute('disabled'));
+        var grandparent = parent && parent.parentNode;
+        var ancestor = grandparent && grandparent.parentNode;
+        return !isDisabled(node) && !isDisabled(parent) && !isDisabled(grandparent) && !isDisabled(ancestor);
+        function isDisabled (elem) {
+          return elem && elem.hasAttribute && elem.hasAttribute('disabled');
+        }
       }
     }
   }
@@ -1451,7 +1854,7 @@ InkRippleService.$inject = ["$window", "$timeout"];
 
 /**
  * noink/nobar/nostretch directive: make any element that has one of
- * these attributes be given a controller, so that other directives can 
+ * these attributes be given a controller, so that other directives can
  * `require:` these and see if there is a `no<xxx>` parent attribute.
  *
  * @usage
@@ -1492,11 +1895,361 @@ function attrNoDirective() {
 (function() {
 'use strict';
 
+angular.module('material.core.theming.palette', [])
+.constant('$mdColorPalette', {
+  'red': {
+    '50': '#ffebee',
+    '100': '#ffcdd2',
+    '200': '#ef9a9a',
+    '300': '#e57373',
+    '400': '#ef5350',
+    '500': '#f44336',
+    '600': '#e53935',
+    '700': '#d32f2f',
+    '800': '#c62828',
+    '900': '#b71c1c',
+    'A100': '#ff8a80',
+    'A200': '#ff5252',
+    'A400': '#ff1744',
+    'A700': '#d50000',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 300 400 A100'
+  },
+  'pink': {
+    '50': '#fce4ec',
+    '100': '#f8bbd0',
+    '200': '#f48fb1',
+    '300': '#f06292',
+    '400': '#ec407a',
+    '500': '#e91e63',
+    '600': '#d81b60',
+    '700': '#c2185b',
+    '800': '#ad1457',
+    '900': '#880e4f',
+    'A100': '#ff80ab',
+    'A200': '#ff4081',
+    'A400': '#f50057',
+    'A700': '#c51162',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 300 400 A100'
+  },
+  'purple': {
+    '50': '#f3e5f5',
+    '100': '#e1bee7',
+    '200': '#ce93d8',
+    '300': '#ba68c8',
+    '400': '#ab47bc',
+    '500': '#9c27b0',
+    '600': '#8e24aa',
+    '700': '#7b1fa2',
+    '800': '#6a1b9a',
+    '900': '#4a148c',
+    'A100': '#ea80fc',
+    'A200': '#e040fb',
+    'A400': '#d500f9',
+    'A700': '#aa00ff',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 A100'
+  },
+  'deep-purple': {
+    '50': '#ede7f6',
+    '100': '#d1c4e9',
+    '200': '#b39ddb',
+    '300': '#9575cd',
+    '400': '#7e57c2',
+    '500': '#673ab7',
+    '600': '#5e35b1',
+    '700': '#512da8',
+    '800': '#4527a0',
+    '900': '#311b92',
+    'A100': '#b388ff',
+    'A200': '#7c4dff',
+    'A400': '#651fff',
+    'A700': '#6200ea',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 A100'
+  },
+  'indigo': {
+    '50': '#e8eaf6',
+    '100': '#c5cae9',
+    '200': '#9fa8da',
+    '300': '#7986cb',
+    '400': '#5c6bc0',
+    '500': '#3f51b5',
+    '600': '#3949ab',
+    '700': '#303f9f',
+    '800': '#283593',
+    '900': '#1a237e',
+    'A100': '#8c9eff',
+    'A200': '#536dfe',
+    'A400': '#3d5afe',
+    'A700': '#304ffe',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 A100'
+  },
+  'blue': {
+    '50': '#e3f2fd',
+    '100': '#bbdefb',
+    '200': '#90caf9',
+    '300': '#64b5f6',
+    '400': '#42a5f5',
+    '500': '#2196f3',
+    '600': '#1e88e5',
+    '700': '#1976d2',
+    '800': '#1565c0',
+    '900': '#0d47a1',
+    'A100': '#82b1ff',
+    'A200': '#448aff',
+    'A400': '#2979ff',
+    'A700': '#2962ff',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '100 200 300 400 A100'
+  },
+  'light-blue': {
+    '50': '#e1f5fe',
+    '100': '#b3e5fc',
+    '200': '#81d4fa',
+    '300': '#4fc3f7',
+    '400': '#29b6f6',
+    '500': '#03a9f4',
+    '600': '#039be5',
+    '700': '#0288d1',
+    '800': '#0277bd',
+    '900': '#01579b',
+    'A100': '#80d8ff',
+    'A200': '#40c4ff',
+    'A400': '#00b0ff',
+    'A700': '#0091ea',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '500 600 700 800 900 A700'
+  },
+  'cyan': {
+    '50': '#e0f7fa',
+    '100': '#b2ebf2',
+    '200': '#80deea',
+    '300': '#4dd0e1',
+    '400': '#26c6da',
+    '500': '#00bcd4',
+    '600': '#00acc1',
+    '700': '#0097a7',
+    '800': '#00838f',
+    '900': '#006064',
+    'A100': '#84ffff',
+    'A200': '#18ffff',
+    'A400': '#00e5ff',
+    'A700': '#00b8d4',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '500 600 700 800 900'
+  },
+  'teal': {
+    '50': '#e0f2f1',
+    '100': '#b2dfdb',
+    '200': '#80cbc4',
+    '300': '#4db6ac',
+    '400': '#26a69a',
+    '500': '#009688',
+    '600': '#00897b',
+    '700': '#00796b',
+    '800': '#00695c',
+    '900': '#004d40',
+    'A100': '#a7ffeb',
+    'A200': '#64ffda',
+    'A400': '#1de9b6',
+    'A700': '#00bfa5',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '500 600 700 800 900'
+  },
+  'green': {
+    '50': '#e8f5e9',
+    '100': '#c8e6c9',
+    '200': '#a5d6a7',
+    '300': '#81c784',
+    '400': '#66bb6a',
+    '500': '#4caf50',
+    '600': '#43a047',
+    '700': '#388e3c',
+    '800': '#2e7d32',
+    '900': '#1b5e20',
+    'A100': '#b9f6ca',
+    'A200': '#69f0ae',
+    'A400': '#00e676',
+    'A700': '#00c853',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '500 600 700 800 900'
+  },
+  'light-green': {
+    '50': '#f1f8e9',
+    '100': '#dcedc8',
+    '200': '#c5e1a5',
+    '300': '#aed581',
+    '400': '#9ccc65',
+    '500': '#8bc34a',
+    '600': '#7cb342',
+    '700': '#689f38',
+    '800': '#558b2f',
+    '900': '#33691e',
+    'A100': '#ccff90',
+    'A200': '#b2ff59',
+    'A400': '#76ff03',
+    'A700': '#64dd17',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '800 900'
+  },
+  'lime': {
+    '50': '#f9fbe7',
+    '100': '#f0f4c3',
+    '200': '#e6ee9c',
+    '300': '#dce775',
+    '400': '#d4e157',
+    '500': '#cddc39',
+    '600': '#c0ca33',
+    '700': '#afb42b',
+    '800': '#9e9d24',
+    '900': '#827717',
+    'A100': '#f4ff81',
+    'A200': '#eeff41',
+    'A400': '#c6ff00',
+    'A700': '#aeea00',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '900'
+  },
+  'yellow': {
+    '50': '#fffde7',
+    '100': '#fff9c4',
+    '200': '#fff59d',
+    '300': '#fff176',
+    '400': '#ffee58',
+    '500': '#ffeb3b',
+    '600': '#fdd835',
+    '700': '#fbc02d',
+    '800': '#f9a825',
+    '900': '#f57f17',
+    'A100': '#ffff8d',
+    'A200': '#ffff00',
+    'A400': '#ffea00',
+    'A700': '#ffd600',
+    'contrastDefaultColor': 'dark'
+  },
+  'amber': {
+    '50': '#fff8e1',
+    '100': '#ffecb3',
+    '200': '#ffe082',
+    '300': '#ffd54f',
+    '400': '#ffca28',
+    '500': '#ffc107',
+    '600': '#ffb300',
+    '700': '#ffa000',
+    '800': '#ff8f00',
+    '900': '#ff6f00',
+    'A100': '#ffe57f',
+    'A200': '#ffd740',
+    'A400': '#ffc400',
+    'A700': '#ffab00',
+    'contrastDefaultColor': 'dark'
+  },
+  'orange': {
+    '50': '#fff3e0',
+    '100': '#ffe0b2',
+    '200': '#ffcc80',
+    '300': '#ffb74d',
+    '400': '#ffa726',
+    '500': '#ff9800',
+    '600': '#fb8c00',
+    '700': '#f57c00',
+    '800': '#ef6c00',
+    '900': '#e65100',
+    'A100': '#ffd180',
+    'A200': '#ffab40',
+    'A400': '#ff9100',
+    'A700': '#ff6d00',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '800 900'
+  },
+  'deep-orange': {
+    '50': '#fbe9e7',
+    '100': '#ffccbc',
+    '200': '#ffab91',
+    '300': '#ff8a65',
+    '400': '#ff7043',
+    '500': '#ff5722',
+    '600': '#f4511e',
+    '700': '#e64a19',
+    '800': '#d84315',
+    '900': '#bf360c',
+    'A100': '#ff9e80',
+    'A200': '#ff6e40',
+    'A400': '#ff3d00',
+    'A700': '#dd2c00',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 300 400 A100 A200'
+  },
+  'brown': {
+    '50': '#efebe9',
+    '100': '#d7ccc8',
+    '200': '#bcaaa4',
+    '300': '#a1887f',
+    '400': '#8d6e63',
+    '500': '#795548',
+    '600': '#6d4c41',
+    '700': '#5d4037',
+    '800': '#4e342e',
+    '900': '#3e2723',
+    'A100': '#d7ccc8',
+    'A200': '#bcaaa4',
+    'A400': '#8d6e63',
+    'A700': '#5d4037',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200'
+  },
+  'grey': {
+    '0': '#ffffff',
+    '50': '#fafafa',
+    '100': '#f5f5f5',
+    '200': '#eeeeee',
+    '300': '#e0e0e0',
+    '400': '#bdbdbd',
+    '500': '#9e9e9e',
+    '600': '#757575',
+    '700': '#616161',
+    '800': '#424242',
+    '900': '#212121',
+    '1000': '#000000',
+    'A100': '#ffffff',
+    'A200': '#eeeeee',
+    'A400': '#bdbdbd',
+    'A700': '#616161',
+    'contrastDefaultColor': 'dark',
+    'contrastLightColors': '600 700 800 900'
+  },
+  'blue-grey': {
+    '50': '#eceff1',
+    '100': '#cfd8dc',
+    '200': '#b0bec5',
+    '300': '#90a4ae',
+    '400': '#78909c',
+    '500': '#607d8b',
+    '600': '#546e7a',
+    '700': '#455a64',
+    '800': '#37474f',
+    '900': '#263238',
+    'A100': '#cfd8dc',
+    'A200': '#b0bec5',
+    'A400': '#78909c',
+    'A700': '#455a64',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': '50 100 200 300'
+  }
+});
+})();
 
-angular.module('material.core')
+(function() {
+'use strict';
+
+angular.module('material.core.theming', ['material.core.theming.palette'])
   .directive('mdTheme', ThemingDirective)
   .directive('mdThemable', ThemableDirective)
-  .provider('$mdTheming', ThemingProvider);
+  .provider('$mdTheming', ThemingProvider)
+  .run(generateThemes);
 
 /**
  * @ngdoc provider
@@ -1519,18 +2272,232 @@ angular.module('material.core')
  * classes when they change. Default is `false`. Enabling can reduce performance.
  */
 
-function ThemingProvider() {
+// In memory storage of defined themes and color palettes (both loaded by CSS, and user specified)
+var PALETTES;
+var THEMES;
+var themingProvider;
+var generationIsDone;
+
+var DARK_FOREGROUND = {
+  name: 'dark',
+  '1': 'rgba(0,0,0,0.87)',
+  '2': 'rgba(0,0,0,0.54)',
+  '3': 'rgba(0,0,0,0.26)',
+  '4': 'rgba(0,0,0,0.12)'
+};
+var LIGHT_FOREGROUND = {
+  name: 'light',
+  '1': 'rgba(255,255,255,1.0)',
+  '2': 'rgba(255,255,255,0.7)',
+  '3': 'rgba(255,255,255,0.3)',
+  '4': 'rgba(255,255,255,0.12)'
+};
+
+var DARK_SHADOW = '1px 1px 0px rgba(0,0,0,0.4), -1px -1px 0px rgba(0,0,0,0.4)';
+var LIGHT_SHADOW = '';
+
+var DARK_CONTRAST_COLOR = colorToRgbaArray('rgba(0,0,0,0.87)');
+var LIGHT_CONTRAST_COLOR = colorToRgbaArray('rgb(255,255,255)');
+
+var THEME_COLOR_TYPES = ['primary', 'accent', 'warn', 'background'];
+var DEFAULT_COLOR_TYPE = 'primary';
+
+// A color in a theme will use these hues by default, if not specified by user.
+var LIGHT_DEFAULT_HUES = {
+  'accent': {
+    'default': 'A700',
+    'hue-1': 'A200',
+    'hue-2': 'A400',
+    'hue-3': 'A100'
+  }
+};
+var DARK_DEFAULT_HUES = {
+  'background': {
+    'default': '500',
+    'hue-1': '300',
+    'hue-2': '600',
+    'hue-3': '800'
+  }
+};
+THEME_COLOR_TYPES.forEach(function(colorType) {
+  // Color types with unspecified default hues will use these default hue values
+  var defaultDefaultHues = {
+    'default': '500',
+    'hue-1': '300',
+    'hue-2': '800',
+    'hue-3': 'A100'
+  };
+  if (!LIGHT_DEFAULT_HUES[colorType]) LIGHT_DEFAULT_HUES[colorType] = defaultDefaultHues;
+  if (!DARK_DEFAULT_HUES[colorType]) DARK_DEFAULT_HUES[colorType] = defaultDefaultHues;
+});
+
+var VALID_HUE_VALUES = [
+  '50', '100', '200', '300', '400', '500', '600',
+  '700', '800', '900', 'A100', 'A200', 'A400', 'A700'
+];
+
+function ThemingProvider($mdColorPalette) {
+  PALETTES = {};
+  THEMES = {};
   var defaultTheme = 'default';
   var alwaysWatchTheme = false;
-  return {
+
+  // Load JS Defined Palettes
+  angular.extend(PALETTES, $mdColorPalette);
+
+  // Default theme defined in core.js
+
+  ThemingService.$inject = ["$rootScope"];
+  return themingProvider = {
+    definePalette: definePalette,
+    extendPalette: extendPalette,
+    theme: registerTheme,
+
     setDefaultTheme: function(theme) {
       defaultTheme = theme;
     },
     alwaysWatchTheme: function(alwaysWatch) {
       alwaysWatchTheme = alwaysWatch;
     },
-    $get: ['$rootScope', ThemingService]
+    $get: ThemingService,
+    _LIGHT_DEFAULT_HUES: LIGHT_DEFAULT_HUES,
+    _DARK_DEFAULT_HUES: DARK_DEFAULT_HUES,
+    _PALETTES: PALETTES,
+    _THEMES: THEMES,
+    _parseRules: parseRules,
+    _rgba: rgba
   };
+
+  // Example: $mdThemingProvider.definePalette('neonRed', { 50: '#f5fafa', ... });
+  function definePalette(name, map) {
+    map = map || {};
+    PALETTES[name] = checkPaletteValid(name, map);
+    return themingProvider;
+  }
+
+  // Returns an new object which is a copy of a given palette `name` with variables from
+  // `map` overwritten
+  // Example: var neonRedMap = $mdThemingProvider.extendPalette('red', { 50: '#f5fafafa' });
+  function extendPalette(name, map) {
+    return checkPaletteValid(name,  angular.extend({}, PALETTES[name] || {}, map) );
+  }
+
+  // Make sure that palette has all required hues
+  function checkPaletteValid(name, map) {
+    var missingColors = VALID_HUE_VALUES.filter(function(field) {
+      return !map[field];
+    });
+    if (missingColors.length) {
+      throw new Error("Missing colors %1 in palette %2!"
+                      .replace('%1', missingColors.join(', '))
+                      .replace('%2', name));
+    }
+
+    return map;
+  }
+
+  // Register a theme (which is a collection of color palettes to use with various states
+  // ie. warn, accent, primary )
+  // Optionally inherit from an existing theme
+  // $mdThemingProvider.theme('custom-theme').primaryColor('red');
+  function registerTheme(name, inheritFrom) {
+    inheritFrom = inheritFrom || 'default';
+    if (THEMES[name]) return THEMES[name];
+
+    var parentTheme = typeof inheritFrom === 'string' ? THEMES[inheritFrom] : inheritFrom;
+    var theme = new Theme(name);
+
+    if (parentTheme) {
+      angular.forEach(parentTheme.colors, function(color, colorType) {
+        theme.colors[colorType] = {
+          name: color.name,
+          // Make sure a COPY of the hues is given to the child color,
+          // not the same reference.
+          hues: angular.extend({}, color.hues)
+        };
+      });
+    }
+    THEMES[name] = theme;
+
+    return theme;
+  }
+
+  function Theme(name) {
+    var self = this;
+    self.name = name;
+    self.colors = {};
+
+    self.dark = setDark;
+    setDark(false);
+
+    function setDark(isDark) {
+      isDark = arguments.length === 0 ? true : !!isDark;
+
+      // If no change, abort
+      if (isDark === self.isDark) return;
+
+      self.isDark = isDark;
+
+      self.foregroundPalette = self.isDark ? LIGHT_FOREGROUND : DARK_FOREGROUND;
+      self.foregroundShadow = self.isDark ? DARK_SHADOW : LIGHT_SHADOW;
+      
+      // Light and dark themes have different default hues.
+      // Go through each existing color type for this theme, and for every
+      // hue value that is still the default hue value from the previous light/dark setting,
+      // set it to the default hue value from the new light/dark setting.
+      var newDefaultHues = self.isDark ? DARK_DEFAULT_HUES : LIGHT_DEFAULT_HUES;
+      var oldDefaultHues = self.isDark ? LIGHT_DEFAULT_HUES : DARK_DEFAULT_HUES;
+      angular.forEach(newDefaultHues, function(newDefaults, colorType) {
+        var color = self.colors[colorType];
+        var oldDefaults = oldDefaultHues[colorType];
+        if (color) {
+          for (var hueName in color.hues) {
+            if (color.hues[hueName] === oldDefaults[hueName]) {
+              color.hues[hueName] = newDefaults[hueName];
+            }
+          }
+        }
+      });
+
+      return self;
+    }
+
+    THEME_COLOR_TYPES.forEach(function(colorType) {
+      var defaultHues = (self.isDark ? DARK_DEFAULT_HUES : LIGHT_DEFAULT_HUES)[colorType];
+      self[colorType + 'Color'] = function setColorType(paletteName, hues) {
+        var color = self.colors[colorType] = {
+          name: paletteName,
+          hues: angular.extend({}, defaultHues, hues)
+        };
+
+        Object.keys(color.hues).forEach(function(name) {
+          if (!defaultHues[name]) {
+            throw new Error("Invalid hue name '%1' in theme %2's %3 color %4. Available hue names: %4"
+              .replace('%1', name)
+              .replace('%2', self.name)
+              .replace('%3', paletteName)
+              .replace('%4', Object.keys(defaultHues).join(', '))
+            );
+          }
+        });
+        Object.keys(color.hues).map(function(key) {
+          return color.hues[key];
+        }).forEach(function(hueValue) {
+          if (VALID_HUE_VALUES.indexOf(hueValue) == -1) {
+            throw new Error("Invalid hue value '%1' in theme %2's %3 color %4. Available hue values: %5"
+              .replace('%1', hueValue)
+              .replace('%2', self.name)
+              .replace('%3', colorType)
+              .replace('%4', paletteName)
+              .replace('%5', VALID_HUE_VALUES.join(', '))
+            );
+          }
+        });
+
+        return self;
+      };
+    });
+  }
 
   /**
    * @ngdoc service
@@ -1552,6 +2519,7 @@ function ThemingProvider() {
    * ```
    * @param {el=} element to apply theming to
    */
+  /* @ngInject */
   function ThemingService($rootScope) {
     applyTheme.inherit = function(el, parent) {
       var ctrl = parent.controller('mdTheme');
@@ -1590,6 +2558,7 @@ function ThemingProvider() {
     }
   }
 }
+ThemingProvider.$inject = ["$mdColorPalette"];
 
 function ThemingDirective($interpolate) {
   return {
@@ -1614,4 +2583,198 @@ function ThemableDirective($mdTheming) {
   return $mdTheming;
 }
 ThemableDirective.$inject = ["$mdTheming"];
+
+function parseRules(theme, colorType, rules) {
+  checkValidPalette(theme, colorType);
+
+  rules = rules.replace(/THEME_NAME/g, theme.name);
+  var generatedRules = [];
+  var color = theme.colors[colorType];
+
+  var themeNameRegex = new RegExp('.md-' + theme.name + '-theme', 'g');
+  // Matches '{{ primary-color }}', etc
+  var hueRegex = new RegExp('(\'|")?{{\\s*(' + colorType + ')-(color|contrast)-?(\\d\\.?\\d*)?\\s*}}(\"|\')?','g');
+  var simpleVariableRegex = /'?"?\{\{\s*([a-zA-Z]+)-(A?\d+|hue\-[0-3]|shadow)-?(\d\.?\d*)?\s*\}\}'?"?/g;
+  var palette = PALETTES[color.name];
+
+  // find and replace simple variables where we use a specific hue, not angentire palette
+  // eg. "{{primary-100}}"
+  //\(' + THEME_COLOR_TYPES.join('\|') + '\)'
+  rules = rules.replace(simpleVariableRegex, function(match, colorType, hue, opacity) {
+    if (colorType === 'foreground') {
+      if (hue == 'shadow') {
+        return theme.foregroundShadow;
+      } else {
+        return theme.foregroundPalette[hue] || theme.foregroundPalette['1'];
+      }
+    }
+    if (hue.indexOf('hue') === 0) {
+      hue = theme.colors[colorType].hues[hue];
+    }
+    return rgba( (PALETTES[ theme.colors[colorType].name ][hue] || '').value, opacity );
+  });
+
+  // For each type, generate rules for each hue (ie. default, md-hue-1, md-hue-2, md-hue-3)
+  angular.forEach(color.hues, function(hueValue, hueName) {
+    var newRule = rules
+      .replace(hueRegex, function(match, _, colorType, hueType, opacity) {
+        return rgba(palette[hueValue][hueType === 'color' ? 'value' : 'contrast'], opacity);
+      });
+    if (hueName !== 'default') {
+      newRule = newRule.replace(themeNameRegex, '.md-' + theme.name + '-theme.md-' + hueName);
+    }
+    generatedRules.push(newRule);
+  });
+
+  return generatedRules.join('');
+}
+
+// Generate our themes at run time given the state of THEMES and PALETTES
+function generateThemes($injector) {
+  var themeCss = $injector.has('$MD_THEME_CSS') ? $injector.get('$MD_THEME_CSS') : '';
+
+  // MD_THEME_CSS is a string generated by the build process that includes all the themable
+  // components as templates
+
+  // Expose contrast colors for palettes to ensure that text is always readable
+  angular.forEach(PALETTES, sanitizePalette);
+
+  // Break the CSS into individual rules
+  var rules = themeCss.split(/\}(?!(\}|'|"|;))/)
+    .filter(function(rule) { return rule && rule.length; })
+    .map(function(rule) { return rule.trim() + '}'; });
+
+  var rulesByType = {};
+  THEME_COLOR_TYPES.forEach(function(type) {
+    rulesByType[type] = '';
+  });
+  var ruleMatchRegex = new RegExp('md-(' + THEME_COLOR_TYPES.join('|') + ')', 'g');
+
+  // Sort the rules based on type, allowing us to do color substitution on a per-type basis
+  rules.forEach(function(rule) {
+    var match = rule.match(ruleMatchRegex);
+    // First: test that if the rule has '.md-accent', it goes into the accent set of rules
+    for (var i = 0, type; type = THEME_COLOR_TYPES[i]; i++) {
+      if (rule.indexOf('.md-' + type) > -1) {
+        return rulesByType[type] += rule;
+      }
+    }
+
+    // If no eg 'md-accent' class is found, try to just find 'accent' in the rule and guess from
+    // there
+    for (i = 0; type = THEME_COLOR_TYPES[i]; i++) {
+      if (rule.indexOf(type) > -1) {
+        return rulesByType[type] += rule;
+      }
+    }
+
+    // Default to the primary array
+    return rulesByType[DEFAULT_COLOR_TYPE] += rule;
+  });
+
+  var styleString = '';
+
+  // For each theme, use the color palettes specified for `primary`, `warn` and `accent`
+  // to generate CSS rules.
+  angular.forEach(THEMES, function(theme) {
+    THEME_COLOR_TYPES.forEach(function(colorType) {
+      styleString += parseRules(theme, colorType, rulesByType[colorType] + '');
+    });
+  });
+
+  // Insert our newly minted styles into the DOM
+  if (!generationIsDone) {
+    var style = document.createElement('style');
+    style.innerHTML = styleString;
+    var head = document.getElementsByTagName('head')[0];
+    head.insertBefore(style, head.firstElementChild);
+    generationIsDone = true;
+  }
+
+  // The user specifies a 'default' contrast color as either light or dark,
+  // then explicitly lists which hues are the opposite contrast (eg. A100 has dark, A200 has light)
+  function sanitizePalette(palette) {
+    var defaultContrast = palette.contrastDefaultColor;
+    var lightColors = palette.contrastLightColors || [];
+    var darkColors = palette.contrastDarkColors || [];
+
+    // Sass provides these colors as space-separated lists
+    if (typeof lightColors === 'string') lightColors = lightColors.split(' ');
+    if (typeof darkColors === 'string') darkColors = darkColors.split(' ');
+
+    // Cleanup after ourselves
+    delete palette.contrastDefaultColor;
+    delete palette.contrastLightColors;
+    delete palette.contrastDarkColors;
+
+    // Change { 'A100': '#fffeee' } to { 'A100': { value: '#fffeee', contrast:DARK_CONTRAST_COLOR }
+    angular.forEach(palette, function(hueValue, hueName) {
+      if (angular.isObject(hueValue)) return; // Already converted
+      // Map everything to rgb colors
+      var rgbValue = colorToRgbaArray(hueValue);
+      if (!rgbValue) {
+        throw new Error("Color %1, in palette %2's hue %3, is invalid. Hex or rgb(a) color expected."
+                        .replace('%1', hueValue)
+                        .replace('%2', palette.name)
+                        .replace('%3', hueName));
+      }
+
+      palette[hueName] = {
+        value: rgbValue,
+        contrast: getContrastColor()
+      };
+      function getContrastColor() {
+        if (defaultContrast === 'light') {
+          return darkColors.indexOf(hueName) > -1 ? DARK_CONTRAST_COLOR : LIGHT_CONTRAST_COLOR;
+        } else {
+          return lightColors.indexOf(hueName) > -1 ? LIGHT_CONTRAST_COLOR : DARK_CONTRAST_COLOR;
+        }
+      }
+    });
+  }
+
+}
+generateThemes.$inject = ["$injector"];
+
+function checkValidPalette(theme, colorType) {
+  // If theme attempts to use a palette that doesnt exist, throw error
+  if (!PALETTES[ (theme.colors[colorType] || {}).name ]) {
+    throw new Error(
+      "You supplied an invalid color palette for theme %1's %2 palette. Available palettes: %3"
+                    .replace('%1', theme.name)
+                    .replace('%2', colorType)
+                    .replace('%3', Object.keys(PALETTES).join(', '))
+    );
+  }
+}
+
+function colorToRgbaArray(clr) {
+  if (angular.isArray(clr) && clr.length == 3) return clr;
+  if (/^rgb/.test(clr)) {
+    return clr.replace(/(^\s*rgba?\(|\)\s*$)/g, '').split(',').map(function(value) {
+      return parseInt(value, 10);
+    });
+  }
+  if (clr.charAt(0) == '#') clr = clr.substring(1);
+  if (!/^([a-fA-F0-9]{3}){1,2}$/g.test(clr)) return;
+
+  var dig = clr.length / 3;
+  var red = clr.substr(0, dig);
+  var grn = clr.substr(dig, dig);
+  var blu = clr.substr(dig * 2);
+  if (dig === 1) {
+    red += red;
+    grn += grn;
+    blu += blu;
+  }
+  return [parseInt(red, 16), parseInt(grn, 16), parseInt(blu, 16)];
+}
+
+function rgba(rgbArray, opacity) {
+  if (rgbArray.length == 4) opacity = rgbArray.pop();
+  return opacity && opacity.length ?
+    'rgba(' + rgbArray.join(',') + ',' + opacity + ')' :
+    'rgb(' + rgbArray.join(',') + ')';
+}
+
 })();
