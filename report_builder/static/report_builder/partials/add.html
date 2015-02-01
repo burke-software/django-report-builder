@@ -7,7 +7,10 @@
         </h2>
       </md-toolbar>
       <form style="padding: 20px;" name="reportForm" ng-submit="submitForm()">
-        <md-text-float label="Report Name" required="required" name="name" ng-model="report.name"></md-text-float>
+        <md-input-container>
+          <label>Report Name</label>
+          <input required="required" name="name" ng-model="report.name"></input>
+        </md-input-container>
         <md-input-container flex>
             <label>Description</label>
             <textarea ng-model="report.description"></textarea>

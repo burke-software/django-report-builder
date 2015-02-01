@@ -44,6 +44,9 @@ Admin action is disabled by default. To enable set
     
     REPORT_BUILDER_GLOBAL_EXPORT = True
 
+This allows users to select lists of objects in django admin's change_list view and export them to a predefined report.
+In effect bypasses the report's filters using the checked off objects instead.
+
 ### Asynchronous Report Generation
 
 Sometimes it's useful to generate long running reports with a background worker. Defaults to off.

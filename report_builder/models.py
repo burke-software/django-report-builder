@@ -11,6 +11,9 @@ from django.db.models.fields import FieldDoesNotExist
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
+from decimal import Decimal
+import time
+import datetime
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -114,41 +117,33 @@ class Report(models.Model):
         filters = {}
         excludes = {}
         for filter_field in report.filterfield_set.all():
-            try:
-                # exclude properties from standard ORM filtering
-                if '[property]' in filter_field.field_verbose:
-                    continue
-                if '[custom' in filter_field.field_verbose:
-                    continue
+            # exclude properties from standard ORM filtering
+            if filter_field.field_type == "Property":
+                continue
+            if filter_field.field_type == "Custom":
+                continue
 
-                filter_string = str(filter_field.path + filter_field.field)
+            filter_string = str(filter_field.path + filter_field.field)
 
-                if filter_field.filter_type:
-                    filter_string += '__' + filter_field.filter_type
+            if filter_field.filter_type:
+                filter_string += '__' + filter_field.filter_type
 
-                # Check for special types such as isnull
-                if (filter_field.filter_type == "isnull"
-                        and filter_field.filter_value in ["0", "False"]):
-                    filter_ = {filter_string: False}
-                elif filter_field.filter_type == "in":
-                    filter_ = {filter_string: filter_field.filter_value.split(',')}
-                else:
-                    filter_value = filter_field.filter_value
-                    if filter_field.filter_type == 'range':
-                        filter_value = [filter_value, filter_field.filter_value2]
-                    filter_ = {filter_string: filter_value}
+            # Check for special types such as isnull
+            if (filter_field.filter_type == "isnull"
+                    and filter_field.filter_value in ["0", "False"]):
+                filter_ = {filter_string: False}
+            elif filter_field.filter_type == "in":
+                filter_ = {filter_string: filter_field.filter_value.split(',')}
+            else:
+                filter_value = filter_field.filter_value
+                if filter_field.filter_type == 'range':
+                    filter_value = [filter_value, filter_field.filter_value2]
+                filter_ = {filter_string: filter_value}
 
-                if not filter_field.exclude:
-                    filters.update(filter_)
-                else:
-                    excludes.update(filter_)
-
-            except Exception:
-                import sys
-                e = sys.exc_info()[1]
-                message += "Filter Error on %s. If you are using the report builder then " % filter_field.field_verbose
-                message += "you found a bug! "
-                message += "If you made this in admin, then you probably did something wrong."
+            if not filter_field.exclude:
+                filters.update(filter_)
+            else:
+                excludes.update(filter_)
 
         if filters:
             objects = objects.filter(**filters)
@@ -339,6 +334,70 @@ class FilterField(models.Model):
             model_field = None
         if model_field and model_field.choices:
             return model_field.choices
+
+    def filter_property(self, value):
+        """ Determine if passed value should be filtered or not """
+        filter_field = self
+        filter_type = filter_field.filter_type
+        filter_value = filter_field.filter_value
+        filtered = True
+        WEEKDAY_INTS = {
+            'monday': 0,
+            'tuesday': 1,
+            'wednesday': 2,
+            'thursday': 3,
+            'friday': 4,
+            'saturday': 5,
+            'sunday': 6,
+        }
+        if filter_type == 'exact' and str(value) == filter_value:
+            filtered = False
+        if filter_type == 'iexact' and str(value).lower() == str(filter_value).lower():
+            filtered = False
+        if filter_type == 'contains' and filter_value in value:
+            filtered = False
+        if filter_type == 'icontains' and str(filter_value).lower() in str(value).lower():
+            filtered = False
+        if filter_type == 'in' and value in filter_value:
+            filtered = False
+        # convert dates and datetimes to timestamps in order to compare digits and date/times the same
+        if isinstance(value, datetime.datetime) or isinstance(value, datetime.date):
+            value = str(time.mktime(value.timetuple()))
+            try:
+                filter_value_dt = parser.parse(filter_value)
+                filter_value = str(time.mktime(filter_value_dt.timetuple()))
+            except ValueError:
+                pass
+        if filter_type == 'gt' and Decimal(value) > Decimal(filter_value):
+            filtered = False
+        if filter_type == 'gte' and Decimal(value) >= Decimal(filter_value):
+            filtered = False
+        if filter_type == 'lt' and Decimal(value) < Decimal(filter_value):
+            filtered = False
+        if filter_type == 'lte' and Decimal(value) <= Decimal(filter_value):
+            filtered = False
+        if filter_type == 'startswith' and str(value).startswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'istartswith' and str(value).lower().startswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'endswith' and str(value).endswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'iendswith' and str(value).lower().endswith(str(filter_value)):
+            filtered = False
+        if filter_type == 'range' and value in [int(x) for x in filter_value]:
+            filtered = False
+        if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
+            filtered = False
+        if filter_type == 'isnull' and value == None:
+            filtered = False
+        if filter_type == 'regex' and re.search(filter_value, value):
+            filtered = False
+        if filter_type == 'iregex' and re.search(filter_value, value, re.I):
+            filtered = False
+
+        if filter_field.exclude:
+            return not filtered
+        return filtered
 
     @property
     def field_type(self):

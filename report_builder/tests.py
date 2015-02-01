@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
 from .models import Report, DisplayField, FilterField
@@ -71,7 +72,7 @@ class UtilityFunctionTests(TestCase):
 
     def test_filter_property(self):
         # Not a very complete test - only tests one type of filter
-        result = filter_property(self.filter_field, 'spam')
+        result = self.filter_field.filter_property('spam')
         self.assertTrue(result)
 
     def test_custom_global_model_manager(self):
@@ -142,6 +143,7 @@ class ReportTests(TestCase):
         ct = ContentType.objects.get(name="bar")
         self.report = Report.objects.create(root_model=ct, name="A")
         Bar.objects.create(char_field="wooo")
+        self.generate_url = reverse('generate_report', args=[self.report.id])
 
     def test_property_display(self):
         DisplayField.objects.create(
@@ -149,6 +151,42 @@ class ReportTests(TestCase):
             field="i_want_char_field",
             field_verbose="stuff",
         )
-        response = self.client.get(
-            '/report_builder/api/report/1/generate/{}/'.format(self.report.id))
+        response = self.client.get(self.generate_url)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'lol no')
+
+    def test_error_display_field(self):
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_do_not_exist",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        response = self.client.get(self.generate_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'lol no')
+        self.assertNotContains(response, 'i_do_not_exist')
+
+    def test_filter_property(self):
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        filter_field = FilterField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+            filter_type = 'contains',
+            filter_value = 'lol no',
+        )
+        response = self.client.get(self.generate_url)
+        self.assertContains(response, 'lol no')
+        filter_field.filter_value = 'It does not contain this'
+        filter_field.save()
+        response = self.client.get(self.generate_url)
+        self.assertNotContains(response, 'lol no')

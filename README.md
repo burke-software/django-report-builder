@@ -20,6 +20,7 @@ For the old see the [2.x] branch.
 - Requires Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x] branch instead. I will continue to accept pull requests for 2.x however new features will be added only in 3.x
 - Responsive
 - API built with DRF - in theory you could impliment your own frontend
+- Property fields must now be explicity allowed in settings
  
 ## Why a frontend redesign?
 
@@ -38,10 +39,8 @@ There's actually no schema changes at all - but you'll want to be in sync with t
 
 ## What's next
 
-- Fixing the bugs you find
-- More documentation
 - Or filtering
-- Widgets that help with filter values (Dates showing a calendar widget, ect)
+- More Testing
 
 # What is Django Report Builder?
 

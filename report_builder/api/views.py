@@ -80,6 +80,8 @@ class FieldsView(RelatedFieldsView):
             self.path,
             self.path_verbose,)
         result = []
+        fields = None
+        extra = None
         meta = getattr(self.model_class, 'ReportBuilder', None)
         if meta is not None:
             fields = getattr(meta, 'fields', None)
@@ -144,17 +146,27 @@ class GenerateReport(DataExportMixin, APIView):
         user = request.user
         if not queryset:
             queryset, message = report.get_query()
-        property_filters = report.filterfield_set.filter(
-            Q(field_verbose__contains='[property]') |
-            Q(field_verbose__contains='[custom')
-        )
+
+        display_fields = report.displayfield_set.all()
+        bad_display_fields = []
+        for display_field in display_fields:
+            if display_field.field_type == "Invalid":
+                bad_display_fields.append(display_field)
+        display_fields = display_fields.exclude(
+            id__in=[o.id for o in bad_display_fields])
+
+        property_filters=[]
+        for field in report.filterfield_set.all():
+            if field.field_type == "Property":
+                property_filters += [field]
+
         objects_list, message = self.report_to_list(
             queryset,
-            report.displayfield_set.all(),
+            display_fields,
             user,
             property_filters=property_filters,
-            preview=False,)
-        display_fields = report.displayfield_set.all().values_list('name', flat=True)
+            preview=True,)
+        display_fields = display_fields.values_list('name', flat=True)
         response = {
             'data': objects_list,
             'meta': {'titles': display_fields},

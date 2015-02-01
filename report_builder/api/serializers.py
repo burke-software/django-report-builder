@@ -16,7 +16,11 @@ class FormatSerializer(serializers.ModelSerializer):
 class DisplayFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = DisplayField
-        read_only_fields = ('id',)
+        fields = ('id', 'path', 'path_verbose', 'field', 'field_verbose',
+                  'name', 'sort', 'sort_reverse', 'width', 'aggregate',
+                  'position', 'total', 'group', 'report', 'display_format',
+                  'field_type')
+        read_only_fields = ('id')
 
 
 class FilterFieldSerializer(serializers.ModelSerializer):
