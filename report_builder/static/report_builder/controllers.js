@@ -141,6 +141,14 @@ reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidena
   $scope.reports = reportService.getList().$object;
   $scope.reportOrder = "name";
   
+  $scope.currentUserFilter = function(report) {
+    return ( report.user_created.id == CURRENT_USER );
+  };
+  
+  $scope.notCurrentUserFilter = function(report) {
+    return !( $scope.currentUserFilter(report) );
+  };
+  
   $scope.close = function() {
     $mdSidenav('left').close();
   };
