@@ -15,7 +15,13 @@
       var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
       var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
       var BASE_URL = "{% url 'report_builder' %}";
+    </script> 
+    
+    {% if user %}
+    <script>
+      var CURRENT_USER = '{{ user.id }}';
     </script>
+    {% endif %}
 
     <script src="{% static 'report_builder/app.js' %}"></script>
     <script src="{% static 'report_builder/controllers.js' %}"></script>
