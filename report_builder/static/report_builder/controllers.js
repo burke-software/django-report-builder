@@ -47,13 +47,12 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
   };
 
   $scope.openReport = function(reportId) {
-    $mdSidenav('left').close();
     $scope.showFields = true;
     $location.path('/report/' + reportId, false);
     reportService.getReport(reportId).then(function(report) {
+      $mdSidenav('left').close();
       $scope.fields_header = report.root_model_name;
       $scope.report = report;
-      console.log(report);
       $scope.report.lastSaved = null;
       root_related_field = {
         verbose_name: report.root_model_name,

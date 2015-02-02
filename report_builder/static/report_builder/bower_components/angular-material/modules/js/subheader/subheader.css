@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc3
  */
 @-webkit-keyframes subheaderStickyHoverIn {
   0% {
@@ -56,3 +56,6 @@
     .md-subheader:not(.md-sticky-no-effect):not(.md-sticky-clone)[sticky-prev-state="active"]:after {
       -webkit-animation: subheaderStickyHoverOut 0.3s ease-out both;
               animation: subheaderStickyHoverOut 0.3s ease-out both; }
+  .md-subheader .md-subheader-content {
+    z-index: 1;
+    position: relative; }

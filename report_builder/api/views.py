@@ -80,6 +80,25 @@ class FieldsView(RelatedFieldsView):
             self.path,
             self.path_verbose,)
         result = []
+        fields = None
+        extra = None
+        meta = getattr(self.model_class, 'ReportBuilder', None)
+        if meta is not None:
+            fields = getattr(meta, 'fields', None)
+            exclude = getattr(meta, 'exclude', None)
+            extra = getattr(meta, 'extra', None)
+            if fields is not None:
+                fields = list(fields)
+                for field in field_data['fields']:
+                    if field.name not in fields:
+                        field_data['fields'].remove(field)
+            if exclude is not None:
+                for field in field_data['fields']:
+                    if field.name in exclude:
+                        field_data['fields'].remove(field)
+            if extra is not None:
+                extra = list(extra)
+
         for new_field in field_data['fields']:
             verbose_name = getattr(new_field, 'verbose_name', None)
             if verbose_name == None:
@@ -93,6 +112,28 @@ class FieldsView(RelatedFieldsView):
                 'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,
             }]
+        # Add properties
+        if fields is not None or extra is not None:
+            if fields and extra:
+                extra_fields = list(set(fields + extra))
+            elif fields is not None:
+                extra_fields = fields
+            else:
+                extra_fields = extra
+            for field in extra_fields:
+                field_attr = getattr(self.model_class, field, None)
+                if isinstance(field_attr, property):
+                    result += [{
+                        'name': field,
+                        'field': field,
+                        'field_verbose': field,
+                        'field_type': 'Property',
+                        'path': field_data['path'],
+                        'path_verbose': field_data['path_verbose'],
+                        'help_text': 'Adding this property will '
+                        'significantly increase the time it takes to run a '
+                        'report.'
+                    }]
         return Response(result)
 
 
@@ -105,17 +146,27 @@ class GenerateReport(DataExportMixin, APIView):
         user = request.user
         if not queryset:
             queryset, message = report.get_query()
-        property_filters = report.filterfield_set.filter(
-            Q(field_verbose__contains='[property]') |
-            Q(field_verbose__contains='[custom')
-        )
+
+        display_fields = report.displayfield_set.all()
+        bad_display_fields = []
+        for display_field in display_fields:
+            if display_field.field_type == "Invalid":
+                bad_display_fields.append(display_field)
+        display_fields = display_fields.exclude(
+            id__in=[o.id for o in bad_display_fields])
+
+        property_filters=[]
+        for field in report.filterfield_set.all():
+            if field.field_type == "Property":
+                property_filters += [field]
+
         objects_list, message = self.report_to_list(
             queryset,
-            report.displayfield_set.all(),
+            display_fields,
             user,
             property_filters=property_filters,
-            preview=False,)
-        display_fields = report.displayfield_set.all().values_list('name', flat=True)
+            preview=True,)
+        display_fields = display_fields.values_list('name', flat=True)
         response = {
             'data': objects_list,
             'meta': {'titles': display_fields},

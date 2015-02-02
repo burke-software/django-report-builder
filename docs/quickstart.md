@@ -10,16 +10,27 @@
 
 ##Settings
 
-You may include and exclude fields or entire models.
+### Include and exclude fields and models
 
     REPORT_BUILDER_INCLUDE = []
     REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
 
-You may also limit which fields in a model can be used. Just add this property to a model
+### Per model settings
 
-    report_builder_exclude_fields = () # Lists or tuple of excluded fields
+You may also limit which fields in a model can be used. Add this class and these properties to a model
+This works similar to Django's Meta class.
 
-You may set a custom model manager for all models
+    class ReportBuilder:
+        exclude = ()  # Lists or tuple of excluded fields
+        fields = ()   # Explicitely allowed fields
+        extra = ()    # List extra fields (useful for methods)
+
+Note you can add properties in a similair way as Django admin.
+
+In previous versions of django-report-builder all properties were included by default.
+They must now be explicitly included.
+
+### Custom model manager for all models
 
     REPORT_BUILDER_MODEL_MANAGER = 'on_site' #name of custom model manager to use on all models
 
@@ -27,11 +38,16 @@ You many also set a custom model manager per model. Just add the custom model ma
 
     report_builder_model_manager = on_site #reference to custom model manager to use for a model
 
-Export to Report action is disabled by default. To enable set
+### Export to Report
+
+Admin action is disabled by default. To enable set
     
     REPORT_BUILDER_GLOBAL_EXPORT = True
 
-## Asynchronous Report Generation
+This allows users to select lists of objects in django admin's change_list view and export them to a predefined report.
+In effect bypasses the report's filters using the checked off objects instead.
+
+### Asynchronous Report Generation
 
 Sometimes it's useful to generate long running reports with a background worker. Defaults to off.
 Advantages of this option
@@ -41,7 +57,7 @@ Advantages of this option
 - Download the last report that was run instead of regenerating
 - Nicer status messages about report status
 
-###Installation
+**Installation**
 
 1. Set up Celery
 2. Set `REPORT_BUILDER_ASYNC_REPORT = True` in settings.py

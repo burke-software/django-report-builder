@@ -7,8 +7,14 @@
         </h2>
       </md-toolbar>
       <form style="padding: 20px;" name="reportForm" ng-submit="submitForm()">
-        <md-text-float label="Report Name" required="required" name="name" ng-model="report.name"></md-text-float>
-        <md-text-float type="textarea" label="Description" ng-model="report.description"></md-text-float>
+        <md-input-container>
+          <label>Report Name</label>
+          <input required="required" name="name" ng-model="report.name"></input>
+        </md-input-container>
+        <md-input-container flex>
+            <label>Description</label>
+            <textarea ng-model="report.description"></textarea>
+        </md-input-container>
         <label for="root_model">Root Model</label>
         <select id="root_model" required="required" ng-model="report.root_model" ng-options="item.value as item.display_name for item in options.root_model.choices | orderBy:'display_name'">
         </select>

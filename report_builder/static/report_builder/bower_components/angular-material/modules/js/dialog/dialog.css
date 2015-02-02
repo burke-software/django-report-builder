@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc3
  */
 .md-dialog-container {
   display: -webkit-box;
@@ -22,15 +22,15 @@
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 90; }
+  z-index: 80; }
 
 md-dialog {
   opacity: 0;
   min-width: 240px;
   max-width: 80%;
   max-height: 80%;
-  margin: auto;
   position: relative;
+  overflow: hidden;
   box-shadow: 0px 27px 24px 0 rgba(0, 0, 0, 0.2);
   display: -webkit-box;
   display: -webkit-flex;
@@ -60,7 +60,7 @@ md-dialog {
     padding: 24px;
     overflow: auto;
     -webkit-overflow-scrolling: touch; }
-    md-dialog md-content *:first-child {
+    md-dialog md-content:not([layout=row]) *:first-child {
       margin-top: 0px; }
   md-dialog .md-actions {
     display: -webkit-box;

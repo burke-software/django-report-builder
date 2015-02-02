@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.1
  */
 md-progress-linear {
   display: block;
@@ -15,8 +15,7 @@ md-progress-linear {
     top: 5px;
     -webkit-transform: translate(0, 5px) scale(1, 0);
             transform: translate(0, 5px) scale(1, 0);
-    -webkit-transition: all 0.3s linear;
-            transition: all 0.3s linear; }
+    transition: all 0.3s linear; }
   md-progress-linear .md-container.md-ready {
     -webkit-transform: translate(0, 0) scale(1, 1);
             transform: translate(0, 0) scale(1, 1); }
@@ -25,8 +24,7 @@ md-progress-linear {
     position: absolute;
     width: 100%; }
   md-progress-linear .md-bar1, md-progress-linear .md-bar2 {
-    -webkit-transition: all 0.2s linear;
-            transition: all 0.2s linear; }
+    transition: all 0.2s linear; }
   md-progress-linear[md-mode=determinate] .md-bar1 {
     display: none; }
   md-progress-linear[md-mode=indeterminate] .md-bar1 {

@@ -2,36 +2,41 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.6.1
+ * v0.7.0-rc3
  */
-.md-button.md-default-theme {
+.md-button.md-THEME_NAME-theme {
   border-radius: 3px; }
-  .md-button.md-default-theme:not([disabled]):hover, .md-button.md-default-theme:not([disabled]):focus {
-    background-color: rgba(158, 158, 158, 0.2); }
-  .md-button.md-default-theme.md-fab {
+  .md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):focus {
+    background-color: '{{background-500-0.2}}'; }
+  .md-button.md-THEME_NAME-theme.md-primary {
+    color: '{{primary-color}}'; }
+    .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {
+      color: '{{primary-contrast}}';
+      background-color: '{{primary-color}}'; }
+      .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):focus, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):focus {
+        background-color: '{{primary-600}}'; }
+  .md-button.md-THEME_NAME-theme.md-fab {
     border-radius: 50%; }
-  .md-button.md-default-theme.md-primary {
-    color: #29b6f6;
-    fill: #29b6f6; }
-  .md-button.md-default-theme.md-warn {
-    color: #ef5350;
-    fill: #ef5350; }
-  .md-button.md-default-theme.md-raised, .md-button.md-default-theme.md-fab {
-    background-color: rgba(158, 158, 158, 0.185); }
-    .md-button.md-default-theme.md-raised:not([disabled]):hover, .md-button.md-default-theme.md-raised:not([disabled]):focus, .md-button.md-default-theme.md-fab:not([disabled]):hover, .md-button.md-default-theme.md-fab:not([disabled]):focus {
-      background-color: rgba(158, 158, 158, 0.3); }
-    .md-button.md-default-theme.md-raised.md-primary, .md-button.md-default-theme.md-fab.md-primary {
-      color: white;
-      background-color: #03a9f4; }
-      .md-button.md-default-theme.md-raised.md-primary:not([disabled]):hover, .md-button.md-default-theme.md-raised.md-primary:not([disabled]):focus, .md-button.md-default-theme.md-fab.md-primary:not([disabled]):hover, .md-button.md-default-theme.md-fab.md-primary:not([disabled]):focus {
-        background-color: #039be5; }
-    .md-button.md-default-theme.md-raised.md-warn, .md-button.md-default-theme.md-fab.md-warn {
-      color: white;
-      background-color: #f44336; }
-      .md-button.md-default-theme.md-raised.md-warn:not([disabled]):hover, .md-button.md-default-theme.md-raised.md-warn:not([disabled]):focus, .md-button.md-default-theme.md-fab.md-warn:not([disabled]):hover, .md-button.md-default-theme.md-fab.md-warn:not([disabled]):focus {
-        background-color: #d32f2f; }
-  .md-button.md-default-theme[disabled], .md-button.md-default-theme.md-raised[disabled], .md-button.md-default-theme.md-fab[disabled] {
-    color: rgba(0, 0, 0, 0.26);
-    fill: rgba(0, 0, 0, 0.26);
+  .md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-fab {
+    color: '{{background-contrast}}';
+    background-color: '{{background-500-0.185}}'; }
+    .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):focus, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):focus {
+      background-color: '{{background-500-0.3}}'; }
+  .md-button.md-THEME_NAME-theme.md-warn {
+    color: '{{warn-color}}'; }
+    .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {
+      color: '{{warn-contrast}}';
+      background-color: '{{warn-color}}'; }
+      .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):focus, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):focus {
+        background-color: '{{warn-700}}'; }
+  .md-button.md-THEME_NAME-theme.md-accent {
+    color: '{{accent-color}}'; }
+    .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {
+      color: '{{accent-contrast}}';
+      background-color: '{{accent-color}}'; }
+      .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):focus, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):focus {
+        background-color: '{{accent-700}}'; }
+  .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {
+    color: '{{foreground-3}}';
     background-color: transparent;
     cursor: not-allowed; }
