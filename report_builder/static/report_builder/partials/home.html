@@ -6,8 +6,11 @@
           <h1 class="md-toolbar-tools">Reports</h1>
         </md-toolbar>
         <md-content ng-controller="LeftCtrl">
+          <md-input-container flex>
+            <label>Search Reports</label>
+            <input type="text" ng-model="searchReports" placeholder="start typing to filter reports">
+          </md-input-container>
           <div class="md-padding"> 
-            <input class="searchInput" ng-model="searchReports" placeholder="Search" type="search">
             <a ng-href="{{BASE_URL + 'report/add/'}}">New Report</a>
           </div>
           <md-list>
@@ -23,7 +26,7 @@
                         </div>
                       </div>
                       <div layout="column" layout-align="center end" flex="50">
-                        <div>edited: {{ report.modified }}</div>
+                        <div>{{ report.modified }}</div>
                       </div>
                     </div>
                   </div>
