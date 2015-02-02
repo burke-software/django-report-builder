@@ -10,8 +10,35 @@
             <label>Search Reports</label>
             <input type="text" ng-model="searchReports" placeholder="start typing to filter reports">
           </md-input-container>
+          <md-content layout-align="center center" layout="row">
+            <h4>My Reports</h4>
+          </md-content>
           <md-list>
-            <md-item ng-repeat="report in reports | filter:searchReports | orderBy:reportOrder">
+            <md-item ng-repeat="report in reports | filter:searchReports | filter:currentUserFilter | orderBy:reportOrder">
+              <md-item-content>
+                <md-button layout-fill ng-click="openReport(report.id)" class="sidenav-report-link md-primary">
+                  <div layout="column" layout-align="center start">
+                    <div>{{ report.name }}</div>
+                    <div layout="row" layout-fill class="report-meta-data">
+                      <div layout="column" layout-align="center start" flex="50">
+                        <div>
+                          {{ report.user_created.first_name }} {{ report.user_created.last_name }}
+                        </div>
+                      </div>
+                      <div layout="column" layout-align="center end" flex="50">
+                        <div>{{ report.modified }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </md-button>
+              </md-item-content>
+            </md-item>
+          </md-list>
+          <md-content layout-align="center center" layout="row">
+            <h4>All Reports</h4>
+          </md-content>
+          <md-list>
+            <md-item ng-repeat="report in reports | filter:searchReports | filter:notCurrentUserFilter | orderBy:reportOrder">
               <md-item-content>
                 <md-button layout-fill ng-click="openReport(report.id)" class="sidenav-report-link md-primary">
                   <div layout="column" layout-align="center start">
