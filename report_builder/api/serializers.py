@@ -35,7 +35,7 @@ class FilterFieldSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields=("first_name", "last_name")
+        fields=("first_name", "last_name", "id")
         
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
