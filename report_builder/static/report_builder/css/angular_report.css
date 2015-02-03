@@ -121,6 +121,10 @@ body {
     z-index: 58;
 }
 
+.sidebar-left-search {
+  padding-bottom: 5px;
+}
+
 .sidenav-report-link {
     text-transform: none !important;
     border-radius: 0px !important;
@@ -129,4 +133,17 @@ body {
 .sidenav-report-link .report-meta-data {
     font-size: 0.8em;
     color: #bbb;
+}
+
+.sort-by-label {
+  font-size: 0.7em;
+  color: #bbb;
+}
+
+.sort-button {
+  text-transform: none !important;
+}
+
+.report-list-header {
+  padding-left: 6px;
 }
