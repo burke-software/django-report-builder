@@ -140,6 +140,7 @@ reportBuilderApp.service('reportService', ['Restangular',
 reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidenav, $location, reportService) {
   $scope.reports = reportService.getList().$object;
   $scope.reportOrder = "name";
+  $scope.reverseReportOrder = false;
   
   $scope.currentUserFilter = function(report) {
     return ( report.user_created.id == CURRENT_USER );
