@@ -80,11 +80,13 @@ class Report(models.Model):
     def root_model_class(self):
         return self.root_model.model_class()
 
-    def get_field_type(self, field_name):
-        """ Get field type for given field name
+    def get_field_type(self, field_name, path=""):
+        """ Get field type for given field name.
+        field_name is the full path of the field
+        path is optional
         """
         model = get_model_from_path_string(
-            self.root_model_class, field_name)
+            self.root_model_class, path + field_name)
 
         # Is it a ORM field?
         try:
@@ -96,6 +98,8 @@ class Report(models.Model):
         field_attr = getattr(model, field_name, None)
         if isinstance(field_attr, property):
             return "Property"
+        return model._meta.get_field_by_name(
+            field_name)[0].get_internal_type()
         return "Invalid"
 
     def get_query(self):
@@ -254,7 +258,7 @@ class DisplayField(models.Model):
 
     @property
     def field_type(self):
-        return self.report.get_field_type(self.field)
+        return self.report.get_field_type(self.field, self.path)
 
     @property
     def choices_dict(self):
@@ -401,7 +405,7 @@ class FilterField(models.Model):
 
     @property
     def field_type(self):
-        return self.report.get_field_type(self.field)
+        return self.report.get_field_type(self.field, self.path)
 
     @property
     def choices(self):
