@@ -5,6 +5,7 @@
 1. `pip install django-report-builder`
 2. Add `report_builder` to INSTALLED_APPS
 3. Add `url(r'^report_builder/', include('report_builder.urls'))` to url.py url patterns
+3. Ensure `django.core.context_processors.static` and `django.core.context_processors.media` are in `TEMPLATE_CONTEXT_PROCESSORS`
 4. Sync your database. `python manage.py migrate` 
 5. Use Django admin or navigate to /report_builder/
 
