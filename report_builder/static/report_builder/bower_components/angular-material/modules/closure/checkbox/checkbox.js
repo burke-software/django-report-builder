@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 goog.provide('ng.material.components.checkbox');
 goog.require('ng.material.core');
@@ -88,6 +88,13 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
       ngModelCtrl = ngModelCtrl || $mdUtil.fakeNgModel();
       var checked = false;
       $mdTheming(element);
+
+      if (attr.ngChecked) {
+        scope.$watch(
+            scope.$eval.bind(scope, attr.ngChecked),
+            ngModelCtrl.$setViewValue.bind(ngModelCtrl)
+        );
+      }
 
       $mdAria.expectWithText(element, 'aria-label');
 

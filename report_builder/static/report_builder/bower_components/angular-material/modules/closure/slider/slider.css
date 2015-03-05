@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 @-webkit-keyframes sliderFocusThumb {
   0% {
@@ -38,6 +38,7 @@ md-slider {
   display: block;
   margin-left: 4px;
   margin-right: 4px;
+  padding: 0;
   /**
    * Track
    */
@@ -49,6 +50,8 @@ md-slider {
    * The border/background that comes in when focused in non-discrete mode
    */
   /* Don't animate left/right while panning */ }
+  md-slider .md-slider-wrapper {
+    position: relative; }
   md-slider .md-track-container {
     width: 100%;
     position: absolute;
@@ -69,12 +72,10 @@ md-slider {
   md-slider .md-thumb-container {
     position: absolute;
     left: 0;
-    top: 0;
-    right: 0;
-    -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-    transition: -webkit-transform 0.1s linear;
-    transition: transform 0.1s linear; }
+    top: 50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+            transform: translate3d(-50%, -50%, 0);
+    transition: left 0.1s linear; }
   md-slider .md-thumb {
     z-index: 1;
     position: absolute;

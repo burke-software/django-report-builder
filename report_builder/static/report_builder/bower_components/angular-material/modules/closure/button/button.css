@@ -2,12 +2,13 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 /**
  * Position a FAB button.
  */
 .md-button {
+  color: currentColor;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -34,6 +35,8 @@
   transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
   .md-button:focus {
     outline: none; }
+  .md-button:hover {
+    text-decoration: none; }
   .md-button.ng-hide {
     transition: none; }
   .md-button.md-cornered {
@@ -81,13 +84,10 @@
       left: 20px;
       position: absolute; }
     .md-button.md-fab md-icon {
-      line-height: 56px;
       margin-top: 0; }
     .md-button.md-fab.md-mini {
       width: 40px;
       height: 40px; }
-      .md-button.md-fab.md-mini md-icon {
-        line-height: 40px; }
   .md-button:not([disabled]).md-raised:focus, .md-button:not([disabled]).md-raised:hover, .md-button:not([disabled]).md-fab:focus, .md-button:not([disabled]).md-fab:hover {
     -webkit-transform: translate3d(0, -1px, 0);
             transform: translate3d(0, -1px, 0); }

@@ -1,7 +1,8 @@
 from django.db import models
+from custom_field.custom_field import CustomFieldModel
 
 
-class Foo(models.Model):
+class Foo(CustomFieldModel, models.Model):
     char_field = models.CharField(max_length=50, blank=True)
     char_field2 = models.CharField(max_length=50, blank=True)
 

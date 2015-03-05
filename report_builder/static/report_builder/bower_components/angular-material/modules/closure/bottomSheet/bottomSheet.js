@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 goog.provide('ng.material.components.bottomSheet');
 goog.require('ng.material.components.backdrop');
@@ -37,7 +37,7 @@ function MdBottomSheetDirective() {
  * @description
  * `$mdBottomSheet` opens a bottom sheet over the app and provides a simple promise API.
  *
- * ### Restrictions
+ * ## Restrictions
  *
  * - The bottom sheet's template must have an outer `<md-bottom-sheet>` element.
  * - Add the `md-grid` class to the bottom sheet for a grid layout.
@@ -77,6 +77,9 @@ function MdBottomSheetDirective() {
  *   have an outer `md-bottom-sheet` element.
  *   - `template` - `{string=}`: Same as templateUrl, except this is an actual
  *   template string.
+ *   - `scope` - `{object=}`: the scope to link the template / controller to. If none is specified, it will create a new child scope.
+ *     This scope will be destroyed when the bottom sheet is removed unless `preserveScope` is set to true.
+ *   - `preserveScope` - `{boolean=}`: whether to preserve the scope when the element is removed. Default is false
  *   - `controller` - `{string=}`: The controller to associate with this bottom sheet.
  *   - `locals` - `{string=}`: An object containing key/value pairs. The keys will
  *   be used as names of values to inject into the controller. For example,

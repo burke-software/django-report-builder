@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 md-card {
   box-sizing: border-box;
@@ -14,7 +14,7 @@ md-card {
           flex-direction: column;
   margin: 8px;
   box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26); }
-  md-card > img, md-card :not(md-card-content) img {
+  md-card > img, md-card > :not(md-card-content) img {
     -webkit-order: 0;
         -ms-flex-order: 0;
             order: 0;

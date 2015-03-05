@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 md-input-container {
   display: -webkit-flex;
@@ -12,11 +12,18 @@ md-input-container {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
+  overflow-x: hidden;
   padding: 2px;
   padding-bottom: 26px;
-  /* 
-   * The .md-input class is added to the input/textarea 
+  /*
+   * The .md-input class is added to the input/textarea
    */ }
+  md-input-container > md-icon {
+    position: absolute;
+    top: 5px;
+    left: 2px; }
+    md-input-container > md-icon + input {
+      margin-left: 56px; }
   md-input-container textarea, md-input-container input[type="text"], md-input-container input[type="password"], md-input-container input[type="datetime"], md-input-container input[type="datetime-local"], md-input-container input[type="date"], md-input-container input[type="month"], md-input-container input[type="time"], md-input-container input[type="week"], md-input-container input[type="number"], md-input-container input[type="email"], md-input-container input[type="url"], md-input-container input[type="search"], md-input-container input[type="tel"], md-input-container input[type="color"] {
     /* remove default appearance from all input/textarea */
     -moz-appearance: none;
@@ -24,7 +31,7 @@ md-input-container {
   md-input-container textarea {
     resize: none;
     overflow: hidden; }
-  md-input-container label, md-input-container .md-placeholder {
+  md-input-container label:not(.md-no-float), md-input-container .md-placeholder {
     -webkit-order: 1;
         -ms-flex-order: 1;
             order: 1;
@@ -53,6 +60,8 @@ md-input-container {
   md-input-container.md-input-has-value .md-placeholder {
     transition: none;
     opacity: 0; }
+  md-input-container:not(.md-input-has-value) input:not(:focus) {
+    color: transparent; }
   md-input-container .md-input {
     -webkit-flex: 1;
         -ms-flex: 1;
@@ -101,13 +110,13 @@ md-input-container {
   md-input-container .md-char-counter {
     bottom: 2px;
     right: 2px; }
-  md-input-container.md-input-focused label, md-input-container.md-input-has-value label {
+  md-input-container.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float) {
     -webkit-transform: translate3d(0, 4px, 0) scale(0.75);
             transform: translate3d(0, 4px, 0) scale(0.75); }
   md-input-container.md-input-focused .md-input, md-input-container .md-input.ng-invalid.ng-dirty {
     padding-bottom: 0px;
     border-width: 0 0 2px 0; }
-  md-input-container .md-input[disabled] {
+  md-input-container .md-input[disabled], [disabled] md-input-container .md-input {
     background-position: 0 bottom;
     background-size: 3px 1px;
     background-repeat: repeat-x; }

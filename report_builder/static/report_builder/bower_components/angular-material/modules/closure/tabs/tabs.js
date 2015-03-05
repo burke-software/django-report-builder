@@ -2,9 +2,10 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 goog.provide('ng.material.components.tabs');
+goog.require('ng.material.components.icon');
 goog.require('ng.material.core');
 (function() {
 'use strict';
@@ -33,8 +34,10 @@ goog.require('ng.material.core');
  * @see js folder for tabs implementation
  */
 angular.module('material.components.tabs', [
-  'material.core'
+  'material.core',
+  'material.components.icon'
 ]);
+
 })();
 
 (function() {
@@ -474,7 +477,7 @@ angular.module('material.components.tabs')
  * @restrict E
  *
  * @description
- * `<md-tab>` is the nested directive used [within `<md-tabs>`] to specify each tab with a **label** and optional *view content*.
+ * Use the `<md-tab>` a nested directive used within `<md-tabs>` to specify a tab with a **label** and optional *view content*.
  *
  * If the `label` attribute is not specified, then an optional `<md-tab-label>` tag can be used to specify more
  * complex tab header markup. If neither the **label** nor the **md-tab-label** are specified, then the nested
@@ -563,12 +566,11 @@ function MdTabDirective($mdInkRipple, $compile, $mdUtil, $mdConstant, $timeout) 
       transcludeTabContent();
       configureAria();
 
-      var detachRippleFn = $mdInkRipple.attachTabBehavior(scope, element, {
+      $mdInkRipple.attachTabBehavior(scope, element, {
         colorElement: tabsCtrl.inkBarElement
       });
       tabsCtrl.add(tabItemCtrl);
       scope.$on('$destroy', function() {
-        detachRippleFn();
         tabsCtrl.remove(tabItemCtrl);
       });
       element.on('$destroy', function () {
@@ -862,7 +864,7 @@ angular.module('material.components.tabs')
  *    <md-tab label="Tab #1"></md-tab>
  *    <md-tab label="Tab #2"></md-tab>
  *    <md-tab label="Tab #3"></md-tab>
- *  <md-tabs>
+ *  </md-tabs>
  *  </hljs>
  *
  * Tabs supports three (3) usage scenarios:
@@ -949,6 +951,7 @@ function TabsDirective($mdTheming) {
           'ng-if="pagination.active && pagination.hasPrev" ' +
           'ng-click="pagination.clickPrevious()" ' +
           'aria-hidden="true">' +
+          '<md-icon md-svg-icon="tabs-arrow"></md-icon>' +
         '</button>' +
 
         // overflow: hidden container when paginating
@@ -963,6 +966,7 @@ function TabsDirective($mdTheming) {
           'ng-if="pagination.active && pagination.hasNext" ' +
           'ng-click="pagination.clickNext()" ' +
           'aria-hidden="true">' +
+          '<md-icon md-svg-icon="tabs-arrow"></md-icon>' +
         '</button>' +
 
       '</section>' +

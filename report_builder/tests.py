@@ -55,7 +55,6 @@ class UtilityFunctionTests(TestCase):
         self.assertEquals(len(names), 9)
 
     def test_get_custom_fields_from_model(self):
-        return
         if 'custom_field' in settings.INSTALLED_APPS:
             from custom_field.models import CustomField
             CustomField.objects.create(

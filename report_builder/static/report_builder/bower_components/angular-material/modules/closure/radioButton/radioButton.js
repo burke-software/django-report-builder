@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1
+ * v0.8.3
  */
 goog.provide('ng.material.components.radioButton');
 goog.require('ng.material.core');
@@ -145,7 +145,7 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming) {
       selectNext: function() {
         return changeSelectedButton(this.$element, 1);
       },
-      selectPrevious : function() {
+      selectPrevious: function() {
         return changeSelectedButton(this.$element, -1);
       },
       setActiveDescendant: function (radioId) {
@@ -159,10 +159,7 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming) {
    */
   function changeSelectedButton(parent, increment) {
     // Coerce all child radio buttons into an array, then wrap then in an iterator
-    var buttons = $mdUtil.iterator(
-      Array.prototype.slice.call(parent[0].querySelectorAll('md-radio-button')),
-      true
-    );
+    var buttons = $mdUtil.iterator(parent[0].querySelectorAll('md-radio-button'), true);
 
     if (buttons.count()) {
       var validate = function (button) {
@@ -202,8 +199,8 @@ mdRadioGroupDirective.$inject = ["$mdUtil", "$mdConstant", "$mdTheming"];
  *    be set when selected.*
  * @param {string} value The value to which the expression should be set when selected.
  * @param {string=} name Property name of the form under which the control is published.
- * @param {string=} ariaLabel Adds label to radio button for accessibility.
- * Defaults to radio button's text. If no default text is found, a warning will be logged.
+ * @param {string=} aria-label Adds label to radio button for accessibility.
+ * Defaults to radio button's text. If no text content is available, a warning will be logged.
  *
  * @usage
  * <hljs lang="html">

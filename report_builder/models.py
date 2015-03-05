@@ -103,7 +103,7 @@ class Report(models.Model):
     def get_query(self):
         report = self
         model_class = self.root_model_class
-        message= ""
+        message = ""
 
         # Check for report_builder_model_manger property on the model
         if getattr(model_class, 'report_builder_model_manager', False):
