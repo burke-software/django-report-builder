@@ -4,8 +4,10 @@ from .models import Foo, Bar
 
 
 @admin.register(Foo)
-class FooAdmin(CustomFieldAdmin, admin.ModelAdmin):
+class FooAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(Bar)
+@admin.register(Bar)
+class BarAdmin(CustomFieldAdmin, admin.ModelAdmin):
+    pass

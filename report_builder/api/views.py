@@ -134,6 +134,17 @@ class FieldsView(RelatedFieldsView):
                         'significantly increase the time it takes to run a '
                         'report.'
                     }]
+        # Add custom fields
+        for field in field_data['custom_fields']:
+            result += [{
+                'name': field.name,
+                'field': field.name,
+                'field_verbose': field.name,
+                'field_type': 'Custom Field',
+                'path': field_data['path'],
+                'path_verbose': field_data['path_verbose'],
+                'help_text': 'This is a custom field.',
+            }]
         return Response(result)
 
 
@@ -157,7 +168,7 @@ class GenerateReport(DataExportMixin, APIView):
 
         property_filters=[]
         for field in report.filterfield_set.all():
-            if field.field_type == "Property":
+            if field.field_type in ["Property", "Custom Field"]:
                 property_filters += [field]
 
         objects_list, message = self.report_to_list(

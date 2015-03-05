@@ -54,17 +54,6 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('id' in names)
         self.assertEquals(len(names), 9)
 
-    def test_get_custom_fields_from_model(self):
-        if 'custom_field' in settings.INSTALLED_APPS:
-            from custom_field.models import CustomField
-            CustomField.objects.create(
-                name="foo",
-                content_type=self.report_ct,
-                field_type='t',)
-            fields = get_custom_fields_from_model(Report)
-            self.assertEquals(fields[0].__class__, CustomField)
-            self.assertEquals(fields[0].name, "foo")
-
     def test_get_properties_from_model(self):
         properties = get_properties_from_model(DisplayField)
         self.assertEquals(properties[0]['label'], 'choices')
@@ -142,7 +131,7 @@ class ReportTests(TestCase):
         self.client.login(username='testy', password='pass')
         ct = ContentType.objects.get(name="bar")
         self.report = Report.objects.create(root_model=ct, name="A")
-        Bar.objects.create(char_field="wooo")
+        self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
 
     def test_property_display(self):
@@ -190,3 +179,31 @@ class ReportTests(TestCase):
         filter_field.save()
         response = self.client.get(self.generate_url)
         self.assertNotContains(response, 'lol no')
+
+    def test_filter_custom_field(self):
+        from custom_field.models import CustomField
+        ct = ContentType.objects.get(name="bar")
+        CustomField.objects.create(
+            name="custom one",
+            content_type=ct,
+            field_type="t",
+        )
+        self.bar.set_custom_value('custom one', 'I am custom')
+        DisplayField.objects.create(
+            report=self.report,
+            field="custom one",
+            field_verbose="stuff",
+        )
+        filter_field = FilterField.objects.create(
+            report=self.report,
+            field="custom one",
+            field_verbose="stuff",
+            filter_type = 'contains',
+            filter_value = 'I am custom',
+        )
+        response = self.client.get(self.generate_url)
+        self.assertContains(response, 'I am custom')
+        filter_field.filter_value = 'It does not contain this'
+        filter_field.save()
+        response = self.client.get(self.generate_url)
+        self.assertNotContains(response, 'I am custom')

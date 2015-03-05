@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.db import models
@@ -98,6 +98,12 @@ class Report(models.Model):
         field_attr = getattr(model, field_name, None)
         if isinstance(field_attr, property):
             return "Property"
+        # Is it a custom field?
+        try:
+            model().get_custom_field(field_name)
+            return "Custom Field"
+        except (ObjectDoesNotExist, AttributeError):
+            pass
         return "Invalid"
 
     def get_query(self):
@@ -122,7 +128,7 @@ class Report(models.Model):
             # exclude properties from standard ORM filtering
             if filter_field.field_type == "Property":
                 continue
-            if filter_field.field_type == "Custom":
+            if filter_field.field_type == "Custom Field":
                 continue
 
             filter_string = str(filter_field.path + filter_field.field)

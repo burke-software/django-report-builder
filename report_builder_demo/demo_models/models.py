@@ -2,7 +2,7 @@ from django.db import models
 from custom_field.custom_field import CustomFieldModel
 
 
-class Foo(CustomFieldModel, models.Model):
+class Foo(models.Model):
     char_field = models.CharField(max_length=50, blank=True)
     char_field2 = models.CharField(max_length=50, blank=True)
 
@@ -15,7 +15,7 @@ class FooExclude(Foo):
         exclude = ('char_field2',)
 
 
-class Bar(models.Model):
+class Bar(CustomFieldModel, models.Model):
     char_field = models.CharField(max_length=50, blank=True)
     foos = models.ManyToManyField(Foo, blank=True)
 
