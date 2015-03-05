@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'report_builder_demo.demo_models',
     'report_builder',
     'report_utils',
+    'custom_field',
     'django_extensions',
 )
 

@@ -98,8 +98,6 @@ class Report(models.Model):
         field_attr = getattr(model, field_name, None)
         if isinstance(field_attr, property):
             return "Property"
-        return model._meta.get_field_by_name(
-            field_name)[0].get_internal_type()
         return "Invalid"
 
     def get_query(self):
