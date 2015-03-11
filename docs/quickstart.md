@@ -1,5 +1,10 @@
 #Quick Start Guide
 
+##Requirements
+
+Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x] branch instead. 
+See setup.py for full requirements list.
+
 ##Installation
 
 1. `pip install django-report-builder`
@@ -62,3 +67,5 @@ Advantages of this option
 
 1. Set up Celery
 2. Set `REPORT_BUILDER_ASYNC_REPORT = True` in settings.py
+
+[2.x]: https://github.com/burke-software/django-report-builder/tree/2.x
