@@ -1,5 +1,5 @@
 django==1.7.5
-openpyxl
+openpyxl==2.1.5
 python-dateutil
 django-report-utils==0.3.1
 django-custom-field

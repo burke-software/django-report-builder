@@ -24,7 +24,7 @@ setup(
     ],
     install_requires=[
         'django>=1.7',
-        'openpyxl',
+        'openpyxl==2.1.5',
         'python-dateutil',
         'django-report-utils==0.3.1',
         'djangorestframework>=3.0.4',
