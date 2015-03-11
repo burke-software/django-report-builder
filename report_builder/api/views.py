@@ -135,16 +135,18 @@ class FieldsView(RelatedFieldsView):
                         'report.'
                     }]
         # Add custom fields
-        for field in field_data['custom_fields']:
-            result += [{
-                'name': field.name,
-                'field': field.name,
-                'field_verbose': field.name,
-                'field_type': 'Custom Field',
-                'path': field_data['path'],
-                'path_verbose': field_data['path_verbose'],
-                'help_text': 'This is a custom field.',
-            }]
+        custom_fields = field_data.get('custom_fields', None)
+        if custom_fields:
+            for field in custom_fields:
+                result += [{
+                    'name': field.name,
+                    'field': field.name,
+                    'field_verbose': field.name,
+                    'field_type': 'Custom Field',
+                    'path': field_data['path'],
+                    'path_verbose': field_data['path_verbose'],
+                    'help_text': 'This is a custom field.',
+                }]
         return Response(result)
 
 
