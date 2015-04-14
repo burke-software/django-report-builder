@@ -151,24 +151,16 @@ class FieldsView(RelatedFieldsView):
 
 
 class GenerateReport(DataExportMixin, APIView):
-    def get(self, request, report_id=None, format=None, queryset=None):
+    def get(self, request, report_id=None):
         return self.post(request, report_id=report_id)
 
-    def post(self, request, report_id=None, format=None, queryset=None):
+    def post(self, request, report_id=None):
         report = get_object_or_404(Report, pk=report_id)
         user = request.user
-        if not queryset:
-            queryset, message = report.get_query()
+        queryset = report.get_query()
 
-        display_fields = report.displayfield_set.all()
-        bad_display_fields = []
-        for display_field in display_fields:
-            if display_field.field_type == "Invalid":
-                bad_display_fields.append(display_field)
-        display_fields = display_fields.exclude(
-            id__in=[o.id for o in bad_display_fields])
-
-        property_filters=[]
+        display_fields = report.get_good_display_fields()
+        property_filters = []
         for field in report.filterfield_set.all():
             if field.field_type in ["Property", "Custom Field"]:
                 property_filters += [field]

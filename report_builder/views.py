@@ -62,15 +62,9 @@ class DownloadXlsxView(DataExportMixin, View):
         report = get_object_or_404(Report, pk=report_id)
         user = User.objects.get(pk=user_id)
         if not queryset:
-            queryset, message = report.get_query()
+            queryset = report.get_query()
 
-        display_fields = report.displayfield_set.all()
-        bad_display_fields = []
-        for display_field in display_fields:
-            if display_field.field_type == "Invalid":
-                bad_display_fields.append(display_field)
-        display_fields = display_fields.exclude(
-            id__in=[o.id for o in bad_display_fields])
+        display_fields = report.get_good_display_fields()
 
         objects_list, message = self.report_to_list(
             queryset,

@@ -83,7 +83,7 @@ class UtilityFunctionTests(TestCase):
             self.filter_field.filter_value = 'foo'
             self.filter_field.save()
             # coverage of get_query
-            objects, message = self.report.get_query()
+            objects = self.report.get_query()
             # expect custom manager to return correct object with filters
             self.assertEquals(objects[0], self.report)
 

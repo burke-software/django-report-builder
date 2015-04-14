@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
-from django.utils import timezone
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.fields import FieldDoesNotExist
@@ -14,6 +13,7 @@ from dateutil import parser
 from decimal import Decimal
 import time
 import datetime
+import re
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -106,10 +106,18 @@ class Report(models.Model):
             pass
         return "Invalid"
 
+    def get_good_display_fields(self):
+        """ Returns only valid display fields """
+        display_fields = self.displayfield_set.all()
+        bad_display_fields = []
+        for display_field in display_fields:
+            if display_field.field_type == "Invalid":
+                bad_display_fields.append(display_field)
+        return display_fields.exclude(id__in=[o.id for o in bad_display_fields])
+
     def get_query(self):
         report = self
         model_class = self.root_model_class
-        message = ""
 
         # Check for report_builder_model_manger property on the model
         if getattr(model_class, 'report_builder_model_manager', False):
@@ -165,33 +173,38 @@ class Report(models.Model):
         if report.distinct:
             objects = objects.distinct()
 
-        return objects, message
+        return objects
 
     @models.permalink
     def get_absolute_url(self):
         return ("report_update_view", [str(self.id)])
 
     def edit(self):
-        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/edit.svg"/></a>'.format(
-            self.get_absolute_url(),
-            getattr(settings, 'STATIC_URL', '/static/')
-        ))
+        return mark_safe(
+            '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/edit.svg"/></a>'.format(
+                self.get_absolute_url(),
+                getattr(settings, 'STATIC_URL', '/static/')
+            )
+        )
     edit.allow_tags = True
 
     def download_xlsx(self):
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
-            return mark_safe('<a href="javascript:void(0)" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
-                self.id,
-                getattr(settings, 'STATIC_URL', '/static/'),
-            ))
+            return mark_safe(
+                '<a href="javascript:void(0)" onclick="get_async_report({0})"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+                    self.id,
+                    getattr(settings, 'STATIC_URL', '/static/'),
+                )
+            )
         else:
-            return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
-                reverse('report_download_xlsx', args=[self.id]),
-                getattr(settings, 'STATIC_URL', '/static/'),
-            ))
+            return mark_safe(
+                '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/download.svg"/></a>'.format(
+                    reverse('report_download_xlsx', args=[self.id]),
+                    getattr(settings, 'STATIC_URL', '/static/'),
+                )
+            )
     download_xlsx.short_description = "Download"
     download_xlsx.allow_tags = True
-
 
     def copy_report(self):
         return '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/copy.svg"/></a>'.format(
@@ -214,7 +227,10 @@ class Format(models.Model):
     """ A specifies a Python string format for e.g. `DisplayField`s.
     """
     name = models.CharField(max_length=50, blank=True, default='')
-    string = models.CharField(max_length=300, blank=True, default='', help_text='Python string format. Ex ${} would place a $ in front of the result.')
+    string = models.CharField(
+        max_length=300, blank=True, default='',
+        help_text='Python string format. Ex ${} would place a $ in front of the result.'
+    )
 
     def __unicode__(self):
         return self.name
@@ -234,16 +250,16 @@ class DisplayField(models.Model):
     width = models.IntegerField(default=15)
     aggregate = models.CharField(
         max_length=5,
-        choices = (
-            ('Sum','Sum'),
-            ('Count','Count'),
-            ('Avg','Avg'),
-            ('Max','Max'),
-            ('Min','Min'),
+        choices=(
+            ('Sum', 'Sum'),
+            ('Count', 'Count'),
+            ('Avg', 'Avg'),
+            ('Max', 'Max'),
+            ('Min', 'Min'),
         ),
         blank = True
     )
-    position = models.PositiveSmallIntegerField(blank = True, null = True)
+    position = models.PositiveSmallIntegerField(blank=True, null=True)
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
     display_format = models.ForeignKey(Format, blank=True, null=True)
@@ -257,7 +273,6 @@ class DisplayField(models.Model):
         except:
             model_field = None
         if model_field and model_field.choices:
-            # See https://github.com/burke-software/django-report-builder/pull/93
             return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
 
     @property
@@ -276,7 +291,8 @@ class DisplayField(models.Model):
     @property
     def choices(self):
         if self.pk:
-            model = get_model_from_path_string(self.report.root_model.model_class(), self.path)
+            model = get_model_from_path_string(
+                self.report.root_model.model_class(), self.path)
             return self.get_choices(model, self.field)
 
     def __unicode__(self):
