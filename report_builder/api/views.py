@@ -1,6 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +8,7 @@ from .serializers import (
     FilterFieldSerializer)
 from report_builder.models import Report, Format, FilterField
 from report_utils.mixins import GetFieldsMixin, DataExportMixin
+import copy
 
 
 class FormatViewSet(viewsets.ModelViewSet):
@@ -89,11 +89,11 @@ class FieldsView(RelatedFieldsView):
             extra = getattr(meta, 'extra', None)
             if fields is not None:
                 fields = list(fields)
-                for field in field_data['fields']:
+                for field in copy.copy(field_data['fields']):
                     if field.name not in fields:
                         field_data['fields'].remove(field)
             if exclude is not None:
-                for field in field_data['fields']:
+                for field in copy.copy(field_data['fields']):
                     if field.name in exclude:
                         field_data['fields'].remove(field)
             if extra is not None:
@@ -101,7 +101,7 @@ class FieldsView(RelatedFieldsView):
 
         for new_field in field_data['fields']:
             verbose_name = getattr(new_field, 'verbose_name', None)
-            if verbose_name == None:
+            if not verbose_name:
                 verbose_name = new_field.get_accessor_name()
             result += [{
                 'name': new_field.name,

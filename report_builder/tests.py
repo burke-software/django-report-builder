@@ -1,15 +1,14 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client
 from .models import Report, DisplayField, FilterField
-from .views import *
-from report_builder_demo.demo_models.models import *
+from report_builder_demo.demo_models.models import Bar
 from django.conf import settings
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
     get_relation_fields_from_model)
 from rest_framework.test import APIClient
+import time
 
 
 try:
@@ -17,6 +16,7 @@ try:
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
+
 
 class UtilityFunctionTests(TestCase):
     def setUp(self):
@@ -28,8 +28,8 @@ class UtilityFunctionTests(TestCase):
             report=self.report,
             field="X",
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'Lots of spam')
+            filter_type='contains',
+            filter_value='Lots of spam')
 
     def get_fields_names(self, fields):
         names = []
@@ -40,8 +40,8 @@ class UtilityFunctionTests(TestCase):
     def test_get_relation_fields_from_model(self):
         fields = get_relation_fields_from_model(Report)
         names = self.get_fields_names(fields)
-        self.assertTrue('report_builder:displayfield' in names)
-        self.assertTrue('report_builder:filterfield' in names)
+        self.assertTrue('displayfield' in names)
+        self.assertTrue('filterfield' in names)
         self.assertTrue('root_model' in names)
         self.assertEquals(len(names), 6)
 
@@ -65,20 +65,26 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue(result)
 
     def test_custom_global_model_manager(self):
-        #test for custom global model manager
+        """ test for custom global model manager """
         if getattr(settings, 'REPORT_BUILDER_MODEL_MANAGER', False):
-            self.assertEquals(self.report._get_model_manager(), settings.REPORT_BUILDER_MODEL_MANAGER)
+            self.assertEquals(
+                self.report._get_model_manager(),
+                settings.REPORT_BUILDER_MODEL_MANAGER)
 
     def test_custom_model_manager(self):
-        #test for custom model manager
-        if getattr(self.report.root_model.model_class(), 'report_builder_model_manager', True):
-            #change setup to use actual field and value
+        """ test for custom model manager """
+        if getattr(
+            self.report.root_model.model_class(),
+            'report_builder_model_manager',
+            True
+        ):
+            # change setup to use actual field and value
             self.filter_field.field = 'name'
             self.filter_field.filter_value = 'foo'
             self.filter_field.save()
-            #coverage of get_query
+            # coverage of get_query
             objects, message = self.report.get_query()
-            #expect custom manager to return correct object with filters
+            # expect custom manager to return correct object with filters
             self.assertEquals(objects[0], self.report)
 
 
@@ -93,7 +99,7 @@ class ReportBuilderTests(TestCase):
         self.client.login(username='testy', password='pass')
 
     def test_report_builder_fields(self):
-        ct = ContentType.objects.get(name="foo")
+        ct = ContentType.objects.get(model="foo")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -102,7 +108,7 @@ class ReportBuilderTests(TestCase):
         self.assertNotContains(response, 'char_field2')
 
     def test_report_builder_exclude(self):
-        ct = ContentType.objects.get(name="foo exclude")
+        ct = ContentType.objects.get(model="fooexclude")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -111,7 +117,7 @@ class ReportBuilderTests(TestCase):
         self.assertNotContains(response, 'char_field2')
 
     def test_report_builder_extra(self):
-        ct = ContentType.objects.get(name="bar")
+        ct = ContentType.objects.get(model="bar")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -129,7 +135,7 @@ class ReportTests(TestCase):
         user.save()
         self.client = APIClient()
         self.client.login(username='testy', password='pass')
-        ct = ContentType.objects.get(name="bar")
+        ct = ContentType.objects.get(model="bar")
         self.report = Report.objects.create(root_model=ct, name="A")
         self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
@@ -170,8 +176,8 @@ class ReportTests(TestCase):
             report=self.report,
             field="i_want_char_field",
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'lol no',
+            filter_type='contains',
+            filter_value='lol no',
         )
         response = self.client.get(self.generate_url)
         self.assertContains(response, 'lol no')
@@ -182,7 +188,7 @@ class ReportTests(TestCase):
 
     def test_filter_custom_field(self):
         from custom_field.models import CustomField
-        ct = ContentType.objects.get(name="bar")
+        ct = ContentType.objects.get(model="bar")
         CustomField.objects.create(
             name="custom one",
             content_type=ct,
@@ -198,8 +204,8 @@ class ReportTests(TestCase):
             report=self.report,
             field="custom one",
             field_verbose="stuff",
-            filter_type = 'contains',
-            filter_value = 'I am custom',
+            filter_type='contains',
+            filter_value='I am custom',
         )
         response = self.client.get(self.generate_url)
         self.assertContains(response, 'I am custom')
@@ -207,3 +213,57 @@ class ReportTests(TestCase):
         filter_field.save()
         response = self.client.get(self.generate_url)
         self.assertNotContains(response, 'I am custom')
+
+    def make_lots_of_foos(self):
+        for x in range(500):
+            bar = Bar.objects.create(char_field="wooo" + str(x))
+            bar.foos.create(char_field="a")
+
+    def test_performance(self):
+        """ Test getting a report with ORM and property fields.
+        Provides baseline on performance testing. """
+        self.make_lots_of_foos()
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="char_field",
+            field_verbose="stuff",
+        )
+        start = time.time()
+        response = self.client.get(self.generate_url)
+        run_time = time.time() - start
+        print('report builder report time is {}'.format(run_time))
+        self.assertEqual(response.status_code, 200)
+        self.assertLess(run_time, 1.0)
+
+    def test_performance_filter(self):
+        """ Test getting a report with ORM and property fields.
+        Provides baseline on performance testing. """
+        self.make_lots_of_foos()
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="char_field",
+            field_verbose="stuff",
+        )
+        FilterField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+            filter_type='contains',
+            filter_value='I am custom',
+        )
+        start = time.time()
+        response = self.client.get(self.generate_url)
+        run_time = time.time() - start
+        print('report builder report time is {}'.format(run_time))
+        self.assertEqual(response.status_code, 200)
+        self.assertLess(run_time, 1.0)
