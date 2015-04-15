@@ -12,6 +12,7 @@ from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
 from decimal import Decimal
+from functools import reduce
 import time
 import datetime
 import re
@@ -137,6 +138,58 @@ class Report(models.Model):
             if display_field.field_type == "Invalid":
                 bad_display_fields.append(display_field)
         return display_fields.exclude(id__in=[o.id for o in bad_display_fields])
+
+    def report_to_list(self, queryset=None, user=None, preview=False):
+        """ Convert report into list. """
+        property_filters = []
+        if queryset is None:
+            queryset = self.get_query()
+            for field in self.filterfield_set.all():
+                if field.field_type in ["Property", "Custom Field"]:
+                    property_filters += [field]
+        display_fields = self.get_good_display_fields()
+
+        # Need the pk for inserting properties later
+        display_field_paths = ['pk']
+        display_field_properties = []
+        insert_property_indexes = []
+        i = 0
+        for display_field in display_fields:
+            display_field_type = display_field.field_type
+            if display_field_type == "Property":
+                display_field_properties.append(display_field.field_key)
+                insert_property_indexes.append(i)
+            else:
+                i += 1
+                display_field_paths += [display_field.field_key]
+        values_list = queryset.values_list(*display_field_paths)
+
+        if not display_field_properties:
+            return values_list[1:]
+
+        data_list = []
+        values_index = 0
+        for obj in queryset:
+            display_property_values = []
+            for display_property in display_field_properties:
+                relations = display_property.split('__')
+                val = reduce(getattr, relations, obj)
+                display_property_values.append(val)
+
+            value_row = values_list[values_index]
+            while value_row[0] == obj.pk:
+                data_row = list(value_row[1:])  # Remove added pk
+                # Insert in the location dictated by the order of display fields
+                for i, prop_value in enumerate(display_property_values):
+                    data_row.insert(insert_property_indexes[i], val)
+                data_list.append(data_row)
+                values_index += 1
+                try:
+                    value_row = values_list[values_index]
+                except IndexError:
+                    break
+
+        return data_list
 
     def get_query(self):
         report = self
@@ -339,6 +392,18 @@ class DisplayField(AbstractField):
             for choice in choices:
                 choices_dict.update({choice[0]: choice[1]})
         return choices_dict
+
+    @property
+    def choices(self):
+        if self.pk:
+            model = get_model_from_path_string(
+                self.report.root_model.model_class(), self.path)
+            return self.get_choices(model, self.field)
+
+    @property
+    def field_key(self):
+        """ This key can be passed to a Django ORM values_list """
+        return self.path + self.field
 
     def __unicode__(self):
         return self.name

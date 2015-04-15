@@ -214,22 +214,12 @@ class GenerateReport(DataExportMixin, APIView):
 
     def post(self, request, report_id=None):
         report = get_object_or_404(Report, pk=report_id)
-        user = request.user
-        queryset = report.get_query()
 
-        display_fields = report.get_good_display_fields()
-        property_filters = []
-        for field in report.filterfield_set.all():
-            if field.field_type in ["Property", "Custom Field"]:
-                property_filters += [field]
-
-        objects_list, message = self.report_to_list(
-            queryset,
-            display_fields,
-            user,
-            property_filters=property_filters,
+        objects_list = report.report_to_list(
+            user=request.user,
             preview=True,)
-        display_fields = display_fields.values_list('name', flat=True)
+        display_fields = report.get_good_display_fields().values_list(
+            'name', flat=True)
         response = {
             'data': objects_list,
             'meta': {'titles': display_fields},
