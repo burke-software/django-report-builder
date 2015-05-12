@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer)
@@ -40,6 +41,7 @@ class ReportNestedViewSet(viewsets.ModelViewSet):
 class RelatedFieldsView(GetFieldsMixin, APIView):
     """ Get related fields from an ORM model
     """
+    permission_classes = (IsAdminUser,)
     def get_data_from_request(self, request):
         self.model = request.DATA['model']
         self.path = request.DATA['path']
@@ -72,6 +74,7 @@ class RelatedFieldsView(GetFieldsMixin, APIView):
 class FieldsView(RelatedFieldsView):
     """ Get direct fields and properties on an ORM model
     """
+    permission_classes = (IsAdminUser,)
     def post(self, request):
         self.get_data_from_request(request)
         field_data = self.get_fields(
