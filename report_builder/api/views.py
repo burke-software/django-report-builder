@@ -15,6 +15,7 @@ import copy
 class FormatViewSet(viewsets.ModelViewSet):
     queryset = Format.objects.all()
     serializer_class = FormatSerializer
+    pagination_class = None
 
 
 class FilterFieldViewSet(viewsets.ModelViewSet):
@@ -25,11 +26,13 @@ class FilterFieldViewSet(viewsets.ModelViewSet):
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
+    pagination_class = None
 
 
 class ReportNestedViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportNestedSerializer
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(user_created=self.request.user)
@@ -154,6 +157,7 @@ class FieldsView(RelatedFieldsView):
 
 
 class GenerateReport(DataExportMixin, APIView):
+    permission_classes = (IsAdminUser,)
     def get(self, request, report_id=None):
         return self.post(request, report_id=report_id)
 
