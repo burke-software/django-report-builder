@@ -30,32 +30,32 @@ class FilterFieldSerializer(serializers.ModelSerializer):
                   'field_type', 'filter_type', 'filter_value', 'filter_value2',
                   'exclude', 'position', 'report')
         read_only_fields = ('id', 'field_type')
-        
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields=("first_name", "last_name", "id")
-        
+
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
     root_model = serializers.PrimaryKeyRelatedField(
-        queryset=ContentType.objects.all())
+        queryset=Report._get_allowed_models())
     root_model_name = serializers.StringRelatedField(source='root_model')
     user_created = UserSerializer(read_only=True)
 
     class Meta:
         model = Report
-        fields = ('id', 'name', 'modified', 'root_model', 'root_model_name', 
+        fields = ('id', 'name', 'modified', 'root_model', 'root_model_name',
         'user_created')
-        
-        
+
+
 class ReportNestedSerializer(ReportSerializer):
     displayfield_set = DisplayFieldSerializer(required=False, many=True)
     filterfield_set = FilterFieldSerializer(required=False, many=True)
     user_created = serializers.PrimaryKeyRelatedField(read_only=True)
     user_modified = serializers.PrimaryKeyRelatedField(read_only=True)
-    
+
     class Meta:
         model = Report
         fields = (

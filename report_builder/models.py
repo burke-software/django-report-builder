@@ -32,9 +32,9 @@ class Report(models.Model):
     def _get_allowed_models():
         models = ContentType.objects.all()
         if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
-            models = models.filter(name__in=settings.REPORT_BUILDER_INCLUDE)
+            models = models.filter(model__in=settings.REPORT_BUILDER_INCLUDE)
         if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
-            models = models.exclude(name__in=settings.REPORT_BUILDER_EXCLUDE)
+            models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
         return models
 
     name = models.CharField(max_length=255)
