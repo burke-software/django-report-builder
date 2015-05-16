@@ -145,7 +145,7 @@ class Report(models.Model):
         if queryset is None:
             queryset = self.get_query()
             for field in self.filterfield_set.all():
-                if field.field_type in ["Property", "Custom Field"]:
+                if field.field_type in ["Property"]:
                     property_filters += [field]
         display_fields = self.get_good_display_fields()
 
@@ -567,6 +567,11 @@ class FilterField(AbstractField):
             model = get_model_from_path_string(
                 self.report.root_model.model_class(), self.path)
             return self.get_choices(model, self.field)
+
+    @property
+    def field_key(self):
+        """ This key can be passed to a Django ORM values_list """
+        return self.path + self.field
 
     def __unicode__(self):
         return self.field
