@@ -29,6 +29,7 @@ class Report(models.Model):
             model_manager = settings.REPORT_BUILDER_MODEL_MANAGER
         return model_manager
 
+    @staticmethod
     def _get_allowed_models():
         models = ContentType.objects.all()
         if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
