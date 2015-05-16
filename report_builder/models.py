@@ -145,7 +145,7 @@ class Report(models.Model):
         if queryset is None:
             queryset = self.get_query()
             for field in self.filterfield_set.all():
-                if field.field_type in ["Property", "Custom Field"]:
+                if field.field_type in ["Property"]:
                     property_filters += [field]
         display_fields = self.get_good_display_fields()
 
@@ -162,6 +162,13 @@ class Report(models.Model):
             else:
                 i += 1
                 display_field_paths += [display_field.field_key]
+
+        property_filters = []
+        for filter_field in self.filterfield_set.all():
+            filter_field_type = filter_field.field_type
+            if filter_field_type == "Property":
+                property_filters += [field]
+
         values_list = queryset.values_list(*display_field_paths)
 
         if not display_field_properties:
@@ -178,11 +185,19 @@ class Report(models.Model):
 
             value_row = values_list[values_index]
             while value_row[0] == obj.pk:
+                add_row = True
                 data_row = list(value_row[1:])  # Remove added pk
                 # Insert in the location dictated by the order of display fields
                 for i, prop_value in enumerate(display_property_values):
                     data_row.insert(insert_property_indexes[i], val)
-                data_list.append(data_row)
+                for property_filter in property_filters:
+                    relations = property_filter.field_key.split('__')
+                    val = reduce(getattr, relations, obj)
+                    if property_filter.filter_property(val):
+                        add_row = False
+
+                if add_row is True:
+                    data_list.append(data_row)
                 values_index += 1
                 try:
                     value_row = values_list[values_index]
@@ -529,6 +544,22 @@ class FilterField(AbstractField):
         if filter_field.exclude:
             return not filtered
         return filtered
+
+    @property
+    def field_type(self):
+        return self.report.get_field_type(self.field, self.path)
+
+    @property
+    def choices(self):
+        if self.pk:
+            model = get_model_from_path_string(
+                self.report.root_model.model_class(), self.path)
+            return self.get_choices(model, self.field)
+
+    @property
+    def field_key(self):
+        """ This key can be passed to a Django ORM values_list """
+        return self.path + self.field
 
     def __unicode__(self):
         return self.field
