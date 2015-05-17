@@ -18,6 +18,14 @@ import re
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
+def get_allowed_models():
+    models = ContentType.objects.all()
+    if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
+        models = models.filter(model__in=settings.REPORT_BUILDER_INCLUDE)
+    if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
+        models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
+    return models
+
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
     """
@@ -29,23 +37,15 @@ class Report(models.Model):
             model_manager = settings.REPORT_BUILDER_MODEL_MANAGER
         return model_manager
 
-    def _get_allowed_models():
-        models = ContentType.objects.all()
-        if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
-            models = models.filter(model__in=settings.REPORT_BUILDER_INCLUDE)
-        if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
-            models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
-        return models
-
-    @classmethod
-    def allowed_models(cls):
-        return cls._get_allowed_models()
+    @staticmethod
+    def allowed_models():
+        return get_allowed_models()
 
     name = models.CharField(max_length=255)
     slug = models.SlugField(verbose_name="Short Name")
     description = models.TextField(blank=True)
     root_model = models.ForeignKey(
-        ContentType, limit_choices_to={'pk__in': _get_allowed_models})
+        ContentType, limit_choices_to={'pk__in': get_allowed_models})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(
