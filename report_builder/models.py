@@ -556,10 +556,5 @@ class FilterField(AbstractField):
                 self.report.root_model.model_class(), self.path)
             return self.get_choices(model, self.field)
 
-    @property
-    def field_key(self):
-        """ This key can be passed to a Django ORM values_list """
-        return self.path + self.field
-
     def __unicode__(self):
         return self.field
