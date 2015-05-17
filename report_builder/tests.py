@@ -278,3 +278,8 @@ class ReportTests(TestCase):
         print('report builder report time is {}'.format(run_time))
         self.assertEqual(response.status_code, 200)
         self.assertLess(run_time, 1.0)
+
+    def test_admin(self):
+        response = self.client.get('/admin/report_builder/report/')
+        self.assertEqual(response.status_code, 200)
+

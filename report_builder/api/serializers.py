@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from report_builder.models import Report, DisplayField, FilterField, Format
@@ -35,19 +34,19 @@ class FilterFieldSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields=("first_name", "last_name", "id")
+        fields = ("first_name", "last_name", "id")
 
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
     root_model = serializers.PrimaryKeyRelatedField(
-        queryset=Report._get_allowed_models())
+        queryset=Report.allowed_models())
     root_model_name = serializers.StringRelatedField(source='root_model')
     user_created = UserSerializer(read_only=True)
 
     class Meta:
         model = Report
         fields = ('id', 'name', 'modified', 'root_model', 'root_model_name',
-        'user_created')
+                  'user_created')
 
 
 class ReportNestedSerializer(ReportSerializer):

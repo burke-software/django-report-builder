@@ -29,7 +29,6 @@ class Report(models.Model):
             model_manager = settings.REPORT_BUILDER_MODEL_MANAGER
         return model_manager
 
-    @staticmethod
     def _get_allowed_models():
         models = ContentType.objects.all()
         if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
@@ -37,6 +36,10 @@ class Report(models.Model):
         if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
             models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
         return models
+
+    @classmethod
+    def allowed_models(cls):
+        return cls._get_allowed_models()
 
     name = models.CharField(max_length=255)
     slug = models.SlugField(verbose_name="Short Name")
