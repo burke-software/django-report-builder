@@ -253,6 +253,10 @@ class AbstractField(models.Model):
         ordering = ['position']
 
     @property
+    def field_type(self):
+        return self.report.get_field_type(self.field, self.path)
+
+    @property
     def choices(self):
         if self.pk:
             model = get_model_from_path_string(
@@ -289,10 +293,6 @@ class DisplayField(AbstractField):
             model_field = None
         if model_field and model_field.choices:
             return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
-
-    @property
-    def field_type(self):
-        return self.report.get_field_type(self.field, self.path)
 
     @property
     def choices_dict(self):
@@ -421,10 +421,6 @@ class FilterField(AbstractField):
         if filter_field.exclude:
             return not filtered
         return filtered
-
-    @property
-    def field_type(self):
-        return self.report.get_field_type(self.field, self.path)
 
     def __unicode__(self):
         return self.field
