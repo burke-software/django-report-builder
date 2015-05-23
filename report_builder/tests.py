@@ -2,11 +2,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from .models import Report, DisplayField, FilterField
-from report_builder_demo.demo_models.models import Bar
+from report_builder_demo.demo_models.models import Bar, Restaurant, Waiter
 from django.conf import settings
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
-    get_relation_fields_from_model)
+    get_relation_fields_from_model, get_model_from_path_string)
 from rest_framework.test import APIClient
 import time
 
@@ -44,6 +44,10 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('filterfield' in names)
         self.assertTrue('root_model' in names)
         self.assertEquals(len(names), 6)
+
+    def test_get_model_from_path_string(self):
+        result = get_model_from_path_string(Restaurant, 'waiter__name')
+        self.assertEqual(result, Waiter)
 
     def test_get_direct_fields_from_model(self):
         fields = get_direct_fields_from_model(Report)
