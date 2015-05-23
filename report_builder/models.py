@@ -343,7 +343,7 @@ class FilterField(AbstractField):
         if self.filter_type == "range":
             if self.filter_value2 in [None, ""]:
                 raise ValidationError('Range filters must have two values')
-        if self.field_type == "DateField":
+        if self.field_type == "DateField" and self.filter_type != "isnull":
             date_form = forms.DateField()
             date_value = parser.parse(self.filter_value).date()
             date_form.clean(date_value)
