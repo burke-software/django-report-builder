@@ -79,6 +79,7 @@ class ReportNestedSerializer(ReportSerializer):
 
         with transaction.atomic():
             instance.name = validated_data.get('name', instance.name)
+            instance.description = validated_data.get('description', instance.description)
             instance.distinct = validated_data.get(
                 'distinct', instance.distinct)
             instance.modified = datetime.date.today()
