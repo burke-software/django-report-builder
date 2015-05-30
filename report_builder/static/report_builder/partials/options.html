@@ -13,7 +13,7 @@
             <a ng-href="{{ 'report/' + report.id + '/create_copy/' }}" target="_self"><img style="width: 1em" src="{{ static('report_builder/img/copy.svg') }}"/> Copy this report</a>
         </md-item-content>
     </md-item>
-    <md-item ng-if="ASYNC_REPORT">
+    <md-item ng-if="ASYNC_REPORT === 'True'">
         <md-item-content>
             <a ng-href="{{ report.report_file }}">
                 <img style="width: 1em" src="{{ static('report_builder/img/download.svg') }}"/>
