@@ -2,6 +2,14 @@
 <md-list>
     <md-item>
         <md-item-content>
+            <md-input-container flex>
+                <label>Description</label>
+                <textarea ng-model="report.description"></textarea>
+            </md-input-container>
+        </md-item-content>
+    </md-item>
+    <md-item>
+        <md-item-content>
             <md-checkbox ng-model="report.distinct" aria-label="Is Distinct">
                 Is Distinct (Maybe help reduce duplicates rows) 
             </md-checkbox>
