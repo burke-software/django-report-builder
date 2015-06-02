@@ -47,6 +47,7 @@ class Restaurant(models.Model):
 class Waiter(models.Model):
     restaurant = models.ForeignKey(Restaurant)
     name = models.CharField(max_length=50)
+    days_worked = models.IntegerField(blank=True, null=True, default=None)
 
     def __str__(self):
         return "%s the waiter at %s" % (self.name, self.restaurant)
