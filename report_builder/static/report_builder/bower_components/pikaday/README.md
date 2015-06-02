@@ -4,7 +4,7 @@ Pikaday
 ### A refreshing JavaScript Datepicker
 
 * Lightweight (less than 5kb minified and gzipped)
-* No dependencies (but plays well with [Moment.js][moment]
+* No dependencies (but plays well with [Moment.js][moment])
 * Modular CSS classes for easy styling
 
 [**Try Pikaday Demo →**][Pikaday]
@@ -78,6 +78,8 @@ Pikaday has many useful options:
 * `trigger` use a different element to trigger opening the datepicker, see [trigger example][] (default to `field`)
 * `bound` automatically show/hide the datepicker on `field` focus (default `true` if `field` is set)
 * `position` preferred position of the datepicker relative to the form field, e.g.: `top right`, `bottom right` **Note:** automatic adjustment may occur to avoid datepicker from being displayed outside the viewport, see [positions example][] (default to 'bottom left')
+* `reposition` can be set to false to not reposition datepicker within the viewport, forcing it to take the configured `position` (default: true)
+* `container` DOM node to render calendar into, see [container example][] (default: undefined) 
 * `format` the default output format for `.toString()` and `field` value (requires [Moment.js][moment] for custom formatting)
 * `defaultDate` the initial date to view when first opened
 * `setDefaultDate` make the `defaultDate` the initial selected value
@@ -85,10 +87,13 @@ Pikaday has many useful options:
 * `minDate` the minimum/earliest date that can be selected (this should be a native Date object - e.g. `new Date()` or `moment().toDate()`)
 * `maxDate` the maximum/latest date that can be selected (this should be a native Date object - e.g. `new Date()` or `moment().toDate()`)
 * `yearRange` number of years either side (e.g. `10`) or array of upper/lower range (e.g. `[1900,2015]`)
+* `showWeekNumber` show the ISO week number at the head of the row (default `false`)
 * `isRTL` reverse the calendar for right-to-left languages
 * `i18n` language defaults for month and weekday names (see internationalization below)
 * `yearSuffix` additional text to append to the year in the title
 * `showMonthAfterYear` render the month after year in the title (default `false`)
+* `numberOfMonths` number of visible calendars
+* `mainCalendar` when `numberOfMonths` is used, this will help you to choose where the main calendar will be (default `left`, can be set to `right`). Only used for the first display or when a selected date is not already visible
 * `onSelect` callback function for when a date is selected
 * `onOpen` callback function for when the picker becomes visible
 * `onClose` callback function for when the picker is hidden
@@ -257,8 +262,9 @@ You must provide 12 months and 7 weekdays (with abbreviations). Always specify w
 Pikaday is a pure datepicker. It will not support picking a time of day. However, there have been efforts to add time support to Pikaday.  
 See [#1][issue1] and [#18][issue18]. These reside in their own fork.
 
-You can use the work [@stas][stas] did at [stas/Pikaday][stas Pika]  
-or the work [@owenmead][owenmead] did more recently at [owenmead/Pikaday][owen Pika] which is based on version 1.1.0.
+You can use the work [@owenmead][owenmead] did most recently at [owenmead/Pikaday][owen Pika]  
+A more simple time selection approach done by [@xeeali][xeeali] at [xeeali/Pikaday][xeeali Pika] is based on version 1.2.0.  
+Also [@stas][stas] has a fork [stas/Pikaday][stas Pika], but is now quite old
 
 
 ## Browser Compatibility
@@ -268,6 +274,9 @@ or the work [@owenmead][owenmead] did more recently at [owenmead/Pikaday][owen P
 * Firefox 3.5+
 * Safari 3+
 * Opera 10.6+
+
+[![browser compatibility](https://ci.testling.com/rikkert/pikaday.png)
+](https://ci.testling.com/rikkert/pikaday)
 
 
 * * *
@@ -297,11 +306,14 @@ Copyright © 2014 David Bushell | BSD & MIT license
   [issue18]:     https://github.com/dbushell/Pikaday/issues/18                    "Issue 18"
   [stas]:        https://github.com/stas                                          "@stas"
   [stas Pika]:   https://github.com/stas/Pikaday                                  "Pikaday"
-  [owenmead]:     https://github.com/owenmead                                     "@owenmead"
+  [owenmead]:    https://github.com/owenmead                                      "@owenmead"
   [owen Pika]:   https://github.com/owenmead/Pikaday                              "Pikaday"
+  [xeeali]:      https://github.com/xeeali                                        "@xeeali"
+  [xeeali Pika]: https://github.com/xeeali/Pikaday                                "Pikaday"
   [moment.js example]: http://dbushell.github.com/Pikaday/examples/moment.html    "Pikaday w/ moment.js"
   [jQuery example]: http://dbushell.github.com/Pikaday/examples/jquery.html       "Pikaday w/ jQuery"
   [AMD example]: http://dbushell.github.com/Pikaday/examples/amd.html             "Pikaday w/ AMD"
   [jQuery AMD example]: http://dbushell.github.com/Pikaday/examples/jquery-amd.html "Pikaday w/ jQuery + AMD"
   [trigger example]: http://dbushell.github.com/Pikaday/examples/trigger.html     "Pikaday using custom trigger"
   [positions example]: http://dbushell.github.com/Pikaday/examples/positions.html "Pikaday using different position options"
+  [container example]: http://dbushell.github.com/Pikaday/examples/container.html "Pikaday using custom calendar container"

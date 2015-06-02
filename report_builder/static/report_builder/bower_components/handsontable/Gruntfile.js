@@ -50,6 +50,9 @@ var browsers = [
 ];
 
 module.exports = function (grunt) {
+
+  require('time-grunt')(grunt);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     gitinfo: {
@@ -88,6 +91,7 @@ module.exports = function (grunt) {
         'src/editors/numericEditor.js',
 
         'src/validators/numericValidator.js',
+        'src/validators/dateValidator.js',
         'src/validators/autocompleteValidator.js',
 
         'src/cellTypes.js',
@@ -119,7 +123,8 @@ module.exports = function (grunt) {
         'src/plugins/grouping/grouping.js',
         'src/plugins/contextMenuCopyPaste/contextMenuCopyPaste.js',
         'src/plugins/multipleSelectionHandles/multipleSelectionHandles.js',
-        'src/plugins/touchScroll/touchScroll.js'
+        'src/plugins/touchScroll/touchScroll.js',
+        'src/plugins/manualColumnFreeze/manualColumnFreeze.js'
       ],
       walkontable: [
         'src/3rdparty/walkontable/src/*.js',
@@ -183,7 +188,7 @@ module.exports = function (grunt) {
         'lib/**/*.js',
         'lib/**/*.css'
       ],
-      tasks: ['default']
+      tasks: ['build']
     },
 
     clean: {
@@ -227,10 +232,12 @@ module.exports = function (grunt) {
             'test/jasmine/css/SpecRunner.css',
             'dist/handsontable.css',
             'plugins/removeRow/handsontable.removeRow.css',
-            'lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css'
+            'demo/js/pikaday/css/pikaday.css'
           ],
           vendor: [
             'lib/jquery.min.js',
+            'demo/js/moment/moment.js',
+            'demo/js/pikaday/pikaday.js',
             'lib/numeral.js',
             'lib/numeral.de-de.js',
             'test/jasmine/lib/jasmine-extensions.js'
@@ -248,6 +255,7 @@ module.exports = function (grunt) {
       walkontable: {
         src: [
           'src/dom.js',
+          'src/helpers.js',
           'src/eventManager.js',
           'src/3rdparty/walkontable/src/*.js',
           'src/3rdparty/walkontable/src/3rdparty/*.js'
@@ -364,11 +372,24 @@ module.exports = function (grunt) {
           testname: "Development test (Walkontable)"
         }
       }
-    }
+    },
+    jshint: (function() {
+      var options = {
+        options: {
+          jshintrc: true
+        }
+      };
+      options.core = 'src/core.js';
+      options.src = '<%= meta.src %>';
+      options.walkontable = '<%= meta.walkontable %>';
+
+      return options;
+    }())
   });
 
   // Default task.
-  grunt.registerTask('default', ['gitinfo', 'replace:dist', 'concat', 'uglify', 'cssmin', 'clean']);
+  grunt.registerTask('default', ['jshint', 'build']);
+  grunt.registerTask('build', ['gitinfo', 'replace:dist', 'concat', 'uglify', 'cssmin', 'clean']);
   grunt.registerTask('test', ['default', 'jasmine:handsontable', 'jasmine:walkontable', 'jasmine:mobile:build']);
   grunt.registerTask('test:handsontable', ['default', 'jasmine:handsontable']);
   grunt.registerTask('test:walkontable', ['default', 'jasmine:walkontable']);
@@ -415,4 +436,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-gitinfo');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 };

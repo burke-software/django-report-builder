@@ -20,7 +20,7 @@ module.exports = function (grunt) {
   var myBanner = '/**\n' +
     ' * <%= pkg.name %> <%= pkg.version %>\n' +
     ' * \n' +
-    ' * Copyright 2012-2014 Marcin Warpechowski\n' +
+    ' * Copyright 2012-2015 Marcin Warpechowski\n' +
     ' * Licensed under the MIT license.\n' +
     ' * https://github.com/handsontable/ngHandsontable\n' +
     ' * Date: <%= (new Date()).toString() %>\n' +
@@ -51,18 +51,23 @@ module.exports = function (grunt) {
 			"dist/ngHandsontable.min.js": ["dist/ngHandsontable.js"]
     },
 
+    jshint: {
+      options: {
+        jshintrc:true
+      },
+      files:['src/**/*.js', 'src/*.js']
+    },
+
 		watch: {
       files: ['src/**/*', 'bower_components/**/*'],
       tasks: ['concat', 'uglify']
     }
   });
 
-  // Default task.
-//  grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
-
-	grunt.registerTask('default', ['concat', 'uglify']);
+	grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 };

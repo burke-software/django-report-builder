@@ -1,10 +1,10 @@
 /**
- * ngHandsontable 0.5.0
+ * ngHandsontable 0.5.2
  * 
- * Copyright 2012-2014 Marcin Warpechowski
+ * Copyright 2012-2015 Marcin Warpechowski
  * Licensed under the MIT license.
  * https://github.com/handsontable/ngHandsontable
- * Date: Thu Dec 11 2014 16:21:43 GMT+0100 (CET)
+ * Date: Wed Apr 08 2015 16:48:57 GMT+0200 (Środkowoeuropejski czas letni)
 */
 
 if (document.all && !document.addEventListener) { // IE 8 and lower
@@ -105,7 +105,7 @@ angular.module('ngHandsontable.services', [])
 
 					return scopeDefinition;
 				}
-			}
+			};
 		}
 	]
 )
@@ -149,7 +149,7 @@ angular.module('ngHandsontable.services', [])
 						}
 					};
 				}
-			}
+			};
 		}
 	]
 );
@@ -163,7 +163,8 @@ angular.module('ngHandsontable.directives', [])
 		'settingFactory',
 		'autoCompleteFactory',
 		'$rootScope',
-		function (settingFactory, autoCompleteFactory, $rootScope) {
+		'$parse',
+		function (settingFactory, autoCompleteFactory, $rootScope, $parse) {
 			var publicProperties = Object.keys(Handsontable.DefaultSettings.prototype),
 				publicHooks = Object.keys(Handsontable.PluginHooks.hooks),
 				htOptions = publicProperties.concat(publicHooks);
@@ -180,7 +181,7 @@ angular.module('ngHandsontable.directives', [])
 							$scope.htSettings.columns = [];
 						}
 						$scope.htSettings['columns'].push(column);
-					}
+					};
 				}],
 				link: function (scope, element, attrs) {
 					if (!scope.htSettings) {
@@ -232,12 +233,7 @@ angular.module('ngHandsontable.directives', [])
 							var settingToCheck = scope.$parent;
 
 							if (columnSetting) {
-								var settingKeys = columnSetting.split('.');
-								while (settingKeys.length > 0) {
-									var key = settingKeys.shift();
-									settingToCheck = settingToCheck[key];
-								}
-								return angular.toJson([settingToCheck]);
+								return angular.toJson($parse(columnSetting)(settingToCheck));
 							}
 
 						},
@@ -254,24 +250,25 @@ angular.module('ngHandsontable.directives', [])
 					 */
 					scope.$parent.$watch(
 						function () {
-							var objKeys = attrs.datarows.split('.'),
-								objToCheck = scope.$parent;
-
-							while(objKeys.length > 0) {
-								var key = objKeys.shift();
-								objToCheck = objToCheck[key];
-							}
-
-							return angular.toJson([objToCheck]);
+							var objToCheck = scope.$parent;
+							return angular.toJson($parse(attrs.datarows)(objToCheck));
 						},
 						function () {
 							settingFactory.renderHandsontable(scope.hotInstance);
 						}
 					);
 
-					//scope.hotInstance = settingFactory.initializeHandsontable(element, scope.htSettings);
+					/***
+					 * INITIALIZE DATA
+					 */
+					scope.$watch('datarows', function (newValue, oldValue) {
+						if (oldValue.length == scope.htSettings.minSpareRows && newValue.length != scope.htSettings.minSpareRows) {
+							scope.htSettings['data'] = scope.datarows;
+							settingFactory.updateHandsontableSettings(scope.hotInstance, scope.htSettings);
+						}
+					});
 				}
-			}
+			};
 		}
 	]
 )
@@ -289,7 +286,7 @@ angular.module('ngHandsontable.directives', [])
 				controller:['$scope', function ($scope) {
 					this.setColumnOptionList = function (options) {
 						if (!$scope.column) {
-							$scope.column = {}
+							$scope.column = {};
 						}
 
 						var optionList = {};
@@ -301,7 +298,7 @@ angular.module('ngHandsontable.directives', [])
 							optionList.object = options.split(',');
 						}
 						$scope.column['optionList'] = optionList;
-					}
+					};
 				}],
 				link: function (scope, element, attributes, controllerInstance) {
 					var column = {};
@@ -341,7 +338,7 @@ angular.module('ngHandsontable.directives', [])
 					angular.extend(scope.column, column);
 					controllerInstance.setColumnSetting(scope.column);
 				}
-			}
+			};
 		}
 	]
 )
@@ -360,7 +357,7 @@ angular.module('ngHandsontable.directives', [])
 					var options = attrs.datarows;
 					controllerInstance.setColumnOptionList(options);
 				}
-			}
+			};
 		}
 	]
 )

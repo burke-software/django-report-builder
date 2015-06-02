@@ -1,4 +1,4 @@
-# ngHandsontable - the AngularJS directive for [Handsontable](https://github.com/handsontable/jquery-handsontable)
+# ngHandsontable - the AngularJS directive for [Handsontable](https://github.com/handsontable/handsontable)
 
 Enables creation of data grid applications in AngularJS.
 
@@ -11,10 +11,9 @@ See the demo at http://handsontable.github.io/ngHandsontable
 Include the library files:
 
 ```html
-<link rel="stylesheet" media="screen" href="bower_components/handsontable/dist/jquery.handsontable.full.css">
+<link rel="stylesheet" media="screen" href="bower_components/handsontable/dist/handsontable.full.css">
 <script src="bower_components/angular/angular.js"></script>
-<script src="bower_components/jquery/jquery.min.js"></script>
-<script src="bower_components/handsontable/dist/jquery.handsontable.full.js"></script>
+<script src="bower_components/handsontable/dist/handsontable.full.js"></script>
 <script src="dist/ngHandsontable.js"></script>
 ```
 
