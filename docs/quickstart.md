@@ -63,6 +63,14 @@ Advantages of this option
 - Download the last report that was run instead of regenerating
 - Nicer status messages about report status
 
+### Turn off front-end
+
+If you're developing your own front-end then you would need the ability to disable the front-end that comes with this package. To disable the built-in front-end:
+
+    REPORT_BUILDER_FRONTEND = False
+
+By default the front-end is turned on.
+
 **Installation**
 
 1. Set up Celery

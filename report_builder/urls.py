@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url('^report/(?P<pk>\d+)/$', views.ReportSPAView.as_view(), name="report_update_view"),
 )
 
-if not hasattr(settings, 'REPORT_BUILDER_FRONTEND_OFF') or not settings.REPORT_BUILDER_FRONTEND_OFF:
+if not hasattr(settings, 'REPORT_BUILDER_FRONTEND') or settings.REPORT_BUILDER_FRONTEND:
     urlpatterns += patterns('',
         url(r'^',  staff_member_required(views.ReportSPAView.as_view()), name="report_builder"),
     )
