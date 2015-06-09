@@ -1,8 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from .models import Report, DisplayField, FilterField
-from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter
+from .models import Report, DisplayField, FilterField, Format
+from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
 from django.conf import settings
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
@@ -32,16 +32,13 @@ class UtilityFunctionTests(TestCase):
             filter_value='Lots of spam')
 
     def get_fields_names(self, fields):
-        names = []
-        for field in fields:
-            names += [field.name]
-        return names
+        return [field.name for field in fields]
 
     def test_get_relation_fields_from_model(self):
         fields = get_relation_fields_from_model(Report)
         names = self.get_fields_names(fields)
-        self.assertTrue('displayfield' in names)
-        self.assertTrue('filterfield' in names)
+        self.assertTrue('displayfield' in names or 'report_builder:displayfield' in names)
+        self.assertTrue('filterfield' in names or 'report_builder:filterfield' in names)
         self.assertTrue('root_model' in names)
         self.assertEquals(len(names), 6)
 
@@ -338,7 +335,300 @@ class ReportTests(TestCase):
 
         self.assertContains(response, '["TOTALS",""],[22.0,21.0]')
 
+    def make_people(self):
+        people = (
+            ('John', 'Doe', (
+                ('Will', 'Doe', 5, 'R'),
+                ('James', 'Doe', 8, ''),
+                ('Robert', 'Doe', 3, 'G'),
+            )),
+            ('Maria', 'Smith', (
+                ('Susan', 'Smith', 1, 'Y'),
+                ('Karen', 'Smith', 4, 'B'),
+            )),
+            ('Donald', 'King', (
+                ('Mark', 'King', 2, 'B'),
+                ('Charles', 'King', None, ''),
+                ('Helen', 'King', 7, 'G'),
+                ('Lisa', 'King', 3, 'R'),
+            )),
+            ('Paul', 'Nelson', ()),
+        )
+
+        for first_name, last_name, children in people:
+            person = Person(first_name=first_name, last_name=last_name)
+            person.save()
+            for child_first, child_last, age, color in children:
+                child = Child(
+                    parent=person, first_name=child_first, last_name=child_last,
+                    age=age, color=color
+                )
+                child.save()
+
+    def test_groupby_id(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='child')
+        report = Report.objects.create(root_model=model, name='# of Kids / Person Id')
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='id',
+            field_verbose="Parent's Id",
+            sort=3,
+            position=0,
+            group=True,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='first_name',
+            field_verbose="Parent's First name",
+            sort=2,
+            sort_reverse=True,
+            position=1,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='last_name',
+            field_verbose="Parent's Last name",
+            sort=1,
+            position=2,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='id',
+            field_verbose='Child Count',
+            sort=4,
+            position=3,
+            aggregate='Count',
+            total=True,
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[[1,"John","Doe",3],[3,"Donald","King",4],[2,"Maria","Smith",2],["TOTALS","","",""],["","","",9.0]]'
+
+        self.assertContains(response, data)
+
+    def test_groupby_name(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='child')
+        report = Report.objects.create(root_model=model, name='# of Kids / Person Name')
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='id',
+            field_verbose="Parent's Id",
+            sort=3,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='first_name',
+            field_verbose="Parent's First name",
+            sort=2,
+            sort_reverse=True,
+            position=1,
+            group=True,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='last_name',
+            field_verbose="Parent's Last name",
+            sort=1,
+            position=2,
+            group=True,
+            total=True,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='id',
+            field_verbose='Child Count',
+            sort=4,
+            position=3,
+            aggregate='Count',
+            total=True,
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[[1,"John","Doe",3],[3,"Donald","King",4],[2,"Maria","Smith",2],["TOTALS","","",""],["","",3.0,9.0]]'
+
+        self.assertContains(response, data)
+
+    def test_aggregates(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='person')
+        report = Report.objects.create(root_model=model, name='Kid Stats')
+
+        DisplayField.objects.create(
+            report=report,
+            field='first_name',
+            field_verbose='First Name',
+            sort=1,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='last_name',
+            field_verbose='Last Name',
+            sort=2,
+            position=1,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='children__',
+            field='age',
+            field_verbose='Oldest Age',
+            sort=3,
+            position=2,
+            aggregate='Max',
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='children__',
+            field='age',
+            field_verbose='Youngest Age',
+            sort=4,
+            position=3,
+            aggregate='Min',
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='children__',
+            field='age',
+            field_verbose='Average Age',
+            sort=5,
+            position=4,
+            aggregate='Avg',
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='children__',
+            field='age',
+            field_verbose='Parenting Years',
+            sort=6,
+            position=5,
+            aggregate='Sum',
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[["Donald","King",7,2,4.0,12],["John","Doe",8,3,5.333333333333333,16],["Maria","Smith",4,1,2.5,5],["Paul","Nelson",null,null,null,null]]'
+
+        self.assertContains(response, data)
+
+    def test_choices_and_sort_null(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='person')
+        report = Report.objects.create(root_model=model, name='Kid Data')
+
+        DisplayField.objects.create(
+            report=report,
+            field='first_name',
+            field_verbose='First Name',
+            sort=4,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='last_name',
+            field_verbose='Last Name',
+            sort=3,
+            position=1,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='children__',
+            field='age',
+            field_verbose='Child Age',
+            sort=2,
+            position=2,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='children__',
+            field='color',
+            field_verbose='Child Color',
+            sort=1,
+            position=3,
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[["Donald","King",null,""],["Paul","Nelson",null,""],["John","Doe",8,""],["Donald","King",2,"Blue"],["Maria","Smith",4,"Blue"],["John","Doe",3,"Green"],["Donald","King",7,"Green"],["Donald","King",3,"Red"],["John","Doe",5,"Red"],["Maria","Smith",1,"Y"]]'
+
+        self.assertContains(response, data)
+
+    def test_formatter(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='child')
+        report = Report.objects.create(root_model=model, name='Children')
+
+        DisplayField.objects.create(
+            report=report,
+            field='first_name',
+            field_verbose='First Name',
+            sort=1,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='last_name',
+            field_verbose='Last Name',
+            sort=2,
+            position=1,
+        )
+
+        years_old = Format(name='years old', string='{} years old')
+        years_old.save()
+
+        DisplayField.objects.create(
+            report=report,
+            field='age',
+            field_verbose='Child Age',
+            sort=3,
+            position=2,
+            total=True,
+            display_format=years_old,
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[["Charles","King","None years old"],["Helen","King","7 years old"],["James","Doe","8 years old"],["Karen","Smith","4 years old"],["Lisa","King","3 years old"],["Mark","King","2 years old"],["Robert","Doe","3 years old"],["Susan","Smith","1 years old"],["Will","Doe","5 years old"],["TOTALS","",""],["","","33 years old"]]'
+
+        self.assertContains(response, data)
+
     def test_admin(self):
         response = self.client.get('/admin/report_builder/report/')
         self.assertEqual(response.status_code, 200)
-
