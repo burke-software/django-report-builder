@@ -3,7 +3,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import routers
 from . import views
 from .api import views as api_views
-
+from django.conf import settings
 
 router = routers.DefaultRouter()
 router.register(r'reports', api_views.ReportViewSet)
@@ -23,5 +23,9 @@ urlpatterns = patterns('',
     url(r'^api/fields',  staff_member_required(api_views.FieldsView.as_view()), name="fields"),
     url(r'^api/report/(?P<report_id>\w+)/generate/',  staff_member_required(api_views.GenerateReport.as_view()), name="generate_report"),
     url('^report/(?P<pk>\d+)/$', views.ReportSPAView.as_view(), name="report_update_view"),
-    url(r'^',  staff_member_required(views.ReportSPAView.as_view()), name="report_builder"),
 )
+
+if not hasattr(settings, 'REPORT_BUILDER_FRONTEND') or settings.REPORT_BUILDER_FRONTEND:
+    urlpatterns += patterns('',
+        url(r'^',  staff_member_required(views.ReportSPAView.as_view()), name="report_builder"),
+    )
