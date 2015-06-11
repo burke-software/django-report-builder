@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
+from django.utils.functional import cached_property
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.fields import FieldDoesNotExist
@@ -21,26 +22,9 @@ AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 def get_allowed_models():
     models = ContentType.objects.all()
     if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
-        allModelNames = ()
-        additionalModels = []
-        for element in settings.REPORT_BUILDER_INCLUDE:
-            splitElement = element.split('.')
-            if len(splitElement) == 2:
-                additionalModels.append(models.filter(app_label=splitElement[0], model=splitElement[1]))
-            else:
-                allModelNames = allModelNames + (element,)
-        models = models.filter(model__in=allModelNames)
-        for additionalModel in additionalModels:
-            models = models | additionalModel
+        models = models.filter(model__in=settings.REPORT_BUILDER_INCLUDE)
     if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
-        allModelNames = ()
-        for element in settings.REPORT_BUILDER_EXCLUDE:
-            splitElement = element.split('.')
-            if len(splitElement) == 2:
-                models = models.exclude(app_label=splitElement[0], model=splitElement[1])
-            else:
-                allModelNames = allModelNames + (element,)
-        models = models.exclude(model__in=allModelNames)
+        models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
     return models
 
 class Report(models.Model):
@@ -117,7 +101,7 @@ class Report(models.Model):
             pass
         # Is it a property?
         field_attr = getattr(model, field_name, None)
-        if isinstance(field_attr, property):
+        if isinstance(field_attr, property) or isinstance(field_attr, cached_property):
             return "Property"
         # Is it a custom field?
         try:
