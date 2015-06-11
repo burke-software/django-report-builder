@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
+from django.utils.functional import cached_property
 from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer)
@@ -128,7 +129,7 @@ class FieldsView(RelatedFieldsView):
                 extra_fields = extra
             for field in extra_fields:
                 field_attr = getattr(self.model_class, field, None)
-                if isinstance(field_attr, property):
+                if isinstance(field_attr, property) or isinstance(field_attr, cached_property):
                     result += [{
                         'name': field,
                         'field': field,
