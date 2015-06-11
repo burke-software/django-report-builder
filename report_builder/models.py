@@ -21,9 +21,26 @@ AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 def get_allowed_models():
     models = ContentType.objects.all()
     if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
-        models = models.filter(model__in=settings.REPORT_BUILDER_INCLUDE)
+        allModelNames = ()
+        additionalModels = []
+        for element in settings.REPORT_BUILDER_INCLUDE:
+            splitElement = element.split('.')
+            if len(splitElement) == 2:
+                additionalModels.append(models.filter(app_label=splitElement[0], model=splitElement[1]))
+            else:
+                allModelNames = allModelNames + (element,)
+        models = models.filter(model__in=allModelNames)
+        for additionalModel in additionalModels:
+            models = models | additionalModel
     if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
-        models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
+        allModelNames = ()
+        for element in settings.REPORT_BUILDER_EXCLUDE:
+            splitElement = element.split('.')
+            if len(splitElement) == 2:
+                models = models.exclude(app_label=splitElement[0], model=splitElement[1])
+            else:
+                allModelNames = allModelNames + (element,)
+        models = models.exclude(model__in=allModelNames)
     return models
 
 class Report(models.Model):
