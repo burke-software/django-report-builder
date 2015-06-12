@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
+from django.utils.functional import cached_property
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.fields import FieldDoesNotExist
@@ -100,7 +101,7 @@ class Report(models.Model):
             pass
         # Is it a property?
         field_attr = getattr(model, field_name, None)
-        if isinstance(field_attr, property):
+        if isinstance(field_attr, property) or isinstance(field_attr, cached_property):
             return "Property"
         # Is it a custom field?
         try:
