@@ -115,6 +115,7 @@ class FieldsView(RelatedFieldsView):
                 'field': new_field.name,
                 'field_verbose': verbose_name,
                 'field_type': new_field.get_internal_type(),
+                'field_choices': new_field.choices,
                 'path': field_data['path'],
                 'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,
@@ -135,6 +136,7 @@ class FieldsView(RelatedFieldsView):
                         'field': field,
                         'field_verbose': field,
                         'field_type': 'Property',
+                        'field_choices': None,
                         'path': field_data['path'],
                         'path_verbose': field_data['path_verbose'],
                         'help_text': 'Adding this property will '
@@ -150,6 +152,7 @@ class FieldsView(RelatedFieldsView):
                     'field': field.name,
                     'field_verbose': field.name,
                     'field_type': 'Custom Field',
+                    'field_choices': new_field.choices,
                     'path': field_data['path'],
                     'path_verbose': field_data['path_verbose'],
                     'help_text': 'This is a custom field.',

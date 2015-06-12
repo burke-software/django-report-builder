@@ -20,9 +20,6 @@ class Migration(migrations.Migration):
                 ('age', models.IntegerField(default=None, null=True, blank=True)),
                 ('color', models.CharField(default=b'', max_length=1, blank=True, choices=[(b'R', b'Red'), (b'G', b'Green'), (b'B', b'Blue')])),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Person',
@@ -31,14 +28,15 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=50)),
                 ('last_name', models.CharField(max_length=50)),
             ],
-            options={
-            },
-            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='bar',
+            name='check_mate_status',
+            field=models.CharField(default=b'CH', max_length=2, choices=[(b'CH', b'CHECK'), (b'MA', b'CHECKMATE')]),
         ),
         migrations.AddField(
             model_name='child',
             name='parent',
             field=models.ForeignKey(related_name='children', to='demo_models.Person'),
-            preserve_default=True,
         ),
     ]
