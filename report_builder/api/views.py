@@ -129,7 +129,7 @@ class FieldsView(RelatedFieldsView):
                 extra_fields = extra
             for field in extra_fields:
                 field_attr = getattr(self.model_class, field, None)
-                if isinstance(field_attr, property) or isinstance(field_attr, cached_property):
+                if isinstance(field_attr, (property, cached_property)):
                     result += [{
                         'name': field,
                         'field': field,

@@ -101,7 +101,7 @@ class Report(models.Model):
             pass
         # Is it a property?
         field_attr = getattr(model, field_name, None)
-        if isinstance(field_attr, property) or isinstance(field_attr, cached_property):
+        if isinstance(field_attr, (property, cached_property)):
             return "Property"
         # Is it a custom field?
         try:
