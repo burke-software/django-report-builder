@@ -327,6 +327,7 @@ class ReportTests(TestCase):
         response = self.client.get(self.generate_url)
         self.assertNotContains(response, 'lol yes')
 
+    @unittest.skip("Custom field not yet implimented")
     def test_filter_custom_field(self):
         from custom_field.models import CustomField
         ct = ContentType.objects.get(model="bar", app_label="demo_models")
@@ -462,6 +463,7 @@ class ReportTests(TestCase):
             field='days_worked',
             field_verbose='days_worked_verbose',
             total=True,
+            position=1,
         )
 
         generate_url = reverse('generate_report', args=[report.id])
