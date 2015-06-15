@@ -88,11 +88,13 @@ class FieldsView(RelatedFieldsView):
         result = []
         fields = None
         extra = None
+        defaults = None
         meta = getattr(self.model_class, 'ReportBuilder', None)
         if meta is not None:
             fields = getattr(meta, 'fields', None)
             exclude = getattr(meta, 'exclude', None)
             extra = getattr(meta, 'extra', None)
+            defaults = getattr(meta, 'defaults', None)
             if fields is not None:
                 fields = list(fields)
                 for field in copy.copy(field_data['fields']):
@@ -114,6 +116,7 @@ class FieldsView(RelatedFieldsView):
                 'field': new_field.name,
                 'field_verbose': verbose_name,
                 'field_type': new_field.get_internal_type(),
+                'is_default': True if defaults is None or new_field.name in defaults else False,
                 'path': field_data['path'],
                 'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,
@@ -136,6 +139,7 @@ class FieldsView(RelatedFieldsView):
                         'field_type': 'Property',
                         'path': field_data['path'],
                         'path_verbose': field_data['path_verbose'],
+                        'is_default': True if defaults is None or new_field.name in defaults else False,
                         'help_text': 'Adding this property will '
                         'significantly increase the time it takes to run a '
                         'report.'
@@ -151,6 +155,7 @@ class FieldsView(RelatedFieldsView):
                     'field_type': 'Custom Field',
                     'path': field_data['path'],
                     'path_verbose': field_data['path_verbose'],
+                    'is_default': True if defaults is None or new_field.name in defaults else False,
                     'help_text': 'This is a custom field.',
                 }]
         return Response(result)
