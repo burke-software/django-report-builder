@@ -36,6 +36,13 @@ Note you can add properties in a similair way as Django admin.
 In previous versions of django-report-builder all properties were included by default.
 They must now be explicitly included.
 
+Moreover, we have added functionality to set fields to display by default. This is currently not valuable to the front-end that django-report-builder comes with, but if you have your own front-end then you could utilize this information. The aim is that when you select the model you want to filter on these fields would be selected as display defaults automatically.
+
+    class ReportBuilder:
+        defaults = () # Lists or tuple of defaults
+
+The `defaults` field would usually be a subset of the `fields`. The idea is that you would have a `is_defualt` field on the JSON-frontend that would allow you to recognize that this is a default value on your own front-end.
+
 ### Custom model manager for all models
 
     REPORT_BUILDER_MODEL_MANAGER = 'on_site' #name of custom model manager to use on all models

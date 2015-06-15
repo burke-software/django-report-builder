@@ -9,6 +9,7 @@ from report_utils.model_introspection import (
     get_relation_fields_from_model, get_model_from_path_string)
 from rest_framework.test import APIClient
 import time
+import json
 
 
 try:
@@ -136,6 +137,16 @@ class ReportBuilderTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'char_field')
         self.assertContains(response, 'i_want_char_field')
+
+    def test_report_builder_is_default(self):
+        ct = ContentType.objects.get(model="bar")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+        responseObject = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'is_default')
+        self.assertEqual(responseObject[0]['is_default'], True)
 
 
 class ReportTests(TestCase):
