@@ -8,3 +8,5 @@ psycopg2
 django-extensions
 Werkzeug
 celery[redis]
+boto
+django_boto==0.3.9

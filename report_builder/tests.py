@@ -53,7 +53,7 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('description' in names)
         self.assertTrue('distinct' in names)
         self.assertTrue('id' in names)
-        self.assertEquals(len(names), 9)
+        self.assertEquals(len(names), 10)
 
     def test_get_properties_from_model(self):
         properties = get_properties_from_model(DisplayField)
