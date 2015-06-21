@@ -17,7 +17,7 @@
             </md-content>
             <md-input-container class="sidebar-left-search">
               <label>Search Reports</label>
-              <input type="text" ng-model="searchReports" placeholder="start typing to filter reports">
+              <input type="text" ng-model="searchReports">
             </md-input-container>
           </md-content>
           <md-content layout-align="center center" layout="row">
@@ -93,11 +93,19 @@
         </h1>
       </md-toolbar>
       <md-content style="height: calc(100% - 64px)">
-        <md-tabs class="md-accent md-hue-2" md-selected="tabData.selectedIndex">
-          <md-tab id="tab1" aria-controls="tab1-content">Display</md-tab>
-          <md-tab id="tab2" aria-controls="tab2-content">Filter</md-tab>
-          <md-tab id="tab3" aria-controls="tab3-content">Report</md-tab>
-          <md-tab id="tab4" aria-controls="tab3-content">Options</md-tab>
+        <md-tabs md-selected="tabData.selectedIndex">
+          <md-tab id="tab1" aria-controls="tab1-content">
+            <md-tab-label>Display</md-tab-label>
+          </md-tab>
+          <md-tab id="tab2" aria-controls="tab2-content">
+            <md-tab-label>Filter</md-tab-label>
+          </md-tab>
+          <md-tab id="tab3" aria-controls="tab3-content">
+            <md-tab-label>Report</md-tab-label>
+          </md-tab>
+          <md-tab id="tab4" aria-controls="tab3-content">
+            <md-tab-label>Options</md-tab-label>
+          </md-tab>
         </md-tabs>
         <div style="height: calc(100% - 48px); overflow-y: auto;">
           <ng-switch on="tabData.selectedIndex" class="tabpanel-container">

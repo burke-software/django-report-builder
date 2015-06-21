@@ -2,10 +2,10 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.1-master-ca60beb
+ * v0.10.0
  */
-(function() {
-'use strict';
+(function( window, angular, undefined ){
+"use strict";
 
 /*
  * @ngdoc module
@@ -21,7 +21,7 @@
  * @restrict E
  *
  * @description
- * `<md-backdrop>` is a backdrop element used by other coponents, such as dialog and bottom sheet.
+ * `<md-backdrop>` is a backdrop element used by other components, such as dialog and bottom sheet.
  * Apply class `opaque` to make the backdrop use the theme backdrop color.
  *
  */
@@ -35,4 +35,5 @@ function BackdropDirective($mdTheming) {
   return $mdTheming;
 }
 BackdropDirective.$inject = ["$mdTheming"];
-})();
+
+})(window, window.angular);

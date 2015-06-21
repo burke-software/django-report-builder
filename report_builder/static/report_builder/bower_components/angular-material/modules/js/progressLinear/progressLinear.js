@@ -2,11 +2,10 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.7.0-rc3
+ * v0.10.0
  */
-(function() {
-'use strict';
-
+(function( window, angular, undefined ){
+"use strict";
 
 /**
  * @ngdoc module
@@ -125,4 +124,4 @@ var transforms = (function() {
   }
 })();
 
-})();
+})(window, window.angular);

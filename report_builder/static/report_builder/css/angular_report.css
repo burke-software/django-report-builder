@@ -144,6 +144,12 @@ body {
   text-transform: none !important;
 }
 
-.report-list-header {
+#reportapp .report-list-header {
   padding-left: 6px;
+}
+
+#reportapp .md-button {
+    margin: 0px;
+    min-width: 0;
+    min-height: 0;
 }

@@ -2,21 +2,17 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.8.3
+ * v0.10.0
  */
 goog.provide('ng.material.components.tooltip');
 goog.require('ng.material.core');
-(function() {
-'use strict';
-
 /**
  * @ngdoc module
  * @name material.components.tooltip
  */
-angular.module('material.components.tooltip', [
-  'material.core'
-])
-  .directive('mdTooltip', MdTooltipDirective);
+angular
+    .module('material.components.tooltip', [ 'material.core' ])
+    .directive('mdTooltip', MdTooltipDirective);
 
 /**
  * @ngdoc directive
@@ -31,89 +27,137 @@ angular.module('material.components.tooltip', [
  *
  * @usage
  * <hljs lang="html">
- * <md-icon icon="/img/icons/ic_play_arrow_24px.svg">
+ * <md-button class="md-fab md-accent" aria-label="Play">
  *   <md-tooltip>
  *     Play Music
  *   </md-tooltip>
- * </md-icon>
+ *   <md-icon icon="img/icons/ic_play_arrow_24px.svg"></md-icon>
+ * </md-button>
  * </hljs>
  *
  * @param {expression=} md-visible Boolean bound to whether the tooltip is
  * currently visible.
  * @param {number=} md-delay How many milliseconds to wait to show the tooltip after the user focuses, hovers, or touches the parent. Defaults to 400ms.
  * @param {string=} md-direction Which direction would you like the tooltip to go?  Supports left, right, top, and bottom.  Defaults to bottom.
+ * @param {boolean=} md-autohide If present or provided with a boolean value, the tooltip will hide on mouse leave, regardless of focus
  */
-function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdTheming, $rootElement, $animate, $q) {
+function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdTheming, $rootElement,
+                            $animate, $q) {
 
-  var TOOLTIP_SHOW_DELAY = 0;
+  var TOOLTIP_SHOW_DELAY = 300;
   var TOOLTIP_WINDOW_EDGE_SPACE = 8;
 
   return {
     restrict: 'E',
     transclude: true,
-    template:
-      '<div class="md-background"></div>' +
-      '<div class="md-content" ng-transclude></div>',
+    priority:210, // Before ngAria
+    template: '\
+        <div class="md-background"></div>\
+        <div class="md-content" ng-transclude></div>',
     scope: {
       visible: '=?mdVisible',
-      delay: '=?mdDelay'
+      delay: '=?mdDelay',
+      autohide: '=?mdAutohide'
     },
     link: postLink
   };
 
-  function postLink(scope, element, attr, contentCtrl) {
+  function postLink(scope, element, attr) {
+
     $mdTheming(element);
-    var parent = element.parent();
-    var background = angular.element(element[0].getElementsByClassName('md-background')[0]);
-    var content = angular.element(element[0].getElementsByClassName('md-content')[0]);
-    var direction = attr.mdDirection;
 
-    // Keep looking for a higher parent if our current one has no pointer events
-    while ($window.getComputedStyle(parent[0])['pointer-events'] == 'none') {
-      parent = parent.parent();
+    var parent        = getParentWithPointerEvents(),
+        background    = angular.element(element[0].getElementsByClassName('md-background')[0]),
+        content       = angular.element(element[0].getElementsByClassName('md-content')[0]),
+        direction     = attr.mdDirection,
+        current       = getNearestContentElement(),
+        tooltipParent = angular.element(current || document.body),
+        debouncedOnResize = $$rAF.throttle(function () { if (scope.visible) positionTooltip(); });
+
+    return init();
+
+    function init () {
+      setDefaults();
+      manipulateElement();
+      bindEvents();
+      configureWatchers();
+      addAriaLabel();
     }
 
-    // Look for the nearest parent md-content, stopping at the rootElement.
-    var current = element.parent()[0];
-    while (current && current !== $rootElement[0] && current !== document.body) {
-      if (current.tagName && current.tagName.toLowerCase() == 'md-content') break;
-      current = current.parentNode;
-    }
-    var tooltipParent = angular.element(current || document.body);
-
-    if (!angular.isDefined(attr.mdDelay)) {
-      scope.delay = TOOLTIP_SHOW_DELAY;
+    function setDefaults () {
+      if (!angular.isDefined(attr.mdDelay)) scope.delay = TOOLTIP_SHOW_DELAY;
     }
 
-    // We will re-attach tooltip when visible
-    element.detach();
-    element.attr('role', 'tooltip');
-    element.attr('id', attr.id || ('tooltip_' + $mdUtil.nextUid()));
+    function configureWatchers () {
+      scope.$on('$destroy', function() {
+        scope.visible = false;
+        element.remove();
+        angular.element($window).off('resize', debouncedOnResize);
+      });
+      scope.$watch('visible', function (isVisible) {
+        if (isVisible) showTooltip();
+        else hideTooltip();
+      });
+    }
 
-    parent.on('focus mouseenter touchstart', function() { setVisible(true); });
-    parent.on('blur mouseleave touchend touchcancel', function() { if ($document[0].activeElement !== parent[0]) setVisible(false); });
+    function addAriaLabel () {
+      if (!parent.attr('aria-label') && !parent.text().trim()) {
+        parent.attr('aria-label', element.text().trim());
+      }
+    }
 
-    scope.$watch('visible', function(isVisible) {
-      if (isVisible) showTooltip();
-      else hideTooltip();
-    });
+    function manipulateElement () {
+      element.detach();
+      element.attr('role', 'tooltip');
+    }
 
-    var debouncedOnResize = $$rAF.throttle(function () { if (scope.visible) positionTooltip(); });
-    angular.element($window).on('resize', debouncedOnResize);
+    function getParentWithPointerEvents () {
+      var parent = element.parent();
+      while (parent && $window.getComputedStyle(parent[0])['pointer-events'] == 'none') {
+        parent = parent.parent();
+      }
+      return parent;
+    }
 
-    // Be sure to completely cleanup the element on destroy
-    scope.$on('$destroy', function() {
-      scope.visible = false;
-      element.remove();
-      angular.element($window).off('resize', debouncedOnResize);
-    });
+     function getNearestContentElement () {
+       var current = element.parent()[0];
+       // Look for the nearest parent md-content, stopping at the rootElement.
+       while (current && current !== $rootElement[0] && current !== document.body) {
+         current = current.parentNode;
+       }
+       return current;
+     }
 
-    // *******
-    // Methods
-    // *******
+    function hasComputedStyleValue(key, value) {
+        // Check if we should show it or not...
+        var computedStyles = $window.getComputedStyle(element[0]);
+        return angular.isDefined(computedStyles[key]) && (computedStyles[key] == value);
+    }
 
-    // If setting visible to true, debounce to scope.delay ms
-    // If setting visible to false and no timeout is active, instantly hide the tooltip.
+    function bindEvents () {
+      var mouseActive = false;
+      var enterHandler = function() {
+        if (!hasComputedStyleValue('pointer-events','none')) {
+          setVisible(true);
+        }
+      };
+      var leaveHandler = function () {
+        var autohide = scope.hasOwnProperty('autohide') ? scope.autohide : attr.hasOwnProperty('mdAutohide');
+        if (autohide || mouseActive || ($document[0].activeElement !== parent[0]) ) {
+          setVisible(false);
+        }
+        mouseActive = false;
+      };
+
+      // to avoid `synthetic clicks` we listen to mousedown instead of `click`
+      parent.on('mousedown', function() { mouseActive = true; });
+      parent.on('focus mouseenter touchstart', enterHandler );
+      parent.on('blur mouseleave touchend touchcancel', leaveHandler );
+
+
+      angular.element($window).on('resize', debouncedOnResize);
+    }
+
     function setVisible (value) {
       setVisible.value = !!value;
       if (!setVisible.queued) {
@@ -123,7 +167,6 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
             scope.visible = setVisible.value;
             setVisible.queued = false;
           }, scope.delay);
-
         } else {
           $timeout(function() { scope.visible = false; });
         }
@@ -131,20 +174,25 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
     }
 
     function showTooltip() {
-      // Insert the element before positioning it, so we can get position
-      parent.attr('aria-describedby', element.attr('id'));
+      // Insert the element before positioning it, so we can get the position
+      // and check if we should display it
       tooltipParent.append(element);
 
-      // Wait until the element has been in the dom for two frames before fading it in.
-      // Additionally, we position the tooltip twice to avoid positioning bugs
+      // Check if we should display it or not.
+      // This handles hide-* and show-* along with any user defined css
+      if ( hasComputedStyleValue('display','none') ) {
+        scope.visible = false;
+        element.detach();
+        return;
+      }
+
       positionTooltip();
-      $animate.addClass(element, 'md-show');
-      $animate.addClass(background, 'md-show');
-      $animate.addClass(content, 'md-show');
+      angular.forEach([element, background, content], function (element) {
+        $animate.addClass(element, 'md-show');
+      });
     }
 
     function hideTooltip() {
-      parent.removeAttr('aria-describedby');
       $q.all([
         $animate.removeClass(content, 'md-show'),
         $animate.removeClass(background, 'md-show'),
@@ -163,7 +211,7 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
       // Otherwise, recalculate based on 'top' since default is 'bottom'
       if (direction) {
         newPosition = fitInParent(newPosition);
-      } else if (newPosition.top > tooltipParent.prop('scrollHeight') - tipRect.height - TOOLTIP_WINDOW_EDGE_SPACE) {
+      } else if (newPosition.top > element.prop('offsetParent').scrollHeight - tipRect.height - TOOLTIP_WINDOW_EDGE_SPACE) {
         newPosition = fitInParent(getPosition('top'));
       }
 
@@ -215,4 +263,5 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
 
 }
 MdTooltipDirective.$inject = ["$timeout", "$window", "$$rAF", "$document", "$mdUtil", "$mdTheming", "$rootElement", "$animate", "$q"];
-})();
+
+ng.material.components.tooltip = angular.module("material.components.tooltip");

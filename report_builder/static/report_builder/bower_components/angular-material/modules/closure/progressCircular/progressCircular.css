@@ -2,13 +2,13 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.8.3
+ * v0.10.0
  */
+/* mixin definition ; sets LTR and RTL within the same style call */
 @-webkit-keyframes outer-rotate {
   100% {
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg); } }
-
 @keyframes outer-rotate {
   100% {
     -webkit-transform: rotate(360deg);
@@ -134,7 +134,8 @@ md-progress-circular {
       right: 24px;
       top: 0;
       bottom: 0;
-      border-top: 5px solid black;
+      border-top-width: 5px;
+      border-top-style: solid;
       box-sizing: border-box; }
     md-progress-circular .md-inner .md-left, md-progress-circular .md-inner .md-right {
       position: absolute;
@@ -150,7 +151,7 @@ md-progress-circular {
         box-sizing: border-box;
         border-width: 5px;
         border-style: solid;
-        border-color: black black transparent;
+        border-bottom-color: transparent;
         border-radius: 50%; }
     md-progress-circular .md-inner .md-left {
       left: 0; }
@@ -1393,3 +1394,16 @@ md-progress-circular {
       md-progress-circular[md-mode=indeterminate] .md-spinner-wrapper .md-inner .md-right .md-half-circle {
         -webkit-animation-name: right-wobble;
                 animation-name: right-wobble; }
+
+.ng-hide md-progress-circular[md-mode=indeterminate] .md-spinner-wrapper, md-progress-circular.ng-hide[md-mode=indeterminate] .md-spinner-wrapper {
+  -webkit-animation: none;
+          animation: none; }
+  .ng-hide md-progress-circular[md-mode=indeterminate] .md-spinner-wrapper .md-inner, md-progress-circular.ng-hide[md-mode=indeterminate] .md-spinner-wrapper .md-inner {
+    -webkit-animation: none;
+            animation: none; }
+    .ng-hide md-progress-circular[md-mode=indeterminate] .md-spinner-wrapper .md-inner .md-left .md-half-circle, md-progress-circular.ng-hide[md-mode=indeterminate] .md-spinner-wrapper .md-inner .md-left .md-half-circle {
+      -webkit-animation-name: none;
+              animation-name: none; }
+    .ng-hide md-progress-circular[md-mode=indeterminate] .md-spinner-wrapper .md-inner .md-right .md-half-circle, md-progress-circular.ng-hide[md-mode=indeterminate] .md-spinner-wrapper .md-inner .md-right .md-half-circle {
+      -webkit-animation-name: none;
+              animation-name: none; }
