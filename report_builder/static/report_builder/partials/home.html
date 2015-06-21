@@ -92,24 +92,11 @@
           <span>Last Updated: {{ report.modified }}</span>
         </h1>
       </md-toolbar>
-      <md-content style="height: calc(100% - 64px)">
-        <md-tabs md-selected="tabData.selectedIndex">
+      <md-content class="report-tabs-height">
+        <md-tabs class="report-tabs-height" md-selected="tabData.selectedIndex">
           <md-tab id="tab1" aria-controls="tab1-content">
             <md-tab-label>Display</md-tab-label>
-          </md-tab>
-          <md-tab id="tab2" aria-controls="tab2-content">
-            <md-tab-label>Filter</md-tab-label>
-          </md-tab>
-          <md-tab id="tab3" aria-controls="tab3-content">
-            <md-tab-label>Report</md-tab-label>
-          </md-tab>
-          <md-tab id="tab4" aria-controls="tab3-content">
-            <md-tab-label>Options</md-tab-label>
-          </md-tab>
-        </md-tabs>
-        <div style="height: calc(100% - 48px); overflow-y: auto;">
-          <ng-switch on="tabData.selectedIndex" class="tabpanel-container">
-            <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+            <md-tab-body>
               <div ui-tree="" ng-controller="ReportDisplayCtrl">
                 <div layout="row">
                   <div class="move_trash" flex=""></div>
@@ -134,24 +121,33 @@
                   Fullscreen
                 </md-button>
               </div>
-              <md-button hide-gt-md class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
-                <md-icon md-svg-src="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
-              </md-button>
-            </div>
-            <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+            </md-tab-body>
+          </md-tab>
+          <md-tab id="tab2" aria-controls="tab2-content">
+            <md-tab-label>Filter</md-tab-label>
+            <md-tab-body>
               <div ng-include="static('report_builder/partials/filters.html')"></div>
-            </div>
-            <div class="fullheight" role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()" md-swipe-right="previous()">
-                <div class="fullheight" ng-include="static('report_builder/partials/show_report.html')"></div>
-            </div>
-            <div role="tabpanel" id="tab4-content" aria-labelledby="tab3" ng-switch-when="3" md-swipe-left="next()" md-swipe-right="previous()">
-                <div ng-include="static('report_builder/partials/options.html')"></div>
-            </div>
-          </ng-switch>
-        </div>
+            </md-tab-body>
+          </md-tab>
+          <md-tab id="tab3" aria-controls="tab3-content">
+            <md-tab-label>Report</md-tab-label>
+            <md-tab-body>
+              <div class="fullheight" ng-include="static('report_builder/partials/show_report.html')"></div>
+            </md-tab-body>
+          </md-tab>
+          <md-tab id="tab4" aria-controls="tab3-content">
+            <md-tab-label>Options</md-tab-label>
+            <md-tab-body>
+              <div ng-include="static('report_builder/partials/options.html')"></div>
+            </md-tab-body>
+          </md-tab>
+        </md-tabs>
       </md-content>
       <md-button hide-gt-lg class="md-fab md-fab-bottom-left" ng-click="reports_list_menu()" aria-label="Reports List">
         <md-icon md-svg-src="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
+      </md-button>
+      <md-button hide-gt-md ng-show="tabData.selectedIndex == 0 || tabData.selectedIndex == 1" class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
+        <md-icon md-svg-src="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
     </div>
     <md-sidenav ng-show="showFields" md-is-locked-open="$mdMedia('gt-md')" class="fullheight md-sidenav-right md-whiteframe-z1" md-component-id="right">
