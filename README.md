@@ -6,8 +6,6 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 [![Build Status](https://travis-ci.org/burke-software/django-report-builder.png?branch=master)](https://travis-ci.org/burke-software/django-report-builder) [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=314767)](https://www.bountysource.com/trackers/314767-burke-software-django-report-builder?utm_source=314767&utm_medium=shield&utm_campaign=TRACKER_BADGE)
 
-[Support development on gratipay](http://www.gratipay.com/bufke)
-
 # News
 
 We now have a [google group](https://groups.google.com/forum/#!forum/django-report-builder/). Please post suggestions, ask questions, and let me know how you're using django report builder. I'll make future announnments there.
@@ -38,6 +36,11 @@ http://django-report-builder.readthedocs.org/
 We've included a fig.yml file for use with [fig](http://fig.sh/). There's also a demo project so you can start using report builder right now without touching any python code.
 Once you have fig installed just run `fig up`. Populate the database with `fig run --rm web ./manage.py migrate`. 
 You may want to edit fig.yml to comment/uncomment the django-report-utils line. Report utils is a seperated library with common reporting functions. If you want to hack on report utils too just clone the repo in a sibling directory.
+
+## Making pull requests
+
+This project is a bit complex and has many features that some people will depend on and others will never use.
+As such please submit a unit test with your pull request if merited. New features need unit tests. Bug fixes should too to prevent an idiot like me from breaking it later. Travis should also pass, if it fails please explain why. Thanks :)
 
 # Discussion
 
