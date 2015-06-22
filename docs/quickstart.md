@@ -70,6 +70,25 @@ Advantages of this option
 - Download the last report that was run instead of regenerating
 - Nicer status messages about report status
 
+### Email notification when file is uploaded
+
+The reports are emailed to the current user rather than generated and then downloaded. This is if you have reports that take a while to generate or if you'd prefer your users to be emailed.
+
+The current front-end simply downloads the report right away, and so this is a feature you'll have to enable on the front-end yourself (or the package will support it in the future).
+
+    REPORT_BUILDER_EMAIL_NOTIFICATION = True
+
+This uses the default django mail implementation. The code checks for either `EMAIL_BACKEND` or `EMAIL_HOST` to be defined in the `settings.py` file. You should also define `DEFAULT_FROM_EMAIL`.
+
+You're also able to stylize the templates according to your needs. To enable the reports:
+
+    REPORT_BUILDER_EMAIL_NOTIFICATION = True
+    REPORT_BUILDER_EMAIL_SUBJECT = ""
+
+This package uses Django-Templates for its email templates. The report path it uses is `email/email_report.html`, and you're able to overwrite this in your own django application.
+
+The `{{report}}` element is what would be replaced with the report URL, and the `{{name}}`. The field `REPORT_BUILDER_EMAIL_SUBJECT` will be defaulted to 'Report is ready' if missing.
+
 ### Turn off front-end
 
 If you're developing your own front-end then you would need the ability to disable the front-end that comes with this package. To disable the built-in front-end:
