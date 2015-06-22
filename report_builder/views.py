@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.core.mail import send_mail
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -82,22 +83,53 @@ class DownloadXlsxView(DataExportMixin, View):
             return self.list_to_xlsx_response(
                 objects_list, title, header, widths)
         else:
-            self.async_report_save(report, objects_list, title, header, widths)
+            self.async_report_save(report, objects_list, title, header, widths, user)
 
-    def async_report_save(self, report, objects_list, title, header, widths):
+    def email_report(self, reportURL, user):
+        # 1. If neither EMAIL_BACKEND or EMAIL_HOST isn't present then email is not present.
+        # 2. Then if there is a default from email and the user has an email then we email them
+        # the report.
+        if ((getattr(settings, 'EMAIL_BACKEND', False) or getattr(settings, 'EMAIL_HOST', False)) and
+            getattr(settings, 'DEFAULT_FROM_EMAIL', False) and user.email):
+            send_mail('Report is ready', str(reportURL), getattr(settings, 'DEFAULT_FROM_EMAIL'), [user.email], fail_silently=True)
+
+    def async_report_save(self, report, objects_list, title, header, widths, user):
         xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
         if not title.endswith('.xlsx'):
             title += '.xlsx'
-        report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
-        report.report_file_creation = datetime.datetime.today()
-        report.save()
+        if (getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT_S3', False) and
+            getattr(settings, 'AWS_ACCESS_KEY_ID', False) and
+            getattr(settings, 'AWS_SECRET_ACCESS_KEY', False) and
+            getattr(settings, 'AWS_STORAGE_BUCKET_NAME_REPORT', False)):
+            # Upload the report to s3 and save it in external_report_url
+            from boto.s3.connection import S3Connection
+            from django_boto.s3 import upload
+            AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID')
+            AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY')
+            AWS_STORAGE_BUCKET_NAME = getattr(settings, 'AWS_STORAGE_BUCKET_NAME_REPORT')
+            conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+            bucket = conn.lookup(AWS_STORAGE_BUCKET_NAME)
+            if bucket is None:
+                bucket = conn.create_bucket(AWS_STORAGE_BUCKET_NAME)
+            report.external_report_url = upload(ContentFile(xlsx_file.getvalue()), 
+                name=str(report.id)+"_"+title, bucket_name=AWS_STORAGE_BUCKET_NAME, 
+                key=AWS_ACCESS_KEY_ID, secret=AWS_SECRET_ACCESS_KEY)
+            report.save()
+            if getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False):
+                self.email_report(report.external_report_url, user)
+        else:
+            # Upload it the normal way
+            report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
+            report.report_file_creation = datetime.datetime.today()
+            report.save()
 
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
             from .tasks import report_builder_async_report_save
             report_task = report_builder_async_report_save.delay(
-                report_id, request.user.pk)
+                report_id,
+                request.user.pk,)
             task_id = report_task.task_id
             return HttpResponse(
                 json.dumps({'task_id': task_id}),
@@ -186,7 +218,10 @@ def check_status(request, pk, task_id):
     link = ''
     if res.state == 'SUCCESS':
         report = get_object_or_404(Report, pk=pk)
-        link = report.report_file.url
+        if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT_S3', False):
+            link = report.external_report_url
+        else:
+            link = report.report_file.url
     return HttpResponse(
-        json.dumps({'state': res.state, 'link': link}),
+        json.dumps({'state': res.state, 'link': link, 'email': getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False)}),
         content_type="application/json")

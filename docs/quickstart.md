@@ -63,6 +63,28 @@ Advantages of this option
 - Download the last report that was run instead of regenerating
 - Nicer status messages about report status
 
+### File upload to Amazon S3 asynchronously
+
+Uploading the file directly to Amazon S3 is built into django-report-builder. If you would like to enable this then in your `settings.py` file define:
+
+    REPORT_BUILDER_ASYNC_REPORT_S3 = True
+
+Then in the same `settings.py` file you should define your Amazon S3 credentials:
+
+    AWS_ACCESS_KEY_ID = ""
+    AWS_SECRET_ACCESS_KEY = ""
+    AWS_STORAGE_BUCKET_NAME = ""
+
+Uploading the file to S3 is run by Celery and is done asynchronously. This method overwrites the default method of uploading it in your django folder.
+
+### Email notification when file is uploaded
+
+The reports are emailed to the current user rather than generated and downloaded. This is if you have reports that take a while to generate or if you'd prefer them to be emailed.
+
+    REPORT_BUILDER_EMAIL_NOTIFICATION = True
+
+This uses the default django mail implementation. The code checks for either `EMAIL_BACKEND` or `EMAIL_HOST` to be defined in the `settings.py` file. You should also define `DEFAULT_FROM_EMAIL`.
+
 ### Turn off front-end
 
 If you're developing your own front-end then you would need the ability to disable the front-end that comes with this package. To disable the built-in front-end:

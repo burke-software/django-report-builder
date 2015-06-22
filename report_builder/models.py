@@ -7,6 +7,7 @@ from django.utils.safestring import mark_safe
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum
 from django.db.models.fields import FieldDoesNotExist
+from django.core.validators import URLValidator
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from dateutil import parser
@@ -60,6 +61,7 @@ class Report(models.Model):
         AUTH_USER_MODEL, blank=True,
         help_text="These users have starred this report for easy reference.",
         related_name="report_starred_set")
+    external_report_url = models.TextField(blank=True, null=True, validators=[URLValidator()])
 
     def save(self, *args, **kwargs):
         if not self.id:
