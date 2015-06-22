@@ -136,6 +136,7 @@ class ReportBuilderTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'char_field')
         self.assertContains(response, 'i_want_char_field')
+        self.assertContains(response, 'i_need_char_field')
 
 
 class ReportTests(TestCase):
@@ -162,6 +163,16 @@ class ReportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'lol no')
 
+    def test_cached_property_display(self):
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+        )
+        response = self.client.get(self.generate_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'lol yes')
+
     def test_error_display_field(self):
         DisplayField.objects.create(
             report=self.report,
@@ -173,9 +184,15 @@ class ReportTests(TestCase):
             field="i_want_char_field",
             field_verbose="stuff",
         )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+        )
         response = self.client.get(self.generate_url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'lol no')
+        self.assertContains(response, 'lol yes')
         self.assertNotContains(response, 'i_do_not_exist')
 
     def test_filter_property(self):
@@ -197,6 +214,26 @@ class ReportTests(TestCase):
         filter_field.save()
         response = self.client.get(self.generate_url)
         self.assertNotContains(response, 'lol no')
+
+    def test_filter_cached_property(self):
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+        )
+        filter_field = FilterField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+            filter_type='contains',
+            filter_value='lol yes',
+        )
+        response = self.client.get(self.generate_url)
+        self.assertContains(response, 'lol yes')
+        filter_field.filter_value = 'It does not contain this'
+        filter_field.save()
+        response = self.client.get(self.generate_url)
+        self.assertNotContains(response, 'lol yes')
 
     def test_filter_custom_field(self):
         from custom_field.models import CustomField
@@ -259,6 +296,11 @@ class ReportTests(TestCase):
         DisplayField.objects.create(
             report=self.report,
             field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
             field_verbose="stuff",
         )
         DisplayField.objects.create(

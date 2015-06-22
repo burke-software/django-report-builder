@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
+from django.utils.functional import cached_property
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -128,7 +129,7 @@ class FieldsView(RelatedFieldsView):
                 extra_fields = extra
             for field in extra_fields:
                 field_attr = getattr(self.model_class, field, None)
-                if isinstance(field_attr, property):
+                if isinstance(field_attr, (property, cached_property)):
                     result += [{
                         'name': field,
                         'field': field,
