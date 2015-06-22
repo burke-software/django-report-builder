@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from custom_field.custom_field import CustomFieldModel
 
 
@@ -23,8 +24,12 @@ class Bar(CustomFieldModel, models.Model):
     def i_want_char_field(self):
         return 'lol no'
 
+    @cached_property
+    def i_need_char_field(self):
+        return 'lol yes'
+
     class ReportBuilder:
-        extra = ('i_want_char_field',)
+        extra = ('i_want_char_field', 'i_need_char_field',)
 
 
 class Place(models.Model):
