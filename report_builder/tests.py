@@ -146,6 +146,15 @@ class ReportBuilderTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'is_default')
 
+    def test_report_builder_choices(self):
+        ct = ContentType.objects.get(model="bar")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'field_choices')
+        self.assertContains(response, '[["CH","CHECK"],["MA","CHECKMATE"]]')
+
 
 class ReportTests(TestCase):
     def setUp(self):

@@ -20,6 +20,19 @@ class Bar(CustomFieldModel, models.Model):
     char_field = models.CharField(max_length=50, blank=True)
     foos = models.ManyToManyField(Foo, blank=True)
 
+    CHECK = 'CH'
+    MATE = 'MA'
+    CHESS_CHOICES = (
+        (CHECK, 'CHECK'),
+        (MATE, 'CHECKMATE'),
+    )
+
+    check_mate_status = models.CharField(
+        max_length=2,
+        choices=CHESS_CHOICES,
+        default=CHECK
+    )
+
     @property
     def i_want_char_field(self):
         return 'lol no'
