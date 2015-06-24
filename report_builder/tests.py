@@ -138,6 +138,14 @@ class ReportBuilderTests(TestCase):
         self.assertContains(response, 'i_want_char_field')
         self.assertContains(response, 'i_need_char_field')
 
+    def test_report_builder_is_default(self):
+        ct = ContentType.objects.get(model="bar")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'is_default')
+
 
 class ReportTests(TestCase):
     def setUp(self):
