@@ -359,7 +359,7 @@ class ReportTests(TestCase):
             for count in range(row[4]):
                 days = None if not (total % 3 | total % 2) else total % 3
 
-                waiter = Waiter.objects.create(
+                Waiter.objects.create(
                     restaurant=restaurant,
                     name=str(total),
                     days_worked=days,

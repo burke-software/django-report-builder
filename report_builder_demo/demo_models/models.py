@@ -70,9 +70,11 @@ class Waiter(models.Model):
     def __str__(self):
         return "%s the waiter at %s" % (self.name, self.restaurant)
 
+
 class Person(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+
 
 class Child(models.Model):
     parent = models.ForeignKey(Person, related_name='children')

@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
+from six import string_types
 
 from .utils import duplicate
 from .models import Report
@@ -34,7 +35,7 @@ def fieldset_string_to_field(fieldset_dict, model):
         fieldset_dict['fields'] = list(fieldset_dict['fields'])
     i = 0
     for dict_field in fieldset_dict['fields']:
-        if isinstance(dict_field, basestring):
+        if isinstance(dict_field, string_types):
             fieldset_dict['fields'][i] = model._meta.get_field_by_name(
                 dict_field)[0]
         elif isinstance(dict_field, list) or isinstance(dict_field, tuple):
@@ -54,6 +55,7 @@ def get_fieldsets(model):
 
 
 class DownloadXlsxView(DataExportMixin, View):
+
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
         return super(DownloadXlsxView, self).dispatch(*args, **kwargs)

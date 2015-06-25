@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "django-report-builder",
-    version = "3.1.10",
-    author = "David Burke",
-    author_email = "david@burkesoftware.com",
-    description = ("Query and Report builder for Django ORM"),
-    license = "BSD",
-    keywords = "django report",
-    url = "https://github.com/burke-software/django-report-builder",
+    name="django-report-builder",
+    version="3.1.10",
+    author="David Burke",
+    author_email="david@burkesoftware.com",
+    description=("Query and Report builder for Django ORM"),
+    license="BSD",
+    keywords="django report",
+    url="https://github.com/burke-software/django-report-builder",
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
@@ -28,5 +28,6 @@ setup(
         'python-dateutil',
         'django-report-utils>=0.3.10',
         'djangorestframework>=3.0.4',
+        "six"
     ]
 )

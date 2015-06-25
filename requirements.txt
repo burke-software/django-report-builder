@@ -7,3 +7,4 @@ psycopg2
 django-extensions
 Werkzeug
 celery[redis]
+flake8

@@ -27,6 +27,7 @@ def get_allowed_models():
         models = models.exclude(model__in=settings.REPORT_BUILDER_EXCLUDE)
     return models
 
+
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
     """
@@ -223,8 +224,8 @@ class Report(models.Model):
         """ After report is saved, make sure positions are sane
         """
         for i, display_field in enumerate(self.displayfield_set.all()):
-            if display_field.position != i+1:
-                display_field.position = i+1
+            if display_field.position != i + 1:
+                display_field.position = i + 1
                 display_field.save()
 
 
@@ -412,7 +413,7 @@ class FilterField(AbstractField):
             filtered = False
         if filter_type == 'week_day' and WEEKDAY_INTS.get(str(filter_value).lower()) == value.weekday:
             filtered = False
-        if filter_type == 'isnull' and value == None:
+        if filter_type == 'isnull' and value is None:
             filtered = False
         if filter_type == 'regex' and re.search(filter_value, value):
             filtered = False

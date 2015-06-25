@@ -43,9 +43,11 @@ class ReportNestedViewSet(viewsets.ModelViewSet):
 
 
 class RelatedFieldsView(GetFieldsMixin, APIView):
+
     """ Get related fields from an ORM model
     """
     permission_classes = (IsAdminUser,)
+
     def get_data_from_request(self, request):
         self.model = request.DATA['model']
         self.path = request.DATA['path']
@@ -63,7 +65,7 @@ class RelatedFieldsView(GetFieldsMixin, APIView):
         result = []
         for new_field in new_fields:
             verbose_name = getattr(new_field, 'verbose_name', None)
-            if verbose_name == None:
+            if verbose_name is None:
                 verbose_name = new_field.get_accessor_name()
             result += [{
                 'field_name': new_field.field_name,
@@ -76,9 +78,11 @@ class RelatedFieldsView(GetFieldsMixin, APIView):
 
 
 class FieldsView(RelatedFieldsView):
+
     """ Get direct fields and properties on an ORM model
     """
     permission_classes = (IsAdminUser,)
+
     def post(self, request):
         self.get_data_from_request(request)
         field_data = self.get_fields(
@@ -167,6 +171,7 @@ class FieldsView(RelatedFieldsView):
 
 class GenerateReport(DataExportMixin, APIView):
     permission_classes = (IsAdminUser,)
+
     def get(self, request, report_id=None):
         return self.post(request, report_id=report_id)
 
