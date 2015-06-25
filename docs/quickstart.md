@@ -18,8 +18,13 @@ See setup.py for full requirements list.
 
 ### Include and exclude fields and models
 
-    REPORT_BUILDER_INCLUDE = []
-    REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
+To include a model you've to specify with app your models belong to. If your 'user' model is in the app 'hr' then you can do the following to include it:
+
+    REPORT_BUILDER_INCLUDE = ['hr.user'] # Allow only the model user to be accessed
+
+The same reasoning also applies to exclude models. If your 'account' model is in the app 'finance' then you can do the following to exclude it:
+
+    REPORT_BUILDER_EXCLUDE = ['finance.account'] # Allow all models except account to be accessed
 
 ### Per model settings
 
