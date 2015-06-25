@@ -156,6 +156,19 @@ class ReportBuilderTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'pizza')
 
+    def test_report_builder_fields_from_related_fields(self):
+        ct = ContentType.objects.get(model="place", app_label="demo_models")
+        response = self.client.post(
+            '/report_builder/api/related_fields/',
+            {"model": ct.id,
+             "path": "",
+             "path_verbose": "",
+             "field": "restaurant"})
+        self.assertContains(response, '"parent_model_name"')
+        self.assertContains(response, '"parent_model_app_label"')
+        self.assertContains(response, '"included_model"')
+        self.assertEqual(response.status_code, 200)
+
     def test_report_builder_exclude(self):
         ct = ContentType.objects.get(model="fooexclude", app_label="demo_models")
         response = self.client.post(
