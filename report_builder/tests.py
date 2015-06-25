@@ -691,3 +691,21 @@ class ReportTests(TestCase):
     def test_admin(self):
         response = self.client.get('/admin/report_builder/report/')
         self.assertEqual(response.status_code, 200)
+
+    def test_report_builder_related_fields(self):
+        '''
+        Test for Django 1.8 support via
+        https://github.com/burke-software/django-report-builder/issues/144
+        '''
+        ct = ContentType.objects.get(model='place')
+        response = self.client.post(
+            '/report_builder/api/related_fields/', {
+                'model': ct.id,
+                'path': '',
+                'field': 'restaurant'
+            }
+        )
+        self.assertContains(response, '"field_name":"waiter"')
+        self.assertContains(response, '"verbose_name":"waiter_set"')
+        self.assertContains(response, '"path":"restaurant__"')
+
