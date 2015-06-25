@@ -9,7 +9,9 @@ env:
 install:
   - pip install -e . -r requirements.txt $DJANGO_VERSION
   - pip install coveralls
-script: coverage run --source=report_builder manage.py test
+script:
+  - coverage run --source=report_builder manage.py test
+  - flake8
 after_success:
   coveralls
 sudo: false

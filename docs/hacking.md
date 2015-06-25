@@ -17,6 +17,12 @@ This will get you a quick way to run report builder in a demo project - ideal fo
 
 Run `docker-compose run --rm web python manage.py test`.
 
+Then to make sure your codes coforms to pep8:
+
+```
+docker-compose run --rm web flake8
+```
+
 ## Styles
 
  Old code has the bad style I used at the time. New python code should follow pep8 standards.
