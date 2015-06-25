@@ -2,8 +2,11 @@ language: python
 python:
   - "2.7"
   - "3.4"
-# command to install dependencies
-install: "pip install -r requirements.txt"
-# command to run tests
+env:
+  matrix:
+    - DJANGO_VERSION="django>=1.7,<1.8"
+    - DJANGO_VERSION="django>=1.8,<1.9"
+install:
+  - pip install -e . -r requirements.txt $DJANGO_VERSION
 script: python manage.py test
 sudo: false
