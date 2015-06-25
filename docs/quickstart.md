@@ -43,6 +43,15 @@ Moreover, we have added functionality to set fields to display by default. This 
 
 The `defaults` field would usually be a subset of the `fields`. The idea is that you would have a `is_defualt` field on the JSON-frontend that would allow you to recognize that this is a default value on your own front-end.
 
+You can also mark which fields you would like to set as filters for the JSON end-point. This is currently not valuable to the front-end that django-report-builder comes with, but if you have your own front-end then you could utilize this information.
+
+This filter is purely cosmetic, and not used in any way internally in the configuration of report-builder. This is not a security measure.
+
+    class ReportBuilder:
+        filters = () # Lists or tuple of filters
+
+The distinction here is only created if you want to differentiate display fields and filters. It is possible by this to create a distinction between a display field and a field the user can filter by.
+
 ### Custom model manager for all models
 
     REPORT_BUILDER_MODEL_MANAGER = 'on_site' #name of custom model manager to use on all models
