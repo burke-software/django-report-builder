@@ -4,7 +4,7 @@ redis:
   image: redis
 web:
   build: .
-  command: ./run.sh
+  command: python manage.py runserver_plus 0.0.0.0:8000
   volumes:
     - .:/code
     #- ../django-report-utils/report_utils:/usr/local/lib/python3.4/site-packages/report_utils
@@ -14,3 +14,13 @@ web:
   links:
     - db
     - redis
+celery:
+  build: .
+  command: celery -A report_builder_demo worker -l info
+  links:
+    - db
+    - redis
+  environment:
+    C_FORCE_ROOT: true
+  volumes:
+    - .:/code
