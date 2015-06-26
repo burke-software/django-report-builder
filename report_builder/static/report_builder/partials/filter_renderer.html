@@ -5,7 +5,7 @@
         <img ui-tree-handle="" src="{{ static('report_builder/img/reorder.svg') }}"></img>
         <img ng-click="deleteField(this)" src="{{ static('report_builder/img/delete.svg') }}"></img>
       </div>
-      <div flex="" class="caps">
+      <div title="{{ field.path + field.field }}" flex="" class="caps">
         <span ng-if="field.path_verbose">({{ field.path_verbose }}) </span>
         {{ field.field_verbose }}
       </div>
@@ -30,7 +30,12 @@
         <div ng-switch-when="isnull">
           <md-checkbox ng-model="field.filter_value" ng-true-value="'True'" aria-label="Is Null">
         </div>
-
+        <div ng-switch-when="max">
+         <md-checkbox ng-model="field.filter_value" ng-true-value="'True'" aria-label="Max (annotation-filter)">
+        </div>
+        <div ng-switch-when="min">
+          <md-checkbox ng-model="field.filter_value" ng-true-value="'True'" aria-label="Min (annotation-filter)">
+        </div>
         <div ng-switch-default ng-switch="field.field_type">
           <input ng-switch-when="DateField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value"></input>
           <div ng-switch-when="BooleanField">

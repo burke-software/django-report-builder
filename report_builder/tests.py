@@ -406,9 +406,11 @@ class ReportTests(TestCase):
                 ('Karen', 'Smith', 4, 'B'),
             )),
             ('Donald', 'King', (
-                ('Mark', 'King', 2, 'B'),
                 ('Charles', 'King', None, ''),
                 ('Helen', 'King', 7, 'G'),
+                ('Mark', 'King', 2, 'Y'),
+                ('Karen', 'King', 4, 'R'),
+                ('Larry', 'King', 5, 'R'),
                 ('Lisa', 'King', 3, 'R'),
             )),
             ('Paul', 'Nelson', ()),
@@ -472,7 +474,7 @@ class ReportTests(TestCase):
         generate_url = reverse('generate_report', args=[report.id])
         response = self.client.get(generate_url)
 
-        data = '"data":[[1,"John","Doe",3],[3,"Donald","King",4],[2,"Maria","Smith",2],["TOTALS","","",""],["","","",9.0]]'
+        data = '"data":[[1,"John","Doe",3],[3,"Donald","King",6],[2,"Maria","Smith",2],["TOTALS","","",""],["","","",11.0]]'
 
         self.assertContains(response, data)
 
@@ -526,7 +528,7 @@ class ReportTests(TestCase):
         generate_url = reverse('generate_report', args=[report.id])
         response = self.client.get(generate_url)
 
-        data = '"data":[[1,"John","Doe",3],[3,"Donald","King",4],[2,"Maria","Smith",2],["TOTALS","","",""],["","",3.0,9.0]]'
+        data = '"data":[[1,"John","Doe",3],[3,"Donald","King",6],[2,"Maria","Smith",2],["TOTALS","","",""],["","",3.0,11.0]]'
 
         self.assertContains(response, data)
 
@@ -595,7 +597,7 @@ class ReportTests(TestCase):
         generate_url = reverse('generate_report', args=[report.id])
         response = self.client.get(generate_url)
 
-        data = '"data":[["Donald","King",7,2,4.0,12],["John","Doe",8,3,5.333333333333333,16],["Maria","Smith",4,1,2.5,5],["Paul","Nelson",null,null,null,null]]'
+        data = '"data":[["Donald","King",7,2,4.2,21],["John","Doe",8,3,5.333333333333333,16],["Maria","Smith",4,1,2.5,5],["Paul","Nelson",null,null,null,null]]'
 
         self.assertContains(response, data)
 
@@ -639,10 +641,17 @@ class ReportTests(TestCase):
             position=3,
         )
 
+        FilterField.objects.create(
+            report=report,
+            field='first_name',
+            filter_type='exact',
+            filter_value='Donald',
+        )
+
         generate_url = reverse('generate_report', args=[report.id])
         response = self.client.get(generate_url)
 
-        data = '"data":[["Donald","King",null,""],["Paul","Nelson",null,""],["John","Doe",8,""],["Donald","King",2,"Blue"],["Maria","Smith",4,"Blue"],["John","Doe",3,"Green"],["Donald","King",7,"Green"],["Donald","King",3,"Red"],["John","Doe",5,"Red"],["Maria","Smith",1,"Y"]]'
+        data = '"data":[["Donald","King",null,""],["Donald","King",7,"Green"],["Donald","King",3,"Red"],["Donald","King",4,"Red"],["Donald","King",5,"Red"],["Donald","King",2,"Y"]]'
 
         self.assertContains(response, data)
 
@@ -681,13 +690,153 @@ class ReportTests(TestCase):
             display_format=years_old,
         )
 
+        FilterField.objects.create(
+            report=report,
+            path='parent__',
+            field='first_name',
+            filter_type='exact',
+            filter_value='Maria',
+        )
+
         generate_url = reverse('generate_report', args=[report.id])
         response = self.client.get(generate_url)
 
-        data = '"data":[["Charles","King","None years old"],["Helen","King","7 years old"],["James","Doe","8 years old"],["Karen","Smith","4 years old"],["Lisa","King","3 years old"],["Mark","King","2 years old"],["Robert","Doe","3 years old"],["Susan","Smith","1 years old"],["Will","Doe","5 years old"],["TOTALS","",""],["","","33 years old"]]'
+        data = '"data":[["Karen","Smith","4 years old"],["Susan","Smith","1 years old"],["TOTALS","",""],["","","5 years old"]]'
 
         self.assertContains(response, data)
 
     def test_admin(self):
         response = self.client.get('/admin/report_builder/report/')
         self.assertEqual(response.status_code, 200)
+
+    def test_annotation_filter_min(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='child')
+        report = Report.objects.create(root_model=model, name="Person's Youngest Child")
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='first_name',
+            field_verbose="Person First name",
+            sort=2,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='last_name',
+            field_verbose="Person Last name",
+            sort=1,
+            position=1,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='first_name',
+            field_verbose='Child First Name',
+            sort=4,
+            position=2,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='last_name',
+            field_verbose='Child Last Name',
+            sort=3,
+            position=3,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='age',
+            field_verbose='Child Age',
+            position=4,
+        )
+
+        FilterField.objects.create(
+            report=report,
+            path='parent__children__',
+            field='age',
+            filter_type='min',
+            filter_value='True',
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[["John","Doe","Robert","Doe",3],["Donald","King","Mark","King",2],["Maria","Smith","Susan","Smith",1]]'
+
+        self.assertContains(response, data)
+
+    def test_annotation_filter_max(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='child')
+        report = Report.objects.create(root_model=model, name="Person's Oldest Child whose Favorite Color is Red")
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='first_name',
+            field_verbose="Person First name",
+            sort=2,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            path='parent__',
+            field='last_name',
+            field_verbose="Person Last name",
+            sort=1,
+            position=1,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='first_name',
+            field_verbose='Child First Name',
+            sort=4,
+            position=2,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='last_name',
+            field_verbose='Child Last Name',
+            sort=3,
+            position=3,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='age',
+            field_verbose='Child Age',
+            position=4,
+        )
+
+        FilterField.objects.create(
+            report=report,
+            path='parent__children__',
+            field='color',
+            filter_type='exact',
+            filter_value='R',
+        )
+
+        FilterField.objects.create(
+            report=report,
+            path='parent__children__',
+            field='age',
+            filter_type='max',
+            filter_value='True',
+        )
+
+        generate_url = reverse('generate_report', args=[report.id])
+        response = self.client.get(generate_url)
+
+        data = '"data":[["John","Doe","Will","Doe",5],["Donald","King","Larry","King",5]]'
+
+        self.assertContains(response, data)
