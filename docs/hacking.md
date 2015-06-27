@@ -17,7 +17,7 @@ This will get you a quick way to run report builder in a demo project - ideal fo
 
 Run `docker-compose run --rm web python manage.py test`.
 
-Then to make sure your codes coforms to pep8:
+Then to make sure your codes conforms to pep8:
 
 ```
 docker-compose run --rm web flake8
@@ -25,8 +25,21 @@ docker-compose run --rm web flake8
 
 ## Styles
 
- Old code has the bad style I used at the time. New python code should follow pep8 standards.
+Python code should follow pep8 standards.
 
- Pull requests should ideally include a unit test.
+Pull requests should include a unit test on any added behavior. If it fixes a
+bug, it needs a failing test to show what it fixed. Documentation should also be
+updated, if needed.
 
- User interface should follow Material Design guidelines - this is not strictly enforced.
+User interface should follow Material Design guidelines - this is not strictly
+enforced.
+
+## Making pull requests
+
+After you have a pull request that passes on Travis, and you have added
+any needed test cases, please [squash your commits](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html).
+If it makes more sense to break it up into smaller commits, you can do that
+as well. Just try to think what would be most helpful, when someone looks
+back in the git history to see why this file was changed.
+
+Thanks :)

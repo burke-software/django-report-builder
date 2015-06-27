@@ -35,11 +35,6 @@ http://django-report-builder.readthedocs.org/
 
 # [Hacking](http://django-report-builder.readthedocs.org/en/latest/hacking/)
 
-## Making pull requests
-
-This project is a bit complex and has many features that some people will depend on and others will never use.
-As such please submit a unit test with your pull request if merited. New features need unit tests. Bug fixes should too to prevent an idiot like me from breaking it later. Travis should also pass, if it fails please explain why. Thanks :)
-
 # Discussion
 
 Let us know your thoughts at https://google.com/+Burkesoftware
