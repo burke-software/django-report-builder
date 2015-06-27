@@ -197,6 +197,18 @@ class ReportBuilderTests(TestCase):
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'can_filter')
+        for field in response.data:
+            if field['name'] == 'char_field':
+                self.assertEqual(field['can_filter'], True)
+            else:
+                self.assertEqual(field['can_filter'], False)
+        # Now confirm not setting filter makes it always true
+        ct = ContentType.objects.get(model="foo", app_label="demo_models")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+        for field in response.data:
+            self.assertEqual(field['can_filter'], True)
 
 
 class ReportTests(TestCase):

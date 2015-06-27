@@ -43,6 +43,7 @@ class Bar(CustomFieldModel, models.Model):
 
     class ReportBuilder:
         extra = ('i_want_char_field', 'i_need_char_field',)
+        filters = ('char_field',)
 
 
 class Place(models.Model):
