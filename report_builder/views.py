@@ -1,8 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.core.files.base import ContentFile
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
+from django.template.loader import get_template
+from django.template import Context
 User = get_user_model()
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -54,6 +57,35 @@ def get_fieldsets(model):
     return fieldsets
 
 
+def email_report(report_url, user):
+    # 1. If neither EMAIL_BACKEND or EMAIL_HOST isn't present then email is not present.
+    # 2. Then if there is a default from email and the user has an email then we email them
+    # the report.
+    if ((getattr(settings, 'EMAIL_BACKEND', False) or getattr(settings, 'EMAIL_HOST', False)) and getattr(settings, 'DEFAULT_FROM_EMAIL', False)):
+        if get_template('email/email_report.html'):
+            email_template = get_template('email/email_report.html')
+            msg = EmailMultiAlternatives(
+                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or 'Report is ready',
+                report_url,
+                getattr(settings, 'DEFAULT_FROM_EMAIL'),
+                [user.email],
+            )
+            htmlParameters = {
+                'name': user.first_name or user.username,
+                'report': report_url,
+            }
+            msg.attach_alternative(email_template.render(Context(htmlParameters)), "text/html")
+            msg.send()
+        else:
+            send_mail(
+                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or 'Report is ready',
+                str(report_url),
+                getattr(settings, 'DEFAULT_FROM_EMAIL'),
+                [user.email],
+                fail_silently=True,
+            )
+
+
 class DownloadXlsxView(DataExportMixin, View):
 
     @method_decorator(staff_member_required)
@@ -84,15 +116,18 @@ class DownloadXlsxView(DataExportMixin, View):
             return self.list_to_xlsx_response(
                 objects_list, title, header, widths)
         else:
-            self.async_report_save(report, objects_list, title, header, widths)
+            self.async_report_save(report, objects_list, title, header, widths, user)
 
-    def async_report_save(self, report, objects_list, title, header, widths):
+    def async_report_save(self, report, objects_list, title, header, widths, user):
         xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
         if not title.endswith('.xlsx'):
             title += '.xlsx'
         report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
         report.report_file_creation = datetime.datetime.today()
         report.save()
+        if getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False):
+            if user.email:
+                email_report(report.report_file.url, user)
 
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
@@ -190,5 +225,5 @@ def check_status(request, pk, task_id):
         report = get_object_or_404(Report, pk=pk)
         link = report.report_file.url
     return HttpResponse(
-        json.dumps({'state': res.state, 'link': link}),
+        json.dumps({'state': res.state, 'link': link, 'email': getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False)}),
         content_type="application/json")

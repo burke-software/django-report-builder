@@ -1,7 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from .models import Report, DisplayField, FilterField, Format, get_allowed_models
+from .views import email_report
 from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
 from django.conf import settings
 from report_utils.model_introspection import (
@@ -746,3 +748,29 @@ class ReportTests(TestCase):
     def test_admin(self):
         response = self.client.get('/admin/report_builder/report/')
         self.assertEqual(response.status_code, 200)
+
+
+class ViewTests(TestCase):
+    def test_email_report_without_template(self):
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = True
+        email_subject = getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or "Report is ready"
+        user = User.objects.get_or_create(username='example', email='to@example.com')[0]
+        email_report(email_subject, user)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, email_subject)
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
+        mail.outbox = []
+
+    def test_email_report_with_template(self):
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = True
+        report_url = 'http://fakeurl.com/fakestuffs'
+        username = 'example'
+        email_subject = getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or "Report is ready"
+        user = User.objects.get_or_create(username=username, email='to@example.com')[0]
+        email_report(report_url, user)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, email_subject)
+        self.assertEqual(mail.outbox[0].alternatives[0][0], "<p>Hello {0},</p>\n<br>\n<p>The report is <a href='{1}'>here</u></p>".format(username, report_url))
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
+        settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
+        mail.outbox = []
