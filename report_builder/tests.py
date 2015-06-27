@@ -191,7 +191,7 @@ class ReportBuilderTests(TestCase):
         self.assertContains(response, '[["CH","CHECK"],["MA","CHECKMATE"]]')
 
     def test_report_builder_can_filter(self):
-        ct = ContentType.objects.get(model="bar")
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
