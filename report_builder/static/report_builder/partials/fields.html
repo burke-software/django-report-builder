@@ -26,7 +26,7 @@
     <md-content>
       <div ui-tree data-drag-enabled="false">
       <ol ui-tree-nodes="" ng-model="fields">
-        <li class="field" data-collapsed="false" ng-repeat="field in fields | filter:searchFields" ui-tree-node>
+        <li class="field" data-collapsed="false" ng-repeat="field in fields | filter:searchFields | filter:fieldCanFilter"" ui-tree-node>
           <div ui-tree-handle layout="row" style="margin-right: 7px;">
             <div class="caps" flex ng-click="click_field(field)">
               {{field.field_verbose}}

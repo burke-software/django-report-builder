@@ -21,15 +21,6 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
   reportService.getFormats().then(function(data) {
     $scope.formats = data;
   });
-  $scope.tabData = {
-    selectedIndex: 0,
-  };
-  $scope.next = function() {
-    $scope.tabData.selectedIndex = Math.min($scope.tabData.selectedIndex + 1, 2);
-  };
-  $scope.previous = function() {
-    $scope.tabData.selectedIndex = Math.max($scope.tabData.selectedIndex - 1, 0);
-  };
 
   $scope.reports_list_menu = function() {
     $mdSidenav('left').open();
@@ -37,6 +28,17 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
   $scope.field_menu = function() {
     $mdSidenav('right').open();
   };
+  $scope.selectedIndex = 0;
+
+  $scope.fieldCanFilter = function(field) {
+    if ($scope.selectedIndex === 0) {
+      return true;
+    }
+    if ($scope.selectedIndex === 1 && field.can_filter === true) {
+      return true;
+    }
+    return false;
+  }
 
   $scope.requestFullscreen = function() {
     var
@@ -194,9 +196,9 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
 
   $scope.add_field = function(field) {
     field.report = $scope.report.id;
-    if ($scope.tabData.selectedIndex === 0) {
+    if ($scope.selectedIndex === 0) {
       $scope.report.displayfield_set.push(angular.copy(field));
-    } else if ($scope.tabData.selectedIndex === 1) {
+    } else if ($scope.selectedIndex === 1) {
       $scope.report.filterfield_set.push(angular.copy(field));
     }
   };
