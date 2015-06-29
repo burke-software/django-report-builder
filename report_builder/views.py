@@ -15,7 +15,7 @@ from six import string_types
 
 from .utils import duplicate
 from .models import Report
-from report_utils.mixins import DataExportMixin
+from report_utils.mixins import DataExportMixin, generate_filename
 
 import datetime
 import re
@@ -120,8 +120,7 @@ class DownloadXlsxView(DataExportMixin, View):
 
     def async_report_save(self, report, objects_list, title, header, widths, user):
         xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
-        if not title.endswith('.xlsx'):
-            title += '.xlsx'
+        title = generate_filename(title)
         report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
         report.report_file_creation = datetime.datetime.today()
         report.save()
