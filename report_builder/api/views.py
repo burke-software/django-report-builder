@@ -92,11 +92,13 @@ class FieldsView(RelatedFieldsView):
             self.path_verbose,)
         result = []
         fields = None
+        filters = None
         extra = None
         defaults = None
         meta = getattr(self.model_class, 'ReportBuilder', None)
         if meta is not None:
             fields = getattr(meta, 'fields', None)
+            filters = getattr(meta, 'filters', None)
             exclude = getattr(meta, 'exclude', None)
             extra = getattr(meta, 'extra', None)
             defaults = getattr(meta, 'defaults', None)
@@ -123,6 +125,7 @@ class FieldsView(RelatedFieldsView):
                 'field_type': new_field.get_internal_type(),
                 'is_default': True if defaults is None or new_field.name in defaults else False,
                 'field_choices': new_field.choices,
+                'can_filter': True if filters is None or new_field.name in filters else False,
                 'path': field_data['path'],
                 'path_verbose': field_data['path_verbose'],
                 'help_text': new_field.help_text,
@@ -144,9 +147,10 @@ class FieldsView(RelatedFieldsView):
                         'field_verbose': field,
                         'field_type': 'Property',
                         'field_choices': None,
+                        'can_filter': True if filters is None or field in filters else False,
                         'path': field_data['path'],
                         'path_verbose': field_data['path_verbose'],
-                        'is_default': True if defaults is None or new_field.name in defaults else False,
+                        'is_default': True if defaults is None or field in defaults else False,
                         'help_text': 'Adding this property will '
                         'significantly increase the time it takes to run a '
                         'report.'
@@ -160,10 +164,11 @@ class FieldsView(RelatedFieldsView):
                     'field': field.name,
                     'field_verbose': field.name,
                     'field_type': 'Custom Field',
-                    'field_choices': new_field.choices,
+                    'field_choices': field.choices,
+                    'can_filter': True if filters is None or field.name in filters else False,
                     'path': field_data['path'],
                     'path_verbose': field_data['path_verbose'],
-                    'is_default': True if defaults is None or new_field.name in defaults else False,
+                    'is_default': True if defaults is None or field.name in defaults else False,
                     'help_text': 'This is a custom field.',
                 }]
         return Response(result)

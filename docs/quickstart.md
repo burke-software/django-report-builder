@@ -18,8 +18,13 @@ See setup.py for full requirements list.
 
 ### Include and exclude fields and models
 
-    REPORT_BUILDER_INCLUDE = []
-    REPORT_BUILDER_EXCLUDE = ['user'] # Allow all models except User to be accessed
+To include a model you've to specify with app your models belong to. If your 'user' model is in the app 'hr' then you can do the following to include it:
+
+    REPORT_BUILDER_INCLUDE = ['hr.user'] # Allow only the model user to be accessed
+
+The same reasoning also applies to exclude models. If your 'account' model is in the app 'finance' then you can do the following to exclude it:
+
+    REPORT_BUILDER_EXCLUDE = ['finance.account'] # Allow all models except account to be accessed
 
 ### Per model settings
 
@@ -42,6 +47,15 @@ Moreover, we have added functionality to set fields to display by default. This 
         defaults = () # Lists or tuple of defaults
 
 The `defaults` field would usually be a subset of the `fields`. The idea is that you would have a `is_defualt` field on the JSON-frontend that would allow you to recognize that this is a default value on your own front-end.
+
+You can also mark which fields you would like to set as filters for the JSON end-point. This is currently not valuable to the front-end that django-report-builder comes with, but if you have your own front-end then you could utilize this information.
+
+This filter is purely cosmetic, and not used in any way internally in the configuration of report-builder. This is not a security measure.
+
+    class ReportBuilder:
+        filters = () # Lists or tuple of filters
+
+The distinction here is only created if you want to differentiate display fields and filters. It is possible by this to create a distinction between a display field and a field the user can filter by.
 
 ### Custom model manager for all models
 
@@ -69,6 +83,25 @@ Advantages of this option
 - Run a report, close your browser, come back later to a finished report
 - Download the last report that was run instead of regenerating
 - Nicer status messages about report status
+
+### Email notification when file is uploaded
+
+The reports are emailed to the current user rather than generated and then downloaded. This is if you have reports that take a while to generate or if you'd prefer your users to be emailed.
+
+The current front-end simply downloads the report right away, and so this is a feature you'll have to enable on the front-end yourself (or the package will support it in the future).
+
+    REPORT_BUILDER_EMAIL_NOTIFICATION = True
+
+This uses the default django mail implementation. The code checks for either `EMAIL_BACKEND` or `EMAIL_HOST` to be defined in the `settings.py` file. You should also define `DEFAULT_FROM_EMAIL`.
+
+You're also able to stylize the templates according to your needs. To enable the reports:
+
+    REPORT_BUILDER_EMAIL_NOTIFICATION = True
+    REPORT_BUILDER_EMAIL_SUBJECT = ""
+
+This package uses Django-Templates for its email templates. The report path it uses is `email/email_report.html`, and you're able to overwrite this in your own django application.
+
+The `{{report}}` element is what would be replaced with the report URL, and the `{{name}}`. The field `REPORT_BUILDER_EMAIL_SUBJECT` will be defaulted to 'Report is ready' if missing.
 
 ### Turn off front-end
 

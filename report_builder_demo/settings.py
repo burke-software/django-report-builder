@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'report_builder_demo.demo_models',
+    'report_builder_demo.demo_second_app',
     'report_builder',
     'report_utils',
     'custom_field',
@@ -99,6 +100,7 @@ CELERY_RESULT_BACKEND = BROKER_URL
 
 REPORT_BUILDER_ASYNC_REPORT = True
 REPORT_BUILDER_GLOBAL_EXPORT = True
+REPORT_BUILDER_EMAIL_NOTIFICATION = False
 
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}

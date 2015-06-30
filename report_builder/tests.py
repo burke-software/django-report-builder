@@ -1,7 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from .models import Report, DisplayField, FilterField, Format
+from .models import Report, DisplayField, FilterField, Format, get_allowed_models
+from .views import email_report
 from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
 from django.conf import settings
 from report_utils.model_introspection import (
@@ -16,6 +18,19 @@ try:
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
+
+
+def find_duplicates_in_contexttype():
+    find_duplicates = {}
+    duplicates = []
+    for i in get_allowed_models():
+        model_name = str(i.model)
+        if model_name in find_duplicates:
+            find_duplicates[model_name] += 1
+            duplicates.append(model_name)
+        else:
+            find_duplicates[model_name] = 1
+    return duplicates
 
 
 class UtilityFunctionTests(TestCase):
@@ -99,8 +114,30 @@ class ReportBuilderTests(TestCase):
         self.client = APIClient()
         self.client.login(username='testy', password='pass')
 
+    def test_get_allowed_models_for_include(self):
+        pre_include_duplicates = find_duplicates_in_contexttype()
+        settings.REPORT_BUILDER_INCLUDE = (
+            'demo_models.bar',
+            'demo_models.foo',
+            'demo_models.place',
+        )
+        post_include_duplicates = find_duplicates_in_contexttype()
+        settings.REPORT_BUILDER_INCLUDE = None
+        self.assertEqual(pre_include_duplicates, ['bar'])
+        self.assertEqual(post_include_duplicates, [])
+
+    def test_get_allowed_models_for_exclude(self):
+        pre_exclude_duplicates = find_duplicates_in_contexttype()
+        settings.REPORT_BUILDER_EXCLUDE = (
+            'demo_second_app.bar',
+        )
+        post_exclude_duplicates = find_duplicates_in_contexttype()
+        settings.REPORT_BUILDER_EXCLUDE = None
+        self.assertEqual(pre_exclude_duplicates, ['bar'])
+        self.assertEqual(post_exclude_duplicates, [])
+
     def test_report_builder_fields(self):
-        ct = ContentType.objects.get(model="foo")
+        ct = ContentType.objects.get(model="foo", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -109,7 +146,7 @@ class ReportBuilderTests(TestCase):
         self.assertNotContains(response, 'char_field2')
 
     def test_report_builder_fields_from_related(self):
-        ct = ContentType.objects.get(model="place")
+        ct = ContentType.objects.get(model="place", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id,
@@ -120,7 +157,7 @@ class ReportBuilderTests(TestCase):
         self.assertContains(response, 'pizza')
 
     def test_report_builder_exclude(self):
-        ct = ContentType.objects.get(model="fooexclude")
+        ct = ContentType.objects.get(model="fooexclude", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -129,7 +166,7 @@ class ReportBuilderTests(TestCase):
         self.assertNotContains(response, 'char_field2')
 
     def test_report_builder_extra(self):
-        ct = ContentType.objects.get(model="bar")
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -139,7 +176,7 @@ class ReportBuilderTests(TestCase):
         self.assertContains(response, 'i_need_char_field')
 
     def test_report_builder_is_default(self):
-        ct = ContentType.objects.get(model="bar")
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
@@ -147,13 +184,33 @@ class ReportBuilderTests(TestCase):
         self.assertContains(response, 'is_default')
 
     def test_report_builder_choices(self):
-        ct = ContentType.objects.get(model="bar")
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'field_choices')
         self.assertContains(response, '[["CH","CHECK"],["MA","CHECKMATE"]]')
+
+    def test_report_builder_can_filter(self):
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'can_filter')
+        for field in response.data:
+            if field['name'] == 'char_field':
+                self.assertEqual(field['can_filter'], True)
+            else:
+                self.assertEqual(field['can_filter'], False)
+        # Now confirm not setting filter makes it always true
+        ct = ContentType.objects.get(model="foo", app_label="demo_models")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+        for field in response.data:
+            self.assertEqual(field['can_filter'], True)
 
 
 class ReportTests(TestCase):
@@ -165,7 +222,7 @@ class ReportTests(TestCase):
         user.save()
         self.client = APIClient()
         self.client.login(username='testy', password='pass')
-        ct = ContentType.objects.get(model="bar")
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
         self.report = Report.objects.create(root_model=ct, name="A")
         self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
@@ -254,7 +311,7 @@ class ReportTests(TestCase):
 
     def test_filter_custom_field(self):
         from custom_field.models import CustomField
-        ct = ContentType.objects.get(model="bar")
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
         CustomField.objects.create(
             name="custom one",
             content_type=ct,
@@ -373,7 +430,7 @@ class ReportTests(TestCase):
         """
         self.make_tiny_town()
 
-        model = ContentType.objects.get(model='waiter')
+        model = ContentType.objects.get(model='waiter', app_label="demo_models")
         report = Report.objects.create(root_model=model, name='Waiter Days Worked')
 
         DisplayField.objects.create(
@@ -429,7 +486,7 @@ class ReportTests(TestCase):
     def test_groupby_id(self):
         self.make_people()
 
-        model = ContentType.objects.get(model='child')
+        model = ContentType.objects.get(model='child', app_label="demo_models")
         report = Report.objects.create(root_model=model, name='# of Kids / Person Id')
 
         DisplayField.objects.create(
@@ -481,7 +538,7 @@ class ReportTests(TestCase):
     def test_groupby_name(self):
         self.make_people()
 
-        model = ContentType.objects.get(model='child')
+        model = ContentType.objects.get(model='child', app_label="demo_models")
         report = Report.objects.create(root_model=model, name='# of Kids / Person Name')
 
         DisplayField.objects.create(
@@ -535,7 +592,7 @@ class ReportTests(TestCase):
     def test_aggregates(self):
         self.make_people()
 
-        model = ContentType.objects.get(model='person')
+        model = ContentType.objects.get(model='person', app_label="demo_models")
         report = Report.objects.create(root_model=model, name='Kid Stats')
 
         DisplayField.objects.create(
@@ -604,7 +661,7 @@ class ReportTests(TestCase):
     def test_choices_and_sort_null(self):
         self.make_people()
 
-        model = ContentType.objects.get(model='person')
+        model = ContentType.objects.get(model='person', app_label="demo_models")
         report = Report.objects.create(root_model=model, name='Kid Data')
 
         DisplayField.objects.create(
@@ -658,7 +715,7 @@ class ReportTests(TestCase):
     def test_formatter(self):
         self.make_people()
 
-        model = ContentType.objects.get(model='child')
+        model = ContentType.objects.get(model='child', app_label="demo_models")
         report = Report.objects.create(root_model=model, name='Children')
 
         DisplayField.objects.create(
@@ -708,6 +765,23 @@ class ReportTests(TestCase):
     def test_admin(self):
         response = self.client.get('/admin/report_builder/report/')
         self.assertEqual(response.status_code, 200)
+
+    def test_report_builder_related_fields(self):
+        '''
+        Test for Django 1.8 support via
+        https://github.com/burke-software/django-report-builder/issues/144
+        '''
+        ct = ContentType.objects.get(model='place')
+        response = self.client.post(
+            '/report_builder/api/related_fields/', {
+                'model': ct.id,
+                'path': '',
+                'field': 'restaurant'
+            }
+        )
+        self.assertContains(response, '"field_name":"waiter"')
+        self.assertContains(response, '"verbose_name":"waiter_set"')
+        self.assertContains(response, '"path":"restaurant__"')
 
     def test_annotation_filter_min(self):
         self.make_people()
@@ -840,3 +914,29 @@ class ReportTests(TestCase):
         data = '"data":[["John","Doe","Will","Doe",5],["Donald","King","Larry","King",5]]'
 
         self.assertContains(response, data)
+
+
+class ViewTests(TestCase):
+    def test_email_report_without_template(self):
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = True
+        email_subject = getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or "Report is ready"
+        user = User.objects.get_or_create(username='example', email='to@example.com')[0]
+        email_report(email_subject, user)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, email_subject)
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
+        mail.outbox = []
+
+    def test_email_report_with_template(self):
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = True
+        report_url = 'http://fakeurl.com/fakestuffs'
+        username = 'example'
+        email_subject = getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or "Report is ready"
+        user = User.objects.get_or_create(username=username, email='to@example.com')[0]
+        email_report(report_url, user)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, email_subject)
+        self.assertEqual(mail.outbox[0].alternatives[0][0], "<p>Hello {0},</p>\n<br>\n<p>The report is <a href='{1}'>here</u></p>".format(username, report_url))
+        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
+        settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
+        mail.outbox = []
