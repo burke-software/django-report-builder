@@ -147,10 +147,10 @@ class FieldsView(RelatedFieldsView):
                         'field_verbose': field,
                         'field_type': 'Property',
                         'field_choices': None,
-                        'can_filter': True if filters is None or new_field.name in filters else False,
+                        'can_filter': True if filters is None or field in filters else False,
                         'path': field_data['path'],
                         'path_verbose': field_data['path_verbose'],
-                        'is_default': True if defaults is None or new_field.name in defaults else False,
+                        'is_default': True if defaults is None or field in defaults else False,
                         'help_text': 'Adding this property will '
                         'significantly increase the time it takes to run a '
                         'report.'
@@ -164,11 +164,11 @@ class FieldsView(RelatedFieldsView):
                     'field': field.name,
                     'field_verbose': field.name,
                     'field_type': 'Custom Field',
-                    'field_choices': new_field.choices,
-                    'can_filter': True if filters is None or new_field.name in filters else False,
+                    'field_choices': field.choices,
+                    'can_filter': True if filters is None or field.name in filters else False,
                     'path': field_data['path'],
                     'path_verbose': field_data['path_verbose'],
-                    'is_default': True if defaults is None or new_field.name in defaults else False,
+                    'is_default': True if defaults is None or field.name in defaults else False,
                     'help_text': 'This is a custom field.',
                 }]
         return Response(result)
