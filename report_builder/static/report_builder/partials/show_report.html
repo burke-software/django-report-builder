@@ -2,7 +2,8 @@
     <div>
         <md-button ng-click="save()">Save</md-button>
         <md-button ng-click="getPreview()">Preview</md-button>
-        <md-button ng-click="getXlsx()"><a ng-href="">Download xlsx</a></md-button>
+        <md-button ng-click="downloadReport('xlsx')"><a ng-href="">xlsx</a></md-button>
+        <md-button ng-click="downloadReport('csv')"><a ng-href="">csv</a></md-button>
         <span ng-if="report.lastSaved == null">
             Changes have not been saved
         </span>

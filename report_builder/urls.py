@@ -13,7 +13,7 @@ router.register(r'filterfields', api_views.FilterFieldViewSet)
 
 urlpatterns = patterns(
     '',
-    url('^report/(?P<pk>\d+)/download_xlsx/$', views.DownloadXlsxView.as_view(), name="report_download_xlsx"),
+    url('^report/(?P<pk>\d+)/download_file/(?P<filetype>.+)/$', views.DownloadFileView.as_view(), name="report_download_file"),
     url('^report/(?P<pk>\d+)/check_status/(?P<task_id>.+)/$', views.check_status, name="report_check_status"),
     url('^report/(?P<pk>\d+)/add_star/$', views.ajax_add_star),
     url('^report/(?P<pk>\d+)/create_copy/$', views.create_copy),

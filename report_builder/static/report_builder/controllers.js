@@ -273,9 +273,9 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     });
   };
 
-  $scope.getXlsx = function() {
+  $scope.downloadReport = function(filetype) {
     base_url = BASE_URL + 'report/' + $scope.report.id
-    url = base_url + '/download_xlsx/';
+    url = base_url + '/download_file/' + filetype + '/';
     $scope.workerStatus = 'Requesting report';
     if (ASYNC_REPORT === "True") {
       $http.get(url).
