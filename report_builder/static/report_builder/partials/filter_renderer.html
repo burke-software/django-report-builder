@@ -15,7 +15,7 @@
         </select>
       </div>
 
-      <div flex="" ng-switch="field.filter_type">
+      <div flex="" ng-switch="field.filter_type" mass-autocomplete>
         <div ng-switch-when="week_day">
           <select ng-model="field.filter_value">
             <option value="1">Sunday</option>
@@ -41,7 +41,7 @@
           <div ng-switch-when="BooleanField">
             <md-checkbox ng-model="field.filter_value">
           </div>
-          <input ng-switch-default type="text" ng-model="field.filter_value"></input>
+          <input ng-switch-default type="text" ng-model="field.filter_value" ng-change="saveCurrentField(field)" mass-autocomplete-item="autocomplete_options"></input>
           <div ng-if="field.filter_type == 'range'" flex="" ng-switch="field.field_type">
             <input ng-switch-when="DateField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value2"></input>
             <input ng-switch-default type="text" ng-model="field.filter_value2"></input>

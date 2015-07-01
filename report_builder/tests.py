@@ -230,6 +230,26 @@ class ReportBuilderTests(TestCase):
         for field in response.data:
             self.assertEqual(field['can_filter'], True)
 
+    def test_report_builder_typeahead(self):
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
+        response_one = self.client.post(
+            '/report_builder/api/field/typeahead',
+            {"model": ct.id, "path": "", "path_verbose": "",
+             "field": "", "typeahead_field": "char_field",
+             "filter_values": ""})
+        model_class = ct.model_class()
+        new_entry = model_class(char_field="hello", check_mate_status="CH")
+        new_entry.save()
+        response_two = self.client.post(
+            '/report_builder/api/field/typeahead',
+            {"model": ct.id, "path": "", "path_verbose": "",
+             "field": "", "typeahead_field": "char_field",
+             "filter_values": "hel"})
+        self.assertEqual(response_one.status_code, 200)
+        self.assertContains(response_one, [])
+        self.assertEqual(response_two.status_code, 200)
+        self.assertContains(response_two, "hello")
+
 
 class ReportTests(TestCase):
     def setUp(self):
