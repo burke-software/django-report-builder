@@ -71,6 +71,11 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
       $scope.related_fields = [root_related_field]
       reportService.getRelatedFields(data).then(function(result) {
         root_related_field.related_fields = result;
+        var help_text = 'This model is included in report builder.';
+        if (result[0].included_model == false) {
+          help_text = 'This model is not included in report builder.';
+        }
+        $scope.help_text = help_text;
       });
       reportService.getFields(data).then(function(result) {
         $scope.fields = result;
@@ -161,8 +166,6 @@ reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidena
 })
 
 reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportService) {
-  $scope.help_text = '';
-
   $scope.load_fields = function(field) {
     data = {
       "model": field.model_id,
@@ -174,6 +177,14 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
     $scope.fields_header = field.verbose_name;
     reportService.getFields(data).then(function(result) {
       $scope.fields = result;
+    });
+    reportService.getRelatedFields(data).then(function(result) {
+      field.related_fields = result;
+      var help_text = 'This model is included in report builder.';
+      if (result[0].included_model == false) {
+        help_text = 'This model is not included in report builder.';
+      }
+      $scope.help_text = help_text;
     });
   }
 
