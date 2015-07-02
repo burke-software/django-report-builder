@@ -784,6 +784,34 @@ class ReportTests(TestCase):
         self.assertContains(response, '"path":"restaurant__"')
 
     def test_annotation_filter_min(self):
+        """
+        Similar to group-by queries, annotation-filters allow you to display only
+        the Max or Min of a set of rows.
+
+        Suppose we have two models, Person and Child. Each has first_name,
+        last_name fields and Child has a foreign key to Person as parent. Child
+        also has age and color fields. Already we can use the group-by
+        mechanism to display each Person's count of children or the age of each
+        person's oldest child.
+
+        Unfortunately, getting the related items of an aggregate is difficult
+        in Django and SQL. Suppose in the example above that we want to know
+        the name and age of each person's oldest child. With annotation-filters
+        this can be done.
+
+        Annotation-filters are applied iteratively after normal queryset
+        filtering. They work, as the name indicates, by applying Django's
+        annotate and filter queryset methods. As they are self-referential,
+        they do not accept a text input from the front-end.
+
+        Annotation-filters are difficult to describe conceptually so I'll use
+        an example. To display the name and age of each person's oldest child,
+        we begin by constructing a report based on Child. We add display fields
+        for the parent name, child name, and child age. Then for filter fields,
+        we add the parent__children__age field. This lengthy path indicates
+        that children are to be grouped by their parent and with the type Max,
+        only the maximum age of each group should be included.
+        """
         self.make_people()
 
         model = ContentType.objects.get(model='child')
@@ -846,6 +874,13 @@ class ReportTests(TestCase):
         self.assertContains(response, data)
 
     def test_annotation_filter_max(self):
+        """
+        See test_annotation_filter_min for a description of annotation-filters.
+
+        This test extends things further by adding the filter field
+        parent__children__color with type Equals Red to get a list of the
+        oldest children of each person whose favorite color is red.
+        """
         self.make_people()
 
         model = ContentType.objects.get(model='child')
