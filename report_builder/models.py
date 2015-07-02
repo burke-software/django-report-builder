@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from django.utils.functional import cached_property
 from django.db import models
-from django.db.models import Avg, Min, Max, Count, Sum
+from django.db.models import Avg, Min, Max, Count, Sum, F
 from django.db.models.fields import FieldDoesNotExist
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
@@ -155,11 +155,14 @@ class Report(models.Model):
         # unnecessary joins
         filters = {}
         excludes = {}
-        for filter_field in report.filterfield_set.all():
+        for filter_field in report.filterfield_set.order_by('position'):
             # exclude properties from standard ORM filtering
             if filter_field.field_type == "Property":
                 continue
             if filter_field.field_type == "Custom Field":
+                continue
+            if filter_field.filter_type in ('max', 'min'):
+                # Annotation-filters are handled below.
                 continue
 
             filter_string = str(filter_field.path + filter_field.field)
@@ -188,6 +191,21 @@ class Report(models.Model):
             objects = objects.filter(**filters)
         if excludes:
             objects = objects.exclude(**excludes)
+
+        # Apply annotation-filters after regular filters.
+
+        for filter_field in report.filterfield_set.order_by('position'):
+            if filter_field.filter_type in ('max', 'min'):
+                func = {'max': Max, 'min': Min}[filter_field.filter_type]
+                column_name = '{0}{1}__{2}'.format(
+                    filter_field.path,
+                    filter_field.field,
+                    filter_field.field_type
+                )
+                filter_string = filter_field.path + filter_field.field
+                annotate_args = {column_name: func(filter_string)}
+                filter_args = {column_name: F(filter_field.field)}
+                objects = objects.annotate(**annotate_args).filter(**filter_args)
 
         # Aggregates
         objects = self.add_aggregates(objects)
@@ -350,6 +368,8 @@ class FilterField(AbstractField):
             ('isnull', 'Is null'),
             ('regex', 'Regular Expression'),
             ('iregex', 'Reg. Exp. (case-insensitive)'),
+            ('max', 'Max (annotation-filter)'),
+            ('min', 'Min (annotation-filter)'),
         ),
         blank=True,
         default = 'icontains',
@@ -359,14 +379,18 @@ class FilterField(AbstractField):
     exclude = models.BooleanField(default=False)
 
     def clean(self):
-        if self.filter_type == "range":
-            if self.filter_value2 in [None, ""]:
-                raise ValidationError('Range filters must have two values')
-        if self.field_type == "DateField" and self.filter_type != "isnull":
+        if self.filter_type == 'range' and self.filter_value2 in [None, '']:
+            raise ValidationError('Range filters must have two values')
+
+        if self.filter_type in ('max', 'min'):
+            # These filter types ignore their value.
+            pass
+        elif self.field_type == 'DateField' and self.filter_type != 'isnull':
             date_form = forms.DateField()
             date_value = parser.parse(self.filter_value).date()
             date_form.clean(date_value)
             self.filter_value = str(date_value)
+
         return super(FilterField, self).clean()
 
     def get_choices(self, model, field_name):
