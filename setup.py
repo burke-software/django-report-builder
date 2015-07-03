@@ -26,7 +26,7 @@ setup(
         'django>=1.7',
         'openpyxl==2.2.1',
         'python-dateutil',
-        'django-report-utils>=0.3.11',
+        'django-report-utils>=0.3.12',
         'djangorestframework>=3.0.4',
         "six"
     ]
