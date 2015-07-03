@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
 from celery import shared_task
-from .views import DownloadXlsxView
+from .views import DownloadFileView
 
 
 @shared_task
-def report_builder_async_report_save(report_id, user_id):
-    view = DownloadXlsxView()
-    view.process_report(report_id, user_id, to_response=False)
+def report_builder_file_async_report_save(report_id, user_id, file_type):
+    view = DownloadFileView()
+    view.process_report(report_id, user_id, file_type, to_response=False)

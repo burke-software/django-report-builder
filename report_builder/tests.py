@@ -11,13 +11,18 @@ from report_utils.model_introspection import (
     get_relation_fields_from_model, get_model_from_path_string)
 from rest_framework.test import APIClient
 import time
-
+import csv
 
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 
 def find_duplicates_in_contexttype():
@@ -774,6 +779,52 @@ class ReportTests(TestCase):
         data = '"data":[["Karen","Smith","4 years old"],["Susan","Smith","1 years old"],["TOTALS","",""],["","","5 years old"]]'
 
         self.assertContains(response, data)
+
+    def test_csv(self):
+        self.make_people()
+
+        model = ContentType.objects.get(model='child', app_label="demo_models")
+        report = Report.objects.create(root_model=model, name='Children')
+
+        DisplayField.objects.create(
+            report=report,
+            field='first_name',
+            field_verbose='First Name',
+            sort=1,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=report,
+            field='last_name',
+            field_verbose='Last Name',
+            sort=2,
+            position=1,
+        )
+
+        years_old = Format(name='years old', string='{} years old')
+        years_old.save()
+
+        DisplayField.objects.create(
+            report=report,
+            field='age',
+            field_verbose='Child Age',
+            sort=3,
+            position=2,
+            total=True,
+            display_format=years_old,
+        )
+
+        settings.REPORT_BUILDER_ASYNC_REPORT = False
+        download_csv = reverse('report_download_file', args=[report.id, 'csv'])
+        response = self.client.get(download_csv)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response._headers['content-type'][1], 'text/csv')
+        csv_string = response._container[0]
+        f = StringIO(csv_string)
+        reader = csv.reader(f, delimiter=',')
+        csv_list = list(reader)
+        self.assertEqual(csv_list[1], ['Charles', 'King', 'None years old'])
 
     def test_admin(self):
         response = self.client.get('/admin/report_builder/report/')

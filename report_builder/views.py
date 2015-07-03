@@ -29,7 +29,8 @@ class ReportSPAView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportSPAView, self).get_context_data(**kwargs)
         context['ASYNC_REPORT'] = getattr(
-            settings, 'REPORT_BUILDER_ASYNC_REPORT', False)
+            settings, 'REPORT_BUILDER_ASYNC_REPORT', False
+        )
         return context
 
 
@@ -58,14 +59,14 @@ def get_fieldsets(model):
 
 
 def email_report(report_url, user):
-    # 1. If neither EMAIL_BACKEND or EMAIL_HOST isn't present then email is not present.
-    # 2. Then if there is a default from email and the user has an email then we email them
-    # the report.
-    if ((getattr(settings, 'EMAIL_BACKEND', False) or getattr(settings, 'EMAIL_HOST', False)) and getattr(settings, 'DEFAULT_FROM_EMAIL', False)):
+    if ((getattr(settings, 'EMAIL_BACKEND', False) or
+            getattr(settings, 'EMAIL_HOST', False)) and
+            getattr(settings, 'DEFAULT_FROM_EMAIL', False)):
         if get_template('email/email_report.html'):
             email_template = get_template('email/email_report.html')
             msg = EmailMultiAlternatives(
-                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or 'Report is ready',
+                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or
+                'Report is ready',
                 report_url,
                 getattr(settings, 'DEFAULT_FROM_EMAIL'),
                 [user.email],
@@ -74,11 +75,15 @@ def email_report(report_url, user):
                 'name': user.first_name or user.username,
                 'report': report_url,
             }
-            msg.attach_alternative(email_template.render(Context(htmlParameters)), "text/html")
+            msg.attach_alternative(
+                email_template.render(Context(htmlParameters)),
+                "text/html"
+            )
             msg.send()
         else:
             send_mail(
-                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or 'Report is ready',
+                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or
+                'Report is ready',
                 str(report_url),
                 getattr(settings, 'DEFAULT_FROM_EMAIL'),
                 [user.email],
@@ -86,13 +91,14 @@ def email_report(report_url, user):
             )
 
 
-class DownloadXlsxView(DataExportMixin, View):
+class DownloadFileView(DataExportMixin, View):
 
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
-        return super(DownloadXlsxView, self).dispatch(*args, **kwargs)
+        return super(DownloadFileView, self).dispatch(*args, **kwargs)
 
-    def process_report(self, report_id, user_id, to_response, queryset=None):
+    def process_report(self, report_id, user_id,
+                       file_type, to_response, queryset=None):
         report = get_object_or_404(Report, pk=report_id)
         user = User.objects.get(pk=user_id)
         if not queryset:
@@ -113,15 +119,28 @@ class DownloadXlsxView(DataExportMixin, View):
             widths.append(field.width)
 
         if to_response:
-            return self.list_to_xlsx_response(
-                objects_list, title, header, widths)
+            if file_type == 'csv':
+                return self.list_to_csv_response(
+                    objects_list, title, header, widths)
+            else:
+                return self.list_to_xlsx_response(
+                    objects_list, title, header, widths)
         else:
-            self.async_report_save(report, objects_list, title, header, widths, user)
+            self.async_report_save(report, objects_list,
+                                   title, header, widths, user, file_type)
 
-    def async_report_save(self, report, objects_list, title, header, widths, user):
-        xlsx_file = self.list_to_xlsx_file(objects_list, title, header, widths)
-        title = generate_filename(title)
-        report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
+    def async_report_save(self, report, objects_list,
+                          title, header, widths, user, file_type):
+        if file_type == 'csv':
+            csv_file = self.list_to_csv_file(objects_list, title,
+                                             header, widths)
+            title = generate_filename(title, '.csv')
+            report.report_file.save(title, ContentFile(csv_file.getvalue()))
+        else:
+            xlsx_file = self.list_to_xlsx_file(objects_list, title,
+                                               header, widths)
+            title = generate_filename(title, '.xlsx')
+            report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
         report.report_file_creation = datetime.datetime.today()
         report.save()
         if getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False):
@@ -130,17 +149,18 @@ class DownloadXlsxView(DataExportMixin, View):
 
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
+        file_type = kwargs['filetype']
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
-            from .tasks import report_builder_async_report_save
-            report_task = report_builder_async_report_save.delay(
-                report_id, request.user.pk)
+            from .tasks import report_builder_file_async_report_save
+            report_task = report_builder_file_async_report_save.delay(
+                report_id, request.user.pk, file_type)
             task_id = report_task.task_id
             return HttpResponse(
                 json.dumps({'task_id': task_id}),
                 content_type="application/json")
         else:
             return self.process_report(
-                report_id, request.user.pk, to_response=True)
+                report_id, request.user.pk, file_type, to_response=True)
 
 
 @staff_member_required
@@ -181,7 +201,7 @@ def create_copy(request, pk):
     return redirect(new_report)
 
 
-class ExportToReport(DownloadXlsxView, TemplateView):
+class ExportToReport(DownloadFileView, TemplateView):
     """ Export objects (by ID and content type) to an existing or new report
     In effect this runs the report with it's display fields. It ignores
     filters and filters instead the provided ID's. It can be select
@@ -209,7 +229,10 @@ class ExportToReport(DownloadXlsxView, TemplateView):
             report = get_object_or_404(Report, pk=request.GET['download'])
             queryset = ct.model_class().objects.filter(pk__in=ids)
             return self.process_report(
-                report.id, request.user.pk, to_response=True, queryset=queryset)
+                report.id, request.user.pk,
+                to_response=True,
+                queryset=queryset
+            )
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
 
@@ -224,5 +247,13 @@ def check_status(request, pk, task_id):
         report = get_object_or_404(Report, pk=pk)
         link = report.report_file.url
     return HttpResponse(
-        json.dumps({'state': res.state, 'link': link, 'email': getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False)}),
+        json.dumps({
+            'state': res.state,
+            'link': link,
+            'email': getattr(
+                settings,
+                'REPORT_BUILDER_EMAIL_NOTIFICATION',
+                False
+            )
+        }),
         content_type="application/json")
