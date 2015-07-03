@@ -821,7 +821,7 @@ class ReportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response._headers['content-type'][1], 'text/csv')
         csv_string = response._container[0]
-        f = StringIO(csv_string)
+        f = StringIO(csv_string.decode('UTF-8'))
         reader = csv.reader(f, delimiter=',')
         csv_list = list(reader)
         self.assertEqual(csv_list[1], ['Charles', 'King', 'None years old'])
