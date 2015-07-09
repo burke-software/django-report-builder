@@ -14,6 +14,16 @@ from report_utils.mixins import GetFieldsMixin, DataExportMixin
 import copy
 
 
+def find_exact_position(fields_list, item):
+    current_position = 0
+    for i in fields_list:
+        if (i.name == item.name and
+                i.get_internal_type() == item.get_internal_type()):
+            return current_position
+        current_position += 1
+    return -1
+
+
 class FormatViewSet(viewsets.ModelViewSet):
     queryset = Format.objects.all()
     serializer_class = FormatSerializer
@@ -116,6 +126,14 @@ class FieldsView(RelatedFieldsView):
             self.field,
             self.path,
             self.path_verbose,)
+
+        # External packages might cause duplicates. This clears it up
+        new_set = []
+        for i in field_data['fields']:
+            if i not in new_set:
+                new_set.append(i)
+        field_data['fields'] = new_set
+
         result = []
         fields = None
         filters = None
@@ -132,11 +150,21 @@ class FieldsView(RelatedFieldsView):
                 fields = list(fields)
                 for field in copy.copy(field_data['fields']):
                     if field.name not in fields:
-                        field_data['fields'].remove(field)
+                        index = find_exact_position(
+                            field_data['fields'],
+                            field
+                        )
+                        if index != -1:
+                            field_data['fields'].pop(index)
             if exclude is not None:
                 for field in copy.copy(field_data['fields']):
                     if field.name in exclude:
-                        field_data['fields'].remove(field)
+                        index = find_exact_position(
+                            field_data['fields'],
+                            field
+                        )
+                        if index != -1:
+                            field_data['fields'].pop(index)
             if extra is not None:
                 extra = list(extra)
 

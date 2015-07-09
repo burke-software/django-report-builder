@@ -4,3 +4,4 @@ django-extensions
 Werkzeug
 celery[redis]
 flake8
+django-money==0.7.0

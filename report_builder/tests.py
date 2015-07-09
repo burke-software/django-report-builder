@@ -6,6 +6,7 @@ from .models import Report, DisplayField, FilterField, Format, get_allowed_model
 from .views import email_report
 from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
 from django.conf import settings
+from report_utils.mixins import GetFieldsMixin
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
     get_relation_fields_from_model, get_model_from_path_string)
@@ -1039,3 +1040,21 @@ class ViewTests(TestCase):
         settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
         settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
         mail.outbox = []
+
+
+class TestGetFieldsMixin(GetFieldsMixin, TestCase):
+    def test_find_duplicates_in_get_fields(self):
+        model_class = ContentType.objects.get(app_label='demo_models', model='account').model_class()
+        field_data = self.get_fields(
+            model_class,
+            u'',
+            u'',
+            u'',)
+        find_duplicate = []
+        has_duplicate = True
+        for i in field_data['fields']:
+            if i not in find_duplicate:
+                find_duplicate.append(i)
+            else:
+                has_duplicate = True
+        self.assertEqual(has_duplicate, True)
