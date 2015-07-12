@@ -6,6 +6,7 @@ from .models import Report, DisplayField, FilterField, Format, get_allowed_model
 from .views import email_report
 from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
 from django.conf import settings
+from django.utils import unittest
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
     get_relation_fields_from_model, get_model_from_path_string)
