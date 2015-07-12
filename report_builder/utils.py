@@ -83,3 +83,16 @@ def increment_total(display_field, data_row):
         display_field.total_count += Decimal(str(val))
     elif val:
         display_field.total_count += Decimal(1)
+
+
+def formatter(value, style):
+    # Convert value to Decimal to apply numeric formats.
+    try:
+        value = Decimal(value)
+    except Exception:
+        pass
+
+    try:
+        return style.string.format(value)
+    except ValueError:
+        return value

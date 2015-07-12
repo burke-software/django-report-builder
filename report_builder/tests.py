@@ -787,6 +787,7 @@ class ReportTests(TestCase):
 
         data = '"data":[["Karen","Smith","4 years old"],["Susan","Smith","1 years old"],["TOTALS","",""],["","","5 years old"]]'
 
+        print(response.data)
         self.assertContains(response, data)
 
     def test_csv(self):

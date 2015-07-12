@@ -11,7 +11,7 @@ from django.db.models.fields import FieldDoesNotExist
 from six import text_type
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
-from .utils import sort_data, increment_total
+from .utils import sort_data, increment_total, formatter
 from dateutil import parser
 from decimal import Decimal
 from functools import reduce
@@ -157,6 +157,7 @@ class Report(models.Model):
         display_totals = []
         insert_property_indexes = []
         choice_lists = {}
+        display_formats = {}
         i = 0
         for display_field in display_fields:
             if display_field.total:
@@ -182,6 +183,13 @@ class Report(models.Model):
                 choice_list[''] = ''
                 choice_list[None] = ''
                 choice_lists[display_field.position] = choice_list
+
+            # Build display format list
+            if (hasattr(display_field, 'display_format') and
+                display_field.display_format
+            ):
+                display_formats[display_field.position] = \
+                    display_field.display_format
 
         property_filters = []
         for filter_field in self.filterfield_set.all():
@@ -214,15 +222,17 @@ class Report(models.Model):
                         add_row = False
 
                 if add_row is True:
+                    for total in display_totals:
+                        increment_total(total, data_row)
                     # Replace choice data with display choice string
                     for position, choice_list in choice_lists.items():
                         try:
                             data_row[position] = text_type(choice_list[data_row[position]])
                         except Exception:
                             data_row[position] = text_type(data_row[position])
+                    for position, style in display_formats.items():
+                        data_row[position] = formatter(data_row[position], style)
                     data_list.append(data_row)
-                    for total in display_totals:
-                        increment_total(total, data_row)
                 values_index += 1
                 try:
                     value_row = values_list[values_index]
@@ -243,6 +253,9 @@ class Report(models.Model):
                     display_totals_row.append('')
                 i += 1
                 display_totals_row.append(display_field.total_count)
+            # Add formats to display totals
+            for pos, style in display_formats.items():
+                display_totals_row[pos] = formatter(display_totals_row[pos], style)
 
             data_list += [
                 ['TOTALS'] + (len(display_fields) - 1) * ['']
