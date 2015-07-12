@@ -206,7 +206,7 @@ class Report(models.Model):
                 data_row = list(value_row[1:])  # Remove added pk
                 # Insert in the location dictated by the order of display fields
                 for i, prop_value in enumerate(display_property_values):
-                    data_row.insert(insert_property_indexes[i], val)
+                    data_row.insert(insert_property_indexes[i], prop_value)
                 for property_filter in property_filters:
                     relations = property_filter.field_key.split('__')
                     val = reduce(getattr, relations, obj)
