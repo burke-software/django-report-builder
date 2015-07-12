@@ -8,6 +8,7 @@ from django.utils.functional import cached_property
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum, F
 from django.db.models.fields import FieldDoesNotExist
+from six import text_type
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
 from .utils import sort_data, increment_total
@@ -155,6 +156,7 @@ class Report(models.Model):
         display_field_properties = []
         display_totals = []
         insert_property_indexes = []
+        choice_lists = {}
         i = 0
         for display_field in display_fields:
             if display_field.total:
@@ -172,6 +174,14 @@ class Report(models.Model):
                         '__' + display_field.aggregate.lower()]
                 else:
                     display_field_paths += [display_field.field_key]
+
+            # Build display choices list
+            if display_field.choices and hasattr(display_field, 'choices_dict'):
+                choice_list = display_field.choices_dict
+                # Insert blank and None as valid choices.
+                choice_list[''] = ''
+                choice_list[None] = ''
+                choice_lists[display_field.position] = choice_list
 
         property_filters = []
         for filter_field in self.filterfield_set.all():
@@ -204,6 +214,12 @@ class Report(models.Model):
                         add_row = False
 
                 if add_row is True:
+                    # Replace choice data with display choice string
+                    for position, choice_list in choice_lists.items():
+                        try:
+                            data_row[position] = text_type(choice_list[data_row[position]])
+                        except Exception:
+                            data_row[position] = text_type(data_row[position])
                     data_list.append(data_row)
                     for total in display_totals:
                         increment_total(total, data_row)

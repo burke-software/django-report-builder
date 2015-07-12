@@ -271,19 +271,23 @@ class ReportTests(TestCase):
             report=self.report,
             field="i_do_not_exist",
             field_verbose="stuff",
+            position = 0,
         )
         DisplayField.objects.create(
             report=self.report,
             field="i_want_char_field",
             field_verbose="stuff",
+            position = 1,
         )
         DisplayField.objects.create(
             report=self.report,
             field="i_need_char_field",
             field_verbose="stuff",
+            position = 2,
         )
         response = self.client.get(self.generate_url)
         self.assertEqual(response.status_code, 200)
+        print(response.data)
         self.assertContains(response, 'lol no')
         self.assertContains(response, 'lol yes')
         self.assertNotContains(response, 'i_do_not_exist')
@@ -732,6 +736,7 @@ class ReportTests(TestCase):
 
         data = '"data":[["Donald","King",null,""],["Donald","King",7,"Green"],["Donald","King",3,"Red"],["Donald","King",4,"Red"],["Donald","King",5,"Red"],["Donald","King",2,"Y"]]'
 
+        print(response.data)
         self.assertContains(response, data)
 
     def test_formatter(self):
