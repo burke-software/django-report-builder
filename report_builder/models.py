@@ -215,7 +215,7 @@ class Report(models.Model):
 
         for display_field in display_fields.filter(
             sort__gt=0
-        ).order_by('sort'):
+        ).order_by('-sort'):
             data_list = sort_data(data_list, display_field)
 
         if display_totals:

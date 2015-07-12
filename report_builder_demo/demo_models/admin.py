@@ -1,6 +1,6 @@
 from django.contrib import admin
 from custom_field.custom_field import CustomFieldAdmin
-from .models import Foo, Bar, Place, Waiter, Restaurant
+from .models import Foo, Bar, Place, Waiter, Restaurant, Person, Child
 
 
 @admin.register(Foo)
@@ -16,3 +16,5 @@ class BarAdmin(CustomFieldAdmin, admin.ModelAdmin):
 admin.site.register(Place)
 admin.site.register(Waiter)
 admin.site.register(Restaurant)
+admin.site.register(Person)
+admin.site.register(Child)
