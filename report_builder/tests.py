@@ -458,6 +458,7 @@ class ReportTests(TestCase):
             field='name',
             field_verbose='name_verbose',
             total=True,
+            position=0,
         )
         DisplayField.objects.create(
             report=report,
