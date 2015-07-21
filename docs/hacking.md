@@ -11,7 +11,7 @@ This will get you a quick way to run report builder in a demo project - ideal fo
 2. Populate the database with `docker-compose run --rm web python manage.py migrate`.
 3. Run `docker-compose up`
 4. Go to `<docker host>:8000/report_builder`
-4. You may want to edit `docker-compose.yml` to comment/uncomment the django-report-utils line. Report utils is a seperated library with common reporting functions. If you want to hack on report utils too just clone the repo in a sibling directory.
+4. You may want to edit `docker-compose.yml` to comment/uncomment the django-report-utils line. Report utils is a separated library with common reporting functions. If you want to hack on report utils too just clone the repo in a sibling directory.
 
 ## Testing with docker-compose
 
