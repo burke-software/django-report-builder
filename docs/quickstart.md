@@ -33,10 +33,10 @@ This works similar to Django's Meta class.
 
     class ReportBuilder:
         exclude = ()  # Lists or tuple of excluded fields
-        fields = ()   # Explicitely allowed fields
+        fields = ()   # Explicitly allowed fields
         extra = ()    # List extra fields (useful for methods)
 
-Note you can add properties in a similair way as Django admin.
+Note you can add properties in a similar way as Django admin.
 
 In previous versions of django-report-builder all properties were included by default.
 They must now be explicitly included.
