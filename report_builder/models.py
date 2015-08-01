@@ -89,17 +89,16 @@ class Report(models.Model):
         super(Report, self).save(*args, **kwargs)
 
     def add_aggregates(self, queryset):
-        for display_field in self.displayfield_set.filter(aggregate__isnull=False):
-            if display_field.aggregate == "Avg":
-                queryset = queryset.annotate(Avg(display_field.path + display_field.field))
-            elif display_field.aggregate == "Max":
-                queryset = queryset.annotate(Max(display_field.path + display_field.field))
-            elif display_field.aggregate == "Min":
-                queryset = queryset.annotate(Min(display_field.path + display_field.field))
-            elif display_field.aggregate == "Count":
-                queryset = queryset.annotate(Count(display_field.path + display_field.field))
-            elif display_field.aggregate == "Sum":
-                queryset = queryset.annotate(Sum(display_field.path + display_field.field))
+        agg_funcs = {
+            'Avg': Avg, 'Min': Min, 'Max': Max, 'Count': Count, 'Sum': Sum
+        }
+        display_fields = self.displayfield_set.filter(aggregate__isnull=False)
+        for display_field in display_fields:
+            if display_field.aggregate:
+                func = agg_funcs[display_field.aggregate]
+                full_name = display_field.path + display_field.field
+                queryset = queryset.annotate(func(full_name))
+
         return queryset
 
     @property
@@ -318,7 +317,6 @@ class Report(models.Model):
             objects = objects.exclude(**excludes)
 
         # Apply annotation-filters after regular filters.
-
         for filter_field in report.filterfield_set.order_by('position'):
             if filter_field.filter_type in ('max', 'min'):
                 func = {'max': Max, 'min': Min}[filter_field.filter_type]
