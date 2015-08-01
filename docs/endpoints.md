@@ -1,6 +1,6 @@
 #Understanding the endpoints
 
-If you're attempting to improve the front_end then you might find this useful to study and understand. This is basically a documentation on how to interact with the endpoints that come with report builder.
+This page explains how to interact with the endpoints that come with report builder. It may be useful if you are extending report builder or creating your own front end.
 
 -------------
 
@@ -1465,9 +1465,9 @@ The response will be:
 
 The `filter_type`s that are possible are returned when you do an OPTIONS on `/filterfields/`. The exact are there is the field `filter_type`. You have to use one of those values as the `filter_type`. 
 
-**Exporting things using xlsx**
+**Exporting using xlsx**
 
-GET request on `/report_builder/report/<id>/download_xlsx/`. This triggers a celery task that then goes and starts and sends an email. The response will be:
+GET request on `/report_builder/report/<id>/download_xlsx/`. This triggers a celery task to process the report. The response will be:
 
 ```json
 {
@@ -1475,7 +1475,6 @@ GET request on `/report_builder/report/<id>/download_xlsx/`. This triggers a cel
 }
 ```
 
-Or some combination of numbers. I guess just to make sure that `task_id` is present in the response. If it is not then there must have been an error. 
+`task_id` is the celery task id which can be used to check when the task is finished (or errored).
 
-If it is there then you can just show that the report is being generated and will be in their emails soon.
-
+Check the status of a report with `/report_builder/report/<report_id>/check_status/<task_id>`
