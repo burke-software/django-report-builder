@@ -50,10 +50,10 @@ class RelatedFieldsView(GetFieldsMixin, APIView):
     permission_classes = (IsAdminUser,)
 
     def get_data_from_request(self, request):
-        self.model = request.DATA['model']
-        self.path = request.DATA['path']
-        self.path_verbose = request.DATA.get('path_verbose', '')
-        self.field = request.DATA['field']
+        self.model = request.data['model']
+        self.path = request.data['path']
+        self.path_verbose = request.data.get('path_verbose', '')
+        self.field = request.data['field']
         self.model_class = ContentType.objects.get(pk=self.model).model_class()
 
     def post(self, request):
