@@ -2,11 +2,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from .models import Report, DisplayField, FilterField, Format, get_allowed_models
+from .models import (
+    Report, DisplayField, FilterField, Format, get_allowed_models)
 from .views import email_report
-from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
+from report_builder_demo.demo_models.models import (
+    Bar, Place, Restaurant, Waiter, Person, Child)
 from django.conf import settings
-from report_utils.mixins import GetFieldsMixin
 from django.utils import unittest
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
