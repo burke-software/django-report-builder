@@ -8,10 +8,13 @@ from django.utils.functional import cached_property
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum, F
 from django.db.models.fields import FieldDoesNotExist
+from six import text_type
 from report_builder.unique_slugify import unique_slugify
 from report_utils.model_introspection import get_model_from_path_string
+from .utils import sort_data, increment_total, formatter
 from dateutil import parser
 from decimal import Decimal
+from functools import reduce
 import time
 import datetime
 import re
@@ -85,18 +88,18 @@ class Report(models.Model):
             unique_slugify(self, self.name)
         super(Report, self).save(*args, **kwargs)
 
-    def add_aggregates(self, queryset):
-        for display_field in self.displayfield_set.filter(aggregate__isnull=False):
-            if display_field.aggregate == "Avg":
-                queryset = queryset.annotate(Avg(display_field.path + display_field.field))
-            elif display_field.aggregate == "Max":
-                queryset = queryset.annotate(Max(display_field.path + display_field.field))
-            elif display_field.aggregate == "Min":
-                queryset = queryset.annotate(Min(display_field.path + display_field.field))
-            elif display_field.aggregate == "Count":
-                queryset = queryset.annotate(Count(display_field.path + display_field.field))
-            elif display_field.aggregate == "Sum":
-                queryset = queryset.annotate(Sum(display_field.path + display_field.field))
+    def add_aggregates(self, queryset, display_fields=None):
+        agg_funcs = {
+            'Avg': Avg, 'Min': Min, 'Max': Max, 'Count': Count, 'Sum': Sum
+        }
+        if display_fields is None:
+            display_fields = self.displayfield_set.filter(aggregate__isnull=False)
+        for display_field in display_fields:
+            if display_field.aggregate:
+                func = agg_funcs[display_field.aggregate]
+                full_name = display_field.path + display_field.field
+                queryset = queryset.annotate(func(full_name))
+
         return queryset
 
     @property
@@ -137,6 +140,153 @@ class Report(models.Model):
             if display_field.field_type == "Invalid":
                 bad_display_fields.append(display_field)
         return display_fields.exclude(id__in=[o.id for o in bad_display_fields])
+
+    def report_to_list(self, queryset=None, user=None, preview=False):
+        """ Convert report into list. """
+        property_filters = []
+        if queryset is None:
+            queryset = self.get_query()
+            for field in self.filterfield_set.all():
+                if field.field_type in ["Property"]:
+                    property_filters += [field]
+        display_fields = self.get_good_display_fields()
+
+        # Need the pk for inserting properties later
+        display_field_paths = ['pk']
+        display_field_properties = []
+        display_totals = []
+        insert_property_indexes = []
+        choice_lists = {}
+        display_formats = {}
+        i = 0
+        for display_field in display_fields:
+            if display_field.total:
+                display_field.total_count = Decimal(0.0)
+                display_totals.append(display_field)
+            display_field_type = display_field.field_type
+            if display_field_type == "Property":
+                display_field_properties.append(display_field.field_key)
+                insert_property_indexes.append(i)
+            else:
+                i += 1
+                if display_field.aggregate:
+                    display_field_paths += [
+                        display_field.field_key +
+                        '__' + display_field.aggregate.lower()]
+                else:
+                    display_field_paths += [display_field.field_key]
+
+            # Build display choices list
+            if display_field.choices and hasattr(display_field, 'choices_dict'):
+                choice_list = display_field.choices_dict
+                # Insert blank and None as valid choices.
+                choice_list[''] = ''
+                choice_list[None] = ''
+                choice_lists[display_field.position] = choice_list
+
+            # Build display format list
+            if (
+                hasattr(display_field, 'display_format')
+                and display_field.display_format
+            ):
+                display_formats[display_field.position] = \
+                    display_field.display_format
+
+        property_filters = []
+        for filter_field in self.filterfield_set.all():
+            filter_field_type = filter_field.field_type
+            if filter_field_type == "Property":
+                property_filters += [field]
+
+        group = [df.path + df.field for df in display_fields if df.group]
+
+        # To support group-by with multiple fields, we turn all the other
+        # fields into aggregations. The default aggregation is `Max`.
+        if group:
+            for field in display_fields:
+                if (not field.group) and (not field.aggregate):
+                    field.aggregate = 'Max'
+            values = queryset.values(*group)
+            values = self.add_aggregates(values, display_fields)
+            data_list = []
+            for row in values:
+                row_data = []
+                for field in display_field_paths:
+                    if field == 'pk':
+                        continue
+                    try:
+                        row_data.append(row[field])
+                    except KeyError:
+                        row_data.append(row[field + '__max'])
+                for total in display_totals:
+                    increment_total(total, row_data)
+                data_list.append(row_data)
+        else:
+            values_list = list(queryset.values_list(*display_field_paths))
+
+            data_list = []
+            values_index = 0
+            for obj in queryset:
+                display_property_values = []
+                for display_property in display_field_properties:
+                    relations = display_property.split('__')
+                    val = reduce(getattr, relations, obj)
+                    display_property_values.append(val)
+
+                value_row = values_list[values_index]
+                while value_row[0] == obj.pk:
+                    add_row = True
+                    data_row = list(value_row[1:])  # Remove added pk
+                    # Insert in the location dictated by the order of display fields
+                    for i, prop_value in enumerate(display_property_values):
+                        data_row.insert(insert_property_indexes[i], prop_value)
+                    for property_filter in property_filters:
+                        relations = property_filter.field_key.split('__')
+                        val = reduce(getattr, relations, obj)
+                        if property_filter.filter_property(val):
+                            add_row = False
+
+                    if add_row is True:
+                        for total in display_totals:
+                            increment_total(total, data_row)
+                        # Replace choice data with display choice string
+                        for position, choice_list in choice_lists.items():
+                            try:
+                                data_row[position] = text_type(choice_list[data_row[position]])
+                            except Exception:
+                                data_row[position] = text_type(data_row[position])
+                        for position, style in display_formats.items():
+                            data_row[position] = formatter(data_row[position], style)
+                        data_list.append(data_row)
+                    values_index += 1
+                    try:
+                        value_row = values_list[values_index]
+                    except IndexError:
+                        break
+
+        for display_field in display_fields.filter(
+            sort__gt=0
+        ).order_by('-sort'):
+            data_list = sort_data(data_list, display_field)
+
+        if display_totals:
+            display_totals_row = []
+            i = 0
+            for display_field in display_totals:
+                while i < display_field.position:
+                    i += 1
+                    display_totals_row.append('')
+                i += 1
+                display_totals_row.append(display_field.total_count)
+            # Add formats to display totals
+            for pos, style in display_formats.items():
+                display_totals_row[pos] = formatter(display_totals_row[pos], style)
+
+            data_list += [
+                ['TOTALS'] + (len(display_fields) - 1) * ['']
+            ] + [display_totals_row]
+
+        return data_list
 
     def get_query(self):
         report = self
@@ -193,7 +343,6 @@ class Report(models.Model):
             objects = objects.exclude(**excludes)
 
         # Apply annotation-filters after regular filters.
-
         for filter_field in report.filterfield_set.order_by('position'):
             if filter_field.filter_type in ('max', 'min'):
                 func = {'max': Max, 'min': Min}[filter_field.filter_type]
@@ -294,6 +443,11 @@ class AbstractField(models.Model):
         return self.report.get_field_type(self.field, self.path)
 
     @property
+    def field_key(self):
+        """ This key can be passed to a Django ORM values_list """
+        return self.path + self.field
+
+    @property
     def choices(self):
         if self.pk:
             model = get_model_from_path_string(
@@ -339,6 +493,13 @@ class DisplayField(AbstractField):
             for choice in choices:
                 choices_dict.update({choice[0]: choice[1]})
         return choices_dict
+
+    @property
+    def choices(self):
+        if self.pk:
+            model = get_model_from_path_string(
+                self.report.root_model.model_class(), self.path)
+            return self.get_choices(model, self.field)
 
     def __unicode__(self):
         return self.name
@@ -464,6 +625,17 @@ class FilterField(AbstractField):
         if filter_field.exclude:
             return not filtered
         return filtered
+
+    @property
+    def field_type(self):
+        return self.report.get_field_type(self.field, self.path)
+
+    @property
+    def choices(self):
+        if self.pk:
+            model = get_model_from_path_string(
+                self.report.root_model.model_class(), self.path)
+            return self.get_choices(model, self.field)
 
     def __unicode__(self):
         return self.field

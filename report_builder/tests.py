@@ -7,6 +7,7 @@ from .views import email_report
 from report_builder_demo.demo_models.models import Bar, Place, Restaurant, Waiter, Person, Child
 from django.conf import settings
 from report_utils.mixins import GetFieldsMixin
+from django.utils import unittest
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
     get_relation_fields_from_model, get_model_from_path_string)
@@ -188,7 +189,8 @@ class ReportBuilderTests(TestCase):
         ct = ContentType.objects.get(model="bar", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
-            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""}
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'char_field')
         self.assertContains(response, 'i_want_char_field')
@@ -271,16 +273,19 @@ class ReportTests(TestCase):
             report=self.report,
             field="i_do_not_exist",
             field_verbose="stuff",
+            position=0,
         )
         DisplayField.objects.create(
             report=self.report,
             field="i_want_char_field",
             field_verbose="stuff",
+            position=1,
         )
         DisplayField.objects.create(
             report=self.report,
             field="i_need_char_field",
             field_verbose="stuff",
+            position=2,
         )
         response = self.client.get(self.generate_url)
         self.assertEqual(response.status_code, 200)
@@ -328,6 +333,7 @@ class ReportTests(TestCase):
         response = self.client.get(self.generate_url)
         self.assertNotContains(response, 'lol yes')
 
+    @unittest.skip("Custom field not yet implimented")
     def test_filter_custom_field(self):
         from custom_field.models import CustomField
         ct = ContentType.objects.get(model="bar", app_label="demo_models")
@@ -457,12 +463,14 @@ class ReportTests(TestCase):
             field='name',
             field_verbose='name_verbose',
             total=True,
+            position=0,
         )
         DisplayField.objects.create(
             report=report,
             field='days_worked',
             field_verbose='days_worked_verbose',
             total=True,
+            position=1,
         )
 
         generate_url = reverse('generate_report', args=[report.id])
@@ -1040,21 +1048,3 @@ class ViewTests(TestCase):
         settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
         settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
         mail.outbox = []
-
-
-class TestGetFieldsMixin(GetFieldsMixin, TestCase):
-    def test_find_duplicates_in_get_fields(self):
-        model_class = ContentType.objects.get(app_label='demo_models', model='account').model_class()
-        field_data = self.get_fields(
-            model_class,
-            u'',
-            u'',
-            u'',)
-        find_duplicate = []
-        has_duplicate = True
-        for i in field_data['fields']:
-            if i not in find_duplicate:
-                find_duplicate.append(i)
-            else:
-                has_duplicate = True
-        self.assertEqual(has_duplicate, True)

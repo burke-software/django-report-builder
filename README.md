@@ -10,7 +10,9 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
-We now have a [google group](https://groups.google.com/forum/#!forum/django-report-builder/). Please post suggestions, ask questions, and let me know how you're using django report builder. I'll make future announnments there.
+3.2 is released. 
+This features a refactored report_to_list function which is responsible for generating the actual python list of data from the report object. 
+Tests suggest a 10x speed improvement but your mileage may vary.
 
 # What is Django Report Builder?
 
@@ -32,6 +34,8 @@ reports. Unprivileged users can still build reports and see database schema.
 # Documentation
 
 http://django-report-builder.readthedocs.org/
+
+[Google group](https://groups.google.com/forum/#!forum/django-report-builder/).
 
 # [Hacking](http://django-report-builder.readthedocs.org/en/latest/hacking/)
 
