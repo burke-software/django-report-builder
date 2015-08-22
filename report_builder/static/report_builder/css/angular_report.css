@@ -2,22 +2,12 @@ html, body, .fullheight {
    height: 100%;
 }
 
-.field {
-    background: #f8faff;
-    border: 1px solid #dae2ea;
-    color: #7c9eb2;
-}
-
 .field:hover {
     background: #F2F2F2;
 }
 
 .angular-ui-tree-nodes .angular-ui-tree-nodes {
   padding-left: 8px;
-}
-
-.field input {
-  margin-top: 4px;
 }
 
 .angular-ui-tree-node {

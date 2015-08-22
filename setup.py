@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-report-builder",
-    version="3.2.0rc1",
+    version="3.2.0rc2",
     author="David Burke",
     author_email="david@burkesoftware.com",
     description=("Query and Report builder for Django ORM"),
@@ -26,7 +26,7 @@ setup(
         'django>=1.7',
         'openpyxl==2.2.1',
         'python-dateutil',
-        'django-report-utils>=0.3.12',
+        'django-report-utils>=0.3.13',
         'djangorestframework>=3.0.4',
         "six"
     ]
