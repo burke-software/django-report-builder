@@ -188,7 +188,8 @@ class ReportBuilderTests(TestCase):
         ct = ContentType.objects.get(model="bar", app_label="demo_models")
         response = self.client.post(
             '/report_builder/api/fields/',
-            {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
+            {"model": ct.id, "path": "", "path_verbose": "", "field": ""}
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'char_field')
         self.assertContains(response, 'i_want_char_field')
@@ -271,19 +272,19 @@ class ReportTests(TestCase):
             report=self.report,
             field="i_do_not_exist",
             field_verbose="stuff",
-            position = 0,
+            position=0,
         )
         DisplayField.objects.create(
             report=self.report,
             field="i_want_char_field",
             field_verbose="stuff",
-            position = 1,
+            position=1,
         )
         DisplayField.objects.create(
             report=self.report,
             field="i_need_char_field",
             field_verbose="stuff",
-            position = 2,
+            position=2,
         )
         response = self.client.get(self.generate_url)
         self.assertEqual(response.status_code, 200)

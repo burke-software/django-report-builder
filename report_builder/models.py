@@ -185,8 +185,9 @@ class Report(models.Model):
                 choice_lists[display_field.position] = choice_list
 
             # Build display format list
-            if (hasattr(display_field, 'display_format') and
-                display_field.display_format
+            if (
+                hasattr(display_field, 'display_format')
+                and display_field.display_format
             ):
                 display_formats[display_field.position] = \
                     display_field.display_format
