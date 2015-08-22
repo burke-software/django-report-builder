@@ -88,11 +88,12 @@ class Report(models.Model):
             unique_slugify(self, self.name)
         super(Report, self).save(*args, **kwargs)
 
-    def add_aggregates(self, queryset):
+    def add_aggregates(self, queryset, display_fields=None):
         agg_funcs = {
             'Avg': Avg, 'Min': Min, 'Max': Max, 'Count': Count, 'Sum': Sum
         }
-        display_fields = self.displayfield_set.filter(aggregate__isnull=False)
+        if display_fields is None:
+            display_fields = self.displayfield_set.filter(aggregate__isnull=False)
         for display_field in display_fields:
             if display_field.aggregate:
                 func = agg_funcs[display_field.aggregate]
@@ -196,47 +197,71 @@ class Report(models.Model):
             if filter_field_type == "Property":
                 property_filters += [field]
 
-        values_list = list(queryset.values_list(*display_field_paths))
+        group = [df.path + df.field for df in display_fields if df.group]
 
-        data_list = []
-        values_index = 0
-        for obj in queryset:
-            display_property_values = []
-            for display_property in display_field_properties:
-                relations = display_property.split('__')
-                val = reduce(getattr, relations, obj)
-                display_property_values.append(val)
+        # To support group-by with multiple fields, we turn all the other
+        # fields into aggregations. The default aggregation is `Max`.
+        if group:
+            for field in display_fields:
+                if (not field.group) and (not field.aggregate):
+                    field.aggregate = 'Max'
+            values = queryset.values(*group)
+            values = self.add_aggregates(values, display_fields)
+            data_list = []
+            for row in values:
+                row_data = []
+                for field in display_field_paths:
+                    if field == 'pk':
+                        continue
+                    try:
+                        row_data.append(row[field])
+                    except KeyError:
+                        row_data.append(row[field + '__max'])
+                for total in display_totals:
+                    increment_total(total, row_data)
+                data_list.append(row_data)
+        else:
+            values_list = list(queryset.values_list(*display_field_paths))
 
-            value_row = values_list[values_index]
-            while value_row[0] == obj.pk:
-                add_row = True
-                data_row = list(value_row[1:])  # Remove added pk
-                # Insert in the location dictated by the order of display fields
-                for i, prop_value in enumerate(display_property_values):
-                    data_row.insert(insert_property_indexes[i], prop_value)
-                for property_filter in property_filters:
-                    relations = property_filter.field_key.split('__')
+            data_list = []
+            values_index = 0
+            for obj in queryset:
+                display_property_values = []
+                for display_property in display_field_properties:
+                    relations = display_property.split('__')
                     val = reduce(getattr, relations, obj)
-                    if property_filter.filter_property(val):
-                        add_row = False
+                    display_property_values.append(val)
 
-                if add_row is True:
-                    for total in display_totals:
-                        increment_total(total, data_row)
-                    # Replace choice data with display choice string
-                    for position, choice_list in choice_lists.items():
-                        try:
-                            data_row[position] = text_type(choice_list[data_row[position]])
-                        except Exception:
-                            data_row[position] = text_type(data_row[position])
-                    for position, style in display_formats.items():
-                        data_row[position] = formatter(data_row[position], style)
-                    data_list.append(data_row)
-                values_index += 1
-                try:
-                    value_row = values_list[values_index]
-                except IndexError:
-                    break
+                value_row = values_list[values_index]
+                while value_row[0] == obj.pk:
+                    add_row = True
+                    data_row = list(value_row[1:])  # Remove added pk
+                    # Insert in the location dictated by the order of display fields
+                    for i, prop_value in enumerate(display_property_values):
+                        data_row.insert(insert_property_indexes[i], prop_value)
+                    for property_filter in property_filters:
+                        relations = property_filter.field_key.split('__')
+                        val = reduce(getattr, relations, obj)
+                        if property_filter.filter_property(val):
+                            add_row = False
+
+                    if add_row is True:
+                        for total in display_totals:
+                            increment_total(total, data_row)
+                        # Replace choice data with display choice string
+                        for position, choice_list in choice_lists.items():
+                            try:
+                                data_row[position] = text_type(choice_list[data_row[position]])
+                            except Exception:
+                                data_row[position] = text_type(data_row[position])
+                        for position, style in display_formats.items():
+                            data_row[position] = formatter(data_row[position], style)
+                        data_list.append(data_row)
+                    values_index += 1
+                    try:
+                        value_row = values_list[values_index]
+                    except IndexError:
+                        break
 
         for display_field in display_fields.filter(
             sort__gt=0

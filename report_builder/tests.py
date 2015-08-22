@@ -287,7 +287,6 @@ class ReportTests(TestCase):
         )
         response = self.client.get(self.generate_url)
         self.assertEqual(response.status_code, 200)
-        print(response.data)
         self.assertContains(response, 'lol no')
         self.assertContains(response, 'lol yes')
         self.assertNotContains(response, 'i_do_not_exist')
@@ -559,6 +558,7 @@ class ReportTests(TestCase):
 
         data = '"data":[[1,"John","Doe",3],[3,"Donald","King",6],[2,"Maria","Smith",2],["TOTALS","","",""],["","","",11.0]]'
 
+        print(response.data)
         self.assertContains(response, data)
 
     def test_groupby_name(self):
