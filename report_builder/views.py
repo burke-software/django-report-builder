@@ -149,7 +149,7 @@ class DownloadFileView(DataExportMixin, View):
 
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
-        file_type = kwargs['filetype']
+        file_type = kwargs.get('filetype')
         if getattr(settings, 'REPORT_BUILDER_ASYNC_REPORT', False):
             from .tasks import report_builder_file_async_report_save
             report_task = report_builder_file_async_report_save.delay(
