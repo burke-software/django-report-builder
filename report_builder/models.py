@@ -93,7 +93,8 @@ class Report(models.Model):
             'Avg': Avg, 'Min': Min, 'Max': Max, 'Count': Count, 'Sum': Sum
         }
         if display_fields is None:
-            display_fields = self.displayfield_set.filter(aggregate__isnull=False)
+            display_fields = self.displayfield_set.filter(
+                aggregate__isnull=False)
         for display_field in display_fields:
             if display_field.aggregate:
                 func = agg_funcs[display_field.aggregate]
@@ -493,13 +494,6 @@ class DisplayField(AbstractField):
             for choice in choices:
                 choices_dict.update({choice[0]: choice[1]})
         return choices_dict
-
-    @property
-    def choices(self):
-        if self.pk:
-            model = get_model_from_path_string(
-                self.report.root_model.model_class(), self.path)
-            return self.get_choices(model, self.field)
 
     def __unicode__(self):
         return self.name

@@ -56,6 +56,11 @@ def sort_helper(x, sort_key, sort_type):
 
 
 def sort_data(data_list, display_field):
+    """ Sort data based on display_field settings
+    data_list - 2d array of data
+    display_field - report_builder.DisplayField object
+    returns sorted data_list
+    """
     position = display_field.position
     is_reverse = display_field.sort_reverse
     # Try to inspect sample data to determine type
@@ -86,7 +91,10 @@ def increment_total(display_field, data_row):
 
 
 def formatter(value, style):
-    # Convert value to Decimal to apply numeric formats.
+    """ Convert value to Decimal to apply numeric formats.
+    value - The value we wish to format.
+    style - report_builder.Format object
+    """
     try:
         value = Decimal(value)
     except Exception:
