@@ -1,5 +1,4 @@
 [run]
-source = report_builder
 omit = */migrations/*
 parallel = true
 
