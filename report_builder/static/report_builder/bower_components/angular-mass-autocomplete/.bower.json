@@ -1,0 +1,23 @@
+{
+  "name": "angular-mass-autocomplete",
+  "version": "0.2.3",
+  "main": "massautocomplete.min.js",
+  "dependencies": {
+    "angular": ">=1.2.0"
+  },
+  "ignore": [
+    ".gitignore",
+    "package.json"
+  ],
+  "homepage": "https://github.com/hakib/MassAutocomplete",
+  "_release": "0.2.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.3",
+    "commit": "18be874c2969cb921164c66f927add9881902b40"
+  },
+  "_source": "git://github.com/hakib/MassAutocomplete.git",
+  "_target": "~0.2.3",
+  "_originalSource": "angular-mass-autocomplete",
+  "_direct": true
+}

@@ -9,6 +9,7 @@
     <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/lodash/dist/lodash.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/restangular/dist/restangular.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular-sanitize/angular-sanitize.min.js' %}"></script>
 
     <script>
       var STATIC_URL = '{{ STATIC_URL|escapejs }}';
@@ -44,7 +45,7 @@
     <script src="{% static 'report_builder/bower_components/pikaday/pikaday.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'report_builder/bower_components/pikaday/css/pikaday.css' %}"></link>
     <script src="{% static 'report_builder/bower_components/pikaday-angular/pikaday-angular.js' %}"></script>
-    
+    <script src="{% static 'report_builder/bower_components/angular-mass-autocomplete/massautocomplete.min.js' %}"></script>    
 
 {% endblock %}
 

@@ -72,7 +72,7 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
       reportService.getRelatedFields(data).then(function(result) {
         root_related_field.related_fields = result;
         var help_text = 'This model is included in report builder.';
-        if (result[0].included_model == false) {
+        if (result && result[0] && result[0].included_model && result[0].included_model == false) {
           help_text = 'This model is not included in report builder.';
         }
         $scope.help_text = help_text;
@@ -106,6 +106,10 @@ reportBuilderApp.service('reportService', ['Restangular',
       return Restangular.all('fields').post(data);
     }
 
+    function getFieldTypeahead(data) {
+      return Restangular.all('field/typeahead').post(data);
+    }
+
     function getFormats() {
       return Restangular.all('formats').getList();
     }
@@ -134,6 +138,7 @@ reportBuilderApp.service('reportService', ['Restangular',
       getReport: getReport,
       getRelatedFields: getRelatedFields,
       getFields: getFields,
+      getFieldTypeahead: getFieldTypeahead,
       getFormats: getFormats,
       options: options,
       filterFieldOptions: filterFieldOptions,
@@ -181,7 +186,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
     reportService.getRelatedFields(data).then(function(result) {
       field.related_fields = result;
       var help_text = 'This model is included in report builder.';
-      if (result[0].included_model == false) {
+      if (result && result[0] && result[0].included_model && result[0].included_model == false) {
         help_text = 'This model is not included in report builder.';
       }
       $scope.help_text = help_text;
@@ -221,9 +226,45 @@ reportBuilderApp.controller('ReportDisplayCtrl', function($scope) {
   };
 });
 
-reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
+reportBuilderApp.controller('ReportFilterCtrl', function($scope, $q, $timeout, reportService) {
+  var currentField = {};
   $scope.deleteField = function(field) {
     field.remove();
+  };
+
+  $scope.saveCurrentField = function(field) {
+    currentField = field;
+  };
+
+  $scope.get_field_typeahead = function(term) {
+    var deferred = $q.defer();
+
+    var data = {
+      "model": $scope.report.root_model,
+      "path": currentField.path,
+      "path_verbose": currentField.path_verbose,
+      "field": "",
+      "typeahead_field": currentField.field,
+      "filter_values": term
+    };
+
+    $timeout(function () {
+      deferred.resolve(reportService.getFieldTypeahead(data).then(function(results) {
+        var list = [];
+        results.forEach(function(eachTypeahead){
+          list.push({ label: eachTypeahead, value: eachTypeahead });
+        });
+        $scope.typeahead_results = list;
+        return list;
+      }));
+    }, 200);
+    return deferred.promise;
+  };
+
+  $scope.autocomplete_options = {
+    suggest: $scope.get_field_typeahead,
+    debounce_suggest: 300,
+    on_error: console.log
   };
 });
 

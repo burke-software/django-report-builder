@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/related_fields', staff_member_required(api_views.RelatedFieldsView.as_view()), name="related_fields"),
     url(r'^api/fields', staff_member_required(api_views.FieldsView.as_view()), name="fields"),
+    url(r'^api/field/typeahead', staff_member_required(api_views.FieldsTypeaheadView.as_view()), name="typeaheadfields"),
     url(r'^api/report/(?P<report_id>\w+)/generate/', staff_member_required(api_views.GenerateReport.as_view()), name="generate_report"),
     url('^report/(?P<pk>\d+)/$', views.ReportSPAView.as_view(), name="report_update_view"),
 )

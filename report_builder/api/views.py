@@ -234,6 +234,50 @@ class FieldsView(RelatedFieldsView):
         return Response(result)
 
 
+class FieldsTypeaheadView(GetFieldsMixin, APIView):
+
+    """ Get typeahead results for fields on an ORM model
+    """
+    permission_classes = (IsAdminUser,)
+
+    def get_data_from_request(self, request):
+        self.model = request.DATA['model']
+        self.path = request.DATA['path']
+        self.path_verbose = request.DATA.get('path_verbose', '')
+        self.field = request.DATA['field']
+        self.typeahead_field = request.DATA['typeahead_field']
+        self.filter_values = request.DATA['filter_values']
+        self.model_class = ContentType.objects.get(pk=self.model).model_class()
+
+    def post(self, request):
+        self.get_data_from_request(request)
+        field_data = self.get_fields(
+            self.model_class,
+            self.field,
+            self.path,
+            self.path_verbose,)
+        if self.typeahead_field == "" or self.typeahead_field is None:
+            return Response({'error': 'Missing typeahead_field'})
+        result = []
+        selected_field = None
+        selected_model = None
+        for i in field_data['fields']:
+            if i.name == self.typeahead_field:
+                selected_field = i
+                selected_model = i.model
+        if selected_field is None or selected_model is None:
+            return Response({'error': 'Field is not in model'})
+        if self.filter_values == "" or self.filter_values is None:
+            all_rows = selected_model.objects.all()[:10]
+        else:
+            filter_dict = {}
+            filter_dict[selected_field.name + "__contains"] = self.filter_values
+            all_rows = selected_model.objects.filter(**filter_dict)[:10]
+        for i in all_rows:
+            result.append(str(getattr(i, self.typeahead_field)))
+        return Response(set(result))
+
+
 class GenerateReport(DataExportMixin, APIView):
     permission_classes = (IsAdminUser,)
 
