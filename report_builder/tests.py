@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.utils import override_settings
 from .models import (
     Report, DisplayField, FilterField, Format, get_allowed_models)
 from .views import email_report
@@ -837,6 +838,11 @@ class ReportTests(TestCase):
         self.assertEqual(csv_list[1], ['Charles', 'King', 'None years old'])
 
     def test_admin(self):
+        response = self.client.get('/admin/report_builder/report/')
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(REPORT_BUILDER_ASYNC_REPORT=False)
+    def test_admin_sync(self):
         response = self.client.get('/admin/report_builder/report/')
         self.assertEqual(response.status_code, 200)
 
