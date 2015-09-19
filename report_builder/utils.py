@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.conf import settings
 import copy
 import datetime
 from decimal import Decimal
@@ -11,6 +14,27 @@ def javascript_date_format(python_date_format):
     if not format:
         format = 'yyyy-mm-dd'
     return format
+
+
+def staff_member_required(view_func=None,
+                          redirect_field_name=REDIRECT_FIELD_NAME,
+                          login_url='admin:login'):
+    if (not hasattr(settings, 'REPORT_BUILDER_STAFF_REQUIRED') or
+            settings.REPORT_BUILDER_STAFF_REQUIRED):
+        actual_decorator = user_passes_test(
+            lambda u: u.is_active and u.is_staff,
+            login_url=login_url,
+            redirect_field_name=redirect_field_name
+        )
+    else:
+        actual_decorator = user_passes_test(
+            lambda u: u.is_active,
+            login_url=login_url,
+            redirect_field_name=redirect_field_name
+        )
+    if view_func:
+        return actual_decorator(view_func)
+    return actual_decorator
 
 
 def duplicate(obj, changes=None):

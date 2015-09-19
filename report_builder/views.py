@@ -2,7 +2,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.core.files.base import ContentFile
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.template.loader import get_template
 from django.template import Context
@@ -13,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
 from six import string_types
 
-from .utils import duplicate
+from .utils import duplicate, staff_member_required
 from .models import Report
 from report_utils.mixins import DataExportMixin, generate_filename
 
@@ -239,7 +238,7 @@ class ExportToReport(DownloadFileView, TemplateView):
 
 @staff_member_required
 def check_status(request, pk, task_id):
-    """ Check if the asyncronous report is ready to download """
+    """ Check if the asynchronous report is ready to download """
     from celery.result import AsyncResult
     res = AsyncResult(task_id)
     link = ''
