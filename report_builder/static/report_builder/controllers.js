@@ -122,6 +122,10 @@ reportBuilderApp.service('reportService', ['Restangular',
       return reports.post(data);
     }
 
+    function deleteReport(reportId) {
+      return Restangular.one(path, reportId).remove();
+    }
+
     function getList() {
       return Restangular.all('reports').getList();
     }
@@ -138,6 +142,7 @@ reportBuilderApp.service('reportService', ['Restangular',
       options: options,
       filterFieldOptions: filterFieldOptions,
       create: create,
+      deleteReport: deleteReport,
       getList: getList,
       getPreview: getPreview
     };
@@ -219,6 +224,25 @@ reportBuilderApp.controller('ReportDisplayCtrl', function($scope) {
   $scope.deleteField = function(field) {
     field.remove();
   };
+});
+
+reportBuilderApp.controller('ReportOptionsCtrl', function($scope, $location, $window, reportService) {
+  $scope.deleteReport = function(reportId) {
+    var url = $location.url();
+    var absUrl = $location.absUrl();
+    var origin = absUrl.substr(0,absUrl.indexOf(url));
+    reportService.deleteReport(reportId).then(function() {
+      // Getting another ID to redirect to now that our report has been deleted
+      reportService.getList().then(function(list) {
+        if (list[0]) {
+          $window.location.href = origin + '/report/' + list[0].id;
+        } else {
+          $window.location.href = origin;
+        }
+        // $location.path('/report/' + list[0].id, true);
+      });
+    });
+  }
 });
 
 reportBuilderApp.controller('ReportFilterCtrl', function($scope) {

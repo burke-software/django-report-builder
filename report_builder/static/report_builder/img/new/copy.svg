@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Derived from Font Awesome  -->
+<!-- https://github.com/FortAwesome/Font-Awesome/#license  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="64px" height="64px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
+<g>
+	<path d="M61.7,18.9v39.7c0,1.7-1.4,3.1-3.1,3.1H27.2c-1.7,0-3.1-1.4-3.1-3.1v-9.4H6.3c-1.7,0-3.1-1.4-3.1-3.1v-22
+		c0-1.7,1-4.2,2.2-5.4L18.7,5.4c1.2-1.2,3.6-2.2,5.4-2.2h13.6c1.7,0,3.1,1.4,3.1,3.1v10.7c1.3-0.8,2.9-1.3,4.2-1.3h13.6
+		C60.3,15.8,61.7,17.2,61.7,18.9z M36.6,21V7.4H24V21c0,1.7-1.4,3.1-3.1,3.1H7.3v20.9H24v-8.4c0-1.7,1-4.2,2.2-5.4L36.6,21z
+		 M10.1,19.9h9.8v-9.8L10.1,19.9z M57.5,19.9H45v13.6c0,1.7-1.4,3.1-3.1,3.1H28.2v20.9h29.3V19.9z M31,32.5h9.8v-9.8L31,32.5z"/>
+</g>
+</svg>

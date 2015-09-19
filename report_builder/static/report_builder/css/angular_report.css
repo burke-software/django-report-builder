@@ -139,3 +139,10 @@ md-checkbox {
   background-color: inherit;
   border: none;
 }
+
+.options-icon {
+  position: relative;
+  width: 1.5em; 
+  padding-right: 10px; 
+  top: 4px; 
+}
