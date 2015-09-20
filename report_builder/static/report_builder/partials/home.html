@@ -2,7 +2,7 @@
   <section class="fullheight" layout="row">
     <md-sidenav class="fullheight md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-lg')">
       <md-content style="height: 100%; overflow-y: auto;">
-        <md-toolbar md-scroll-shrink>
+        <md-toolbar>
           <h1 class="md-toolbar-tools">Reports</h1>
         </md-toolbar>
         <md-content ng-controller="LeftCtrl">
@@ -146,7 +146,7 @@
       <md-button hide-gt-lg class="md-fab md-fab-bottom-left" ng-click="reports_list_menu()" aria-label="Reports List">
         <md-icon md-svg-src="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
-      <md-button hide-gt-md ng-show="tabData.selectedIndex == 0 || tabData.selectedIndex == 1" class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
+      <md-button hide-gt-md ng-show="selectedIndex == 0 || selectedIndex == 1" class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
         <md-icon md-svg-src="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
     </div>

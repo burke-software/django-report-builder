@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 md-toolbar {
   box-sizing: border-box;
   display: -webkit-flex;
@@ -20,6 +19,8 @@ md-toolbar {
   width: 100%; }
   md-toolbar.md-whiteframe-z1-add, md-toolbar.md-whiteframe-z1-remove {
     transition: box-shadow 0.5s linear; }
+  md-toolbar md-toolbar-filler {
+    width: 72px; }
   md-toolbar *, md-toolbar *:before, md-toolbar *:after {
     box-sizing: border-box; }
   md-toolbar.md-tall {
@@ -34,7 +35,7 @@ md-toolbar {
       height: 48px;
       min-height: 48px;
       max-height: 48px; }
-  md-toolbar .md-indent {
+  md-toolbar > .md-indent {
     margin-left: 64px; }
   md-toolbar ~ md-content > md-list {
     padding: 0; }
@@ -42,6 +43,9 @@ md-toolbar {
       display: none; }
 
 .md-toolbar-tools {
+  font-size: 20px;
+  letter-spacing: 0.005em;
+  box-sizing: border-box;
   font-weight: 400;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -78,6 +82,24 @@ md-toolbar {
     margin-left: -8px; }
   .md-toolbar-tools > .md-button:last-child {
     margin-right: -8px; }
+  .md-toolbar-tools > md-menu:last-child {
+    margin-right: -8px; }
+    .md-toolbar-tools > md-menu:last-child > .md-button {
+      margin-right: 0; }
   @media screen and (-ms-high-contrast: active) {
     .md-toolbar-tools {
       border-bottom: 1px solid #fff; } }
+
+@media only screen and (min-width: 0) and (max-width: 600px) and (orientation: portrait) {
+  md-toolbar {
+    min-height: 56px; }
+  .md-toolbar-tools {
+    height: 56px;
+    max-height: 56px; } }
+
+@media only screen and (min-width: 0) and (max-width: 600px) and (orientation: landscape) {
+  md-toolbar {
+    min-height: 48px; }
+  .md-toolbar-tools {
+    height: 48px;
+    max-height: 48px; } }

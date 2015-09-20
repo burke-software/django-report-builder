@@ -2,15 +2,15 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 @-webkit-keyframes subheaderStickyHoverIn {
   0% {
     box-shadow: 0 0 0 0 transparent; }
 
   100% {
     box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.16); } }
+
 @keyframes subheaderStickyHoverIn {
   0% {
     box-shadow: 0 0 0 0 transparent; }
@@ -32,6 +32,18 @@
   100% {
     box-shadow: 0 0 0 0 transparent; } }
 
+.md-subheader-wrapper:not(.md-sticky-no-effect) {
+  transition: 0.2s ease-out margin; }
+  .md-subheader-wrapper:not(.md-sticky-no-effect) .md-subheader {
+    margin: 0; }
+  .md-subheader-wrapper:not(.md-sticky-no-effect).md-sticky-clone {
+    z-index: 2; }
+  .md-subheader-wrapper:not(.md-sticky-no-effect)[sticky-state="active"] {
+    margin-top: -2px; }
+  .md-subheader-wrapper:not(.md-sticky-no-effect):not(.md-sticky-clone)[sticky-prev-state="active"] .md-subheader-inner:after {
+    -webkit-animation: subheaderStickyHoverOut 0.3s ease-out both;
+            animation: subheaderStickyHoverOut 0.3s ease-out both; }
+
 .md-subheader {
   display: block;
   font-size: 14px;
@@ -41,23 +53,9 @@
   margin-right: 16px;
   position: relative; }
   .md-subheader .md-subheader-inner {
+    display: block;
     padding: 16px 0px 16px 16px; }
-  .md-subheader:not(.md-sticky-no-effect) {
-    transition: 0.2s ease-out margin; }
-    .md-subheader:not(.md-sticky-no-effect):after {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      top: 0;
-      right: -16px;
-      content: ''; }
-    .md-subheader:not(.md-sticky-no-effect).md-sticky-clone {
-      z-index: 2; }
-    .md-subheader:not(.md-sticky-no-effect)[sticky-state="active"] {
-      margin-top: -2px; }
-    .md-subheader:not(.md-sticky-no-effect):not(.md-sticky-clone)[sticky-prev-state="active"] .md-subheader-inner:after {
-      -webkit-animation: subheaderStickyHoverOut 0.3s ease-out both;
-              animation: subheaderStickyHoverOut 0.3s ease-out both; }
   .md-subheader .md-subheader-content {
+    display: block;
     z-index: 1;
     position: relative; }

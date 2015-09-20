@@ -2,14 +2,14 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 md-toast {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   position: absolute;
+  z-index: 90;
   box-sizing: border-box;
   -webkit-align-items: center;
       -ms-flex-align: center;
@@ -21,10 +21,10 @@ md-toast {
   border-radius: 2px;
   font-size: 14px;
   cursor: default;
+  height: auto;
+  max-height: 168px;
   max-width: 100%;
-  max-height: 40px;
-  height: 24px;
-  z-index: 90;
+  overflow: hidden;
   opacity: 1;
   -webkit-transform: translate3d(0, 0, 0) rotateZ(0deg);
           transform: translate3d(0, 0, 0) rotateZ(0deg);

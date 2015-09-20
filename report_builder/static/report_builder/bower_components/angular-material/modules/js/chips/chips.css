@@ -2,11 +2,10 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 .md-contact-chips .md-chips .md-chip {
-  padding: 0 8px 0 0; }
+  padding: 0 25px 0 0; }
   .md-contact-chips .md-chips .md-chip .md-contact-avatar {
     float: left; }
     .md-contact-chips .md-chips .md-chip .md-contact-avatar img {
@@ -36,15 +35,18 @@
 
 .md-chips {
   display: block;
-  font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
-  font-size: 13px;
-  padding: 0 0 8px 0;
-  vertical-align: middle;
-  cursor: text; }
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  padding: 0 0 8px 3px;
+  vertical-align: middle; }
   .md-chips:after {
     content: '';
     display: table;
     clear: both; }
+  .md-chips:not(.md-readonly) {
+    cursor: text; }
+    .md-chips:not(.md-readonly) .md-chip {
+      padding-right: 22px; }
   .md-chips .md-chip {
     cursor: default;
     border-radius: 16px;
@@ -52,18 +54,25 @@
     height: 32px;
     line-height: 32px;
     margin: 8px 8px 0 0;
-    padding: 0 8px 0 12px;
-    float: left; }
+    padding: 0 12px 0 12px;
+    float: left;
+    box-sizing: border-box;
+    max-width: 100%;
+    position: relative; }
     .md-chips .md-chip .md-chip-content {
       display: block;
       padding-right: 4px;
       float: left;
-      white-space: nowrap; }
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis; }
       .md-chips .md-chip .md-chip-content:focus {
         outline: none; }
     .md-chips .md-chip .md-chip-remove-container {
-      display: inline-block;
-      margin-right: -5px; }
+      position: absolute;
+      right: 0;
+      line-height: 22px; }
     .md-chips .md-chip .md-chip-remove {
       text-align: center;
       width: 32px;
@@ -87,7 +96,7 @@
     display: block;
     line-height: 32px;
     margin: 8px 8px 0 0;
-    padding: 0 8px 0 12px;
+    padding: 0 12px 0 12px;
     float: left; }
     .md-chips .md-chip-input-container input:not([type]), .md-chips .md-chip-input-container input[type="email"], .md-chips .md-chip-input-container input[type="number"], .md-chips .md-chip-input-container input[type="tel"], .md-chips .md-chip-input-container input[type="url"], .md-chips .md-chip-input-container input[type="text"] {
       border: 0;

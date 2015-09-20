@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 @-webkit-keyframes md-tab-content-hide {
   0% {
     opacity: 1; }
@@ -14,6 +13,7 @@
 
   100% {
     opacity: 0; } }
+
 @keyframes md-tab-content-hide {
   0% {
     opacity: 1; }
@@ -42,8 +42,6 @@ md-tabs {
   -webkit-flex-shrink: 0;
       -ms-flex-negative: 0;
           flex-shrink: 0; }
-  md-tabs.ng-animate {
-    transition: height 0.5s cubic-bezier(0.35, 0, 0.25, 1); }
   md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
     min-height: 248px; }
   md-tabs[md-align-tabs="bottom"] md-tabs-wrapper {
@@ -249,7 +247,9 @@ md-tab {
   text-transform: uppercase;
   float: left;
   font-weight: 500;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis; }
   .md-tab.md-focused {
     box-shadow: none;
     outline: none; }

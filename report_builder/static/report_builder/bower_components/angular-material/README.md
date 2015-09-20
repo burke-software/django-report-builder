@@ -13,7 +13,7 @@ You can install this package locally either with `npm`, `jspm`, or `bower`.
 npm install angular-material
 
 # To install latest release and update package.json
-npm install angular-material --save-dev
+npm install angular-material --save
 
 # To install from HEAD of master
 npm install http://github.com/angular/bower-material/tarball/master

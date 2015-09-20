@@ -2,13 +2,10 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
- */
-/* mixin definition ; sets LTR and RTL within the same style call */
-/**
- * Position a FAB button.
+ * v0.11.0
  */
 .md-button {
+  border-radius: 3px;
   box-sizing: border-box;
   color: currentColor;
   -webkit-user-select: none;
@@ -18,7 +15,10 @@
   position: relative;
   outline: none;
   border: 0;
-  display: inline-table;
+  display: inline-block;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 0 6px;
   margin: 6px 8px;
   line-height: 36px;
@@ -37,8 +37,6 @@
   cursor: pointer;
   overflow: hidden;
   transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-  .md-button *, .md-button *:before, .md-button *:after {
-    box-sizing: border-box; }
   .md-button:focus {
     outline: none; }
   .md-button:hover, .md-button:focus {
@@ -50,6 +48,8 @@
   .md-button.md-icon {
     padding: 0;
     background: none; }
+  .md-button.md-raised:not([disabled]) {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
   .md-button.md-icon-button {
     margin: 0 6px;
     height: 48px;
@@ -71,6 +71,7 @@
     width: 56px;
     height: 56px;
     vertical-align: middle;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     border-radius: 50%;
     background-clip: padding-box;
     overflow: hidden;
@@ -105,12 +106,19 @@
       background-clip: padding-box;
       overflow: hidden;
       -webkit-mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC'); }
-    .md-button.md-fab md-icon {
-      margin-top: 0; }
     .md-button.md-fab.md-mini {
       line-height: 40px;
       width: 40px;
       height: 40px; }
+  .md-button:not([disabled]).md-raised.md-focused, .md-button:not([disabled]).md-fab.md-focused {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
+  .md-button:not([disabled]).md-raised:active, .md-button:not([disabled]).md-fab:active {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4); }
+  .md-button .md-ripple-container {
+    border-radius: 3px;
+    background-clip: padding-box;
+    overflow: hidden;
+    -webkit-mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC'); }
 
 .md-toast-open-top .md-button.md-fab-top-left, .md-toast-open-top .md-button.md-fab-top-right {
   -webkit-transform: translate3d(0, 42px, 0);

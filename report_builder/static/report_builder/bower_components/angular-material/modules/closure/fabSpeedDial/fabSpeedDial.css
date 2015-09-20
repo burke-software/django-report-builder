@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 md-fab-speed-dial {
   position: relative;
   display: -webkit-flex;
@@ -16,15 +15,42 @@ md-fab-speed-dial {
   /*
    * Handle the animations
    */ }
+  md-fab-speed-dial.md-fab-bottom-right {
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    position: absolute; }
+  md-fab-speed-dial.md-fab-bottom-left {
+    top: auto;
+    right: auto;
+    bottom: 20px;
+    left: 20px;
+    position: absolute; }
+  md-fab-speed-dial.md-fab-top-right {
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    left: auto;
+    position: absolute; }
+  md-fab-speed-dial.md-fab-top-left {
+    top: 20px;
+    right: auto;
+    bottom: auto;
+    left: 20px;
+    position: absolute; }
   md-fab-speed-dial .md-css-variables {
     z-index: 20; }
   md-fab-speed-dial.md-is-open .md-fab-action-item {
-    visibility: visible; }
+    visibility: visible;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center; }
   md-fab-speed-dial md-fab-actions {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    height: 100%; }
+    height: auto; }
     md-fab-speed-dial md-fab-actions .md-fab-action-item {
       visibility: hidden;
       transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }

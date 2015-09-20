@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.11.0
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 md-bottom-sheet {
   position: absolute;
   left: 0;
@@ -36,7 +35,7 @@ md-bottom-sheet {
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }
   md-bottom-sheet .md-subheader {
     background-color: transparent;
-    font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
     line-height: 56px;
     padding: 0;
     white-space: nowrap; }

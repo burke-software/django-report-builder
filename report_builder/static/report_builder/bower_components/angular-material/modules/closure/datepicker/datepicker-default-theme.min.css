@@ -1,0 +1,6 @@
+/*!
+ * Angular Material Design
+ * https://github.com/angular/material
+ * @license MIT
+ * v0.11.0-rc2-master-587cd22
+ */md-datepicker.md-THEME_NAME-theme{background:#fff}.md-THEME_NAME-theme .md-datepicker-input-container{border-bottom-color:'{{background-300}}'}.md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-focused{border-bottom-color:'{{primary-500}}'}.md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-invalid{border-bottom-color:'{{warn-500}}'}.md-THEME_NAME-theme .md-datepicker-calendar-pane{border-color:'{{background-300}}'}.md-THEME_NAME-theme .md-datepicker-triangle-button:hover .md-datepicker-expand-triangle{border-top-color:'{{foreground-2}}'}.md-THEME_NAME-theme .md-datepicker-open .md-datepicker-calendar-icon{fill:'{{primary-500}}'}.md-THEME_NAME-theme .md-datepicker-calendar{background:#fff}

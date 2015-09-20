@@ -1,0 +1,7 @@
+/*!
+ * Angular Material Design
+ * https://github.com/angular/material
+ * @license MIT
+ * v0.11.0-rc2-master-587cd22
+ */
+function MdButtonDirective(t,n,e,o){function i(t){return angular.isDefined(t.href)||angular.isDefined(t.ngHref)||angular.isDefined(t.ngLink)||angular.isDefined(t.uiSref)}function a(t,n){return i(n)?'<a class="md-button" ng-transclude></a>':'<button class="md-button" ng-transclude></button>'}function u(a,u,r){var c=u[0];n(u),t.attach(a,u);var d=c.textContent.trim();d||e.expect(u,"aria-label"),i(r)&&angular.isDefined(r.ngDisabled)&&a.$watch(r.ngDisabled,function(t){u.attr("tabindex",t?-1:0)}),u.on("click",function(t){r.disabled===!0&&(t.preventDefault(),t.stopImmediatePropagation())}),a.mouseActive=!1,u.on("mousedown",function(){a.mouseActive=!0,o(function(){a.mouseActive=!1},100)}).on("focus",function(){a.mouseActive===!1&&u.addClass("md-focused")}).on("blur",function(){u.removeClass("md-focused")})}return{restrict:"EA",replace:!0,transclude:!0,template:a,link:u}}goog.provide("ng.material.components.button"),goog.require("ng.material.core"),angular.module("material.components.button",["material.core"]).directive("mdButton",MdButtonDirective),MdButtonDirective.$inject=["$mdButtonInkRipple","$mdTheming","$mdAria","$timeout"],ng.material.components.button=angular.module("material.components.button");
