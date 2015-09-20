@@ -84,12 +84,9 @@
     <div class="fullheight" flex="">
       <md-toolbar class="md-theme-indigo">
         <h1 class="md-toolbar-tools">
-        <md-input-container>
-          <label>Name</label>
-          <input ng-model="report.name" class="long"></input>
-        </md-input-container>
-          <span flex=""></span>
-          <span>Last Updated: {{ report.modified }}</span>
+        {{ report.name }}
+        <span flex=""></span>
+        <span>Last Updated: {{ report.modified }}</span>
         </h1>
       </md-toolbar>
       <md-content class="report-tabs-height">

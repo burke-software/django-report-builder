@@ -5,7 +5,7 @@
           <span class="caps">{{ report.root_model_name }} Relations</span>
       </div>
     </md-toolbar>  
-    <input placeholder="Search Relations" style="width: 100%" ng-model="searchRelations"></input>
+    <input placeholder="Search Relations" class="searchbox" ng-model="searchRelations"></input>
     <md-content>
       <div ui-tree data-drag-enabled="false">
       <ol ui-tree-nodes="" ng-model="related_fields">
@@ -22,7 +22,7 @@
         <span class="caps">{{ fields_header }} Fields</span>
       </div>
     </md-toolbar>  
-    <input placeholder="Search Fields" style="width: 100%" ng-model="searchFields"></input>
+    <input placeholder="Search Fields" class="searchbox" ng-model="searchFields"></input>
     <md-content>
       <div ui-tree data-drag-enabled="false">
       <ol ui-tree-nodes="" ng-model="fields">

@@ -146,3 +146,9 @@ md-checkbox {
   padding-right: 10px; 
   top: 4px; 
 }
+
+.searchbox {
+  border-left: 0;
+  border-right: 0;
+  width: 100%;
+}
