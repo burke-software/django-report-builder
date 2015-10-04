@@ -2,8 +2,11 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0
+ * v0.11.2
  */
+md-select.md-THEME_NAME-theme[disabled] .md-select-value {
+  border-bottom-color: transparent;
+  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%); }
 md-select.md-THEME_NAME-theme .md-select-value {
   border-bottom-color: '{{foreground-4}}'; }
   md-select.md-THEME_NAME-theme .md-select-value.md-select-placeholder {

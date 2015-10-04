@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0
+ * v0.11.2
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -103,6 +103,8 @@ function MdProgressCircularDirective($mdTheming, $mdUtil, $log) {
     var circle = element;
     var spinnerWrapper =  angular.element(element.children()[0]);
     var lastMode, toVendorCSS = $mdUtil.dom.animator.toCss;
+
+    element.attr('md-mode', mode());
 
     updateScale();
     validateMode();
@@ -219,7 +221,7 @@ function MdProgressCircularDirective($mdTheming, $mdUtil, $log) {
      * Is the md-mode a valid option?
      */
     function mode() {
-      var value = attr.mdMode;
+      var value = (attr.mdMode || "").trim();
       if ( value ) {
         switch(value) {
           case MODE_DETERMINATE :

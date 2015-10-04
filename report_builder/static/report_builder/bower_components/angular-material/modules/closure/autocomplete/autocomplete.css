@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0
+ * v0.11.2
  */
 @-webkit-keyframes md-autocomplete-list-out {
   0% {
@@ -74,12 +74,13 @@ md-autocomplete {
   md-autocomplete[disabled] input {
     cursor: not-allowed; }
   md-autocomplete[md-floating-label] {
-    padding-bottom: 26px;
     border-radius: 0;
     background: transparent;
     height: auto; }
     md-autocomplete[md-floating-label] md-input-container {
-      padding-bottom: 0; }
+      padding-bottom: 26px; }
+      md-autocomplete[md-floating-label] md-input-container.md-input-has-messages {
+        padding-bottom: 2px; }
     md-autocomplete[md-floating-label] md-autocomplete-wrap {
       height: auto; }
     md-autocomplete[md-floating-label] button {

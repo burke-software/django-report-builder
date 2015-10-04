@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0
+ * v0.11.2
  */
 goog.provide('ng.material.components.fabShared');
 goog.require('ng.material.core');
@@ -67,6 +67,9 @@ goog.require('ng.material.core');
         angular.forEach(eventTypes, function(eventType) {
           $element.off(eventType, parseEvents);
         });
+        // remove any attached keyboard handlers in case element is removed while
+        // speed dial is open
+        disableKeyboard();
       });
     }
 
@@ -333,6 +336,7 @@ goog.require('ng.material.core');
   }
   FabController.$inject = ["$scope", "$element", "$animate", "$mdUtil", "$mdConstant"];
 })();
+
 (function() {
   'use strict';
 

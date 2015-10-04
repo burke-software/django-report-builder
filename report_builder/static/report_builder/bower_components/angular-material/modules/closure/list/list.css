@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0
+ * v0.11.2
  */
 md-list {
   display: block;
@@ -11,7 +11,7 @@ md-list {
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.01em;
-    line-height: 0.75em; }
+    line-height: 1.2em; }
 
 md-list-item.md-proxy-focus.md-focused .md-no-style {
   transition: background-color 0.15s linear; }
@@ -60,7 +60,7 @@ md-list-item, md-list-item .md-list-item-inner {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
-  min-height: 64px; }
+  min-height: 48px; }
   md-list-item > div.md-primary > md-icon, md-list-item > div.md-secondary > md-icon, md-list-item > md-icon:first-child, md-list-item > md-icon.md-secondary, md-list-item .md-list-item-inner > div.md-primary > md-icon, md-list-item .md-list-item-inner > div.md-secondary > md-icon, md-list-item .md-list-item-inner > md-icon:first-child, md-list-item .md-list-item-inner > md-icon.md-secondary {
     width: 24px;
     margin-top: 16px;
@@ -119,12 +119,15 @@ md-list-item, md-list-item .md-list-item-inner {
 md-list-item.md-2-line, md-list-item.md-2-line > .md-no-style, md-list-item.md-3-line, md-list-item.md-3-line > .md-no-style {
   -webkit-align-items: flex-start;
       -ms-flex-align: start;
-          align-items: flex-start; }
+          align-items: flex-start;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
   md-list-item.md-2-line .md-list-item-text, md-list-item.md-2-line > .md-no-style .md-list-item-text, md-list-item.md-3-line .md-list-item-text, md-list-item.md-3-line > .md-no-style .md-list-item-text {
     -webkit-flex: 1;
         -ms-flex: 1;
             flex: 1;
-    padding: 16px 0;
+    margin: auto;
     text-overflow: ellipsis; }
     md-list-item.md-2-line .md-list-item-text.md-offset, md-list-item.md-2-line > .md-no-style .md-list-item-text.md-offset, md-list-item.md-3-line .md-list-item-text.md-offset, md-list-item.md-3-line > .md-no-style .md-list-item-text.md-offset {
       margin-left: 56px; }
@@ -132,14 +135,20 @@ md-list-item.md-2-line, md-list-item.md-2-line > .md-no-style, md-list-item.md-3
       font-size: 16px;
       font-weight: 400;
       letter-spacing: 0.01em;
-      margin: 0 0 6px 0;
-      line-height: 0.75em; }
+      margin: 0 0 0px 0;
+      line-height: 1.2em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis; }
     md-list-item.md-2-line .md-list-item-text h4, md-list-item.md-2-line > .md-no-style .md-list-item-text h4, md-list-item.md-3-line .md-list-item-text h4, md-list-item.md-3-line > .md-no-style .md-list-item-text h4 {
       font-size: 14px;
       letter-spacing: 0.01em;
-      margin: 10px 0 5px 0;
+      margin: 3px 0 1px 0;
       font-weight: 400;
-      line-height: 0.75em; }
+      line-height: 1.2em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis; }
     md-list-item.md-2-line .md-list-item-text p, md-list-item.md-2-line > .md-no-style .md-list-item-text p, md-list-item.md-3-line .md-list-item-text p, md-list-item.md-3-line > .md-no-style .md-list-item-text p {
       font-size: 14px;
       font-weight: 500;
@@ -147,17 +156,20 @@ md-list-item.md-2-line, md-list-item.md-2-line > .md-no-style, md-list-item.md-3
       margin: 0 0 0 0;
       line-height: 1.6em; }
 
-md-list-item.md-2-line > .md-avatar:first-child, md-list-item.md-2-line > .md-no-style > .md-avatar:first-child {
-  margin-top: 12px; }
-md-list-item.md-2-line > md-icon:first-child, md-list-item.md-2-line > .md-no-style > md-icon:first-child {
-  -webkit-align-self: flex-start;
-      -ms-flex-item-align: start;
-          align-self: flex-start; }
-md-list-item.md-2-line .md-list-item-text, md-list-item.md-2-line > .md-no-style .md-list-item-text {
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  padding-top: 19px; }
+md-list-item.md-2-line, md-list-item.md-2-line > .md-no-style {
+  height: 72px; }
+  md-list-item.md-2-line > .md-avatar:first-child, md-list-item.md-2-line > .md-no-style > .md-avatar:first-child {
+    margin-top: 12px; }
+  md-list-item.md-2-line > md-icon:first-child, md-list-item.md-2-line > .md-no-style > md-icon:first-child {
+    -webkit-align-self: flex-start;
+        -ms-flex-item-align: start;
+            align-self: flex-start; }
+  md-list-item.md-2-line .md-list-item-text, md-list-item.md-2-line > .md-no-style .md-list-item-text {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1; }
 
-md-list-item.md-3-line > md-icon:first-child, md-list-item.md-3-line > .md-avatar:first-child, md-list-item.md-3-line > .md-no-style > md-icon:first-child, md-list-item.md-3-line > .md-no-style > .md-avatar:first-child {
-  margin-top: 16px; }
+md-list-item.md-3-line, md-list-item.md-3-line > .md-no-style {
+  height: 88px; }
+  md-list-item.md-3-line > md-icon:first-child, md-list-item.md-3-line > .md-avatar:first-child, md-list-item.md-3-line > .md-no-style > md-icon:first-child, md-list-item.md-3-line > .md-no-style > .md-avatar:first-child {
+    margin-top: 16px; }
