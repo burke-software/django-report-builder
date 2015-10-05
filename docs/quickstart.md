@@ -10,9 +10,13 @@ See setup.py for full requirements list.
 1. `pip install django-report-builder`
 2. Add `report_builder` to INSTALLED_APPS
 3. Add `url(r'^report_builder/', include('report_builder.urls'))` to url.py url patterns
-3. Ensure `django.core.context_processors.static` and `django.core.context_processors.media` are in `TEMPLATE_CONTEXT_PROCESSORS`
-4. Sync your database. `python manage.py migrate` 
-5. Use Django admin or navigate to /report_builder/
+4. Ensure `django.core.context_processors.static` and `django.core.context_processors.media` are in `TEMPLATE_CONTEXT_PROCESSORS`
+    * Note: For Django 1.8+ template context processors have been moved from `django.core.context_processors` to
+      `django.template.context_processors`. The settings for template context processors have moved from
+      `TEMPLATE_CONTEXT_PROCESSORS` to be part of the template engine specific configuration in `TEMPLATES`,
+      [as described here](https://docs.djangoproject.com/en/1.8/ref/templates/upgrading/#the-templates-settings).
+5. Sync your database. `python manage.py migrate`
+6. Use Django admin or navigate to /report_builder/
 
 ##Settings
 
