@@ -88,6 +88,12 @@ Advantages of this option
 - Download the last report that was run instead of regenerating
 - Nicer status messages about report status
 
+
+**Installation**
+
+1. Set up Celery
+2. Set `REPORT_BUILDER_ASYNC_REPORT = True` in settings.py
+
 ### Email notification when file is uploaded
 
 The reports are emailed to the current user rather than generated and then downloaded. This is if you have reports that take a while to generate or if you'd prefer your users to be emailed.
@@ -114,10 +120,5 @@ If you're developing your own front-end then you would need the ability to disab
     REPORT_BUILDER_FRONTEND = False
 
 By default the front-end is turned on.
-
-**Installation**
-
-1. Set up Celery
-2. Set `REPORT_BUILDER_ASYNC_REPORT = True` in settings.py
 
 [2.x]: https://github.com/burke-software/django-report-builder/tree/2.x
