@@ -222,7 +222,7 @@ class FieldsView(RelatedFieldsView):
                     'field': field.name,
                     'field_verbose': field.name,
                     'field_type': 'Custom Field',
-                    'field_choices': field.choices,
+                    'field_choices': getattr(field, 'choices', None),
                     'can_filter': True if filters is None or
                     field.name in filters else False,
                     'path': field_data['path'],
