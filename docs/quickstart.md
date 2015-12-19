@@ -5,6 +5,16 @@
 Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x] branch instead. 
 See setup.py for full requirements list.
 
+Django Rest Framework must have Session Authentication enabled:
+```
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        ...
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+```
+
 ##Installation
 
 1. `pip install django-report-builder`
