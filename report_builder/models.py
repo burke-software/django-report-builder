@@ -49,7 +49,7 @@ def get_allowed_models():
 
 
 def get_limit_choices_to_callable():
-    return {'pk__in': get_allowed_models}
+    return {'pk__in': get_allowed_models()}
 
 
 class Report(models.Model):
