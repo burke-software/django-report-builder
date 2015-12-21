@@ -158,7 +158,7 @@ class ReportBuilderTests(TestCase):
 
         self.assertTrue(callable(get_limit_choices_to_callable))
         self.assertTrue(isinstance(lookup_dict['pk__in'], QuerySet))
-        self.assertEqual(lookup_dict['pk__in'], models)
+        self.assertQuerysetEqual(lookup_dict['pk__in'], map(repr, models))
 
     def test_report_builder_fields(self):
         ct = ContentType.objects.get(model="foo", app_label="demo_models")
