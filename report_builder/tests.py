@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.urlresolvers import reverse
+from django.db.models.query import QuerySet
 from django.test import TestCase
 from django.test.utils import override_settings
 from .models import (
@@ -156,7 +157,7 @@ class ReportBuilderTests(TestCase):
         lookup_dict = get_limit_choices_to_callable()
 
         self.assertTrue(callable(get_limit_choices_to_callable))
-        self.assertTrue(isinstance(lookup_dict['pk__in'], list))
+        self.assertTrue(isinstance(lookup_dict['pk__in'], QuerySet))
         self.assertEqual(lookup_dict['pk__in'], models)
 
     def test_report_builder_fields(self):
