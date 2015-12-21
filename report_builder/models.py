@@ -67,7 +67,7 @@ class Report(models.Model):
     slug = models.SlugField(verbose_name="Short Name")
     description = models.TextField(blank=True)
     root_model = models.ForeignKey(
-        ContentType, limit_choices_to={'pk__in': get_allowed_models})
+        ContentType, limit_choices_to={'pk__in': get_allowed_models()})
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(
