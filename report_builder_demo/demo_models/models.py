@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.functional import cached_property
-#from custom_field.custom_field import CustomFieldModel
 
 from djmoney.models.fields import MoneyField
 
@@ -19,7 +18,6 @@ class FooExclude(Foo):
         exclude = ('char_field2',)
 
 
-#class Bar(CustomFieldModel, models.Model):
 class Bar(models.Model):
     char_field = models.CharField(max_length=50, blank=True)
     foos = models.ManyToManyField(Foo, blank=True)
