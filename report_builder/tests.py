@@ -11,7 +11,6 @@ from .views import email_report
 from report_builder_demo.demo_models.models import (
     Bar, Place, Restaurant, Waiter, Person, Child, Comment)
 from django.conf import settings
-from django.utils import unittest
 from report_utils.model_introspection import (
     get_properties_from_model, get_direct_fields_from_model,
     get_relation_fields_from_model, get_model_from_path_string)
@@ -353,35 +352,6 @@ class ReportTests(TestCase):
         filter_field.save()
         response = self.client.get(self.generate_url)
         self.assertNotContains(response, 'lol yes')
-
-    @unittest.skip("Custom field not yet implimented")
-    def test_filter_custom_field(self):
-        from custom_field.models import CustomField
-        ct = ContentType.objects.get(model="bar", app_label="demo_models")
-        CustomField.objects.create(
-            name="custom one",
-            content_type=ct,
-            field_type="t",
-        )
-        self.bar.set_custom_value('custom one', 'I am custom')
-        DisplayField.objects.create(
-            report=self.report,
-            field="custom one",
-            field_verbose="stuff",
-        )
-        filter_field = FilterField.objects.create(
-            report=self.report,
-            field="custom one",
-            field_verbose="stuff",
-            filter_type='contains',
-            filter_value='I am custom',
-        )
-        response = self.client.get(self.generate_url)
-        self.assertContains(response, 'I am custom')
-        filter_field.filter_value = 'It does not contain this'
-        filter_field.save()
-        response = self.client.get(self.generate_url)
-        self.assertNotContains(response, 'I am custom')
 
     def make_lots_of_foos(self):
         for x in range(500):
