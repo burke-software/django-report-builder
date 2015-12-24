@@ -7,7 +7,7 @@ from .models import (
     Report, DisplayField, FilterField, Format, get_allowed_models)
 from .views import email_report
 from report_builder_demo.demo_models.models import (
-    Bar, Place, Restaurant, Waiter, Person, Child)
+    Bar, Place, Restaurant, Waiter, Person, Child, Comment)
 from django.conf import settings
 from django.utils import unittest
 from report_utils.model_introspection import (
@@ -78,6 +78,10 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('distinct' in names)
         self.assertTrue('id' in names)
         self.assertEquals(len(names), 9)
+
+    def test_get_gfk_fields_from_model(self):
+        fields = get_direct_fields_from_model(Comment)
+        print(fields)
 
     def test_get_properties_from_model(self):
         properties = get_properties_from_model(DisplayField)

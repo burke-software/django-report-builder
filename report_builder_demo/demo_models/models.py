@@ -1,6 +1,7 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.functional import cached_property
-from custom_field.custom_field import CustomFieldModel
+#from custom_field.custom_field import CustomFieldModel
 
 from djmoney.models.fields import MoneyField
 
@@ -18,7 +19,8 @@ class FooExclude(Foo):
         exclude = ('char_field2',)
 
 
-class Bar(CustomFieldModel, models.Model):
+#class Bar(CustomFieldModel, models.Model):
+class Bar(models.Model):
     char_field = models.CharField(max_length=50, blank=True)
     foos = models.ManyToManyField(Foo, blank=True)
 
@@ -101,3 +103,11 @@ class Child(models.Model):
         ('G', 'Green'),
         ('B', 'Blue'),
     ))
+
+
+class Comment(models.Model):
+    """ django-contrib-comments like model """
+    content_type = models.ForeignKey('contenttypes.ContentType')
+    object_pk = models.TextField()
+    content_object = GenericForeignKey(
+        ct_field="content_type", fk_field="object_pk")

@@ -10,9 +10,9 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
-3.2 is released. 
-This features a refactored report_to_list function which is responsible for generating the actual python list of data from the report object. 
-Tests suggest a 10x speed improvement but your mileage may vary.
+3.3 is released. 
+
+Official support is now for Django 1.8 and 1.9. Python 2.7 and 3.5 (I'm sure 3.4 works but no longer unit testing it). For Django < 1.8 please use the 3.2 release.
 
 # What is Django Report Builder?
 

@@ -1,8 +1,7 @@
 from django.db import models
-from custom_field.custom_field import CustomFieldModel
 
 
-class Bar(CustomFieldModel, models.Model):
+class Bar(models.Model):
     char_field = models.CharField(max_length=50, blank=True)
 
     @property
