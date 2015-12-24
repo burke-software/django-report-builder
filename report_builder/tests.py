@@ -1,10 +1,12 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.urlresolvers import reverse
+from django.db.models.query import QuerySet
 from django.test import TestCase
 from django.test.utils import override_settings
 from .models import (
-    Report, DisplayField, FilterField, Format, get_allowed_models)
+    Report, DisplayField, FilterField, Format, get_allowed_models,
+    get_limit_choices_to_callable)
 from .views import email_report
 from report_builder_demo.demo_models.models import (
     Bar, Place, Restaurant, Waiter, Person, Child, Comment)
@@ -148,6 +150,19 @@ class ReportBuilderTests(TestCase):
         settings.REPORT_BUILDER_EXCLUDE = None
         self.assertEqual(pre_exclude_duplicates, ['bar'])
         self.assertEqual(post_exclude_duplicates, [])
+
+    def test_get_allowed_models_lookup_dict(self):
+        settings.REPORT_BUILDER_INCLUDE = (
+            'demo_models.bar',
+            'demo_models.foo',
+            'demo_models.place',
+        )
+        models = get_allowed_models()
+        lookup_dict = get_limit_choices_to_callable()
+
+        self.assertTrue(callable(get_limit_choices_to_callable))
+        self.assertTrue(isinstance(lookup_dict['pk__in'], QuerySet))
+        self.assertQuerysetEqual(lookup_dict['pk__in'], map(repr, models), ordered=False)
 
     def test_report_builder_fields(self):
         ct = ContentType.objects.get(model="foo", app_label="demo_models")

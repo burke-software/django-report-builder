@@ -48,6 +48,10 @@ def get_allowed_models():
     return models
 
 
+def get_limit_choices_to_callable():
+    return {'pk__in': get_allowed_models()}
+
+
 class Report(models.Model):
     """ A saved report with queryset and descriptive fields
     """
@@ -67,7 +71,7 @@ class Report(models.Model):
     slug = models.SlugField(verbose_name="Short Name")
     description = models.TextField(blank=True)
     root_model = models.ForeignKey(
-        ContentType, limit_choices_to={'pk__in': get_allowed_models})
+        ContentType, limit_choices_to=get_limit_choices_to_callable)
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(

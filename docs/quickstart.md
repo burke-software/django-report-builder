@@ -2,7 +2,7 @@
 
 ##Requirements
 
-Django 1.7 and Django Rest Framework 3.0. Users of older versions should continue to use the [2.x] branch instead. 
+Django 1.8 or 1.9 and Django Rest Framework > 3.0. Users of older versions should continue to use the [2.x] branch instead. 
 See setup.py for full requirements list.
 
 ##Installation
@@ -17,6 +17,17 @@ See setup.py for full requirements list.
       [as described here](https://docs.djangoproject.com/en/1.8/ref/templates/upgrading/#the-templates-settings).
 5. Sync your database. `python manage.py migrate`
 6. Use Django admin or navigate to /report_builder/
+ 
+Django Rest Framework must have Session Authentication enabled. Note this is enabled by default.
+
+```
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        ...
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+```
 
 ##Settings
 
