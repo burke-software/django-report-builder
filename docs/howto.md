@@ -1,3 +1,6 @@
+**Important** this page is REALLY old and no longer represents the current version of django report builder. I'll leave it here until it can be replaced. Your contributions are very welcome.
+
+
 #How To Use Django-Report-Builder
 
 Django-SIS is a good example integration of report_builder. Note we've given report_builder a grappelli theme by modifying
