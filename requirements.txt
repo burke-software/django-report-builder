@@ -1,5 +1,4 @@
 django-custom-field==2.5
-django==1.9
 psycopg2
 django-extensions
 Werkzeug
