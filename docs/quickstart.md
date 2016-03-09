@@ -33,7 +33,7 @@ REST_FRAMEWORK = {
 
 ### Include and exclude fields and models
 
-To include a model you've to specify with app your models belong to. If your 'user' model is in the app 'hr' then you can do the following to include it:
+To include a model you've to specify the app your models belong to. If your 'user' model is in the app 'hr' then you can do the following to include it:
 
     REPORT_BUILDER_INCLUDE = ['hr.user'] # Allow only the model user to be accessed
 
@@ -76,7 +76,7 @@ The distinction here is only created if you want to differentiate display fields
 
     REPORT_BUILDER_MODEL_MANAGER = 'on_site' #name of custom model manager to use on all models
 
-You many also set a custom model manager per model. Just add the custom model manager and this property to a model
+You may also set a custom model manager per model. Just add the custom model manager and this property to a model
 
     report_builder_model_manager = on_site #reference to custom model manager to use for a model
 
