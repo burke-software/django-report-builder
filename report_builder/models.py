@@ -191,8 +191,8 @@ class Report(models.Model):
 
             # Build display format list
             if (
-                hasattr(display_field, 'display_format')
-                and display_field.display_format
+                hasattr(display_field, 'display_format') and
+                display_field.display_format
             ):
                 display_formats[display_field.position] = \
                     display_field.display_format
@@ -326,8 +326,8 @@ class Report(models.Model):
                 filter_string += '__' + filter_field.filter_type
 
             # Check for special types such as isnull
-            if (filter_field.filter_type == "isnull"
-                    and filter_field.filter_value in ["0", "False"]):
+            if (filter_field.filter_type == "isnull" and
+               filter_field.filter_value in ["0", "False"]):
                 filter_ = {filter_string: False}
             elif filter_field.filter_type == "in":
                 filter_ = {filter_string: filter_field.filter_value.split(',')}
@@ -476,7 +476,7 @@ class DisplayField(AbstractField):
             ('Max', 'Max'),
             ('Min', 'Min'),
         ),
-        blank = True
+        blank=True
     )
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
@@ -531,7 +531,7 @@ class FilterField(AbstractField):
             ('min', 'Min (annotation-filter)'),
         ),
         blank=True,
-        default = 'icontains',
+        default='icontains',
     )
     filter_value = models.CharField(max_length=2000)
     filter_value2 = models.CharField(max_length=2000, blank=True)

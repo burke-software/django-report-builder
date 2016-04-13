@@ -1,3 +1,7 @@
+import datetime
+import re
+import copy
+import json
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -6,24 +10,20 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.template.loader import get_template
 from django.template import Context
-User = get_user_model()
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
 from six import string_types
-
 from .utils import duplicate
 from .models import Report
 from report_utils.mixins import DataExportMixin, generate_filename
 
-import datetime
-import re
-import copy
-import json
+User = get_user_model()
 
 
 class ReportSPAView(TemplateView):
+
     template_name = "report_builder/spa.html"
 
     def get_context_data(self, **kwargs):
