@@ -1,3 +1,4 @@
+Django==1.9.5
 django-custom-field==2.5
 psycopg2
 django-extensions
