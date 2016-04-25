@@ -23,7 +23,6 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        'django>=1.8',
         'openpyxl==2.2.1',
         'python-dateutil',
         'django-report-utils>=0.3.15',
