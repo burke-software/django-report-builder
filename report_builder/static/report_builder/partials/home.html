@@ -146,7 +146,7 @@
       <md-button hide-gt-lg class="md-fab md-fab-bottom-left" ng-click="reports_list_menu()" aria-label="Reports List">
         <md-icon md-svg-src="{{ static('report_builder/img/list.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
-      <md-button hide-gt-md ng-show="tabData.selectedIndex == 0 || tabData.selectedIndex == 1" class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
+      <md-button hide-gt-md ng-show="selectedIndex == 0 || selectedIndex == 1" class="md-fab md-fab-bottom-right" ng-click="field_menu()" aria-label="Add Field">
         <md-icon md-svg-src="{{ static('report_builder/img/add.svg') }}" style="width: 24px; height: 24px;"></md-icon>
       </md-button>
     </div>

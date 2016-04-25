@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v1.0.7
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -55,7 +55,7 @@ angular
  * </hljs>
  *
  */
-function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant, $mdTheming, $mdUtil, $timeout) {
+function MdCheckboxDirective(inputDirective, $mdAria, $mdConstant, $mdTheming, $mdUtil, $timeout) {
   inputDirective = inputDirective[0];
   var CHECKED_CSS = 'md-checked';
 
@@ -63,7 +63,7 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
     restrict: 'E',
     transclude: true,
     require: '?ngModel',
-    priority:210, // Run before ngAria
+    priority: 210, // Run before ngAria
     template: 
       '<div class="md-container" md-ink-ripple md-ink-ripple-checkbox>' +
         '<div class="md-icon"></div>' +
@@ -77,10 +77,25 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
   // **********************************************************
 
   function compile (tElement, tAttrs) {
+    var container = tElement.children();
 
     tAttrs.type = 'checkbox';
     tAttrs.tabindex = tAttrs.tabindex || '0';
     tElement.attr('role', tAttrs.type);
+
+    // Attach a click handler in compile in order to immediately stop propagation
+    // (especially for ng-click) when the checkbox is disabled.
+    tElement.on('click', function(event) {
+      if (this.hasAttribute('disabled')) {
+        event.stopImmediatePropagation();
+      }
+    });
+
+    // Redirect focus events to the root element, because IE11 is always focusing the container element instead
+    // of the md-checkbox element. This causes issues when using ngModelOptions: `updateOnBlur`
+    container.on('focus', function() {
+      tElement.focus();
+    });
 
     return function postLink(scope, element, attr, ngModelCtrl) {
       ngModelCtrl = ngModelCtrl || $mdUtil.fakeNgModel();
@@ -92,10 +107,12 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
             ngModelCtrl.$setViewValue.bind(ngModelCtrl)
         );
       }
+
       $$watchExpr('ngDisabled', 'tabindex', {
         true: '-1',
         false: attr.tabindex
       });
+
       $mdAria.expectWithText(element, 'aria-label');
 
       // Reuse the original input[type=checkbox] directive from Angular core.
@@ -111,14 +128,18 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
         .on('keypress', keypressHandler)
         .on('mousedown', function() {
           scope.mouseActive = true;
-          $timeout(function(){
+          $timeout(function() {
             scope.mouseActive = false;
           }, 100);
         })
         .on('focus', function() {
-          if(scope.mouseActive === false) { element.addClass('md-focused'); }
+          if (scope.mouseActive === false) {
+            element.addClass('md-focused');
+          }
         })
-        .on('blur', function() { element.removeClass('md-focused'); });
+        .on('blur', function() {
+          element.removeClass('md-focused');
+        });
 
       ngModelCtrl.$render = render;
 
@@ -136,12 +157,18 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
         var keyCode = ev.which || ev.keyCode;
         if (keyCode === $mdConstant.KEY_CODE.SPACE || keyCode === $mdConstant.KEY_CODE.ENTER) {
           ev.preventDefault();
-          if (!element.hasClass('md-focused')) { element.addClass('md-focused'); }
+
+          if (!element.hasClass('md-focused')) {
+            element.addClass('md-focused');
+          }
+
           listener(ev);
         }
       }
       function listener(ev) {
-        if (element[0].hasAttribute('disabled')) return;
+        if (element[0].hasAttribute('disabled')) {
+          return;
+        }
 
         scope.$apply(function() {
           // Toggle the checkbox value...
@@ -162,6 +189,6 @@ function MdCheckboxDirective(inputDirective, $mdInkRipple, $mdAria, $mdConstant,
     };
   }
 }
-MdCheckboxDirective.$inject = ["inputDirective", "$mdInkRipple", "$mdAria", "$mdConstant", "$mdTheming", "$mdUtil", "$timeout"];
+MdCheckboxDirective.$inject = ["inputDirective", "$mdAria", "$mdConstant", "$mdTheming", "$mdUtil", "$timeout"];
 
 })(window, window.angular);

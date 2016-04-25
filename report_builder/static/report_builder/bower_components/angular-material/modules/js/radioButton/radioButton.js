@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v1.0.7
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -73,13 +73,48 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming, $timeout) {
     var rgCtrl = ctrls[0];
     var ngModelCtrl = ctrls[1] || $mdUtil.fakeNgModel();
 
+    rgCtrl.init(ngModelCtrl);
+
+    scope.mouseActive = false;
+    element.attr({
+              'role': 'radiogroup',
+              'tabIndex': element.attr('tabindex') || '0'
+            })
+            .on('keydown', keydownListener)
+            .on('mousedown', function(event) {
+              scope.mouseActive = true;
+              $timeout(function() {
+                scope.mouseActive = false;
+              }, 100);
+            })
+            .on('focus', function() {
+              if(scope.mouseActive === false) { rgCtrl.$element.addClass('md-focused'); }
+            })
+            .on('blur', function() { rgCtrl.$element.removeClass('md-focused'); });
+
+    /**
+     *
+     */
     function setFocus() {
       if (!element.hasClass('md-focused')) { element.addClass('md-focused'); }
     }
 
+    /**
+     *
+     */
     function keydownListener(ev) {
       var keyCode = ev.which || ev.keyCode;
-      switch(keyCode) {
+
+      // Only listen to events that we originated ourselves
+      // so that we don't trigger on things like arrow keys in
+      // inputs.
+
+      if (keyCode != $mdConstant.KEY_CODE.ENTER &&
+          ev.currentTarget != ev.target) {
+        return;
+      }
+
+      switch (keyCode) {
         case $mdConstant.KEY_CODE.LEFT_ARROW:
         case $mdConstant.KEY_CODE.UP_ARROW:
           ev.preventDefault();
@@ -101,26 +136,8 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming, $timeout) {
           }
           break;
       }
+
     }
-
-    rgCtrl.init(ngModelCtrl);
-
-    scope.mouseActive = false;
-    element.attr({
-              'role': 'radiogroup',
-              'tabIndex': element.attr('tabindex') || '0'
-            })
-            .on('keydown', keydownListener)
-            .on('mousedown', function(event) {
-              scope.mouseActive = true;
-              $timeout(function() {
-                scope.mouseActive = false;
-              }, 100);
-            })
-            .on('focus', function() {
-              if(scope.mouseActive === false) { rgCtrl.$element.addClass('md-focused'); }
-            })
-            .on('blur', function() { rgCtrl.$element.removeClass('md-focused'); });
   }
 
   function RadioGroupController($element) {
@@ -180,8 +197,10 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming, $timeout) {
         // If disabled, then NOT valid
         return !angular.element(button).attr("disabled");
       };
+
       var selected = parent[0].querySelector('md-radio-button.md-checked');
       var target = buttons[increment < 0 ? 'previous' : 'next'](selected, validate) || buttons.first();
+
       // Activate radioButton's click listener (triggerHandler won't create a real click event)
       angular.element(target).triggerHandler('click');
 
@@ -210,7 +229,7 @@ mdRadioGroupDirective.$inject = ["$mdUtil", "$mdConstant", "$mdTheming", "$timeo
  * @param {string=} ngChange Angular expression to be executed when input changes due to user
  *    interaction with the input element.
  * @param {string} ngValue Angular expression which sets the value to which the expression should
- *    be set when selected.*
+ *    be set when selected.
  * @param {string} value The value to which the expression should be set when selected.
  * @param {string=} name Property name of the form under which the control is published.
  * @param {string=} aria-label Adds label to radio button for accessibility.
@@ -252,15 +271,29 @@ function mdRadioButtonDirective($mdAria, $mdUtil, $mdTheming) {
     $mdTheming(element);
     configureAria(element, scope);
 
-    rgCtrl.add(render);
-    attr.$observe('value', render);
+    initialize();
 
-    element
-      .on('click', listener)
-      .on('$destroy', function() {
-        rgCtrl.remove(render);
-      });
+    /**
+     *
+     */
+    function initialize(controller) {
+      if ( !rgCtrl ) {
+        throw 'RadioGroupController not found.';
+      }
 
+      rgCtrl.add(render);
+      attr.$observe('value', render);
+
+      element
+        .on('click', listener)
+        .on('$destroy', function() {
+          rgCtrl.remove(render);
+        });
+    }
+
+    /**
+     *
+     */
     function listener(ev) {
       if (element[0].hasAttribute('disabled')) return;
 
@@ -269,20 +302,41 @@ function mdRadioButtonDirective($mdAria, $mdUtil, $mdTheming) {
       });
     }
 
+    /**
+     *  Add or remove the `.md-checked` class from the RadioButton (and conditionally its parent).
+     *  Update the `aria-activedescendant` attribute.
+     */
     function render() {
       var checked = (rgCtrl.getViewValue() == attr.value);
       if (checked === lastChecked) {
         return;
       }
+
       lastChecked = checked;
       element.attr('aria-checked', checked);
+
       if (checked) {
+        markParentAsChecked(true);
         element.addClass(CHECKED_CSS);
+
         rgCtrl.setActiveDescendant(element.attr('id'));
+
       } else {
+        markParentAsChecked(false);
         element.removeClass(CHECKED_CSS);
       }
+
+      /**
+       * If the radioButton is inside a div, then add class so highlighting will work...
+       */
+      function markParentAsChecked(addClass ) {
+        if ( element.parent()[0].nodeName != "MD-RADIO-GROUP") {
+          element.parent()[ !!addClass ? 'addClass' : 'removeClass'](CHECKED_CSS);
+        }
+
+      }
     }
+
     /**
      * Inject ARIA-specific attributes appropriate for each radio button
      */

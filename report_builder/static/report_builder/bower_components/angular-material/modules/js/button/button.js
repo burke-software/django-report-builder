@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v1.0.7
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -85,20 +85,21 @@ function MdButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $timeout) {
   }
 
   function getTemplate(element, attr) {
-    return isAnchor(attr) ?
-           '<a class="md-button" ng-transclude></a>' :
-           '<button class="md-button" ng-transclude></button>';
+    if (isAnchor(attr)) {
+      return '<a class="md-button" ng-transclude></a>';
+    } else {
+      //If buttons don't have type="button", they will submit forms automatically.
+      var btnType = (typeof attr.type === 'undefined') ? 'button' : attr.type;
+      return '<button class="md-button" type="' + btnType + '" ng-transclude></button>';
+    }
   }
 
   function postLink(scope, element, attr) {
-    var node = element[0];
     $mdTheming(element);
     $mdButtonInkRipple.attach(scope, element);
 
-    var elementHasText = node.textContent.trim();
-    if (!elementHasText) {
-      $mdAria.expect(element, 'aria-label');
-    }
+    // Use async expect to support possible bindings in the button label
+    $mdAria.expectWithText(element, 'aria-label');
 
     // For anchor elements, we have to set tabindex manually when the
     // element is disabled
@@ -125,9 +126,13 @@ function MdButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $timeout) {
         }, 100);
       })
       .on('focus', function() {
-        if(scope.mouseActive === false) { element.addClass('md-focused'); }
+        if (scope.mouseActive === false) {
+          element.addClass('md-focused');
+        }
       })
-      .on('blur', function() { element.removeClass('md-focused'); });
+      .on('blur', function(ev) {
+        element.removeClass('md-focused');
+      });
   }
 
 }

@@ -2,13 +2,15 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v1.0.7
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
+.md-inline-form md-checkbox {
+  margin: 19px 0 18px; }
+
 md-checkbox {
   box-sizing: border-box;
-  display: block;
-  margin: 8px;
+  display: inline-block;
+  margin-bottom: 16px;
   white-space: nowrap;
   cursor: pointer;
   outline: none;
@@ -16,18 +18,62 @@ md-checkbox {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  padding-left: 18px;
-  padding-right: 0;
   position: relative;
-  line-height: 26px;
-  min-width: 18px;
-  min-height: 18px; }
+  min-width: 20px;
+  min-height: 20px;
+  margin-left: inherit;
+  margin-right: 16px; }
   html[dir=rtl] md-checkbox {
-    padding-left: 0; }
+    margin-left: 16px;
+    unicode-bidi: embed; }
+  body[dir=rtl] md-checkbox {
+    margin-left: 16px;
+    unicode-bidi: embed; }
+  md-checkbox bdo[dir=rtl] {
+    direction: rtl;
+    unicode-bidi: bidi-override; }
+  md-checkbox bdo[dir=ltr] {
+    direction: ltr;
+    unicode-bidi: bidi-override; }
   html[dir=rtl] md-checkbox {
-    padding-right: 18px; }
-  md-checkbox *, md-checkbox *:before, md-checkbox *:after {
-    box-sizing: border-box; }
+    margin-right: inherit;
+    unicode-bidi: embed; }
+  body[dir=rtl] md-checkbox {
+    margin-right: inherit;
+    unicode-bidi: embed; }
+  md-checkbox bdo[dir=rtl] {
+    direction: rtl;
+    unicode-bidi: bidi-override; }
+  md-checkbox bdo[dir=ltr] {
+    direction: ltr;
+    unicode-bidi: bidi-override; }
+  md-checkbox:last-of-type {
+    margin-left: inherit;
+    margin-right: 0; }
+    html[dir=rtl] md-checkbox:last-of-type {
+      margin-left: 0;
+      unicode-bidi: embed; }
+    body[dir=rtl] md-checkbox:last-of-type {
+      margin-left: 0;
+      unicode-bidi: embed; }
+    md-checkbox:last-of-type bdo[dir=rtl] {
+      direction: rtl;
+      unicode-bidi: bidi-override; }
+    md-checkbox:last-of-type bdo[dir=ltr] {
+      direction: ltr;
+      unicode-bidi: bidi-override; }
+    html[dir=rtl] md-checkbox:last-of-type {
+      margin-right: inherit;
+      unicode-bidi: embed; }
+    body[dir=rtl] md-checkbox:last-of-type {
+      margin-right: inherit;
+      unicode-bidi: embed; }
+    md-checkbox:last-of-type bdo[dir=rtl] {
+      direction: rtl;
+      unicode-bidi: bidi-override; }
+    md-checkbox:last-of-type bdo[dir=ltr] {
+      direction: ltr;
+      unicode-bidi: bidi-override; }
   md-checkbox.md-focused:not([disabled]) .md-container:before {
     left: -8px;
     top: -8px;
@@ -38,18 +84,40 @@ md-checkbox {
   md-checkbox .md-container {
     position: absolute;
     top: 50%;
-    display: inline-block;
-    width: 18px;
-    height: 18px;
     -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
+    box-sizing: border-box;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
     left: 0;
     right: auto; }
     html[dir=rtl] md-checkbox .md-container {
-      left: auto; }
+      left: auto;
+      unicode-bidi: embed; }
+    body[dir=rtl] md-checkbox .md-container {
+      left: auto;
+      unicode-bidi: embed; }
+    md-checkbox .md-container bdo[dir=rtl] {
+      direction: rtl;
+      unicode-bidi: bidi-override; }
+    md-checkbox .md-container bdo[dir=ltr] {
+      direction: ltr;
+      unicode-bidi: bidi-override; }
     html[dir=rtl] md-checkbox .md-container {
-      right: 0; }
+      right: 0;
+      unicode-bidi: embed; }
+    body[dir=rtl] md-checkbox .md-container {
+      right: 0;
+      unicode-bidi: embed; }
+    md-checkbox .md-container bdo[dir=rtl] {
+      direction: rtl;
+      unicode-bidi: bidi-override; }
+    md-checkbox .md-container bdo[dir=ltr] {
+      direction: ltr;
+      unicode-bidi: bidi-override; }
     md-checkbox .md-container:before {
+      box-sizing: border-box;
       background-color: transparent;
       border-radius: 50%;
       content: '';
@@ -63,6 +131,7 @@ md-checkbox {
       transition: all 0.5s;
       width: auto; }
     md-checkbox .md-container:after {
+      box-sizing: border-box;
       content: '';
       position: absolute;
       top: -10px;
@@ -78,35 +147,40 @@ md-checkbox {
       top: -15px;
       right: -15px;
       bottom: -15px; }
+  md-checkbox.md-align-top-left > div.md-container {
+    top: 12px; }
   md-checkbox .md-icon {
+    box-sizing: border-box;
     transition: 240ms;
     position: absolute;
     top: 0;
     left: 0;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-width: 2px;
     border-style: solid;
     border-radius: 2px; }
   md-checkbox.md-checked .md-icon {
     border: none; }
   md-checkbox[disabled] {
-    cursor: no-drop; }
+    cursor: default; }
   md-checkbox.md-checked .md-icon:after {
+    box-sizing: border-box;
     -webkit-transform: rotate(45deg);
             transform: rotate(45deg);
     position: absolute;
-    left: 6px;
-    top: 2px;
+    left: 6.66667px;
+    top: 2.22222px;
     display: table;
-    width: 6px;
-    height: 12px;
+    width: 6.66667px;
+    height: 13.33333px;
     border-width: 2px;
     border-style: solid;
     border-top: 0;
     border-left: 0;
     content: ''; }
   md-checkbox .md-label {
+    box-sizing: border-box;
     position: relative;
     display: inline-block;
     vertical-align: middle;
@@ -114,11 +188,30 @@ md-checkbox {
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
-            user-select: text; }
-    md-checkbox .md-label span {
-      margin-left: 10px;
-      margin-right: 0; }
-      html[dir=rtl] md-checkbox .md-label span {
-        margin-left: 0; }
-      html[dir=rtl] md-checkbox .md-label span {
-        margin-right: 10px; }
+            user-select: text;
+    margin-left: 30px;
+    margin-right: 0; }
+    html[dir=rtl] md-checkbox .md-label {
+      margin-left: 0;
+      unicode-bidi: embed; }
+    body[dir=rtl] md-checkbox .md-label {
+      margin-left: 0;
+      unicode-bidi: embed; }
+    md-checkbox .md-label bdo[dir=rtl] {
+      direction: rtl;
+      unicode-bidi: bidi-override; }
+    md-checkbox .md-label bdo[dir=ltr] {
+      direction: ltr;
+      unicode-bidi: bidi-override; }
+    html[dir=rtl] md-checkbox .md-label {
+      margin-right: 30px;
+      unicode-bidi: embed; }
+    body[dir=rtl] md-checkbox .md-label {
+      margin-right: 30px;
+      unicode-bidi: embed; }
+    md-checkbox .md-label bdo[dir=rtl] {
+      direction: rtl;
+      unicode-bidi: bidi-override; }
+    md-checkbox .md-label bdo[dir=ltr] {
+      direction: ltr;
+      unicode-bidi: bidi-override; }

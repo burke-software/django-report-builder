@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v1.0.7
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 md-bottom-sheet {
   position: absolute;
   left: 0;
@@ -36,7 +35,7 @@ md-bottom-sheet {
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2); }
   md-bottom-sheet .md-subheader {
     background-color: transparent;
-    font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
     line-height: 56px;
     padding: 0;
     white-space: nowrap; }
@@ -92,13 +91,13 @@ md-bottom-sheet {
       margin-top: 8px;
       margin-bottom: 8px;
       /* Mixin for how many grid items to show per row */ }
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 960px) {
         md-bottom-sheet.md-grid md-list-item {
           -webkit-flex: 1 1 33.33333%;
               -ms-flex: 1 1 33.33333%;
                   flex: 1 1 33.33333%;
           max-width: 33.33333%; }
-          md-bottom-sheet.md-grid md-list-item:nth-of-type(3n+1) {
+          md-bottom-sheet.md-grid md-list-item:nth-of-type(3n + 1) {
             -webkit-align-items: flex-start;
                 -ms-flex-align: start;
                     align-items: flex-start; }
@@ -106,19 +105,19 @@ md-bottom-sheet {
             -webkit-align-items: flex-end;
                 -ms-flex-align: end;
                     align-items: flex-end; } }
-      @media screen and (min-width: 600px) and (max-width: 960px) {
+      @media screen and (min-width: 960px) and (max-width: 1279px) {
         md-bottom-sheet.md-grid md-list-item {
           -webkit-flex: 1 1 25%;
               -ms-flex: 1 1 25%;
                   flex: 1 1 25%;
           max-width: 25%; } }
-      @media screen and (min-width: 960px) and (max-width: 1200px) {
+      @media screen and (min-width: 1280px) and (max-width: 1919px) {
         md-bottom-sheet.md-grid md-list-item {
           -webkit-flex: 1 1 16.66667%;
               -ms-flex: 1 1 16.66667%;
                   flex: 1 1 16.66667%;
           max-width: 16.66667%; } }
-      @media screen and (min-width: 1200px) {
+      @media screen and (min-width: 1920px) {
         md-bottom-sheet.md-grid md-list-item {
           -webkit-flex: 1 1 14.28571%;
               -ms-flex: 1 1 14.28571%;
