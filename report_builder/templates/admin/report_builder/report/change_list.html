@@ -1,16 +1,16 @@
 {% extends "admin/change_list.html" %}
+{% load i18n %}
 
 {% block content_title %}
-  Need a report? Here is where you can download and create custom reports
-  based on current information.
+  {% trans "Need a report? Here is where you can download and create custom reports based on current information." %}
   {{ block.super }}
 {% endblock %}
 
 {% block object-tools-items %}
   {% if 'starred' in request.GET %}
-    <li><a href="./">Manage all Reports</a></li>
+    <li><a href="./">{% trans "Manage all Reports" %}</a></li>
   {% else %}
-    <li><a href="./?starred=Starred">View Starred Reports</a></li>
+    <li><a href="./?starred=Starred">{% trans "View Starred Reports" %}</a></li>
   {% endif %}
   {{ block.super }}
 {% endblock %}

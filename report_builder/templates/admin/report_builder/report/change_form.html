@@ -1,11 +1,11 @@
 {% extends "admin/change_form.html" %}
-
+{% load i18n %}
 {% block submit_buttons_bottom %}
  {{ block.super }}
  <script>
-    (function($) {$('.submit-row').html('<input type="submit" class="default" name="_easy" value="Save and Start Building Report"/>');})(django.jQuery);
+    (function($) {$('.submit-row').html('<input type="submit" class="default" name="_easy" value="{% trans 'Save and Start Building Report' %}"/>');})(django.jQuery);
 
     {# Grappelli #}
-    $('footer ul').html('<li><input type="submit" class="grp-button grp-default" name="_easy" value="Save and Start Building Report"/></li>');
+    $('footer ul').html('<li><input type="submit" class="grp-button grp-default" name="_easy" value="{% trans 'Save and Start Building Report' %}"/></li>');
 </script>
 {% endblock %}

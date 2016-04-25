@@ -4,7 +4,7 @@
 {% block report_header %}
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <base href="{% url 'report_builder' %}">
-    
+
     <script src="{% static 'report_builder/bower_components/angular/angular.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/lodash/dist/lodash.min.js' %}"></script>
@@ -15,8 +15,8 @@
       var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
       var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
       var BASE_URL = "{% url 'report_builder' %}";
-    </script> 
-    
+    </script>
+
     {% if user %}
     <script>
       var CURRENT_USER = '{{ user.id }}';
@@ -44,7 +44,7 @@
     <script src="{% static 'report_builder/bower_components/pikaday/pikaday.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'report_builder/bower_components/pikaday/css/pikaday.css' %}"></link>
     <script src="{% static 'report_builder/bower_components/pikaday-angular/pikaday-angular.js' %}"></script>
-    
+
 
 {% endblock %}
 
