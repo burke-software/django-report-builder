@@ -231,7 +231,8 @@ class ExportToReport(DownloadFileView, TemplateView):
             return self.process_report(
                 report.id, request.user.pk,
                 to_response=True,
-                queryset=queryset
+                queryset=queryset,
+                file_type="xlsx",
             )
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
