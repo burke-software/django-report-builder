@@ -43,6 +43,12 @@ reportBuilder.config(function($routeProvider, $httpProvider, $locationProvider) 
     return $locationProvider.html5Mode(true);
 });
 
+reportBuilder.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('blue-grey')
+    .accentPalette('orange');
+});
+
 reportBuilder.run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
     var original = $location.path;
     $location.path = function (path, reload) {
