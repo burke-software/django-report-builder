@@ -1,148 +1,201 @@
 html, body, .fullheight {
-   height: 100%;
+height: 100%;
 }
 
 .field:hover {
-    background: #F2F2F2;
+background: #F2F2F2;
 }
 
 .angular-ui-tree-nodes .angular-ui-tree-nodes {
-  padding-left: 8px;
+padding-left: 8px;
 }
 
 .angular-ui-tree-node {
-  padding-left: 4px;
-}
-
-div.col_sort {
-  max-width: 80px;
-}
-
-div.col_checkbox {
-  max-width: 50px;
+padding-left: 4px;
 }
 
 input[type="text"].small_input {
-  width: 2em;
-g}
+width: 2em;
+}
+
+/*
+div.col_sort {
+max-width: 80px;
+}
+
+div.col_checkbox {
+max-width: 50px;
+}
 
 .move_trash {
-  max-width: 53px;
+max-width: 53px;
 }
 
 .col_aggregate {
-  max-width: 5em;
-  min-width: 5em;
+max-width: 5em;
+min-width: 5em;
 }
 
 .col_format {
-  min-width: 4em; 
+min-width: 4em; 
 }
+*/
 
 .col_filter_type {
-  min-width: 14em;
+min-width: 14em;
 }
+
 input[type="text"] {
-  width: 100%; 
-  box-sizing: border-box;
-  -webkit-box-sizing:border-box;
-  -moz-box-sizing: border-box;
+width: 100%; 
+box-sizing: border-box;
+-webkit-box-sizing:border-box;
+-moz-box-sizing: border-box;
 }
 
 .md-button.md-fab.md-fab-bottom-left{
-      bottom: 16px;
-      left: 16px;
+bottom: 16px;
+left: 16px;
 }
 .md-button.md-fab.md-fab-bottom-right{
-      bottom: 16px;
-      right: 16px;
+bottom: 16px;
+right: 16px;
 }
 
 body {
-  overflow:hidden;
+overflow:hidden;
 }
 
 .fullscreen:fullscreen {
-  display: none;
+display: none;
 } 
 
 .caps {
-  text-transform: capitalize;
+text-transform: capitalize;
 }
 
 .form {
-  max-width: 864px;
-  margin: auto;
+max-width: 864px;
+margin: auto;
 }
 
 #reportapp ul {
-    list-style-type: none;
-    padding-left:0;
+list-style-type: none;
+padding-left:0;
 }
 
 .searchInput {
-    margin-top: 5px;
-    width: 165px;
+margin-top: 5px;
+width: 165px;
 }
 
 
 .handsontable table.htCore {
-    padding-top: 0px;
+padding-top: 0px;
 }
 .ht_clone_top {
-    z-index: 58;
+z-index: 58;
 }
 
 .sidebar-left-search {
-  padding-bottom: 5px;
+padding-bottom: 5px;
+margin-top: 80px;
 }
 
 .sidenav-report-link {
-    text-transform: none !important;
-    border-radius: 0px !important;
+text-transform: none !important;
+border-radius: 0px !important;
 }
 
 .sidenav-report-link .report-meta-data {
-    font-size: 0.8em;
-    color: #bbb;
+font-size: 0.8em;
+color: #bbb;
 }
 
 .sort-by-label {
-  font-size: 0.7em;
-  color: #bbb;
+font-size: 0.7em;
+color: #bbb;
 }
 
 .sort-button {
-  text-transform: none !important;
+text-transform: none !important;
 }
 
 #reportapp .report-list-header {
-  padding-left: 6px;
+padding-left: 6px;
 }
 
 md-checkbox {
-  display: inline;
-  margin: 6px;
-}
-#reportapp .md-button {
-    margin: 0px;
-    min-width: 0;
-    min-height: 0;
+display: inline;
+margin: 6px;
 }
 
+/*#reportapp .md-button {
+margin: 0px;
+min-width: 0;
+min-height: 0;
+}*/
+
 .report-tabs-height {
-  height: calc(100% - 32px);
+height: calc(100% - 32px);
 }
 
 .angular-ui-tree-empty {
-  background-image: none;
-  background-color: inherit;
-  border: none;
+background-image: none;
+background-color: inherit;
+border: none;
 }
 
 .options-icon {
-  position: relative;
-  width: 1.5em; 
-  padding-right: 10px; 
-  top: 4px; 
+position: relative;
+width: 1.5em; 
+padding-right: 10px; 
+top: 4px; 
 }
+
+
+/***** new fixes *****/
+/**left column**/
+md-tabs-content-wrapper{
+top: 60px;  
+}
+
+md-content.layout-align-center-center.layout-row h5:first-of-type {
+margin-top: 20px;
+padding-bottom: 18px;
+}
+
+a.sidenav-report-link.md-accent.md-button.md-ink-ripple.layout-fill {
+margin-top: 40px;
+margin-bottom: 10px;
+}
+
+@media (min-width: 960px){
+
+    .md-padding {
+    padding: 8px;
+    }
+}
+
+md-content {
+overflow: hidden;  
+}
+
+md-toolbar ~ md-content > md-list {
+padding-bottom: 30px;
+}
+
+
+/**right column**/
+.angular-ui-tree-nodes .md-button{
+margin-left: -30px;  
+}
+
+.caps.ng-binding.flex {
+line-height: 48px;
+}
+
+
+md-content.fullheight.ng-scope > div{
+overflow-x: hidden;  
+}
+
