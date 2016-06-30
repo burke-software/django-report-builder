@@ -18,29 +18,6 @@ input[type="text"].small_input {
 width: 2em;
 }
 
-/*
-div.col_sort {
-max-width: 80px;
-}
-
-div.col_checkbox {
-max-width: 50px;
-}
-
-.move_trash {
-max-width: 53px;
-}
-
-.col_aggregate {
-max-width: 5em;
-min-width: 5em;
-}
-
-.col_format {
-min-width: 4em; 
-}
-*/
-
 .col_filter_type {
 min-width: 14em;
 }
@@ -96,11 +73,6 @@ padding-top: 0px;
 z-index: 58;
 }
 
-.sidebar-left-search {
-padding-bottom: 5px;
-margin-top: 80px;
-}
-
 .sidenav-report-link {
 text-transform: none !important;
 border-radius: 0px !important;
@@ -114,10 +86,6 @@ color: #bbb;
 .sort-by-label {
 font-size: 0.7em;
 color: #bbb;
-}
-
-.sort-button {
-text-transform: none !important;
 }
 
 #reportapp .report-list-header {
@@ -164,11 +132,6 @@ margin-top: 20px;
 padding-bottom: 18px;
 }
 
-a.sidenav-report-link.md-accent.md-button.md-ink-ripple.layout-fill {
-margin-top: 40px;
-margin-bottom: 10px;
-}
-
 @media (min-width: 960px){
 
     .md-padding {
@@ -182,6 +145,10 @@ overflow: hidden;
 
 md-toolbar ~ md-content > md-list {
 padding-bottom: 30px;
+}
+
+.sidebar-left-search {
+    margin-bottom: 0px;
 }
 
 

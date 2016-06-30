@@ -6,33 +6,28 @@
           <h1 class="md-toolbar-tools">Reports</h1>
         </md-toolbar>
         <md-content ng-controller="LeftCtrl">
-          <md-content class="md-padding">
-            <md-content layout="row" class="sort-buttons">
-              <div flex="25" class="sort-by-label" layout="column" layout-align="center center">
-                <div>Sort By:</div>
-              </div>
-              <md-button class="md-primary sort-button" flex="25" ng-click="reverseReportOrder = !reverseReportOrder; reportOrder='name';">name</md-button>
-              <md-button class="md-primary sort-button" flex="25" ng-click="reverseReportOrder = !reverseReportOrder; reportOrder='modified';">date</md-button>
-              <md-button class="md-primary sort-button" flex="25" ng-click="reverseReportOrder = !reverseReportOrder; reportOrder='user_created.first_name';">user</md-button>
-            </md-content>
-            <md-input-container class="sidebar-left-search">
-              <label>Search Reports</label>
-              <input type="text" ng-model="searchReports">
-            </md-input-container>
-          </md-content>
-          <md-content layout-align="center center" layout="row">
-            <h5>My Reports</h5>
-          </md-content>
+          <md-button layout-fill href="{{BASE_URL + 'report/add/'}}" class="sidenav-report-link md-accent">
+            <div layout="column" layout-align="center center">
+              <div>+ Add Report</div>
+            </div>
+          </md-button>
+
+
+          <div>Sort By:</div>
+          <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+            <md-button class="md-primary sort-button" ng-click="reverseReportOrder = !reverseReportOrder; reportOrder='name';">name</md-button>
+            <md-button class="md-primary sort-button" ng-click="reverseReportOrder = !reverseReportOrder; reportOrder='modified';">date</md-button>
+            <md-button class="md-primary sort-button" ng-click="reverseReportOrder = !reverseReportOrder; reportOrder='user_created.first_name';">user</md-button>
+          </section>
+
+          <md-input-container class="sidebar-left-search">
+            <label>Search Reports</label>
+            <input type="text" ng-model="searchReports">
+          </md-input-container>
+
+          <h5>My Reports</h5>
+
           <md-list>
-            <md-item>
-              <md-item-content>
-                <md-button layout-fill href="{{BASE_URL + 'report/add/'}}" class="sidenav-report-link md-accent">
-                  <div layout="column" layout-align="center center">
-                    <div>+ Add Report</div>
-                  </div>
-                </md-button>
-              </md-item-content>
-            </md-item>
             <md-item ng-repeat="report in reports | filter:searchReports | filter:currentUserFilter | orderBy:reportOrder:reverseReportOrder">
               <md-item-content>
                 <md-button layout-fill ng-click="openReport(report.id)" class="sidenav-report-link md-primary">
@@ -53,9 +48,8 @@
               </md-item-content>
             </md-item>
           </md-list>
-          <md-content layout-align="center center" layout="row">
-            <h5>All Reports</h5>
-          </md-content>
+
+          <h5>All Reports</h5>
           <md-list>
             <md-item ng-repeat="report in reports | filter:searchReports | filter:notCurrentUserFilter | orderBy:reportOrder:reverseReportOrder">
               <md-item-content>
