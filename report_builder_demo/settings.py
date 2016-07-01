@@ -23,8 +23,6 @@ SECRET_KEY = '@rri594lixl!a0g14v__srplb!&+6wv5gbp6+ii=)py4a*87md'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -84,6 +82,25 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.static',
+                'django.core.context_processors.media',
+            ],
+        },
+    },
+]
 
 
 # Static files (CSS, JavaScript, Images)

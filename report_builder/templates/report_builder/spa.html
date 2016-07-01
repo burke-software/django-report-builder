@@ -49,6 +49,9 @@
 {% endblock %}
 
 {% block content %}
+    {% if not STATIC_URL %}
+        <p>Please add 'django.core.context_processors.static' to context_processors in settings.py</p>
+    {% endif %}
     <div class="fullheight" ng-app="reportBuilderApp" ng-view>
     </div>
 {% endblock %}

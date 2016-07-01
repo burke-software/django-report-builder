@@ -10,7 +10,15 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
-3.3 is released. 
+## 3.4
+
+- Switched from default angular theme to something more neutral
+- Updated Angular Material version
+- Some CSS fixes
+- Should support Django 1.10 which isn't released at the time of this writing
+
+
+## 3.3 
 
 Official support is now for Django 1.8 and 1.9. Python 2.7 and 3.5 (I'm sure 3.4 works but no longer unit testing it). For Django < 1.8 please use the 3.2 release.
 
