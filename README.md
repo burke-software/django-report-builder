@@ -34,8 +34,6 @@ Official support is now for Django 1.8 and 1.9. Python 2.7 and 3.5 (I'm sure 3.4
 - Very simple security, user must have change or "view" permission to view
 reports. Unprivileged users can still build reports and see database schema.
 - Model properties (thanks yekibud)
-- Support for [django-custom-fields](https://github.com/burke-software/django-custom-field)
-- Support for django-hstore
 - Export to Report global admin action
 - Optional asynchronous report generation
 
@@ -45,10 +43,4 @@ http://django-report-builder.readthedocs.org/
 
 [Google group](https://groups.google.com/forum/#!forum/django-report-builder/).
 
-# [Hacking](http://django-report-builder.readthedocs.org/en/latest/hacking/)
-
-# Discussion
-
-Let us know your thoughts at https://google.com/+Burkesoftware
-
-[2.x]: https://github.com/burke-software/django-report-builder/tree/2.x
+[Hacking](http://django-report-builder.readthedocs.org/en/latest/hacking/)
