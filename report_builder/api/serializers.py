@@ -19,7 +19,7 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
                   'name', 'sort', 'sort_reverse', 'width', 'aggregate',
                   'position', 'total', 'group', 'report', 'display_format',
                   'field_type')
-        read_only_fields = ('id')
+        read_only_fields = ('id',)
 
 
 class FilterFieldSerializer(serializers.ModelSerializer):
