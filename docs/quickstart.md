@@ -2,8 +2,13 @@
 
 ##Requirements
 
-Django 1.8 or 1.9 and Django Rest Framework > 3.0. Users of older versions should continue to use the [2.x] branch instead. 
-See setup.py for full requirements list.
+Supported versions:
+
+We follow Django's supported version schedule for new releases. No longer supported versions should use previous versions of report builder.
+
+- Django -  1.8-1.9. Preliminary Django 1.10 (needs testing)
+- Django Rest Framework 3.2 and 3.3. 3.4 is NOT supported at this time. 
+- Python - 3.5 and 2.7.
 
 ##Installation
 
@@ -131,5 +136,3 @@ If you're developing your own front-end then you would need the ability to disab
     REPORT_BUILDER_FRONTEND = False
 
 By default the front-end is turned on.
-
-[2.x]: https://github.com/burke-software/django-report-builder/tree/2.x
