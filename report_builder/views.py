@@ -17,7 +17,7 @@ from django.views.generic import TemplateView, View
 from six import string_types
 from .utils import duplicate
 from .models import Report
-from report_utils.mixins import DataExportMixin, generate_filename
+from .mixins import DataExportMixin, generate_filename
 
 User = get_user_model()
 

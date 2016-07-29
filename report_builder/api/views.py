@@ -10,7 +10,7 @@ from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer)
 from report_builder.models import Report, Format, FilterField
-from report_utils.mixins import GetFieldsMixin, DataExportMixin
+from report_builder.mixins import GetFieldsMixin, DataExportMixin
 import copy
 
 
