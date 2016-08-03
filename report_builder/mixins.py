@@ -54,7 +54,7 @@ class DataExportMixin(object):
         ws.title = re.sub(r'\W+', '', sheet_name)[:30]
         if header:
             for i, header_cell in enumerate(header):
-                cell = ws.cell(row=first_row, column=i+column_base)
+                cell = ws.cell(row=first_row, column=i + column_base)
                 cell.value = header_cell
                 cell.font = Font(bold=True)
                 if widths:
