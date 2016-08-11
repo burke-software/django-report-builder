@@ -10,8 +10,8 @@ from django.db.models import Avg, Min, Max, Count, Sum, F
 from django.db.models.fields import FieldDoesNotExist
 from six import text_type
 from report_builder.unique_slugify import unique_slugify
-from report_utils.model_introspection import get_model_from_path_string
-from .utils import sort_data, increment_total, formatter
+from .utils import (
+    get_model_from_path_string, sort_data, increment_total, formatter)
 from dateutil import parser
 from decimal import Decimal
 from functools import reduce
