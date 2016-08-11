@@ -6,6 +6,7 @@ env:
   matrix:
     - DJANGO_VERSION="django>=1.8,<1.9"
     - DJANGO_VERSION="django>=1.9,<1.10"
+    - DJANGO_VERSION="django>=1.10,<1.11"
 install:
   - pip install -e . -r requirements.txt $DJANGO_VERSION
   - pip install coveralls
