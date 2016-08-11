@@ -7,7 +7,6 @@ web:
   command: python manage.py runserver_plus 0.0.0.0:8000
   volumes:
     - .:/code
-    #- ../django-report-utils/report_utils:/usr/local/lib/python3.5/site-packages/report_utils
   ports:
     - "8000:8000"
   links:
