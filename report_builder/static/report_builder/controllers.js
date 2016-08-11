@@ -1,6 +1,6 @@
 reportBuilderApp.controller('addCtrl', function($scope, $location, reportService) {
-  reportService.options().then(function(options) {
-    $scope.options = options.actions.POST;
+  reportService.getContentTypes().then(function(contentTypes) {
+    $scope.contentTypes = contentTypes;
   });
   $scope.submitForm = function() {
     if ($scope.reportForm.$valid) {
@@ -110,6 +110,10 @@ reportBuilderApp.service('reportService', ['Restangular',
       return Restangular.all('formats').getList();
     }
 
+    function getContentTypes() {
+      return Restangular.all('contenttypes').getList();
+    }
+
     function options() {
       return reports.options();
     }
@@ -139,6 +143,7 @@ reportBuilderApp.service('reportService', ['Restangular',
       getRelatedFields: getRelatedFields,
       getFields: getFields,
       getFormats: getFormats,
+      getContentTypes: getContentTypes,
       options: options,
       filterFieldOptions: filterFieldOptions,
       create: create,

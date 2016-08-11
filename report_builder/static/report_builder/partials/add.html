@@ -16,7 +16,7 @@
             <textarea ng-model="report.description"></textarea>
         </md-input-container>
         <label for="root_model">Root Model</label>
-        <select id="root_model" required="required" ng-model="report.root_model" ng-options="item.value as item.display_name for item in options.root_model.choices | orderBy:'display_name'">
+        <select id="root_model" required="required" ng-model="report.root_model" ng-options="item.pk as item.name for item in contentTypes | orderBy:'name'">
         </select>
         <p>The "root model" will be the starting point for this report. In database terms this is the FROM table that others will be joined with. A spreadsheet approximation would a pivot table.</p>
         <md-button type="submit" class="md-raised md-primary">Create Report</md-button>

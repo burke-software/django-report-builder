@@ -10,6 +10,7 @@ router.register(r'reports', api_views.ReportViewSet)
 router.register(r'report', api_views.ReportNestedViewSet)
 router.register(r'formats', api_views.FormatViewSet)
 router.register(r'filterfields', api_views.FilterFieldViewSet)
+router.register(r'contenttypes', api_views.ContentTypeViewSet)
 
 urlpatterns = [
     url(r'^report/(?P<pk>\d+)/download_file/$', views.DownloadFileView.as_view(), name="report_download_file"),

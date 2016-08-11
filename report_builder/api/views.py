@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
-    FilterFieldSerializer)
+    FilterFieldSerializer, ContentTypeSerializer)
 from report_builder.models import Report, Format, FilterField
 from report_utils.mixins import GetFieldsMixin, DataExportMixin
 import copy
@@ -33,6 +33,15 @@ class FormatViewSet(viewsets.ModelViewSet):
 class FilterFieldViewSet(viewsets.ModelViewSet):
     queryset = FilterField.objects.all()
     serializer_class = FilterFieldSerializer
+
+
+class ContentTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    """ Read only view of content types.
+    Used to populate choices for new report root model.
+    """
+    queryset = ContentType.objects.all()
+    serializer_class = ContentTypeSerializer
+    permission_classes = (IsAdminUser,)
 
 
 class ReportViewSet(viewsets.ModelViewSet):

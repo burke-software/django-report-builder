@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from report_builder.models import Report, DisplayField, FilterField, Format
 from rest_framework import serializers
 import datetime
@@ -37,6 +38,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "id")
 
 
+class ContentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContentType
+        fields = ("pk", "name")
+
+
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
     root_model = serializers.PrimaryKeyRelatedField(
         queryset=Report.allowed_models())
@@ -58,9 +65,10 @@ class ReportNestedSerializer(ReportSerializer):
     class Meta:
         model = Report
         fields = (
-            'id', 'name', 'description', 'modified', 'root_model', 'root_model_name',
-            'displayfield_set', 'distinct', 'user_created', 'user_modified',
-            'filterfield_set', 'report_file', 'report_file_creation')
+            'id', 'name', 'description', 'modified', 'root_model',
+            'root_model_name', 'displayfield_set', 'distinct', 'user_created',
+            'user_modified', 'filterfield_set', 'report_file',
+            'report_file_creation')
         read_only_fields = ('report_file', 'report_file_creation')
 
     def validate(self, data):
@@ -79,7 +87,8 @@ class ReportNestedSerializer(ReportSerializer):
 
         with transaction.atomic():
             instance.name = validated_data.get('name', instance.name)
-            instance.description = validated_data.get('description', instance.description)
+            instance.description = validated_data.get(
+                'description', instance.description)
             instance.distinct = validated_data.get(
                 'distinct', instance.distinct)
             instance.modified = datetime.date.today()
