@@ -121,8 +121,7 @@ class Report(models.Model):
 
         # Is it a ORM field?
         try:
-            return model._meta.get_field_by_name(
-                field_name)[0].get_internal_type()
+            return model._meta.get_field(field_name).get_internal_type()
         except FieldDoesNotExist:
             pass
         # Is it a property?

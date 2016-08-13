@@ -135,15 +135,16 @@ def get_relation_fields_from_model(model_class):
     relation_fields = []
     all_fields_names = get_all_field_names(model_class)
     for field_name in all_fields_names:
-        # avoid setting field_name on any ManyToOneRel objects
-        field = copy.deepcopy(model_class._meta.get_field_by_name(field_name))
+        field = model_class._meta.get_field(field_name)
+        direct = field.concrete
+        m2m = field.many_to_many
         # get_all_field_names will return the same field
         # both with and without _id. Ignore the duplicate.
         if field_name[-3:] == '_id' and field_name[:-3] in all_fields_names:
             continue
-        if field[3] or not field[2] or hasattr(field[0], 'related'):
-            field[0].field_name = field_name
-            relation_fields += [field[0]]
+        if m2m or not direct or hasattr(field, 'related') or field.is_relation:
+            field.field_name = field_name
+            relation_fields += [field]
     return relation_fields
 
 

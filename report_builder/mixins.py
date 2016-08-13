@@ -542,29 +542,27 @@ class GetFieldsMixin(object):
         app_label = model_class._meta.app_label
 
         if field_name != '':
-            field = model_class._meta.get_field_by_name(field_name)
+            field = model_class._meta.get_field(field_name)
+            direct = field.concrete
             if path_verbose:
                 path_verbose += "::"
             # TODO: need actual model name to generate choice list (not pluralized field name)
             # - maybe store this as a separate value?
-            if field[3] and hasattr(field[0], 'm2m_reverse_field_name'):
-                path_verbose += field[0].m2m_reverse_field_name()
+            if field[3] and hasattr(field, 'm2m_reverse_field_name'):
+                path_verbose += field.m2m_reverse_field_name()
             else:
-                path_verbose += field[0].name
+                path_verbose += field.name
 
             path += field_name
             path += '__'
-            if field[2]:  # Direct field
+            if direct:
                 try:
-                    new_model = field[0].related.parent_model
+                    new_model = field.related.parent_model
                 except AttributeError:
-                    new_model = field[0].related.model
+                    new_model = field.related.model
                 path_verbose = new_model.__name__.lower()
             else:  # Indirect related field
-                try:
-                    new_model = field[0].related_model
-                except AttributeError:  # Django 1.7
-                    new_model = field[0].model
+                new_model = field.related_model
                 path_verbose = new_model.__name__.lower()
 
             fields = get_direct_fields_from_model(new_model)
@@ -585,23 +583,20 @@ class GetFieldsMixin(object):
     def get_related_fields(self, model_class, field_name, path="", path_verbose=""):
         """ Get fields for a given model """
         if field_name:
-            field = model_class._meta.get_field_by_name(field_name)
-            if field[2]:
-                # Direct field
+            field = model_class._meta.get_field(field_name)
+            direct = field.concrete
+            if direct:
                 try:
-                    new_model = field[0].related.parent_model()
+                    new_model = field.related.parent_model()
                 except AttributeError:
-                    new_model = field[0].related.model
+                    new_model = field.related.model
             else:
                 # Indirect related field
-                if hasattr(field[0], 'related_model'):  # Django>=1.8
-                    new_model = field[0].related_model
-                else:
-                    new_model = field[0].model()
+                new_model = field.related_model
 
             if path_verbose:
                 path_verbose += "::"
-            path_verbose += field[0].name
+            path_verbose += field.name
 
             path += field_name
             path += '__'
