@@ -548,7 +548,7 @@ class GetFieldsMixin(object):
                 path_verbose += "::"
             # TODO: need actual model name to generate choice list (not pluralized field name)
             # - maybe store this as a separate value?
-            if field[3] and hasattr(field, 'm2m_reverse_field_name'):
+            if field.many_to_many and hasattr(field, 'm2m_reverse_field_name'):
                 path_verbose += field.m2m_reverse_field_name()
             else:
                 path_verbose += field.name

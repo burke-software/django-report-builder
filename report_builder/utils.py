@@ -131,15 +131,15 @@ def get_properties_from_model(model_class):
 
 
 def get_relation_fields_from_model(model_class):
-    """ Get related fields (m2m, FK, and reverse FK) """
+    """ get related fields (m2m, fk, and reverse fk) """
     relation_fields = []
     all_fields_names = get_all_field_names(model_class)
     for field_name in all_fields_names:
-        field = model_class._meta.get_field(field_name)
+        field = copy.deepcopy(model_class._meta.get_field(field_name))
         direct = field.concrete
         m2m = field.many_to_many
         # get_all_field_names will return the same field
-        # both with and without _id. Ignore the duplicate.
+        # both with and without _id. ignore the duplicate.
         if field_name[-3:] == '_id' and field_name[:-3] in all_fields_names:
             continue
         if m2m or not direct or hasattr(field, 'related') or field.is_relation:
