@@ -142,7 +142,7 @@ def get_relation_fields_from_model(model_class):
         # both with and without _id. ignore the duplicate.
         if field_name[-3:] == '_id' and field_name[:-3] in all_fields_names:
             continue
-        if m2m or not direct or hasattr(field, 'related') or field.is_relation:
+        if m2m or not direct or field.is_relation:
             field.field_name = field_name
             relation_fields += [field]
     return relation_fields
@@ -167,7 +167,7 @@ def get_direct_fields_from_model(model_class):
         field = model_class._meta.get_field(field_name)
         direct = field.concrete
         m2m = field.many_to_many
-        if direct and not m2m and not hasattr(field, 'related'):
+        if direct and not m2m and not field.is_relation:
             direct_fields += [field]
     return direct_fields
 
