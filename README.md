@@ -7,8 +7,6 @@ Targets sys admins and capable end users who might not be able to program or gai
 [![Build Status](https://travis-ci.org/burke-software/django-report-builder.png?branch=master)](https://travis-ci.org/burke-software/django-report-builder) [![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=314767)](https://www.bountysource.com/trackers/314767-burke-software-django-report-builder?utm_source=314767&utm_medium=shield&utm_campaign=TRACKER_BADGE)
 [![Coverage Status](https://coveralls.io/repos/burke-software/django-report-builder/badge.svg)](https://coveralls.io/r/burke-software/django-report-builder)
 
-Django 1.10 is not supported due to major changes in model meta api.
-
 # News
 
 ## 3.4
@@ -16,6 +14,8 @@ Django 1.10 is not supported due to major changes in model meta api.
 - Switched from default angular theme to something more neutral
 - Updated Angular Material version
 - Some CSS fixes
+- Limited Django 1.10 (use >=3.4.2) support see #239
+- Django rest framework 3.4 support
 
 
 ## 3.3 
