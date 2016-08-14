@@ -62,7 +62,7 @@ class ReportAdmin(admin.ModelAdmin):
         else:
             img = static_url + 'report_builder/img/unstar.png'
         return '<a href="javascript:void(0)" onclick="ajax_add_star(this, \'{0}\')"><img style="width: 26px; margin: -6px;" src="{1}"/></a>'.format(
-            reverse('report_builder.views.ajax_add_star', args=[obj.id]),
+            reverse('ajax_add_star', args=[obj.id]),
             img)
     ajax_starred.allow_tags = True
     ajax_starred.short_description = "Starred"
