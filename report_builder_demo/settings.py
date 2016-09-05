@@ -62,11 +62,8 @@ WSGI_APPLICATION = 'report_builder_demo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -114,7 +111,7 @@ REDIS_PORT = os.environ.get('REDIS_1_PORT_6379_TCP_PORT', '6379')
 BROKER_URL = 'redis://{}:{}/0'.format(REDIS_ADDR, REDIS_PORT)
 CELERY_RESULT_BACKEND = BROKER_URL
 
-REPORT_BUILDER_ASYNC_REPORT = True
+REPORT_BUILDER_ASYNC_REPORT = False
 REPORT_BUILDER_GLOBAL_EXPORT = True
 REPORT_BUILDER_EMAIL_NOTIFICATION = False
 
