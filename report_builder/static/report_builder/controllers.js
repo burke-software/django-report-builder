@@ -257,6 +257,7 @@ reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
   $scope.getPreview = function() {
+    $scope.reportData.chart = false;
     $scope.reportData.statusMessage = null;
     $scope.reportData.refresh = true;
     reportService.getPreview($scope.report.id).then(function(data) {
@@ -275,6 +276,37 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     });
   };
 
+  $scope.createChart = function() {
+    $scope.reportData.chart = true;
+    $scope.reportData.statusMessage = null;
+    $scope.reportData.refresh = true;
+    reportService.getPreview($scope.report.id).then(function(data) {
+      var chart_data = data.map(function(row) {
+        return [ row[0], row[row.length-1]];
+      });
+      var categories = chart_data.map(function(row) {
+        return row[0];
+      });
+      Highcharts.chart('highchart_container', {
+        chart: {
+          type: 'column'
+        },
+        xAxis: {
+            categories: categories,
+        },
+        title: {
+            text: $scope.report.name,
+        },
+        series: [{
+            data: chart_data,
+        }]
+      });
+      $scope.reportData.refresh = false;
+    }, function(response) {
+      $scope.reportData.refresh = false;
+      $scope.reportData.statusMessage = "Error with status code " + response.status;
+    });
+  };
   $scope.save = function() {
     angular.forEach($scope.report.displayfield_set, function(value, index) {
       value.position = index;

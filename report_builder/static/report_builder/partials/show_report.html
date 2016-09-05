@@ -4,6 +4,7 @@
         <md-button ng-click="getPreview()">Preview</md-button>
         <md-button ng-click="downloadReport('xlsx')"><a ng-href="">xlsx</a></md-button>
         <md-button ng-click="downloadReport('csv')"><a ng-href="">csv</a></md-button>
+        <md-button ng-click="createChart()"><a ng-href="">chart</a></md-button>
         <span ng-if="report.lastSaved == null">
             Changes have not been saved
         </span>
@@ -54,7 +55,10 @@
                 </ul>
             </div>
         </div>
-        <div class="fullheight" style="width:100%; overflow: auto" ng-if="reportData.refresh == false">
+        <div ng-show="reportData.chart" class="fullheight" style="width:100%; overflow: auto">
+           <div id="highchart_container"></div>
+        </div>
+        <div ng-hide="reportData.chart" class="fullheight" style="width:100%; overflow: auto" ng-if="reportData.refresh == false">
             <hot-table id="previewTable"
                 columnHeaders="true"
                 settings="htSettings"
