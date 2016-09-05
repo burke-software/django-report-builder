@@ -1,6 +1,6 @@
 django-custom-field==2.5
 psycopg2
-django-extensions
+django-extensions==1.6.7
 Werkzeug
 ipdb
 celery[redis]
