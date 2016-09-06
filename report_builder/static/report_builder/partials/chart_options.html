@@ -1,6 +1,6 @@
 <md-content class="md-padding" ng-controller="ChartOptionsCtrl">
 <md-list>
-    <md-list-item> 
+    <md-list-item>
         <md-radio-group ng-model="report.chart_type">
             <p><strong>Type</strong></p>
             <md-radio-button value="2">
@@ -8,12 +8,56 @@
             </md-radio-button>
 
             <md-radio-button ng-value="3">
-            ADVANCED (categories, series, values)
+            NORMAL (categories, series, values)
+            </md-radio-button>
+
+            <md-radio-button ng-value="4">
+            ADVANCED (categories, series, groups, values)
             </md-radio-button>
 
         </md-radio-group>
-
     </md-list-item>
+
+    <md-list-item>
+        <label><strong>Categories: &nbsp; &nbsp;</strong></label>
+        <select ng-model="report.categories">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.categories">
+                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
+                {{ field.name }}
+          </option>
+        </select>
+    </md-list-item>
+
+    <md-list-item ng-show="report.chart_type > 2">
+        <label><strong>Series: &nbsp; &nbsp;</strong></label>
+        <select ng-model="report.series">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.series">
+                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
+                {{ field.name }}
+          </option>
+        </select>
+    </md-list-item>
+
+    <md-list-item ng-show="report.chart_type > 3">
+        <label><strong>Groups: &nbsp; &nbsp;</strong></label>
+        <select ng-model="report.groups">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.groups">
+                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
+                {{ field.name }}
+          </option>
+        </select>
+    </md-list-item>
+
+    <md-list-item>
+        <label><strong>Values: &nbsp; &nbsp;</strong></label>
+        <select ng-model="report.values">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.values">
+                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
+                {{ field.name }}
+          </option>
+        </select>
+    </md-list-item>
+
 </md-list>
 </md-content>
-    
+

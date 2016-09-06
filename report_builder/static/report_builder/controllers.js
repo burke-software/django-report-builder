@@ -255,17 +255,16 @@ reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
   };
 });
 reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
-  $scope.report.chart_type = 2;
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
 
-  function simple_chart(data) {
+  function simple_chart(data, x, y) {
     var categories = data.map(function(row) {
-      return row[0];
+      return row[x];
     });
     var series_data = data.map(function(row) {
-      return [ row[0], row[row.length-1]];
+      return [ row[x], row[y]];
     });
     return {
       categories: categories,
@@ -273,13 +272,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     };
   }
 
-  function chart_with_series(data) {
-    var x1 = 0;
-    var x2 = 1;
-    var y = 0;
-    if (data.length > 0) {
-      y = data[0].length-1;
-    }
+  function chart_with_series(data, x1, x2, y) {
     var categories = [];
     for (var i = 0; i < data.length; i++) {
       if (categories.indexOf(data[i][x1]) < 0) {
@@ -333,9 +326,9 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     reportService.getPreview($scope.report.id).then(function(data) {
       var chart_data = {};
       if ($scope.report.chart_type == 2) {
-        chart_data = simple_chart(data);
+        chart_data = simple_chart(data, $scope.report.categories, $scope.report.values);
       } else {
-        chart_data = chart_with_series(data);
+        chart_data = chart_with_series(data, $scope.report.categories, $scope.report.series, $scope.report.values);
       }
       Highcharts.chart('highchart_container', {
         chart: {
