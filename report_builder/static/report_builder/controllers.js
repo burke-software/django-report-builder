@@ -254,6 +254,9 @@ reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
     field.remove();
   };
 });
+reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
+  $scope.report.chart_type = 2;
+});
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
 
@@ -328,7 +331,12 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     $scope.reportData.statusMessage = null;
     $scope.reportData.refresh = true;
     reportService.getPreview($scope.report.id).then(function(data) {
-      var chart_data = chart_with_series(data);
+      var chart_data = {};
+      if ($scope.report.chart_type == 2) {
+        chart_data = simple_chart(data);
+      } else {
+        chart_data = chart_with_series(data);
+      }
       Highcharts.chart('highchart_container', {
         chart: {
           type: 'column'

@@ -124,12 +124,18 @@
             </md-tab-body>
           </md-tab>
           <md-tab id="tab3" aria-controls="tab3-content">
+            <md-tab-label>Chart options</md-tab-label>
+            <md-tab-body>
+              <div ng-include="static('report_builder/partials/chart_options.html')"></div>
+            </md-tab-body>
+          </md-tab>
+          <md-tab id="tab4" aria-controls="tab4-content">
             <md-tab-label>Report</md-tab-label>
             <md-tab-body>
               <div class="fullheight" ng-include="static('report_builder/partials/show_report.html')"></div>
             </md-tab-body>
           </md-tab>
-          <md-tab id="tab4" aria-controls="tab3-content">
+          <md-tab id="tab5" aria-controls="tab5-content">
             <md-tab-label>Options</md-tab-label>
             <md-tab-body>
               <div ng-include="static('report_builder/partials/options.html')"></div>
