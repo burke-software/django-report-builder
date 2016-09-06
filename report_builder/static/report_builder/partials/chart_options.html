@@ -20,8 +20,8 @@
 
     <md-list-item>
         <label><strong>Categories: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.categories">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.categories">
+        <select ng-model="report.chart_categories">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.chart_categories">
                 {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
                 {{ field.name }}
           </option>
@@ -30,8 +30,8 @@
 
     <md-list-item ng-show="report.chart_type > 2">
         <label><strong>Series: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.series">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.series">
+        <select ng-model="report.chart_series">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.chart_series">
                 {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
                 {{ field.name }}
           </option>
@@ -41,7 +41,7 @@
     <md-list-item ng-show="report.chart_type > 3">
         <label><strong>Groups: &nbsp; &nbsp;</strong></label>
         <select ng-model="report.groups">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.groups">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.groups">
                 {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
                 {{ field.name }}
           </option>
@@ -50,8 +50,8 @@
 
     <md-list-item>
         <label><strong>Values: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.values">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index == report.values">
+        <select ng-model="report.chart_values">
+          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.chart_values">
                 {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
                 {{ field.name }}
           </option>

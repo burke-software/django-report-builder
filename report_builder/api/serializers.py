@@ -80,6 +80,9 @@ class ReportNestedSerializer(ReportSerializer):
 
         with transaction.atomic():
             instance.name = validated_data.get('name', instance.name)
+            instance.chart_categories = validated_data.get('chart_categories', instance.chart_categories)
+            instance.chart_series = validated_data.get('chart_series', instance.chart_series)
+            instance.chart_values = validated_data.get('chart_values', instance.chart_values)
             instance.description = validated_data.get('description', instance.description)
             instance.distinct = validated_data.get(
                 'distinct', instance.distinct)
