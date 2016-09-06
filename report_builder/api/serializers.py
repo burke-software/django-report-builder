@@ -60,7 +60,8 @@ class ReportNestedSerializer(ReportSerializer):
         fields = (
             'id', 'name', 'description', 'modified', 'root_model', 'root_model_name',
             'displayfield_set', 'distinct', 'user_created', 'user_modified',
-            'filterfield_set', 'report_file', 'report_file_creation')
+            'filterfield_set', 'report_file', 'report_file_creation',
+            'chart_categories', 'chart_series', 'chart_values')
         read_only_fields = ('report_file', 'report_file_creation')
 
     def validate(self, data):
