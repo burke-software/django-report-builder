@@ -11,51 +11,22 @@
             NORMAL (categories, series, values)
             </md-radio-button>
 
-            <md-radio-button ng-value="4">
-            ADVANCED (categories, series, groups, values)
-            </md-radio-button>
-
         </md-radio-group>
     </md-list-item>
 
     <md-list-item>
         <label><strong>Categories: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.chart_categories">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.chart_categories">
-                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
-                {{ field.name }}
-          </option>
-        </select>
+        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_categories"></select>
     </md-list-item>
 
     <md-list-item ng-show="report.chart_type > 2">
         <label><strong>Series: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.chart_series">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.chart_series">
-                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
-                {{ field.name }}
-          </option>
-        </select>
-    </md-list-item>
-
-    <md-list-item ng-show="report.chart_type > 3">
-        <label><strong>Groups: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.groups">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.groups">
-                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
-                {{ field.name }}
-          </option>
-        </select>
+        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_series"></select>
     </md-list-item>
 
     <md-list-item>
         <label><strong>Values: &nbsp; &nbsp;</strong></label>
-        <select ng-model="report.chart_values">
-          <option ng-repeat="field in report.displayfield_set" value="{{$index}}" ng-selected="$index === report.chart_values">
-                {{ field.path_verbose ? '(' + field.path_verbose + ') ' : '' }}
-                {{ field.name }}
-          </option>
-        </select>
+        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_values"></select>
     </md-list-item>
 
 </md-list>

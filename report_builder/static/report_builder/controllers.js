@@ -254,7 +254,12 @@ reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
     field.remove();
   };
 });
+
 reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
+    $scope.$watch('report.displayfield_set', function(newValue, oldValue) {
+      $scope.report_fields_indexes = newValue.map(function(el, idx) { return idx; });
+      $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
+    }, true);
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
@@ -326,9 +331,9 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     reportService.getPreview($scope.report.id).then(function(data) {
       var chart_data = {};
       if ($scope.report.chart_type == 2) {
-        chart_data = simple_chart(data, $scope.report.categories, $scope.report.values);
+        chart_data = simple_chart(data, $scope.report.chart_categories, $scope.report.chart_values);
       } else {
-        chart_data = chart_with_series(data, $scope.report.categories, $scope.report.series, $scope.report.values);
+        chart_data = chart_with_series(data, $scope.report.chart_categories, $scope.report.chart_series, $scope.report.chart_values);
       }
       Highcharts.chart('highchart_container', {
         chart: {
