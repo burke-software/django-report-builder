@@ -256,6 +256,53 @@ reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
+
+  function simple_chart(data) {
+    var categories = data.map(function(row) {
+      return row[0];
+    });
+    var series_data = data.map(function(row) {
+      return [ row[0], row[row.length-1]];
+    });
+    return {
+      categories: categories,
+      series: [{ data: series_data }],
+    };
+  }
+
+  function chart_with_series(data) {
+    var x1 = 0;
+    var x2 = 1;
+    var y = 0;
+    if (data.length > 0) {
+      y = data[0].length-1;
+    }
+    var categories = [];
+    for (var i = 0; i < data.length; i++) {
+      if (categories.indexOf(data[i][x1]) < 0) {
+        categories.push(data[i][x1]);
+      }
+    }
+    var series_data_dict = {};
+    for (i = 0; i < data.length; i++) {
+      if (! (data[i][x2] in series_data_dict)) {
+        series_data_dict[data[i][x2]] = [];
+      }
+      series_data_dict[data[i][x2]].push([data[i][x1], data[i][y]]);
+    }
+    var series_data = [];
+    for (var key in series_data_dict) {
+      series_data.push({
+        name: key,
+        data: series_data_dict[key]
+      });
+    }
+    return {
+      categories: categories,
+      series: series_data,
+    };
+  }
+
   $scope.getPreview = function() {
     $scope.reportData.chart = false;
     $scope.reportData.statusMessage = null;
@@ -281,25 +328,18 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     $scope.reportData.statusMessage = null;
     $scope.reportData.refresh = true;
     reportService.getPreview($scope.report.id).then(function(data) {
-      var chart_data = data.map(function(row) {
-        return [ row[0], row[row.length-1]];
-      });
-      var categories = chart_data.map(function(row) {
-        return row[0];
-      });
+      var chart_data = chart_with_series(data);
       Highcharts.chart('highchart_container', {
         chart: {
           type: 'column'
         },
         xAxis: {
-            categories: categories,
+            categories: chart_data.categories,
         },
         title: {
             text: $scope.report.name,
         },
-        series: [{
-            data: chart_data,
-        }]
+        series: chart_data.series,
       });
       $scope.reportData.refresh = false;
     }, function(response) {
@@ -307,6 +347,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       $scope.reportData.statusMessage = "Error with status code " + response.status;
     });
   };
+
   $scope.save = function() {
     angular.forEach($scope.report.displayfield_set, function(value, index) {
       value.position = index;
