@@ -61,7 +61,7 @@ class ReportNestedSerializer(ReportSerializer):
             'id', 'name', 'description', 'modified', 'root_model', 'root_model_name',
             'displayfield_set', 'distinct', 'user_created', 'user_modified',
             'filterfield_set', 'report_file', 'report_file_creation',
-            'chart_categories', 'chart_series', 'chart_values', 'chart_type')
+            'chart_categories', 'chart_series', 'chart_values', 'chart_type', 'chart_style')
         read_only_fields = ('report_file', 'report_file_creation')
 
     def validate(self, data):
@@ -84,6 +84,7 @@ class ReportNestedSerializer(ReportSerializer):
             instance.chart_series = validated_data.get('chart_series', instance.chart_series)
             instance.chart_values = validated_data.get('chart_values', instance.chart_values)
             instance.chart_type = validated_data.get('chart_type', instance.chart_type)
+            instance.chart_style = validated_data.get('chart_style', instance.chart_style)
             instance.description = validated_data.get('description', instance.description)
             instance.distinct = validated_data.get(
                 'distinct', instance.distinct)
