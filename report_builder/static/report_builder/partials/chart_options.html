@@ -29,6 +29,15 @@
         <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_values"></select>
     </md-list-item>
 
+    <md-list-item>
+        <md-radio-group ng-model="report.chart_style">
+            <p><strong>Style</strong></p>
+            <md-radio-button ng-repeat="style in chart_styles" value="{{style}}">
+            {{ style }}
+            </md-radio-button>
+        </md-radio-group>
+    </md-list-item>
+
 </md-list>
 </md-content>
 

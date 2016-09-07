@@ -260,6 +260,7 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
       $scope.report_fields_indexes = newValue.map(function(el, idx) { return idx; });
       $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
     }, true);
+    $scope.chart_styles = ['area', 'bar', 'column', 'line', 'pie']
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
@@ -337,7 +338,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       }
       Highcharts.chart('highchart_container', {
         chart: {
-          type: 'column'
+          type: $scope.report.chart_style,
         },
         xAxis: {
             categories: chart_data.categories,
