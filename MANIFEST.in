@@ -1,2 +1,6 @@
 recursive-include report_builder/templates *
-recursive-include report_builder/static *
+recursive-include report_builder/static/report_builder/css *
+recursive-include report_builder/static/report_builder/img *
+recursive-include report_builder/static/report_builder/js *
+recursive-include report_builder/static/report_builder/partials *
+include report_builder/static/report_builder/*.js
