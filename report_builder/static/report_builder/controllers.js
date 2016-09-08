@@ -336,18 +336,33 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       } else {
         chart_data = chart_with_series(data, $scope.report.chart_categories, $scope.report.chart_series, $scope.report.chart_values);
       }
-      Highcharts.chart('highchart_container', {
+      var chart_dict = {
         chart: {
           type: $scope.report.chart_style,
         },
         xAxis: {
-            categories: chart_data.categories,
+          categories: chart_data.categories,
         },
         title: {
-            text: $scope.report.name,
+          text: $scope.report.name,
+        },
+        yAxis: {
+          stackLabels: {
+            enabled: $scope.report.chart_total,
+            formatter: function() {return 'total: ' + this.total},
+          }
         },
         series: chart_data.series,
-      });
+      };
+      chart_dict['plotOptions'] = {};
+      chart_dict['plotOptions'][$scope.report.chart_style] = {
+        dataLabels: {
+          enabled: $scope.report.chart_labels,
+        },
+        stacking: $scope.report.chart_stacked ? 'normal' : false,
+      };
+      Highcharts.chart('highchart_container', chart_dict);
+
       $scope.reportData.refresh = false;
     }, function(response) {
       $scope.reportData.refresh = false;

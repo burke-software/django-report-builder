@@ -2,7 +2,7 @@
 <md-list>
     <md-list-item>
         <md-radio-group ng-model="report.chart_type">
-            <p><strong>Type</strong></p>
+            <p><strong>Type:</strong></p>
             <md-radio-button value="2">
             SIMPLE (categories, values)
             </md-radio-button>
@@ -31,12 +31,22 @@
 
     <md-list-item>
         <md-radio-group ng-model="report.chart_style">
-            <p><strong>Style</strong></p>
+            <p><strong>Style:</strong></p>
             <md-radio-button ng-repeat="style in chart_styles" value="{{style}}">
             {{ style }}
             </md-radio-button>
         </md-radio-group>
     </md-list-item>
+
+    <md-list-item>
+        <md-item-content>
+        <p><strong>Others options:</strong></p>
+            <md-checkbox ng-model="report.chart_stacked"> Stacked </md-checkbox>
+            <md-checkbox ng-model="report.chart_labels"> Labels </md-checkbox>
+            <md-checkbox ng-model="report.chart_total"> Total </md-checkbox>
+        </md-item-content>
+    </md-list-item>
+
 
 </md-list>
 </md-content>
