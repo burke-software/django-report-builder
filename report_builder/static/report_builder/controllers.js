@@ -265,24 +265,33 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
 
-  function simple_chart(data, x, y) {
+  function chart_series_from_columns(data, x, y, titles) {
     var categories = data.map(function(row) {
-      return row[x];
+      return '' + row[x];
     });
-    var series_data = data.map(function(row) {
-      return [ row[x], row[y]];
-    });
+    console.log(data)
+    console.log(y)
+    var series_data = [];
+    for (var i = 0; i < y.length; i++) {
+      series_data.push({
+        name: titles[y[i]],
+        data: data.map(function(row) {
+          return [ '' + row[x], row[y[i]]];
+        }),
+      });
+    }
+    console.log(series_data);
     return {
       categories: categories,
-      series: [{ data: series_data }],
+      series: series_data,
     };
   }
 
-  function chart_with_series(data, x1, x2, y) {
+  function chart_series_from_rows(data, x1, x2, y) {
     var categories = [];
     for (var i = 0; i < data.length; i++) {
       if (categories.indexOf(data[i][x1]) < 0) {
-        categories.push(data[i][x1]);
+        categories.push('' + data[i][x1]);
       }
     }
     var series_data_dict = {};
@@ -290,7 +299,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       if (! (data[i][x2] in series_data_dict)) {
         series_data_dict[data[i][x2]] = [];
       }
-      series_data_dict[data[i][x2]].push([data[i][x1], data[i][y]]);
+      series_data_dict[data[i][x2]].push('' + [data[i][x1], data[i][y]]);
     }
     var series_data = [];
     for (var key in series_data_dict) {
@@ -330,11 +339,17 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     $scope.reportData.statusMessage = null;
     $scope.reportData.refresh = true;
     reportService.getPreview($scope.report.id).then(function(data) {
+      console.log($scope.report.chart_type)
+      console.log($scope.report.chart_values)
+      var chart_values_list = $scope.report.chart_values.split(',');
       var chart_data = {};
       if ($scope.report.chart_type == 2) {
-        chart_data = simple_chart(data, $scope.report.chart_categories, $scope.report.chart_values);
+        chart_data = chart_series_from_columns(data, $scope.report.chart_categories, chart_values_list, data.meta.titles);
+      }
+      else if ($scope.report.chart_type == 3) {
+        chart_data = chart_series_from_rows(data, $scope.report.chart_categories, $scope.report.chart_series, chart_values_list[0]);
       } else {
-        chart_data = chart_with_series(data, $scope.report.chart_categories, $scope.report.chart_series, $scope.report.chart_values);
+        return;
       }
       var chart_dict = {
         chart: {

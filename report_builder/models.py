@@ -90,7 +90,7 @@ class Report(models.Model):
     chart_type = models.IntegerField(null=True, blank=True)
     chart_categories = models.IntegerField(null=True, blank=True)
     chart_series = models.IntegerField(null=True, blank=True)
-    chart_values = models.IntegerField(null=True, blank=True)
+    chart_values = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
