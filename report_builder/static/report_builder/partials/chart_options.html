@@ -16,7 +16,11 @@
 
     <md-list-item>
         <label><strong>Categories: &nbsp; &nbsp;</strong></label>
-        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_categories"></select>
+        <span ng-repeat="(idx, el) in report.chart_categories_list track by $index">
+            <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_categories_list[idx]"></select>
+            <img ng-click="remove_from_chart_categories(idx)" src="{{ static('report_builder/img/delete.svg') }}"></img>
+        </span>
+        <img style="margin-left: 30px;" ng-click="add_to_chart_categories()" src="{{ static('report_builder/img/add.svg') }}"></img>
     </md-list-item>
 
     <md-list-item ng-show="report.chart_type > 2">

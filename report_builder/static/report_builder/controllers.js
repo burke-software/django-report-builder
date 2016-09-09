@@ -269,6 +269,13 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
         $scope.report.chart_values_list = newValue.split(',').map(function(el) { return parseInt(el);});
       }
     }, true);
+    $scope.$watch('report.chart_categories', function(newValue, oldValue) {
+      if (newValue === undefined || newValue === null || typeof newValue == 'number') {
+        $scope.report.chart_categories_list = [];
+      } else {
+        $scope.report.chart_categories_list = newValue.split(',').map(function(el) { return parseInt(el);});
+      }
+    }, true);
 
     $scope.remove_from_chart_values = function(index) {
       $scope.report.chart_values_list.splice(index, 1);
@@ -276,27 +283,44 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
     $scope.add_to_chart_values = function() {
       $scope.report.chart_values_list.push(null);
     };
+
+    $scope.remove_from_chart_categories = function(index) {
+      $scope.report.chart_categories_list.splice(index, 1);
+    };
+    $scope.add_to_chart_categories = function() {
+      $scope.report.chart_categories_list.push(null);
+    };
+
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
 
   function chart_series_from_columns(data, x, y, titles) {
-    var categories = data.map(function(row) {
-      return '' + row[x];
-    });
+    var categories = [];
+    var unique_categories = [];
+    data.forEach(function(row, idx) {
+        var row_category = "";
+        for (var i = 0; i < x.length; i++) {
+          row_category += row[x[i]];
+        }
+        categories.push(row_category);
+        if (unique_categories.indexOf(row_category) < 0) {
+          unique_categories.push(row_category);
+        }
+      }
+    );
     var series_data = [];
     for (var i = 0; i < y.length; i++) {
       if (y[i] == null) continue;
       series_data.push({
         name: titles[y[i]],
-        data: data.map(function(row) {
-          return [ '' + row[x], row[y[i]]];
+        data: data.map(function(row, idx) {
+          return [ categories[idx], row[y[i]]];
         }),
       });
     }
-    console.log(series_data);
     return {
-      categories: categories,
+      categories: unique_categories,
       series: series_data,
     };
   }
@@ -355,7 +379,8 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     reportService.getPreview($scope.report.id).then(function(data) {
       var chart_data = {};
       if ($scope.report.chart_type == 2) {
-        chart_data = chart_series_from_columns(data, $scope.report.chart_categories, $scope.report.chart_values_list, data.meta.titles);
+        chart_data = chart_series_from_columns(data, $scope.report.chart_categories_list,
+                                               $scope.report.chart_values_list, data.meta.titles);
       }
       else if ($scope.report.chart_type == 3) {
         chart_data = chart_series_from_rows(data, $scope.report.chart_categories, $scope.report.chart_series, $scope.report.chart_values_list[0]);
