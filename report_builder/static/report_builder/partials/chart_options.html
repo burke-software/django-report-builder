@@ -4,11 +4,11 @@
         <md-radio-group ng-model="report.chart_type">
             <p><strong>Type:</strong></p>
             <md-radio-button value="2">
-            SIMPLE (categories, values)
+            Series from columns
             </md-radio-button>
 
             <md-radio-button ng-value="3">
-            NORMAL (categories, series, values)
+            Series from rows
             </md-radio-button>
 
         </md-radio-group>
@@ -26,7 +26,11 @@
 
     <md-list-item>
         <label><strong>Values: &nbsp; &nbsp;</strong></label>
-        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_values"></select>
+        <span ng-repeat="(idx, el) in report.chart_values_list track by $index">
+            <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_values_list[idx]"></select>
+            <img ng-click="remove_from_chart_values(idx)" src="{{ static('report_builder/img/delete.svg') }}"></img>
+        </span>
+        <img style="margin-left: 30px;" ng-click="add_to_chart_values()" src="{{ static('report_builder/img/add.svg') }}"></img>
     </md-list-item>
 
     <md-list-item>
