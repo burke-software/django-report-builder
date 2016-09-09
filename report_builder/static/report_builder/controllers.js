@@ -406,6 +406,11 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     angular.forEach($scope.report.filterfield_set, function(value, index) {
       value.position = index;
     });
+    var chart_values = $scope.report.chart_values_list;
+    chart_values = chart_values.filter(function(el) {
+      return (el != null);
+    });
+    $scope.report.chart_values = chart_values.join(',');
     $scope.report.save().then(function(result) {
       $scope.report.lastSaved = new Date();
       $scope.reportData.reportErrors = null;
