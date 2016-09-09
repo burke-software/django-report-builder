@@ -91,6 +91,9 @@ class Report(models.Model):
     chart_categories = models.IntegerField(null=True, blank=True)
     chart_series = models.IntegerField(null=True, blank=True)
     chart_values = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
+    chart_stacked = models.BooleanField(default=False)
+    chart_labels = models.BooleanField(default=False)
+    chart_total = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:
