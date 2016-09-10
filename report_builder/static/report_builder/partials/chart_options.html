@@ -18,23 +18,32 @@
         <label><strong>Categories: &nbsp; &nbsp;</strong></label>
         <span ng-repeat="(idx, el) in report.chart_categories_list track by $index">
             <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_categories_list[idx]"></select>
-            <img ng-click="remove_from_chart_categories(idx)" src="{{ static('report_builder/img/delete.svg') }}"></img>
+            <img ng-click="remove_from_list(idx, 'categories')" src="{{ static('report_builder/img/delete.svg') }}"></img>
         </span>
-        <img style="margin-left: 30px;" ng-click="add_to_chart_categories()" src="{{ static('report_builder/img/add.svg') }}"></img>
+        <img style="margin-left: 30px;" ng-click="add_to_list('categories')" src="{{ static('report_builder/img/add.svg') }}"></img>
     </md-list-item>
 
     <md-list-item ng-show="report.chart_type > 2">
         <label><strong>Series: &nbsp; &nbsp;</strong></label>
-        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_series"></select>
+        <span ng-repeat="(idx, el) in report.chart_series_list track by $index">
+            <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_series_list[idx]"></select>
+            <img ng-click="remove_from_list(idx, 'series')" src="{{ static('report_builder/img/delete.svg') }}"></img>
+        </span>
+        <img style="margin-left: 30px;" ng-click="add_to_list('series')" src="{{ static('report_builder/img/add.svg') }}"></img>
     </md-list-item>
 
-    <md-list-item>
+    <md-list-item ng-hide="report.chart_type == 3">
         <label><strong>Values: &nbsp; &nbsp;</strong></label>
         <span ng-repeat="(idx, el) in report.chart_values_list track by $index">
             <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_values_list[idx]"></select>
-            <img ng-click="remove_from_chart_values(idx)" src="{{ static('report_builder/img/delete.svg') }}"></img>
+            <img ng-click="remove_from_list(idx, 'values')" src="{{ static('report_builder/img/delete.svg') }}"></img>
         </span>
-        <img style="margin-left: 30px;" ng-click="add_to_chart_values()" src="{{ static('report_builder/img/add.svg') }}"></img>
+        <img style="margin-left: 30px;" ng-click="add_to_list('values')" src="{{ static('report_builder/img/add.svg') }}"></img>
+    </md-list-item>
+
+    <md-list-item ng-show="report.chart_type == 3">
+        <label><strong>Values: &nbsp; &nbsp;</strong></label>
+        <select ng-options="it as report_fields_names[it] for it in report_fields_indexes track by it" ng-model="report.chart_values_list[0]"></select>
     </md-list-item>
 
     <md-list-item>

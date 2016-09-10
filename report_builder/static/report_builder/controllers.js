@@ -263,32 +263,32 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
       $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
     }, true);
     $scope.$watch('report.chart_values', function(newValue, oldValue) {
-      if (newValue === undefined || newValue === null) {
+      if (newValue === undefined || newValue === null || newValue === "") {
         $scope.report.chart_values_list = [];
       } else {
         $scope.report.chart_values_list = newValue.split(',').map(function(el) { return parseInt(el);});
       }
     }, true);
     $scope.$watch('report.chart_categories', function(newValue, oldValue) {
-      if (newValue === undefined || newValue === null) {
+      if (newValue === undefined || newValue === null || newValue === "") {
         $scope.report.chart_categories_list = [];
       } else {
         $scope.report.chart_categories_list = newValue.split(',').map(function(el) { return parseInt(el);});
       }
     }, true);
+    $scope.$watch('report.chart_series', function(newValue, oldValue) {
+      if (newValue === undefined || newValue === null || newValue === "") {
+        $scope.report.chart_series_list = [];
+      } else {
+        $scope.report.chart_series_list = newValue.split(',').map(function(el) { return parseInt(el);});
+      }
+    }, true);
 
-    $scope.remove_from_chart_values = function(index) {
-      $scope.report.chart_values_list.splice(index, 1);
+    $scope.remove_from_list = function(index, list_name) {
+      $scope.report['chart_' + list_name + '_list'].splice(index, 1);
     };
-    $scope.add_to_chart_values = function() {
-      $scope.report.chart_values_list.push(null);
-    };
-
-    $scope.remove_from_chart_categories = function(index) {
-      $scope.report.chart_categories_list.splice(index, 1);
-    };
-    $scope.add_to_chart_categories = function() {
-      $scope.report.chart_categories_list.push(null);
+    $scope.add_to_list = function(list_name) {
+      $scope.report['chart_' + list_name + '_list'].push(null);
     };
 
 });
@@ -328,17 +328,31 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
 
   function chart_series_from_rows(data, x1, x2, y) {
     var categories = [];
-    for (var i = 0; i < data.length; i++) {
-      if (categories.indexOf(data[i][x1]) < 0) {
-        categories.push('' + data[i][x1]);
+    var unique_categories = [];
+    data.forEach(function(row, idx) {
+        var row_category = "";
+        for (var i = 0; i < x1.length; i++) {
+          if (x1[i] == null) continue;
+          row_category += row[x1[i]];
+        }
+        categories.push(row_category);
+        if (unique_categories.indexOf(row_category) < 0) {
+          unique_categories.push(row_category);
+        }
       }
-    }
+    );
+
     var series_data_dict = {};
     for (i = 0; i < data.length; i++) {
-      if (! (data[i][x2] in series_data_dict)) {
-        series_data_dict[data[i][x2]] = [];
+      var row_series = "";
+      for (var j = 0; j < x2.length; j++) {
+          if (x2[j] == null) continue;
+          row_series += data[i][x2[j]];
+        }
+      if (! (row_series in series_data_dict)) {
+        series_data_dict[row_series] = [];
       }
-      series_data_dict[data[i][x2]].push('' + [data[i][x1], data[i][y]]);
+      series_data_dict[row_series].push([categories[i], data[i][y]]);
     }
     var series_data = [];
     for (var key in series_data_dict) {
@@ -348,7 +362,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       });
     }
     return {
-      categories: categories,
+      categories: unique_categories,
       series: series_data,
     };
   }
@@ -384,7 +398,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
                                                $scope.report.chart_values_list, data.meta.titles);
       }
       else if ($scope.report.chart_type == 3) {
-        chart_data = chart_series_from_rows(data, $scope.report.chart_categories, $scope.report.chart_series, $scope.report.chart_values_list[0]);
+        chart_data = chart_series_from_rows(data, $scope.report.chart_categories_list, $scope.report.chart_series_list, $scope.report.chart_values_list[0]);
       } else {
         return;
       }
@@ -423,7 +437,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
   };
 
   function isNotNull(value) {
-    return value != null;
+    return value !== undefined && value !== null;
   }
 
   $scope.save = function() {
@@ -438,6 +452,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     });
     $scope.report.chart_categories = $scope.report.chart_categories_list.filter(isNotNull).join(',');
     $scope.report.chart_values = $scope.report.chart_values_list.filter(isNotNull).join(',');
+    $scope.report.chart_series = $scope.report.chart_series_list.filter(isNotNull).join(',');
     $scope.report.save().then(function(result) {
       $scope.report.lastSaved = new Date();
       $scope.reportData.reportErrors = null;

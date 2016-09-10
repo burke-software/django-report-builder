@@ -89,7 +89,7 @@ class Report(models.Model):
     chart_style = models.CharField(max_length=16, null=True, blank=True)
     chart_type = models.IntegerField(null=True, blank=True)
     chart_categories = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
-    chart_series = models.IntegerField(null=True, blank=True)
+    chart_series = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
     chart_values = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
     chart_stacked = models.BooleanField(default=False)
     chart_labels = models.BooleanField(default=False)
