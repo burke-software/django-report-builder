@@ -88,7 +88,7 @@ class Report(models.Model):
         related_name="report_starred_set")
     chart_style = models.CharField(max_length=16, null=True, blank=True)
     chart_type = models.IntegerField(null=True, blank=True)
-    chart_categories = models.IntegerField(null=True, blank=True)
+    chart_categories = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
     chart_series = models.IntegerField(null=True, blank=True)
     chart_values = models.CommaSeparatedIntegerField(max_length=64,null=True, blank=True)
     chart_stacked = models.BooleanField(default=False)

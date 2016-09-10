@@ -270,7 +270,7 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
       }
     }, true);
     $scope.$watch('report.chart_categories', function(newValue, oldValue) {
-      if (newValue === undefined || newValue === null || typeof newValue == 'number') {
+      if (newValue === undefined || newValue === null) {
         $scope.report.chart_categories_list = [];
       } else {
         $scope.report.chart_categories_list = newValue.split(',').map(function(el) { return parseInt(el);});
@@ -301,6 +301,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     data.forEach(function(row, idx) {
         var row_category = "";
         for (var i = 0; i < x.length; i++) {
+          if (x[i] == null) continue;
           row_category += row[x[i]];
         }
         categories.push(row_category);
@@ -421,6 +422,10 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     });
   };
 
+  function isNotNull(value) {
+    return value != null;
+  }
+
   $scope.save = function() {
     angular.forEach($scope.report.displayfield_set, function(value, index) {
       value.position = index;
@@ -431,11 +436,8 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     angular.forEach($scope.report.filterfield_set, function(value, index) {
       value.position = index;
     });
-    var chart_values = $scope.report.chart_values_list;
-    chart_values = chart_values.filter(function(el) {
-      return (el != null);
-    });
-    $scope.report.chart_values = chart_values.join(',');
+    $scope.report.chart_categories = $scope.report.chart_categories_list.filter(isNotNull).join(',');
+    $scope.report.chart_values = $scope.report.chart_values_list.filter(isNotNull).join(',');
     $scope.report.save().then(function(result) {
       $scope.report.lastSaved = new Date();
       $scope.reportData.reportErrors = null;
