@@ -259,10 +259,12 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
     $scope.chart_styles = ['area', 'bar', 'column', 'line', 'pie'];
 
     $scope.$watch('report.displayfield_set', function(newValue, oldValue) {
+      if (newValue === undefined || $scope.report === undefined) return;
       $scope.report_fields_indexes = newValue.map(function(el, idx) { return idx; });
       $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
     }, true);
     $scope.$watch('report.chart_values', function(newValue, oldValue) {
+      if ($scope.report === undefined) return;
       if (newValue === undefined || newValue === null || newValue === "") {
         $scope.report.chart_values_list = [];
       } else {
@@ -270,6 +272,7 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
       }
     }, true);
     $scope.$watch('report.chart_categories', function(newValue, oldValue) {
+      if ($scope.report === undefined) return;
       if (newValue === undefined || newValue === null || newValue === "") {
         $scope.report.chart_categories_list = [];
       } else {
@@ -277,6 +280,7 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
       }
     }, true);
     $scope.$watch('report.chart_series', function(newValue, oldValue) {
+      if ($scope.report === undefined) return;
       if (newValue === undefined || newValue === null || newValue === "") {
         $scope.report.chart_series_list = [];
       } else {
