@@ -1,0 +1,12 @@
+image:
+  illa/for_splinter:v1
+
+before_script:
+  - pip install celery
+  - pip install -r requirements.txt
+  - python setup.py develop
+  - pip install Django==1.8
+
+tests:
+  script:
+    - python manage.py test
