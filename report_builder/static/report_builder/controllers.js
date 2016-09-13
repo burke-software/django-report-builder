@@ -418,6 +418,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       var chart_dict = {
         chart: {
           type: $scope.report.chart_style,
+          height: 450,
         },
         xAxis: {
           categories: chart_data.categories,
@@ -440,7 +441,15 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
         },
         stacking: $scope.report.chart_stacked ? 'normal' : false,
       };
-      Highcharts.chart('highchart_container', chart_dict);
+      var chart = Highcharts.chart('highchart_container', chart_dict);
+      if ($scope.report.chart_style == 'bar' && chart_data.categories.length * chart_data.series.length > 15 ) {
+        var series_size = 1;
+        if (chart_data.series.length > 1) {
+           series_size = chart_data.series.length / 2;
+        }
+        var size = chart_data.categories.length * series_size * 20;
+        chart.setSize(null, Math.max(size + 100, 450));
+      }
 
       $scope.reportData.refresh = false;
     }, function(response) {
