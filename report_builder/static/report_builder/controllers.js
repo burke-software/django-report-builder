@@ -256,45 +256,44 @@ reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
 });
 
 reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
-    $scope.chart_styles = ['area', 'bar', 'column', 'line', 'pie'];
+  $scope.chart_styles = ['area', 'bar', 'column', 'line', 'pie'];
 
-    $scope.$watch('report.displayfield_set', function(newValue, oldValue) {
-      if (newValue === undefined || $scope.report === undefined) return;
-      $scope.report_fields_indexes = newValue.map(function(el, idx) { return idx; });
-      $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
-    }, true);
-    $scope.$watch('report.chart_values', function(newValue, oldValue) {
-      if ($scope.report === undefined) return;
-      if (newValue === undefined || newValue === null || newValue === "") {
-        $scope.report.chart_values_list = [];
-      } else {
-        $scope.report.chart_values_list = newValue.split(',').map(function(el) { return parseInt(el);});
-      }
-    }, true);
-    $scope.$watch('report.chart_categories', function(newValue, oldValue) {
-      if ($scope.report === undefined) return;
-      if (newValue === undefined || newValue === null || newValue === "") {
-        $scope.report.chart_categories_list = [];
-      } else {
-        $scope.report.chart_categories_list = newValue.split(',').map(function(el) { return parseInt(el);});
-      }
-    }, true);
-    $scope.$watch('report.chart_series', function(newValue, oldValue) {
-      if ($scope.report === undefined) return;
-      if (newValue === undefined || newValue === null || newValue === "") {
-        $scope.report.chart_series_list = [];
-      } else {
-        $scope.report.chart_series_list = newValue.split(',').map(function(el) { return parseInt(el);});
-      }
-    }, true);
+  $scope.$watch('report.displayfield_set', function(newValue, oldValue) {
+    if (newValue === undefined || $scope.report === undefined) return;
+    $scope.report_fields_indexes = newValue.map(function(el, idx) { return idx; });
+    $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
+  }, true);
+  $scope.$watch('report.chart_values', function(newValue, oldValue) {
+    if ($scope.report === undefined) return;
+    if (newValue === undefined || newValue === null || newValue === "") {
+      $scope.report.chart_values_list = [];
+    } else {
+      $scope.report.chart_values_list = newValue.split(',').map(function(el) { return parseInt(el);});
+    }
+  }, true);
+  $scope.$watch('report.chart_categories', function(newValue, oldValue) {
+    if ($scope.report === undefined) return;
+    if (newValue === undefined || newValue === null || newValue === "") {
+      $scope.report.chart_categories_list = [];
+    } else {
+      $scope.report.chart_categories_list = newValue.split(',').map(function(el) { return parseInt(el);});
+    }
+  }, true);
+  $scope.$watch('report.chart_series', function(newValue, oldValue) {
+    if ($scope.report === undefined) return;
+    if (newValue === undefined || newValue === null || newValue === "") {
+      $scope.report.chart_series_list = [];
+    } else {
+      $scope.report.chart_series_list = newValue.split(',').map(function(el) { return parseInt(el);});
+    }
+  }, true);
 
-    $scope.remove_from_list = function(index, list_name) {
-      $scope.report['chart_' + list_name + '_list'].splice(index, 1);
-    };
-    $scope.add_to_list = function(list_name) {
-      $scope.report['chart_' + list_name + '_list'].push(null);
-    };
-
+  $scope.remove_from_list = function(index, list_name) {
+    $scope.report['chart_' + list_name + '_list'].splice(index, 1);
+  };
+  $scope.add_to_list = function(list_name) {
+    $scope.report['chart_' + list_name + '_list'].push(null);
+  };
 });
 
 reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $timeout, $mdToast, reportService) {
@@ -303,17 +302,16 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     var categories = [];
     var unique_categories = [];
     data.forEach(function(row, idx) {
-        var row_category = "";
-        for (var i = 0; i < x.length; i++) {
-          if (x[i] == null) continue;
-          row_category += row[x[i]];
-        }
-        categories.push(row_category);
-        if (unique_categories.indexOf(row_category) < 0) {
-          unique_categories.push(row_category);
-        }
+      var row_category = "";
+      for (var i = 0; i < x.length; i++) {
+        if (x[i] == null) continue;
+        row_category += row[x[i]];
       }
-    );
+      categories.push(row_category);
+      if (unique_categories.indexOf(row_category) < 0) {
+        unique_categories.push(row_category);
+      }
+    });
     var series_data = [];
     for (var i = 0; i < y.length; i++) {
       if (y[i] == null) continue;
@@ -334,25 +332,23 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     var categories = [];
     var unique_categories = [];
     data.forEach(function(row, idx) {
-        var row_category = "";
-        for (var i = 0; i < x1.length; i++) {
-          if (x1[i] == null) continue;
-          row_category += row[x1[i]];
-        }
-        categories.push(row_category);
-        if (unique_categories.indexOf(row_category) < 0) {
-          unique_categories.push(row_category);
-        }
+      var row_category = "";
+      for (var i = 0; i < x1.length; i++) {
+        if (x1[i] == null) continue;
+        row_category += row[x1[i]];
       }
-    );
-
+      categories.push(row_category);
+      if (unique_categories.indexOf(row_category) < 0) {
+        unique_categories.push(row_category);
+      }
+    });
     var series_data_dict = {};
     for (i = 0; i < data.length; i++) {
       var row_series = "";
       for (var j = 0; j < x2.length; j++) {
-          if (x2[j] == null) continue;
-          row_series += data[i][x2[j]];
-        }
+        if (x2[j] == null) continue;
+        row_series += data[i][x2[j]];
+      }
       if (! (row_series in series_data_dict)) {
         series_data_dict[row_series] = [];
       }
@@ -369,6 +365,18 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
       categories: unique_categories,
       series: series_data,
     };
+  }
+
+  function prepare_for_chart(data, report) {
+    var totals = false;
+    report.displayfield_set.forEach(function(field) {
+      if (field.total) {
+        totals = true;
+      }
+    });
+    if (totals) {
+      data.splice(data.length - 2, 2);
+    }
   }
 
   $scope.getPreview = function() {
@@ -396,6 +404,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
     $scope.reportData.statusMessage = null;
     $scope.reportData.refresh = true;
     reportService.getPreview($scope.report.id).then(function(data) {
+      prepare_for_chart(data, $scope.report);
       var chart_data = {};
       if ($scope.report.chart_type == 2) {
         chart_data = chart_series_from_columns(data, $scope.report.chart_categories_list,
