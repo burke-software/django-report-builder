@@ -8,7 +8,7 @@ reportBuilderApp.controller('addCtrl', function($scope, $location, reportService
         $location.path('/report/' + result.id, true);
       });
     }
-  }
+  };
 });
 
 reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location, $mdSidenav, reportService) {
@@ -38,7 +38,7 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
       return true;
     }
     return false;
-  }
+  };
 
   $scope.requestFullscreen = function() {
     var
@@ -61,14 +61,14 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
         field_name: '',
         path: '',
         model_id: report.root_model
-      }
+      };
       data = {
         "model": report.root_model,
         "path": "",
         "path_verbose": "",
         "field": ""
-      }
-      $scope.related_fields = [root_related_field]
+      };
+      $scope.related_fields = [root_related_field];
       reportService.getRelatedFields(data).then(function(result) {
         root_related_field.related_fields = result;
         var help_text = 'This model is included in report builder.';
@@ -172,7 +172,7 @@ reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidena
   if (!$routeParams.reportId) {
     $mdSidenav('left').open();
   }
-})
+});
 
 reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportService) {
   $scope.load_fields = function(field) {
@@ -181,7 +181,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
       "path": field.path,
       "path_verbose": field.path_verbose,
       "field": field.field_name
-    }
+    };
     $scope.help_text = field.help_text;
     $scope.fields_header = field.verbose_name;
     reportService.getFields(data).then(function(result) {
@@ -195,7 +195,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
       }
       $scope.help_text = help_text;
     });
-  }
+  };
 
   $scope.toggle_related_fields = function(node) {
     field = node.$nodeScope.$modelValue;
@@ -204,7 +204,7 @@ reportBuilderApp.controller('FieldsCtrl', function($scope, $mdSidenav, reportSer
       "model": field.model_id,
       "path": parent_field.path,
       "field": field.field_name
-    }
+    };
     reportService.getRelatedFields(data).then(function(result) {
       field.related_fields = result;
     });
@@ -246,7 +246,7 @@ reportBuilderApp.controller('ReportOptionsCtrl', function($scope, $location, $wi
         // $location.path('/report/' + list[0].id, true);
       });
     });
-  }
+  };
 });
 
 reportBuilderApp.controller('ReportFilterCtrl', function($scope) {
@@ -429,7 +429,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
         yAxis: {
           stackLabels: {
             enabled: $scope.report.chart_total,
-            formatter: function() {return 'total: ' + this.total},
+            formatter: function() {return 'total: ' + this.total;},
           }
         },
         series: chart_data.series,
@@ -492,7 +492,7 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
   };
 
   $scope.downloadReport = function(filetype) {
-    base_url = BASE_URL + 'report/' + $scope.report.id
+    base_url = BASE_URL + 'report/' + $scope.report.id;
     url = base_url + '/download_file/' + filetype + '/';
     $scope.workerStatus = 'Requesting report';
     if (ASYNC_REPORT === "True") {
@@ -519,12 +519,12 @@ reportBuilderApp.controller('ReportShowCtrl', function($scope, $window, $http, $
                 $timeout(checkPoller, 1000 + (500 * attempts));
               }
             }
-          })
+          });
         };
         $timeout(checkPoller, 100);
       });
     } else {
       $window.location.href = url;
     }
-  }
+  };
 });
