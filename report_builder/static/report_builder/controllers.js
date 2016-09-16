@@ -56,6 +56,7 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
       $scope.fields_header = report.root_model_name;
       $scope.report = report;
       $scope.report.lastSaved = null;
+      $scope.report.create_chart_lists = true;
       root_related_field = {
         verbose_name: report.root_model_name,
         field_name: '',
@@ -263,36 +264,39 @@ reportBuilderApp.controller('ChartOptionsCtrl', function($scope, $window, $http,
     $scope.report_fields_indexes = newValue.map(function(el, idx) { return idx; });
     $scope.report_fields_names = newValue.map(function(el, idx) { return el.name; });
   }, true);
-  $scope.$watch('report.chart_values', function(newValue, oldValue) {
-    if ($scope.report === undefined) return;
-    if (newValue === undefined || newValue === null || newValue === "") {
-      $scope.report.chart_values_list = [];
+
+  function isNotEmpty(string) {
+    return string !== '';
+  }
+
+  function parseInt1(el) {
+    return parseInt(el);
+  }
+
+  function toListOfInts(element_name, list_name) {
+    if ($scope.report[element_name] === null) {
+      $scope.report[list_name] = [];
     } else {
-      $scope.report.chart_values_list = newValue.split(',').map(function(el) { return parseInt(el);});
+      $scope.report[list_name] = $scope.report[element_name].split(',').filter(isNotEmpty).map(parseInt1);
     }
-  }, true);
-  $scope.$watch('report.chart_categories', function(newValue, oldValue) {
-    if ($scope.report === undefined) return;
-    if (newValue === undefined || newValue === null || newValue === "") {
-      $scope.report.chart_categories_list = [];
-    } else {
-      $scope.report.chart_categories_list = newValue.split(',').map(function(el) { return parseInt(el);});
+  }
+
+  $scope.$watch('report.create_chart_lists', function(newValue, oldValue) {
+    if (newValue) {
+      toListOfInts('chart_categories', 'chart_categories_list');
+      toListOfInts('chart_series', 'chart_series_list');
+      toListOfInts('chart_values', 'chart_values_list');
+      $scope.report.create_chart_lists = false;
     }
-  }, true);
-  $scope.$watch('report.chart_series', function(newValue, oldValue) {
-    if ($scope.report === undefined) return;
-    if (newValue === undefined || newValue === null || newValue === "") {
-      $scope.report.chart_series_list = [];
-    } else {
-      $scope.report.chart_series_list = newValue.split(',').map(function(el) { return parseInt(el);});
-    }
-  }, true);
+  });
 
   $scope.remove_from_list = function(index, list_name) {
-    $scope.report['chart_' + list_name + '_list'].splice(index, 1);
+    var name = 'chart_' + list_name + '_list';
+    $scope.report[name].splice(index, 1);
   };
   $scope.add_to_list = function(list_name) {
-    $scope.report['chart_' + list_name + '_list'].push(null);
+    var name = 'chart_' + list_name + '_list';
+    $scope.report[name].push(null);
   };
 });
 
