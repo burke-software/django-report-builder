@@ -25,7 +25,6 @@ setup(
     install_requires=[
         'openpyxl >= 2.2.1, <= 2.3.99',
         'python-dateutil',
-        'django-report-utils>=0.3.15',
         'djangorestframework>=3.1.0',
         "six"
     ]
