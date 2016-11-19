@@ -22,6 +22,7 @@ import re
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
+
 @lru_cache(maxsize=None)
 def get_model_contenttype(name):
     if "." in name:
@@ -29,9 +30,9 @@ def get_model_contenttype(name):
         split_name = name.lower().split('.')
         # Negative indexing allows, eg. "django.contrib.auth.User"
         model_query = {
-                'app_label':split_name[-2], 
-                'model': split_name[-1]
-                }
+            'app_label': split_name[-2],
+            'model': split_name[-1]
+        }
         model_name = "%s.%s" % (model_query['app_label'], model_query['model'])
     else:
         # short model name
@@ -43,30 +44,27 @@ def get_model_contenttype(name):
         model_ct = ContentType.objects.get(**model_query)
     except ContentType.DoesNotExist:
         raise ImproperlyConfigured(
-                "REPORT_BUILDER: Model '%s' (from '%s') could not be found." %
-                (model_name, name)
-                )
+            "REPORT_BUILDER: Model '%s' (from '%s') could not be found." % (model_name, name))
     except ContentType.MultipleObjectsReturned:
         possible_cts = ContentType.objects.filter(**model_query).values_list('app_label', 'model')
         possible_cts = [".".join(ct) for ct in possible_cts]
 
         raise ImproperlyConfigured(
-                "REPORT_BUILDER: Model '%s' is ambiguous. Possible values: %s" %
-                (name, str(possible_cts))
-                )
+            "REPORT_BUILDER: Model '%s' is ambiguous. Possible values: %s" % (name, str(possible_cts)))
     else:
         return model_ct
+
 
 def get_allowed_models():
     models = ContentType.objects.all()
     if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
-        ct_pks = [] # pks of all included model contenttypes
+        ct_pks = []  # pks of all included model contenttypes
         for element in settings.REPORT_BUILDER_INCLUDE:
             ct_pks.append(get_model_contenttype(element).pk)
         models = ContentType.objects.filter(pk__in=ct_pks)
 
     if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
-        ct_pks = [] # pks of all excluded model contenttypes
+        ct_pks = []  # pks of all excluded model contenttypes
         for element in settings.REPORT_BUILDER_EXCLUDE:
             ct_pks.append(get_model_contenttype(element).pk)
         models = models.exclude(pk__in=ct_pks)
