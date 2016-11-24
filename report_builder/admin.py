@@ -79,6 +79,7 @@ class ReportAdmin(admin.ModelAdmin):
         if star_user:  # Star created reports automatically
             obj.starred.add(request.user)
 
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
 
@@ -91,6 +92,7 @@ def export_to_report(modeladmin, request, queryset):
         selected.append(str(s))
     ct = ContentType.objects.get_for_model(queryset.model)
     return HttpResponseRedirect(reverse('export_to_report') + "?ct=%s&admin_url=%s&ids=%s" % (ct.pk, admin_url, ",".join(selected)))
+
 
 if getattr(settings, 'REPORT_BUILDER_GLOBAL_EXPORT', False):
     admin.site.add_action(export_to_report, 'Export to Report')
