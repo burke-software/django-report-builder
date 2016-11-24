@@ -79,7 +79,7 @@ class ReportAdmin(admin.ModelAdmin):
         if star_user:  # Star created reports automatically
             obj.starred.add(request.user)
 
-            
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
 
