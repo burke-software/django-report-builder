@@ -23,7 +23,7 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        'openpyxl >= 2.2.1, <= 2.3.99',
+        'openpyxl >= 2.2.1',
         'python-dateutil',
         'djangorestframework>=3.1.0',
         "six"

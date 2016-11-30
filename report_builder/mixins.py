@@ -12,7 +12,7 @@ except ImportError:
 from django.db.models import Avg, Count, Sum, Max, Min
 from openpyxl.workbook import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.cell import get_column_letter
+from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font
 import csv
 import re
@@ -95,7 +95,7 @@ class DataExportMixin(object):
         """ Take a workbook and return a csv file response """
         title = generate_filename(title, '.csv')
         myfile = StringIO()
-        sh = wb.get_active_sheet()
+        sh = wb.active
         c = csv.writer(myfile)
         for r in sh.rows:
             c.writerow([cell.value for cell in r])
@@ -145,7 +145,7 @@ class DataExportMixin(object):
         if not title.endswith('.csv'):
             title += '.csv'
         myfile = StringIO()
-        sh = wb.get_active_sheet()
+        sh = wb.active
         c = csv.writer(myfile)
         for r in sh.rows:
             c.writerow([cell.value for cell in r])
