@@ -117,5 +117,10 @@ REPORT_BUILDER_ASYNC_REPORT = True
 REPORT_BUILDER_GLOBAL_EXPORT = True
 REPORT_BUILDER_EMAIL_NOTIFICATION = False
 
+# These default settings can break report builder - so test against them
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 10,
+}
+
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
