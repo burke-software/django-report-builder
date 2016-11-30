@@ -195,12 +195,7 @@ class DataExportMixin(object):
             """ Return True iff `user` has either change or view permission
             for `model`.
             """
-            try:
-                model_name = model._meta.model_name
-            except AttributeError:
-                # Needed for Django 1.4.* (LTS).
-                model_name = model._meta.module_name
-
+            model_name = model._meta.model_name
             app_label = model._meta.app_label
             can_change = user.has_perm(app_label + '.change_' + model_name)
             can_view = user.has_perm(app_label + '.view_' + model_name)
@@ -587,9 +582,14 @@ class GetFieldsMixin(object):
             direct = field.concrete
             if direct:
                 try:
-                    new_model = field.related.parent_model()
+                    related_field = field.remote_field
+                except AttributeError: 
+                    # Needed for Django < 1.9
+                    related_field = field.related
+                try:
+                    new_model = related_field.parent_model()
                 except AttributeError:
-                    new_model = field.related.model
+                    new_model = related_field.model
             else:
                 # Indirect related field
                 new_model = field.related_model
