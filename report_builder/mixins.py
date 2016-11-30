@@ -583,7 +583,7 @@ class GetFieldsMixin(object):
             if direct:
                 try:
                     related_field = field.remote_field
-                except AttributeError: 
+                except AttributeError:
                     # Needed for Django < 1.9
                     related_field = field.related
                 try:
