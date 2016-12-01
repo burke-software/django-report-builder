@@ -45,6 +45,7 @@
           <input ng-switch-default type="text" ng-model="field.filter_value"></input>
           <div ng-if="field.filter_type == 'range'" flex="" ng-switch="field.field_type">
             <input ng-switch-when="DateField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value2"></input>
+            <input ng-switch-when="DateTimeField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value2"></input>
             <input ng-switch-default type="text" ng-model="field.filter_value2"></input>
           </div>
         </div>
