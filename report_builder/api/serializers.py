@@ -11,6 +11,7 @@ User = get_user_model()
 class FormatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Format
+        fields = '__all__'
 
 
 class DisplayFieldSerializer(serializers.ModelSerializer):
