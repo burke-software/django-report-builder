@@ -38,6 +38,7 @@
         </div>
         <div ng-switch-default ng-switch="field.field_type">
           <input ng-switch-when="DateField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value"></input>
+          <input ng-switch-when="DateTimeField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value"></input>
           <div ng-switch-when="BooleanField">
             <md-checkbox ng-model="field.filter_value">
           </div>
