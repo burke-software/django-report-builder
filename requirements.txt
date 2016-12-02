@@ -9,3 +9,4 @@ django-money==0.9.1
 djangorestframework==3.4.3
 python-dateutil==2.6.0
 openpyxl==2.4.1
+django-model-utils==2.6

@@ -191,7 +191,7 @@ class FieldsView(RelatedFieldsView):
                 'field_type': new_field.get_internal_type(),
                 'is_default': True if defaults is None or
                 new_field.name in defaults else False,
-                'choices': new_field.choices,
+                'choices': list(new_field.choices),
                 'can_filter': True if filters is None or
                 new_field.name in filters else False,
                 'path': field_data['path'],
