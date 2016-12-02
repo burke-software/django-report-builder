@@ -257,7 +257,7 @@ class ReportBuilderTests(TestCase):
             '/report_builder/api/fields/',
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'field_choices')
+        self.assertContains(response, 'choices')
         self.assertContains(response, '[["CH","CHECK"],["MA","CHECKMATE"]]')
 
     def test_report_builder_can_filter(self):

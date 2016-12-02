@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.functional import cached_property
 
 from djmoney.models.fields import MoneyField
+from model_utils import Choices
 
 
 class Foo(models.Model):
@@ -28,12 +29,19 @@ class Bar(models.Model):
         (CHECK, 'CHECK'),
         (MATE, 'CHECKMATE'),
     )
+    STATUS_CHOICES = Choices(
+        (0, "Pending"),
+        (1, "Approved"),
+        (2, "Rejected"),
+    )
 
     check_mate_status = models.CharField(
         max_length=2,
         choices=CHESS_CHOICES,
         default=CHECK
     )
+
+    status = models.PositiveIntegerField(choices=STATUS_CHOICES, default=0)
 
     @property
     def i_want_char_field(self):

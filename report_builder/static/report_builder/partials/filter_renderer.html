@@ -41,7 +41,8 @@
           <div ng-switch-when="BooleanField">
             <md-checkbox ng-model="field.filter_value">
           </div>
-          <input ng-switch-default type="text" ng-model="field.filter_value"></input>
+          <input ng-if="!field.choices" ng-switch-default type="text" ng-model="field.filter_value"></input>
+          <select ng-if="!!field.choices" ng-model="field.filter_value" ng-options="choice[0] as choice[1] for choice in field.choices"></select>
           <div ng-if="field.filter_type == 'range'" flex="" ng-switch="field.field_type">
             <input ng-switch-when="DateField" pikaday="pikaday" format="YYYY-MM-DD" ng-model="field.filter_value2"></input>
             <input ng-switch-default type="text" ng-model="field.filter_value2"></input>

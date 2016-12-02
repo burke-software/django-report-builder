@@ -29,8 +29,8 @@ class FilterFieldSerializer(serializers.ModelSerializer):
         model = FilterField
         fields = ('id', 'path', 'path_verbose', 'field', 'field_verbose',
                   'field_type', 'filter_type', 'filter_value', 'filter_value2',
-                  'exclude', 'position', 'report')
-        read_only_fields = ('id', 'field_type')
+                  'exclude', 'position', 'report', 'choices')
+        read_only_fields = ('id', 'field_type', 'choices')
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -557,7 +557,7 @@ class FilterField(AbstractField):
         except:
             model_field = None
         if model_field and model_field.choices:
-            return model_field.choices
+            return list(model_field.choices)
 
     def filter_property(self, value):
         """ Determine if passed value should be filtered or not """
