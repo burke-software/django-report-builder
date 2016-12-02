@@ -191,7 +191,7 @@ class FieldsView(RelatedFieldsView):
                 'field_type': new_field.get_internal_type(),
                 'is_default': True if defaults is None or
                 new_field.name in defaults else False,
-                'field_choices': new_field.choices,
+                'choices': new_field.choices,
                 'can_filter': True if filters is None or
                 new_field.name in filters else False,
                 'path': field_data['path'],
@@ -214,7 +214,7 @@ class FieldsView(RelatedFieldsView):
                         'field': field,
                         'field_verbose': field,
                         'field_type': 'Property',
-                        'field_choices': None,
+                        'choices': None,
                         'can_filter': True if filters is None or
                         field in filters else False,
                         'path': field_data['path'],
@@ -234,7 +234,7 @@ class FieldsView(RelatedFieldsView):
                     'field': field.name,
                     'field_verbose': field.name,
                     'field_type': 'Custom Field',
-                    'field_choices': getattr(field, 'choices', None),
+                    'choices': getattr(field, 'choices', None),
                     'can_filter': True if filters is None or
                     field.name in filters else False,
                     'path': field_data['path'],
