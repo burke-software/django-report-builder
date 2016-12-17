@@ -554,7 +554,10 @@ class GetFieldsMixin(object):
                 try:
                     new_model = field.related.parent_model
                 except AttributeError:
-                    new_model = field.related.model
+                    if hasattr(field, "related_model"):
+                        new_model = field.related_model
+                    else:
+                        new_model = field.related.model
                 path_verbose = new_model.__name__.lower()
             else:  # Indirect related field
                 new_model = field.related_model

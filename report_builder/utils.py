@@ -197,7 +197,10 @@ def get_model_from_path_string(root_model, path):
                 field = root_model._meta.get_field(path_section)
                 direct = field.concrete
             except FieldDoesNotExist:
-                return root_model
+                if hasattr(field, 'related_model'):
+                    root_model = field.related_model
+                else:
+                    return root_model
             if direct:
                 if hasattr(field, 'related'):
                     try:
