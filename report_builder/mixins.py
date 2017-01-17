@@ -1,5 +1,6 @@
 from six import BytesIO, StringIO, text_type, string_types
 
+import django
 from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
 try:
@@ -553,9 +554,9 @@ class GetFieldsMixin(object):
             if direct:
                 if django.VERSION >= (1, 10):
                     try:
-                        new_model = field.rel.related_model
-                    except AttributeError:
                         new_model = field.rel.model
+                    except AttributeError:
+                        new_model = field.rel.related_model
                 else:
                     try:
                         new_model = field.related.parent_model
