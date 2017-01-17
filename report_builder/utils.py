@@ -1,6 +1,7 @@
 from decimal import Decimal
 from itertools import chain
 from numbers import Number
+import django
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.fields import FieldDoesNotExist
 from django.conf import settings
@@ -199,11 +200,19 @@ def get_model_from_path_string(root_model, path):
             except FieldDoesNotExist:
                 return root_model
             if direct:
-                if hasattr(field, 'related'):
-                    try:
-                        root_model = field.related.parent_model()
-                    except AttributeError:
-                        root_model = field.related.model
+                if django.VERSION >= (1, 10):
+                    rel = getattr(field, 'rel', None)
+                    if rel:
+                        try:
+                            root_model = rel.model
+                        except AttributeError:
+                            root_model = rel.related_model()
+                else:
+                    if hasattr(field, 'related'):
+                        try:
+                            root_model = field.related.parent_model()
+                        except AttributeError:
+                            root_model = field.related.model
             else:
                 if hasattr(field, 'related_model'):
                     root_model = field.related_model
