@@ -243,7 +243,7 @@ class FieldsView(RelatedFieldsView):
                         'help_text': 'Adding this property will '
                         'significantly increase the time it takes to run a '
                         'report.',
-                }]
+                    }]
         # Add custom fields
         custom_fields = field_data.get('custom_fields', None)
         if custom_fields:
