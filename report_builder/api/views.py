@@ -225,7 +225,7 @@ class FieldsView(RelatedFieldsView):
                         'significantly increase the time it takes to run a '
                         'report.'
                     }]
-        else:
+        if len(properties) > 0 :
             properties = field_data['properties']
             for field in properties:
                 result += [{
