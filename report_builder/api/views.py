@@ -229,20 +229,20 @@ class FieldsView(RelatedFieldsView):
             properties = field_data['properties']
             for field in properties:
                 result += [{
-                        'name': field['label'],
-                        'field': field['name'],
-                        'field_verbose': field['name'],
-                        'field_type': 'Property',
-                        'field_choices': None,
-                        'can_filter': True if filters is None or
-                        field['name'] in filters else False,
-                        'path': field_data['path'],
-                        'path_verbose': field_data['path_verbose'],
-                        'is_default': True if defaults is None or
-                        field['name'] in defaults else False,
-                        'help_text': 'Adding this property will '
-                        'significantly increase the time it takes to run a '
-                        'report.',
+                    'name': field['label'],
+                    'field': field['name'],
+                    'field_verbose': field['name'],
+                    'field_type': 'Property',
+                    'field_choices': None,
+                    'can_filter': True if filters is None or
+                    field['name'] in filters else False,
+                    'path': field_data['path'],
+                    'path_verbose': field_data['path_verbose'],
+                    'is_default': True if defaults is None or
+                    field['name'] in defaults else False,
+                    'help_text': 'Adding this property will '
+                    'significantly increase the time it takes to run a '
+                    'report.',
                 }]
         # Add custom fields
         custom_fields = field_data.get('custom_fields', None)
