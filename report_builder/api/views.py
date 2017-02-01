@@ -220,7 +220,7 @@ class FieldsView(RelatedFieldsView):
                         'path': field_data['path'],
                         'path_verbose': field_data['path_verbose'],
                         'is_default': True if defaults is None or
-                        field in defaults else False,
+                        field in defaults else  False,
                         'help_text': 'Adding this property will '
                         'significantly increase the time it takes to run a '
                         'report.'
