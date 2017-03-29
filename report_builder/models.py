@@ -331,7 +331,10 @@ class Report(models.Model):
             elif filter_field.filter_type == "in":
                 filter_ = {filter_string: filter_field.filter_value.split(',')}
             else:
-                filter_value = filter_field.filter_value
+                if filter_field.filter_value == "True":
+                    filter_value = True
+                else:
+                    filter_value = filter_field.filter_value
                 if filter_field.filter_type == 'range':
                     filter_value = [filter_value, filter_field.filter_value2]
                 filter_ = {filter_string: filter_value}
@@ -342,6 +345,7 @@ class Report(models.Model):
                 excludes.update(filter_)
 
         if filters:
+            print filters
             objects = objects.filter(**filters)
         if excludes:
             objects = objects.exclude(**excludes)
