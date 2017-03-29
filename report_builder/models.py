@@ -345,7 +345,6 @@ class Report(models.Model):
                 excludes.update(filter_)
 
         if filters:
-            print filters
             objects = objects.filter(**filters)
         if excludes:
             objects = objects.exclude(**excludes)
