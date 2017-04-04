@@ -204,6 +204,8 @@ def get_model_from_path_string(root_model, path):
                         root_model = field.related.parent_model()
                     except AttributeError:
                         root_model = field.related.model
+                elif hasattr(field, 'many_to_many') and field.many_to_many and hasattr(field, 'related_model'):
+                    root_model = field.related_model
             else:
                 if hasattr(field, 'related_model'):
                     root_model = field.related_model
