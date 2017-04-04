@@ -348,9 +348,7 @@ class Report(models.Model):
             objects = objects.filter(**filters)
         # if excludes:
         for exc in excludes:
-            tmpdict = {}
-            tmpdict.update({exc: excludes[exc]})
-            objects = objects.exclude(**tmpdict)
+            objects = objects.exclude(**{exc: excludes[exc]})
 
         # Apply annotation-filters after regular filters.
         for filter_field in report.filterfield_set.order_by('position'):
