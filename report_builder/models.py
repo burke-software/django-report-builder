@@ -349,7 +349,7 @@ class Report(models.Model):
         if excludes:
             for exc in excludes:
                 tmpdict = {}
-                tmpdict.update({exc:excludes[exc]})
+                tmpdict.update({exc: excludes[exc]})
                 objects = objects.exclude(**tmpdict)
 
         # Apply annotation-filters after regular filters.
