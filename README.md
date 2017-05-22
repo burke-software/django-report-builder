@@ -9,6 +9,13 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 3.5
+
+- Compatible with Django 1.11
+- Manifest containers only needed static assets, greatly reducing file size.
+- No longer testing in Django 1.9, but probably still works.
+- Remains in maintence mode - no features
+
 ## 3.4
 
 - Switched from default angular theme to something more neutral
