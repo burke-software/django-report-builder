@@ -1,5 +1,6 @@
 from six import BytesIO, StringIO, text_type, string_types
 
+import django
 from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
 try:
@@ -551,10 +552,16 @@ class GetFieldsMixin(object):
             path += field_name
             path += '__'
             if direct:
-                try:
-                    new_model = field.related.parent_model
-                except AttributeError:
-                    new_model = field.related.model
+                if django.VERSION >= (1, 10):
+                    try:
+                        new_model = field.rel.model
+                    except AttributeError:
+                        new_model = field.rel.related_model
+                else:
+                    try:
+                        new_model = field.related.parent_model
+                    except AttributeError:
+                        new_model = field.related.model
                 path_verbose = new_model.__name__.lower()
             else:  # Indirect related field
                 new_model = field.related_model

@@ -1,3 +1,4 @@
+import django
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
@@ -483,7 +484,10 @@ class DisplayField(AbstractField):
 
     def get_choices(self, model, field_name):
         try:
-            model_field = model._meta.get_field_by_name(field_name)[0]
+            if django.VERSION >= (1, 10):
+                model_field = model._meta.get_field(field_name)
+            else:
+                model_field = model._meta.get_field_by_name(field_name)[0]
         except:
             model_field = None
         if model_field and model_field.choices:
