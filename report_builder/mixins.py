@@ -552,9 +552,9 @@ class GetFieldsMixin(object):
             path += '__'
             if direct:
                 try:
-                    new_model = field.related.parent_model
+                    new_model = field.related_model
                 except AttributeError:
-                    new_model = field.related.model
+                    new_model = field.related_model
                 path_verbose = new_model.__name__.lower()
             else:  # Indirect related field
                 new_model = field.related_model
