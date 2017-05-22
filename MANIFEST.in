@@ -4,3 +4,22 @@ recursive-include report_builder/static/report_builder/img *
 recursive-include report_builder/static/report_builder/js *
 recursive-include report_builder/static/report_builder/partials *
 include report_builder/static/report_builder/*.js
+include report_builder/static/report_builder/bower_components/angular/angular.min.js
+include report_builder/static/report_builder/bower_components/angular-route/angular-route.min.js
+include report_builder/static/report_builder/bower_components/lodash/dist/lodash.min.js
+include report_builder/static/report_builder/bower_components/restangular/dist/restangular.min.js
+include report_builder/static/report_builder/bower_components/angular-material/angular-material.css
+include report_builder/static/report_builder/bower_components/angular-aria/angular-aria.js
+include report_builder/static/report_builder/bower_components/angular-animate/angular-animate.js
+include report_builder/static/report_builder/bower_components/hammerjs/hammer.js
+include report_builder/static/report_builder/bower_components/angular-material/angular-material.js
+include report_builder/static/report_builder/bower_components/handsontable/dist/handsontable.full.css
+include report_builder/static/report_builder/bower_components/handsontable/dist/handsontable.full.min.js
+include report_builder/static/report_builder/bower_components/nghandsontable/dist/ngHandsontable.min.js
+include report_builder/static/report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.js
+include report_builder/static/report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css
+include report_builder/static/report_builder/css/angular_report.css
+include report_builder/static/report_builder/bower_components/moment/moment.js
+include report_builder/static/report_builder/bower_components/pikaday/pikaday.js
+include report_builder/static/report_builder/bower_components/pikaday/css/pikaday.css
+include report_builder/static/report_builder/bower_components/pikaday-angular/pikaday-angular.js
