@@ -7,7 +7,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
-from ..models import Report, Format, FilterField
+from ..models import Report, Format, FilterField, get_allowed_models
 from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer, ContentTypeSerializer)
@@ -44,7 +44,7 @@ class ContentTypeViewSet(ReportBuilderViewMixin, viewsets.ReadOnlyModelViewSet):
     """ Read only view of content types.
     Used to populate choices for new report root model.
     """
-    queryset = ContentType.objects.all()
+    queryset = get_allowed_models()
     serializer_class = ContentTypeSerializer
     permission_classes = (IsAdminUser,)
 
