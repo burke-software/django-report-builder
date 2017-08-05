@@ -1,4 +1,5 @@
 django-custom-field==2.5
+python-dateutil==2.6.1
 psycopg2
 django-extensions
 Werkzeug

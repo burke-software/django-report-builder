@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="django-report-builder",
-    version="3.5.0",
-    author="David Burke",
-    author_email="david@burkesoftware.com",
-    description=("Query and Report builder for Django ORM"),
+    name="kryten-reports",
+    version="1.0.0",
+    author="László Hegedűs",
+    author_email="laszlo.hegedus@cherubits.hu",
+    description=("Query and Report builder for Django ORM based on django-report-builder"),
     license="BSD",
-    keywords="django report",
-    url="https://github.com/burke-software/django-report-builder",
+    keywords="kryten django report material"    ,
+    url="https://github.com/lordoftheflies/kryten-reports.git",
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
