@@ -1,5 +1,7 @@
-django-report-builder
+Kryten Reports
 =====================
+
+Based on [django-report-builder](https://github.com/burke-software/django-report-builder)
 
 A GUI for Django ORM. Build custom queries and display results.
 Targets sys admins and capable end users who might not be able to program or gain direct interactive shell access.
