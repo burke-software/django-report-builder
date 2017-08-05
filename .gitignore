@@ -1,6 +1,7 @@
 .idea/
 *.sqlite3
 env/
+dist/
 *.py[co]
 
 # Packages
