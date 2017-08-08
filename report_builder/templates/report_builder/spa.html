@@ -2,10 +2,9 @@
 {% load staticfiles %}
 
 {% block report_header %}
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <base href="{% url 'report_builder' %}">
+    <base href="{% url 'report_builder:report_builder' %}">
 
-    <script src="{% static 'report_builder/bower_components/angular/angular.min.js' %}"></script>
+    <script src="{% static 'report_builder/bower_components/angular/angular.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/lodash/dist/lodash.min.js' %}"></script>
     <script src="{% static 'report_builder/bower_components/restangular/dist/restangular.min.js' %}"></script>
@@ -14,7 +13,7 @@
       var STATIC_URL = '{{ STATIC_URL|escapejs }}';
       var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
       var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
-      var BASE_URL = "{% url 'report_builder' %}";
+      var BASE_URL = "{% url 'report_builder:report_builder' %}";
     </script>
 
     {% if user %}
@@ -48,10 +47,10 @@
 
 {% endblock %}
 
-{% block content %}
+{% block single_page_application %}
     {% if not STATIC_URL %}
         <p>Please add 'django.core.context_processors.static' to context_processors in settings.py</p>
     {% endif %}
-    <div class="fullheight" ng-app="reportBuilderApp" ng-view>
-    </div>
+
+    <div ng-view style="width: 100%;"></div>
 {% endblock %}

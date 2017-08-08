@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="kryten-reports",
-    version="1.0.0",
+    version="1.0.1",
     author="László Hegedűs",
     author_email="laszlo.hegedus@cherubits.hu",
     description=("Query and Report builder for Django ORM based on django-report-builder"),

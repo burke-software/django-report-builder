@@ -23,28 +23,35 @@ SECRET_KEY = '@rri594lixl!a0g14v__srplb!&+6wv5gbp6+ii=)py4a*87md'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = (
+    'material',
+    'material.admin',
+    'material.frontend',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'report_builder_demo.demo_models',
     'report_builder_demo.demo_second_app',
-    'report_builder',
     'django_extensions',
+    'report_builder.apps.ReportConfig',
+
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -119,6 +126,9 @@ CELERY_RESULT_BACKEND = BROKER_URL
 REPORT_BUILDER_ASYNC_REPORT = True
 REPORT_BUILDER_GLOBAL_EXPORT = True
 REPORT_BUILDER_EMAIL_NOTIFICATION = False
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # These default settings can break report builder - so test against them
 REST_FRAMEWORK = {

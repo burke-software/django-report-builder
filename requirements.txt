@@ -8,3 +8,4 @@ celery[redis]
 flake8
 django-money==0.11
 djangorestframework==3.6.3
+openpyxl==2.4.8

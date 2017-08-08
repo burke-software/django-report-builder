@@ -1,14 +1,32 @@
-{% load static from staticfiles %}
+{% extends 'material/frontend/base_module.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    {% block report_header %}
-    {% endblock %}
-</head>
+{% load static %}
 
-<body>
-{% block content %}
-{% endblock %}
-</body>
-</html>
+{% block extrahead %}
+{% block report_header %}{% endblock report_header %}
+{% endblock extrahead %}
+
+{% block body %}
+<div ng-app="reportBuilderApp">
+    <header>
+        {% block header %} {{ block.super }} {% endblock header %}
+    </header>
+    <main>
+        {% block main %}
+        {% block topbar %} {{ block.super }} {% endblock topbar %}
+        {% block breadcrumbs %} {{ block.super }} {% endblock breadcrumbs %}
+        {% block main_content %}
+        <div class="content">
+            {% block content %}
+            {% block single_page_application %} {% endblock %}
+            {% endblock content %}
+        </div>
+        {% endblock main_content %}
+        {% endblock main %}
+    </main>
+    <footer>
+        {% block footer %}{% endblock footer %}
+    </footer>
+</div>
+
+{% endblock body %}
