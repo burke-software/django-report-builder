@@ -95,47 +95,80 @@ reportBuilderApp.service('reportService', ['Restangular',
     var reports = Restangular.all(path);
 
     function getReport(reportId) {
-      return Restangular.one(path, reportId).get();
+      console.info('reportService', 'fetch report', reportId, '...');
+      var result = Restangular.one(path, reportId).get();
+      console.debug('reportService', 'report['+reportId+']:', result);
+      return result;
     }
 
     function getRelatedFields(data) {
-      return Restangular.all('related_fields').post(data);
+      console.info('reportService', 'fetch related fields', data, '...');
+      var result = Restangular.all('related_fields').post(data);
+      console.debug('reportService', 'related fields:', result);
+      return result;
     }
 
     function getFields(data) {
-      return Restangular.all('fields').post(data);
+      console.info('reportService', 'fetch fields', data, '...');
+      var result = Restangular.all('fields').post(data);
+      console.debug('reportService', 'fields:', result);
+      return result;
     }
 
     function getFormats() {
-      return Restangular.all('formats').getList();
+      console.info('reportService', 'fetch formats', '...');
+      var result = Restangular.all('formats').getList();
+      console.debug('reportService', 'formats:', result);
+      return result;
     }
 
     function getContentTypes() {
-      return Restangular.all('contenttypes').getList();
+      console.info('reportService', 'fetch content-types', '...');
+      var result = Restangular.all('contenttypes').getList();
+      console.debug('reportService', 'content-types:', result);
+      return result;
     }
 
     function options() {
-      return reports.options();
+      console.info('reportService', 'fetch options', '...');
+      var result = reports.options();
+      console.debug('reportService', 'options:', result);
+      return result;
     }
 
     function filterFieldOptions() {
-      return Restangular.all('filterfields').options();
+      console.info('reportService', 'fetch filter field options', '...');
+      var result = Restangular.all('filterfields').options();
+      console.debug('reportService', 'filter field options:', result);
+      return result;
     }
 
     function create(data) {
-      return reports.post(data);
+      console.info('create report', data);
+      var result = reports.post(data);
+      console.debug('reportService', 'created:', result);
+      return result;
     }
 
     function deleteReport(reportId) {
-      return Restangular.one(path, reportId).remove();
+      console.info('reportService', 'delete report', reportId);
+      var result = Restangular.one(path, reportId).remove();
+      console.debug('reportService', 'delete report['+reportId+']:', result);
+      return result;
     }
 
     function getList() {
-      return Restangular.all('reports').getList();
+      console.info('reportService', 'fetch reports', '...');
+      var result = Restangular.all('reports').getList();
+      console.debug('reportService', 'reports:', result);
+      return result;
     }
 
     function getPreview(reportId) {
-      return Restangular.one(path, reportId).getList('generate');
+      console.info('reportService', 'fetch preview', reportId, '...');
+      var result = Restangular.one(path, reportId).getList('generate');
+      console.debug('reportService', 'preview:', result);
+      return result;
     }
 
     return {
