@@ -1,14 +1,16 @@
-{% load static from staticfiles %}
+{% extends 'material/frontend/base_module.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    {% block report_header %}
-    {% endblock %}
-</head>
 
-<body>
-{% block content %}
+{% block extrahead %}
+{% block report_header %}{% endblock %}
 {% endblock %}
-</body>
-</html>
+
+{% block content %}
+
+<div>
+    {% block nav %}
+    {{ block.super }}
+    {% endblock %}
+</div>
+{% block single_page_application %}{% endblock %}
+{% endblock %}

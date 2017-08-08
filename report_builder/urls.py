@@ -25,9 +25,11 @@ urlpatterns = [
     url(r'^api/fields', staff_member_required(api_views.FieldsView.as_view()), name="fields"),
     url(r'^api/report/(?P<report_id>\w+)/generate/', staff_member_required(api_views.GenerateReport.as_view()), name="generate_report"),
     url('^report/(?P<pk>\d+)/$', views.ReportSPAView.as_view(), name="report_update_view"),
+    url(r'^', staff_member_required(views.ReportSPAView.as_view()), name="report_builder")
 ]
 
-if not hasattr(settings, 'REPORT_BUILDER_FRONTEND') or settings.REPORT_BUILDER_FRONTEND:
-    urlpatterns += [
-        url(r'^', staff_member_required(views.ReportSPAView.as_view()), name="report_builder"),
-    ]
+# if not hasattr(settings, 'REPORT_BUILDER_FRONTEND') or settings.REPORT_BUILDER_FRONTEND:
+#     urlpatterns += [
+#         # url(r'^', staff_member_required(views.ReportSPAView.as_view()), name="index"),
+#         url(r'^', staff_member_required(views.ReportSPAView.as_view()), name="report_builder"),
+#     ]
