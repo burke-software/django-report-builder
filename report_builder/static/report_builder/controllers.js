@@ -205,10 +205,10 @@ reportBuilderApp.controller('LeftCtrl', function($scope, $routeParams, $mdSidena
   };
 
   $scope.close = function() {
-    $mdSidenav('left').close();
+//    $mdSidenav('left').close();
   };
   if (!$routeParams.reportId) {
-    $mdSidenav('left').open();
+//    $mdSidenav('left').open();
   }
 })
 
