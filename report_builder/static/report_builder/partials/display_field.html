@@ -18,7 +18,7 @@
     <md-checkbox aria-label="Reverse" ng-model="field.sort_reverse"></md-checkbox>
   </div>
   <div class="col_aggregate" flex="">
-    <select ng-model="field.aggregate">
+    <select ng-model="field.aggregate" class="browser-default">
       <option value="" selected="selected">---------</option>
       <option value="Sum">Sum</option>
       <option value="Count">Count</option>
@@ -28,7 +28,7 @@
     </select>
   </div>
   <div class="col_format" flex="">
-    <select ng-model="field.display_format" ng-options="format.id as format.name for format in formats">
+    <select ng-model="field.display_format" ng-options="format.id as format.name for format in formats" class="browser-default">
         <option value=""></option>
     </select>
   </div>
