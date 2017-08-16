@@ -1,0 +1,24 @@
+## 3.6 (WIP)
+
+- Fix bug affecting Django 1.10 and 1.11
+- Moved to tox for testing
+
+## 3.5
+
+- Compatible with Django 1.11
+- Manifest containers only needed static assets, greatly reducing file size.
+- No longer testing in Django 1.9, but probably still works.
+- Remains in maintence mode - no features
+
+## 3.4
+
+- Switched from default angular theme to something more neutral
+- Updated Angular Material version
+- Some CSS fixes
+- Limited Django 1.10 (use >=3.4.2) support see #239
+- Django rest framework 3.4 support
+
+
+## 3.3 
+
+Official support is now for Django 1.8 and 1.9. Python 2.7 and 3.5 (I'm sure 3.4 works but no longer unit testing it). For Django < 1.8 please use the 3.2 release.
