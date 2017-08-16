@@ -14,6 +14,7 @@ from django.conf import settings
 from .utils import (
     get_properties_from_model, get_direct_fields_from_model,
     get_relation_fields_from_model, get_model_from_path_string)
+from .mixins import GetFieldsMixin
 from rest_framework.test import APIClient
 import time
 import csv
@@ -106,6 +107,14 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('distinct' in names)
         self.assertTrue('id' in names)
         self.assertEquals(len(names), 9)
+    
+    def test_get_fields(self):
+        """ Test GetFieldsMixin.get_fields """
+        obj = GetFieldsMixin()
+        obj.get_fields(
+            Bar,
+            "foos",
+        )
 
     def test_get_gfk_fields_from_model(self):
         fields = get_direct_fields_from_model(Comment)

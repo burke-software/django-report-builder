@@ -1,0 +1,11 @@
+image: python:3.6
+
+cache:
+  paths:
+  - ~/.cache/pip/
+
+before_script:
+  - pip install tox
+
+test:
+  script: tox
