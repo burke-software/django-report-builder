@@ -5,7 +5,7 @@ cache:
   - ~/.cache/pip/
 
 before_script:
-  - pip install tox
+  - pip install tox coverage
 
 test:
   script: tox
