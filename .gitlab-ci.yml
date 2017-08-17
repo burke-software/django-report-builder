@@ -9,3 +9,8 @@ before_script:
 
 test:
   script: tox
+
+test_coverage:
+  script:
+    - coverage run --source='.' manage.py test --noinput -v 3
+    - coverage report --skip-covered | grep TOTAL
