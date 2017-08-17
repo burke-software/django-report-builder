@@ -5,6 +5,7 @@ A GUI for Django ORM. Build custom queries and display results.
 Targets sys admins and capable end users who might not be able to program or gain direct interactive shell access.
 
 [![pipeline status](https://gitlab.com/burke-software/django-report-builder/badges/master/pipeline.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
+[![coverage report](https://gitlab.com/burke-software/django-report-builder/badges/master/coverage.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
 
 # News
 
