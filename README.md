@@ -9,7 +9,7 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
-## 3.6 (WIP)
+## 3.6
 
 - Fix bug affecting Django 1.10 and 1.11
 - Moved to tox for testing
