@@ -5,12 +5,14 @@ cache:
   - ~/.cache/pip/
 
 before_script:
-  - pip install tox coverage
+  - pip install tox
 
 test:
   script: tox
 
 test_coverage:
   script:
+    - pip install -e . -r requirements.txt
+    - pip install -e . -r requirements-dev.txt
     - coverage run --source='.' manage.py test --noinput -v 3
     - coverage report --skip-covered | grep TOTAL
