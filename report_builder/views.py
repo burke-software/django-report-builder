@@ -9,7 +9,6 @@ from django.core.files.base import ContentFile
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.template.loader import get_template
-from django.template import Context
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -76,7 +75,7 @@ def email_report(report_url, user):
                 'report': report_url,
             }
             msg.attach_alternative(
-                email_template.render(Context(htmlParameters)),
+                email_template.render(htmlParameters),
                 "text/html"
             )
             msg.send()

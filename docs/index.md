@@ -14,5 +14,4 @@ https://github.com/burke-software/django-report-builder
 Discussion
 --------
 
-Let us know your thoughts at https://google.com/+Burkesoftware or consider sending some pull 
-requests our way!
+https://groups.google.com/forum/#!forum/django-report-builder

@@ -1,9 +1,9 @@
-#Hacking
+# Hacking
 
 You may of course run this as any django application.
 However we've included some docker based tools and a demo project to make things easier.
 
-##Running development environment with Docker [Compose]
+## Running development environment with Docker Compose
 
 This will get you a quick way to run report builder in a demo project - ideal for hacking on.
 
@@ -23,6 +23,12 @@ Then to make sure your codes conforms to pep8:
 docker-compose run --rm web flake8
 ```
 
+To run tests with multiple Django versions run
+
+`docker-compose run --rm web tox`
+
+Please check django versions before submitting merge requests.
+
 ## Styles
 
 Python code should follow pep8 standards.
@@ -30,9 +36,6 @@ Python code should follow pep8 standards.
 Pull requests should include a unit test on any added behavior. If it fixes a
 bug, it needs a failing test to show what it fixed. Documentation should also be
 updated, if needed.
-
-User interface should follow Material Design guidelines - this is not strictly
-enforced.
 
 ## Making pull requests
 
