@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ImproperlyConfigured
 from django.db.models.query import QuerySet
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -163,6 +164,37 @@ class ReportBuilderTests(TestCase):
         user.save()
         self.client = APIClient()
         self.client.login(username='testy', password='pass')
+
+    def test_bad_names(self):
+        settings.REPORT_BUILDER_EXCLUDE = None
+
+        # 'bar' is ambiguous
+        settings.REPORT_BUILDER_INCLUDE = ('bar',)
+        with self.assertRaises(ImproperlyConfigured):
+            get_allowed_models()
+
+        # app_label is invalid
+        settings.REPORT_BUILDER_INCLUDE = ('invalid.bar',)
+        with self.assertRaises(ImproperlyConfigured):
+            get_allowed_models()
+        settings.REPORT_BUILDER_INCLUDE = ('invalid.invalid',)
+        with self.assertRaises(ImproperlyConfigured):
+            get_allowed_models()
+
+        # model is invalid
+        settings.REPORT_BUILDER_INCLUDE = ('invalid',)
+        with self.assertRaises(ImproperlyConfigured):
+            get_allowed_models()
+        settings.REPORT_BUILDER_INCLUDE = ('demo_models.invalid',)
+        with self.assertRaises(ImproperlyConfigured):
+            get_allowed_models()
+
+        # ensure duplicate models don't overlap
+        settings.REPORT_BUILDER_INCLUDE = (
+            'demo_models.bar',
+            'demo_second_app.bar',
+        )
+        self.assertEqual(len(get_allowed_models()), 2)
 
     def test_get_allowed_models_for_include(self):
         pre_include_duplicates = find_duplicates_in_contexttype()

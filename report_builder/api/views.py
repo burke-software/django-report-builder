@@ -44,7 +44,7 @@ class ContentTypeViewSet(ReportBuilderViewMixin, viewsets.ReadOnlyModelViewSet):
     """ Read only view of content types.
     Used to populate choices for new report root model.
     """
-    queryset = ContentType.objects.all()
+    queryset = Report.allowed_models()
     serializer_class = ContentTypeSerializer
     permission_classes = (IsAdminUser,)
 
