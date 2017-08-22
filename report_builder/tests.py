@@ -1056,6 +1056,20 @@ class ReportTests(TestCase):
 
         self.assertContains(response, data)
 
+    def test_missing_entries_with_foreign_key_fields(self):
+        parent = Person.objects.create(first_name='John', last_name='Doe')
+        parent2 = Person.objects.create(first_name='John', last_name='Doe')
+        Child.objects.create(first_name='John Jr. I', last_name='Doe', parent=parent)
+        Child.objects.create(first_name='John Jr. II', last_name='Doe', parent=parent2)
+        Child.objects.create(first_name='John Jr. III', last_name='Doe', parent=parent)
+
+        report = Report.objects.create(root_model=ContentType.objects.get_for_model(Child), name='children_report')
+        DisplayField.objects.create(report=report, field='id', field_verbose='stuff')
+        DisplayField.objects.create(report=report, field='id', path='parent__', field_verbose='stuff')
+
+        report_list = report.report_to_list()
+        self.assertEquals(len(report_list), 3, 'Not all children appear in the report.')
+
 
 class ViewTests(TestCase):
     def test_email_report_without_template(self):
