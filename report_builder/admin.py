@@ -3,7 +3,7 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from report_builder.models import Report, Format
+from report_builder.models import Report, Format, ScheduledReport
 from django.conf import settings
 
 static_url = getattr(settings, 'STATIC_URL', '/static/')
@@ -80,8 +80,22 @@ class ReportAdmin(admin.ModelAdmin):
             obj.starred.add(request.user)
 
 
+class ScheduledReportAdmin(admin.ModelAdmin):
+    list_display = ('report', 'is_active', 'last_run', 'run_report_url')
+    list_filter = ('is_active', 'last_run')
+    readonly_fields = ('last_run',)
+
+    def run_report_url(self, obj):
+        url = reverse('run_scheduled_report', kwargs={'pk': obj.id})
+        return '<a href="%s">Run</a>' % (url,)
+
+    run_report_url.allow_tags = True
+    run_report_url.short_description = ''
+
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
+admin.site.register(ScheduledReport, ScheduledReportAdmin)
 
 
 def export_to_report(modeladmin, request, queryset):

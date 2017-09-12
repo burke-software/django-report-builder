@@ -1,22 +1,20 @@
-import datetime
-import re
 import copy
 import json
-from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.core.files.base import ContentFile
+from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
-from django.template.loader import get_template
-from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
 from six import string_types
 from .utils import duplicate
-from .models import Report
-from .mixins import DataExportMixin, generate_filename
+from .models import Report, ScheduledReport
+from .mixins import DataExportMixin
+from .tasks import report_builder_run_scheduled_report
 
 User = get_user_model()
 
@@ -57,39 +55,6 @@ def get_fieldsets(model):
     return fieldsets
 
 
-def email_report(report_url, user):
-    if ((getattr(settings, 'EMAIL_BACKEND', False) or
-            getattr(settings, 'EMAIL_HOST', False)) and
-            getattr(settings, 'DEFAULT_FROM_EMAIL', False)):
-        if get_template('email/email_report.html'):
-            email_template = get_template('email/email_report.html')
-            msg = EmailMultiAlternatives(
-                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or
-                'Report is ready',
-                report_url,
-                getattr(settings, 'DEFAULT_FROM_EMAIL'),
-                [user.email],
-            )
-            htmlParameters = {
-                'name': user.first_name or user.username,
-                'report': report_url,
-            }
-            msg.attach_alternative(
-                email_template.render(htmlParameters),
-                "text/html"
-            )
-            msg.send()
-        else:
-            send_mail(
-                getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or
-                'Report is ready',
-                str(report_url),
-                getattr(settings, 'DEFAULT_FROM_EMAIL'),
-                [user.email],
-                fail_silently=True,
-            )
-
-
 class DownloadFileView(DataExportMixin, View):
 
     @method_decorator(staff_member_required)
@@ -100,51 +65,11 @@ class DownloadFileView(DataExportMixin, View):
                        file_type, to_response, queryset=None):
         report = get_object_or_404(Report, pk=report_id)
         user = User.objects.get(pk=user_id)
-        if not queryset:
-            queryset = report.get_query()
-
-        display_fields = report.get_good_display_fields()
-
-        objects_list, message = self.report_to_list(
-            queryset,
-            display_fields,
-            user,
-            preview=False,)
-        title = re.sub(r'\W+', '', report.name)[:30]
-        header = []
-        widths = []
-        for field in display_fields:
-            header.append(field.name)
-            widths.append(field.width)
 
         if to_response:
-            if file_type == 'csv':
-                return self.list_to_csv_response(
-                    objects_list, title, header, widths)
-            else:
-                return self.list_to_xlsx_response(
-                    objects_list, title, header, widths)
+            return report.run_report(file_type, user, queryset)
         else:
-            self.async_report_save(report, objects_list,
-                                   title, header, widths, user, file_type)
-
-    def async_report_save(self, report, objects_list,
-                          title, header, widths, user, file_type):
-        if file_type == 'csv':
-            csv_file = self.list_to_csv_file(objects_list, title,
-                                             header, widths)
-            title = generate_filename(title, '.csv')
-            report.report_file.save(title, ContentFile(csv_file.getvalue()))
-        else:
-            xlsx_file = self.list_to_xlsx_file(objects_list, title,
-                                               header, widths)
-            title = generate_filename(title, '.xlsx')
-            report.report_file.save(title, ContentFile(xlsx_file.getvalue()))
-        report.report_file_creation = datetime.datetime.today()
-        report.save()
-        if getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False):
-            if user.email:
-                email_report(report.report_file.url, user)
+            report.run_report(user, file_type, queryset, async=True)
 
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
@@ -257,3 +182,12 @@ def check_status(request, pk, task_id):
             )
         }),
         content_type="application/json")
+
+
+@staff_member_required
+def run_scheduled_report(request, pk):
+    """ Manually run a scheduled report - useful for testing or one off situations """
+    scheduled_report = get_object_or_404(ScheduledReport, pk=pk)
+    report_builder_run_scheduled_report.delay(scheduled_report.id)
+    messages.success(request, "Ran scheduled report")
+    return HttpResponseRedirect(reverse('admin:report_builder_scheduledreport_changelist'))

@@ -1,5 +1,11 @@
-## 3.6 (WIP)
+## 4.0
 
+- Breaking Change - drop support for python 2.7
+- Added scheduled reports to email reports on recurring basis (with celery)
+
+## 3.6
+
+- Last version to support python 2.7
 - Fix bug affecting Django 1.10 and 1.11
 - Moved to tox for testing
 
