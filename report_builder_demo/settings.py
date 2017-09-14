@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'report_builder_demo.demo_models',
     'report_builder_demo.demo_second_app',
     'report_builder',
+    'report_builder_scheduled',
     'django_extensions',
 )
 

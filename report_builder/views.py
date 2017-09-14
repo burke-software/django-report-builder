@@ -2,19 +2,16 @@ import copy
 import json
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
 from six import string_types
 from .utils import duplicate
-from .models import Report, ScheduledReport
+from .models import Report
 from .mixins import DataExportMixin
-from .tasks import report_builder_run_scheduled_report
 
 User = get_user_model()
 
@@ -182,12 +179,3 @@ def check_status(request, pk, task_id):
             )
         }),
         content_type="application/json")
-
-
-@staff_member_required
-def run_scheduled_report(request, pk):
-    """ Manually run a scheduled report - useful for testing or one off situations """
-    scheduled_report = get_object_or_404(ScheduledReport, pk=pk)
-    report_builder_run_scheduled_report.delay(scheduled_report.id)
-    messages.success(request, "Ran scheduled report")
-    return HttpResponseRedirect(reverse('admin:report_builder_scheduledreport_changelist'))

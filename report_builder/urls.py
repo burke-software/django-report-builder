@@ -18,7 +18,6 @@ urlpatterns = [
     url(r'^report/(?P<pk>\d+)/check_status/(?P<task_id>.+)/$', views.check_status, name="report_check_status"),
     url(r'^report/(?P<pk>\d+)/add_star/$', views.ajax_add_star, name="ajax_add_star"),
     url(r'^report/(?P<pk>\d+)/create_copy/$', views.create_copy, name="report_builder_create_copy"),
-    url(r'^report/(?P<pk>\d+)/run_scheduled_report/$', views.run_scheduled_report, name="run_scheduled_report"),
     url(r'^export_to_report/$', views.ExportToReport.as_view(), name="export_to_report"),
     url(r'^api/', include(router.urls)),
     url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),

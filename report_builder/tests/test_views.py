@@ -34,12 +34,3 @@ class ViewTests(TestCase):
         settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
         settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
         mail.outbox = []
-
-class AdminViewTests(TestCase):
-    """ Basic sanity check that admin views work """
-    def test_scheduled_report_admin(self):
-        url = reverse('admin:report_builder_scheduledreport_changelist')
-        user = User.objects.create(username='testy', is_staff=True, is_superuser=True)
-        self.client.force_login(user)
-        res = self.client.get(url)
-        self.assertEqual(res.status_code, 200)

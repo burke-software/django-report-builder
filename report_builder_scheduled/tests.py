@@ -3,8 +3,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from ..tasks import report_builder_run_scheduled_report
-from ..models import Report, ScheduledReport
+from .models import ScheduledReport
+from report_builder.models import Report
+from .tasks import report_builder_run_scheduled_report
 
 User = get_user_model()
 
@@ -37,3 +38,13 @@ class ScheduledReportTests(TestCase):
         self.client.force_login(user)
         res = self.client.get(url)
         self.assertEqual(res.status_code, 302)
+
+
+class AdminViewTests(TestCase):
+    """ Basic sanity check that admin views work """
+    def test_scheduled_report_admin(self):
+        url = reverse('admin:report_builder_scheduled_scheduledreport_changelist')
+        user = User.objects.create(username='testy', is_staff=True, is_superuser=True)
+        self.client.force_login(user)
+        res = self.client.get(url)
+        self.assertEqual(res.status_code, 200)
