@@ -125,5 +125,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-if 'test' in sys.argv:
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+if TESTING:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+    CELERY_ALWAYS_EAGER = True
+
