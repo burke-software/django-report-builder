@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'report_builder_demo.demo_second_app',
     'report_builder',
     'report_builder_scheduled',
+    'django_celery_beat',
     'django_extensions',
 )
 
@@ -102,6 +103,7 @@ TEMPLATES = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/

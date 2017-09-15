@@ -5,9 +5,9 @@ from .models import ScheduledReport
 
 @admin.register(ScheduledReport)
 class ScheduledReportAdmin(admin.ModelAdmin):
-    list_display = ('report', 'is_active', 'last_run', 'run_report_url')
-    list_filter = ('is_active', 'last_run')
-    readonly_fields = ('last_run',)
+    list_display = ('report', 'is_active', 'last_run_at', 'run_report_url')
+    list_filter = ('is_active', 'last_run_at')
+    readonly_fields = ('last_run_at',)
 
     def run_report_url(self, obj):
         url = reverse('run_scheduled_report', kwargs={'pk': obj.id})

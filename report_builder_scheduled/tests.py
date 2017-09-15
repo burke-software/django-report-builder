@@ -21,7 +21,7 @@ class ScheduledReportTests(TestCase):
         report_builder_run_scheduled_report(scheduled_report.id)
         scheduled_report.refresh_from_db()
         scheduled_report.report.refresh_from_db()
-        self.assertIsNotNone(scheduled_report.last_run)
+        self.assertIsNotNone(scheduled_report.last_run_at)
         self.assertIsNotNone(scheduled_report.report.report_file_creation)
         self.assertEqual(len(mail.outbox), 1)
 
