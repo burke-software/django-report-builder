@@ -305,7 +305,7 @@ class ReportTests(TestCase):
         self.generate_url = reverse('generate_report', args=[self.report.id])
 
     def test_property_position(self):
-        bar = Bar()
+        bar = self.bar
 
         DisplayField.objects.create(
             report=self.report,
@@ -323,6 +323,36 @@ class ReportTests(TestCase):
         self.assertEqual(
             report_list[0],
             [bar.i_want_char_field, bar.i_need_char_field]
+        )
+
+    def test_property_and_field_position(self):
+        bar = self.bar
+
+        DisplayField.objects.create(
+            report=self.report,
+            field="char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="char_field",
+            field_verbose="stuff",
+        )
+
+        report_list = self.report.report_to_list(self.report.get_query())
+        self.assertEqual(
+            report_list[0],
+            [bar.char_field, bar.i_want_char_field, bar.i_need_char_field, bar.char_field]
         )
 
     def test_property_display(self):
