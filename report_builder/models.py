@@ -168,11 +168,11 @@ class Report(models.Model):
                 display_field.total_count = Decimal(0.0)
                 display_totals.append(display_field)
             display_field_type = display_field.field_type
+            i += 1
             if display_field_type == "Property":
                 display_field_properties.append(display_field.field_key)
                 insert_property_indexes.append(i)
             else:
-                i += 1
                 if display_field.aggregate:
                     display_field_paths += [
                         display_field.field_key +
