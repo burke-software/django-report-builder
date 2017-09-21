@@ -2,16 +2,18 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from django.utils.functional import cached_property
 from django.db import models
 from django.db.models import Avg, Min, Max, Count, Sum, F
 from django.db.models.fields import FieldDoesNotExist
-from six import text_type
 from report_builder.unique_slugify import unique_slugify
 from .utils import (
     get_model_from_path_string, sort_data, increment_total, formatter)
+from .mixins import generate_filename, DataExportMixin
+from .email import email_report
 from dateutil import parser
 from decimal import Decimal
 from functools import reduce
@@ -86,6 +88,9 @@ class Report(models.Model):
         AUTH_USER_MODEL, blank=True,
         help_text="These users have starred this report for easy reference.",
         related_name="report_starred_set")
+    
+    def __str__(self):
+        return self.name
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -256,9 +261,9 @@ class Report(models.Model):
                         # Replace choice data with display choice string
                         for position, choice_list in choice_lists.items():
                             try:
-                                data_row[position] = text_type(choice_list[data_row[position]])
+                                data_row[position] = str(choice_list[data_row[position]])
                             except Exception:
-                                data_row[position] = text_type(data_row[position])
+                                data_row[position] = str(data_row[position])
                         for position, style in display_formats.items():
                             data_row[position] = formatter(data_row[position], style)
                         data_list.append(data_row)
@@ -416,6 +421,64 @@ class Report(models.Model):
                 display_field.position = i + 1
                 display_field.save()
 
+    def email_report(self, user=None, email=None):
+        report_url = self.report_file.url
+        return email_report(report_url, user=user, email=email)
+
+    def async_report_save(self, objects_list,
+                          title, header, widths, user=None, file_type="xlsx", email_to:str = None):
+        data_export = DataExportMixin()
+        if file_type == 'csv':
+            csv_file = data_export.list_to_csv_file(objects_list, title,
+                                             header, widths)
+            title = generate_filename(title, '.csv')
+            self.report_file.save(title, ContentFile(csv_file.getvalue()))
+        else:
+            xlsx_file = data_export.list_to_xlsx_file(objects_list, title,
+                                               header, widths)
+            title = generate_filename(title, '.xlsx')
+            self.report_file.save(title, ContentFile(xlsx_file.getvalue()))
+        self.report_file_creation = datetime.datetime.today()
+        self.save()
+        if email_to:
+            for email in email_to:
+                self.email_report(email=email)
+        elif getattr(settings, 'REPORT_BUILDER_EMAIL_NOTIFICATION', False):
+            if user.email:
+                self.email_report(user=user)
+
+    def run_report(self, file_type, user=None, queryset=None, async=False, scheduled=False, email_to:str = None):
+        """Generate this report file"""
+        if not queryset:
+            queryset = self.get_query()
+
+        display_fields = self.get_good_display_fields()
+
+        data_export = DataExportMixin()
+        objects_list, message = data_export.report_to_list(
+            queryset, display_fields, user, preview=False)
+        title = re.sub(r'\W+', '', self.name)[:30]
+        header = []
+        widths = []
+        for field in display_fields:
+            header.append(field.name)
+            widths.append(field.width)
+
+        if scheduled:
+            self.async_report_save(objects_list, title, header, widths, file_type, email_to=email_to)
+        elif async:
+            if user is None:
+                raise Exception('Cannot run async report without a user')
+            self.async_report_save(
+                self, objects_list, title, header, widths, user, file_type)
+        else:
+            if file_type == 'csv':
+                return data_export.list_to_csv_response(
+                    objects_list, title, header, widths)
+            else:
+                return data_export.list_to_xlsx_response(
+                    objects_list, title, header, widths)
+
 
 class Format(models.Model):
     """ A specifies a Python string format for e.g. `DisplayField`s.
@@ -426,7 +489,7 @@ class Format(models.Model):
         help_text='Python string format. Ex ${} would place a $ in front of the result.'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -498,7 +561,7 @@ class DisplayField(AbstractField):
                 choices_dict.update({choice[0]: choice[1]})
         return choices_dict
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -634,5 +697,5 @@ class FilterField(AbstractField):
                 self.report.root_model.model_class(), self.path)
             return self.get_choices(model, self.field)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.field

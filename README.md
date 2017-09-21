@@ -9,17 +9,15 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 4.0
+
+- Removed python 2.7 support, please use 3.6 for python 2.
+- Added scheduled reports
+
 ## 3.6
 
 - Fix bug affecting Django 1.10 and 1.11
 - Moved to tox for testing
-
-## 3.5
-
-- Compatible with Django 1.11
-- Manifest containers only needed static assets, greatly reducing file size.
-- No longer testing in Django 1.9, but probably still works.
-- Remains in maintence mode - no features
 
 # What is Django Report Builder?
 
@@ -34,6 +32,7 @@ Targets sys admins and capable end users who might not be able to program or gai
 reports. Unprivileged users can still build reports and see database schema.
 - Model properties (thanks yekibud)
 - Export to Report global admin action
+- Scheduled reports can generate and send to users on cron like schedule
 - Optional asynchronous report generation
 
 # Documentation

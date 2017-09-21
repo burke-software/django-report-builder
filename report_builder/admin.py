@@ -80,6 +80,8 @@ class ReportAdmin(admin.ModelAdmin):
             obj.starred.add(request.user)
 
 
+
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Format)
 

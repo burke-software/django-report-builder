@@ -180,11 +180,11 @@ class DataExportMixin(object):
 
         return queryset
 
-    def report_to_list(self, queryset, display_fields, user, property_filters=[], preview=False):
+    def report_to_list(self, queryset, display_fields, user=None, property_filters=[], preview=False):
         """ Create list from a report with all data filtering.
         queryset: initial queryset to generate results
         display_fields: list of field references or DisplayField models
-        user: requesting user
+        user: requesting user. If left as None - there will be no permission check
         property_filters: ???
         preview: return only first 50 rows
         Returns list, message in case of issues.
@@ -193,8 +193,9 @@ class DataExportMixin(object):
 
         def can_change_or_view(model):
             """ Return True iff `user` has either change or view permission
-            for `model`.
-            """
+            for `model`. """
+            if user is None:
+                return True
             model_name = model._meta.model_name
             app_label = model._meta.app_label
             can_change = user.has_perm(app_label + '.change_' + model_name)

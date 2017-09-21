@@ -1,35 +1,23 @@
 from django.contrib.contenttypes.models import ContentType
-from django.core import mail
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 from django.test import TestCase
 from django.test.utils import override_settings
-from .models import (
+from ..models import (
     Report, DisplayField, FilterField, Format, get_allowed_models,
     get_limit_choices_to_callable)
-from .views import email_report
 from report_builder_demo.demo_models.models import (
-    Bar, Place, Restaurant, Waiter, Person, Child, Comment)
+    Bar, Place, Restaurant, Waiter, Person, Child)
 from django.conf import settings
-from .utils import (
-    get_properties_from_model, get_direct_fields_from_model,
-    get_relation_fields_from_model, get_model_from_path_string)
-from .mixins import GetFieldsMixin
 from rest_framework.test import APIClient
 import time
 import csv
 import unittest
 
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:
-    from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 
 
 def find_duplicates_in_contexttype():
@@ -43,115 +31,6 @@ def find_duplicates_in_contexttype():
         else:
             find_duplicates[model_name] = 1
     return duplicates
-
-
-class RelationUtilityFunctionTests(TestCase):
-
-    def test_a_initial_rel_field_name(self):
-        """
-        Test that the initial assumption about the ManyToOneRel field_name is
-        correct
-        """
-        self.assertEquals(Waiter.restaurant.field.rel.field_name, "place")
-
-    def test_get_relation_fields_from_model_does_not_change_field_name(self):
-        """
-        Make sure that getting related_fields doesn't overwrite field_name
-
-        Waiter has a ForeignKey to Restaurant.
-        The relation from Restaurant to Waiter is a ManyToOneRel object.
-        'place' is the PK of Restaurant. The ManyToOneRel field_name should be
-        the same at the PK, unless to_field is set on the ForeignKey.
-
-        ManyToManyRel objects are not affected.
-        """
-        get_relation_fields_from_model(Restaurant)
-        self.assertEquals(Waiter.restaurant.field.rel.field_name, "place")
-        Waiter.restaurant.field.rel.get_related_field()
-
-
-class UtilityFunctionTests(TestCase):
-
-    def setUp(self):
-        self.report_ct = ContentType.objects.get_for_model(Report)
-        self.report = Report.objects.create(
-            name="foo report",
-            root_model=self.report_ct)
-        self.filter_field = FilterField.objects.create(
-            report=self.report,
-            field="X",
-            field_verbose="stuff",
-            filter_type='contains',
-            filter_value='Lots of spam')
-
-    def get_fields_names(self, fields):
-        return [field.name for field in fields]
-
-    def test_get_relation_fields_from_model(self):
-        fields = get_relation_fields_from_model(Report)
-        names = self.get_fields_names(fields)
-        self.assertTrue('displayfield' in names or 'report_builder:displayfield' in names)
-        self.assertTrue('filterfield' in names or 'report_builder:filterfield' in names)
-        self.assertTrue('root_model' in names)
-        self.assertEquals(len(names), 6)
-
-    def test_get_model_from_path_string(self):
-        result = get_model_from_path_string(Restaurant, 'waiter__name')
-        self.assertEqual(result, Waiter)
-
-    def test_get_direct_fields_from_model(self):
-        fields = get_direct_fields_from_model(Report)
-        names = self.get_fields_names(fields)
-        self.assertTrue('created' in names)
-        self.assertTrue('description' in names)
-        self.assertTrue('distinct' in names)
-        self.assertTrue('id' in names)
-        self.assertEquals(len(names), 9)
-
-    def test_get_fields(self):
-        """ Test GetFieldsMixin.get_fields """
-        obj = GetFieldsMixin()
-        obj.get_fields(
-            Bar,
-            "foos",
-        )
-
-    def test_get_gfk_fields_from_model(self):
-        fields = get_direct_fields_from_model(Comment)
-        print(fields)
-
-    def test_get_properties_from_model(self):
-        properties = get_properties_from_model(DisplayField)
-        self.assertEquals(properties[0]['label'], 'choices')
-        self.assertEquals(properties[1]['label'], 'choices_dict')
-
-    def test_filter_property(self):
-        # Not a very complete test - only tests one type of filter
-        result = self.filter_field.filter_property('spam')
-        self.assertTrue(result)
-
-    def test_custom_global_model_manager(self):
-        """ test for custom global model manager """
-        if getattr(settings, 'REPORT_BUILDER_MODEL_MANAGER', False):
-            self.assertEquals(
-                self.report._get_model_manager(),
-                settings.REPORT_BUILDER_MODEL_MANAGER)
-
-    def test_custom_model_manager(self):
-        """ test for custom model manager """
-        if getattr(
-            self.report.root_model.model_class(),
-            'report_builder_model_manager',
-            True
-        ):
-            # change setup to use actual field and value
-            self.filter_field.field = 'name'
-            self.filter_field.filter_value = 'foo'
-            self.filter_field.save()
-            # coverage of get_query
-            objects = self.report.get_query()
-            # expect custom manager to return correct object with filters
-            self.assertEquals(objects[0], self.report)
 
 
 class ReportBuilderTests(TestCase):
@@ -303,7 +182,7 @@ class ReportTests(TestCase):
         self.report = Report.objects.create(root_model=ct, name="A")
         self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
-
+    
     def test_property_position(self):
         bar = self.bar
 
@@ -1106,29 +985,3 @@ class ReportTests(TestCase):
         data = '"data":[["John","Doe","Will","Doe",5],["Donald","King","Larry","King",5]]'
 
         self.assertContains(response, data)
-
-
-class ViewTests(TestCase):
-    def test_email_report_without_template(self):
-        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = True
-        email_subject = getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or "Report is ready"
-        user = User.objects.get_or_create(username='example', email='to@example.com')[0]
-        email_report(email_subject, user)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, email_subject)
-        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
-        mail.outbox = []
-
-    def test_email_report_with_template(self):
-        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = True
-        report_url = 'http://fakeurl.com/fakestuffs'
-        username = 'example'
-        email_subject = getattr(settings, 'REPORT_BUILDER_EMAIL_SUBJECT', False) or "Report is ready"
-        user = User.objects.get_or_create(username=username, email='to@example.com')[0]
-        email_report(report_url, user)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, email_subject)
-        self.assertEqual(mail.outbox[0].alternatives[0][0], "<p>Hello {0},</p>\n<br>\n<p>The report is <a href='{1}'>here</u></p>".format(username, report_url))
-        settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
-        settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
-        mail.outbox = []
