@@ -172,13 +172,13 @@ class Report(models.Model):
                 display_field_properties.append(display_field.field_key)
                 insert_property_indexes.append(i)
             else:
-                i += 1
                 if display_field.aggregate:
                     display_field_paths += [
                         display_field.field_key +
                         '__' + display_field.aggregate.lower()]
                 else:
                     display_field_paths += [display_field.field_key]
+            i += 1
 
             # Build display choices list
             if display_field.choices and hasattr(display_field, 'choices_dict'):

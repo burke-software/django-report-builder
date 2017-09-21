@@ -107,7 +107,7 @@ class UtilityFunctionTests(TestCase):
         self.assertTrue('distinct' in names)
         self.assertTrue('id' in names)
         self.assertEquals(len(names), 9)
-    
+
     def test_get_fields(self):
         """ Test GetFieldsMixin.get_fields """
         obj = GetFieldsMixin()
@@ -303,6 +303,57 @@ class ReportTests(TestCase):
         self.report = Report.objects.create(root_model=ct, name="A")
         self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
+
+    def test_property_position(self):
+        bar = self.bar
+
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+            position=1,
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+            position=2,
+        )
+        report_list = self.report.report_to_list(self.report.get_query())
+        self.assertEqual(
+            report_list[0],
+            [bar.i_want_char_field, bar.i_need_char_field]
+        )
+
+    def test_property_and_field_position(self):
+        bar = self.bar
+
+        DisplayField.objects.create(
+            report=self.report,
+            field="char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_want_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="i_need_char_field",
+            field_verbose="stuff",
+        )
+        DisplayField.objects.create(
+            report=self.report,
+            field="char_field",
+            field_verbose="stuff",
+        )
+
+        report_list = self.report.report_to_list(self.report.get_query())
+        self.assertEqual(
+            report_list[0],
+            [bar.char_field, bar.i_want_char_field, bar.i_need_char_field, bar.char_field]
+        )
 
     def test_property_display(self):
         DisplayField.objects.create(
