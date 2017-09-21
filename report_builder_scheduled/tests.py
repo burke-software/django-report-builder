@@ -1,3 +1,4 @@
+import django
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
@@ -6,8 +7,14 @@ from django.test import TestCase
 from .models import ScheduledReport
 from report_builder.models import Report
 from .tasks import report_builder_run_scheduled_report
+from unittest import skipIf
 
 User = get_user_model()
+
+
+IS_D18 = False
+if django.VERSION[0] is 1 and django.VERSION[1] is 8:
+    IS_D18 = True
 
 
 class ScheduledReportTests(TestCase):
@@ -25,6 +32,7 @@ class ScheduledReportTests(TestCase):
         self.assertIsNotNone(scheduled_report.report.report_file_creation)
         self.assertEqual(len(mail.outbox), 1)
 
+    @skipIf(IS_D18, "Django 1.8 does not support force_login")
     def test_run_scheduled_report_view(self):
         ct = ContentType.objects.get(model="bar", app_label="demo_models")
         report = Report.objects.create(root_model=ct, name="A")
@@ -42,6 +50,7 @@ class ScheduledReportTests(TestCase):
 
 class AdminViewTests(TestCase):
     """ Basic sanity check that admin views work """
+    @skipIf(IS_D18, "Django 1.8 does not support force_login")
     def test_scheduled_report_admin(self):
         url = reverse('admin:report_builder_scheduled_scheduledreport_changelist')
         user = User.objects.create(username='testy', is_staff=True, is_superuser=True)
