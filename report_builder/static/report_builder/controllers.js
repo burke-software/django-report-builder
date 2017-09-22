@@ -53,6 +53,12 @@ reportBuilderApp.controller('homeCtrl', function($scope, $routeParams, $location
     $location.path('/report/' + reportId, false);
     reportService.getReport(reportId).then(function(report) {
       $mdSidenav('left').close();
+      // Deserialize BooleanField strings into actual booleans
+      report.filterfield_set.forEach((filterField) => {
+        if (filterField.field_type === "BooleanField" && filterField.filter_value === "True") {
+          filterField.filter_value = true;
+        }
+      });
       $scope.fields_header = report.root_model_name;
       $scope.report = report;
       $scope.report.lastSaved = null;

@@ -24,6 +24,16 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class NonStrictCharField(serializers.CharField):
+    """ Allow booleans to be turned into strings instead of erroring """
+    def to_internal_value(self, value):
+        if value is True:
+            return "True"
+        elif value is False:
+            return "False"
+        return super().to_internal_value(value)
+
+
 class FilterFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = FilterField
@@ -31,6 +41,8 @@ class FilterFieldSerializer(serializers.ModelSerializer):
                   'field_type', 'filter_type', 'filter_value', 'filter_value2',
                   'exclude', 'position', 'report')
         read_only_fields = ('id', 'field_type')
+
+    filter_value = NonStrictCharField()
 
 
 class UserSerializer(serializers.ModelSerializer):
