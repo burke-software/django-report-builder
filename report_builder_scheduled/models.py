@@ -13,7 +13,11 @@ class ScheduledReport(models.Model):
     a recurring basis. Requires celery. """
     is_active = models.BooleanField(default=True)
     report = models.ForeignKey('report_builder.Report')
-    users = models.ManyToManyField(AUTH_USER_MODEL, blank=True)
+    users = models.ManyToManyField(
+            AUTH_USER_MODEL,
+            limit_choices_to={'is_staff': True},
+            blank=True,
+            help_text="Staff users to notify")
     other_emails = models.CharField(
         max_length=1000,
         blank=True,
