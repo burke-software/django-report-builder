@@ -6,9 +6,9 @@ Supported versions:
 
 We follow Django's supported version schedule for new releases. No longer supported versions should use previous versions of report builder.
 
-- Django -  1.8-1.9. Preliminary Django 1.10 (needs testing)
-- Django Rest Framework 3.2 and 3.3. 3.4 is NOT supported at this time. 
-- Python - 3.5 and 2.7.
+- Django -  1.8, 1.10, and 1.11
+- Django Rest Framework 3.4+ 
+- Python - 3.5 and 3.6.
 
 ##Installation
 
@@ -33,6 +33,14 @@ REST_FRAMEWORK = {
     )
 }
 ```
+
+### Scheduled Reports
+
+If using celery - you can set up scheduled reports to be sent on a recurring basis.
+
+1. Ensure 'django_celery_beat' is in INSTALLED_APPS
+2. Add 'report_builder_scheduled' to INSTALLED_APPS
+3. Schedule a celery periodic task to process the report builder scheduled tasks. `report_builder_scheduled.tasks.report_builder_check_if_scheduled_report`. Run it every 10 minutes or so. Note that this task will simply schedule other report generating tasks so it should be very short lived even if there are long reports that need to run.
 
 ##Settings
 
