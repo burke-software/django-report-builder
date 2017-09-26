@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 import { ApiService } from '../api.service';
 
 import { IReportForm } from './interfaces';
@@ -12,7 +13,7 @@ export class NewReportComponent implements OnInit {
   root_model_choices$ = this.api.getRootModels();
   form: IReportForm;
 
-  constructor(private api: ApiService) { }
+  constructor(private router: Router, private api: ApiService) { }
 
   ngOnInit() {
     this.form = {
@@ -23,7 +24,11 @@ export class NewReportComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.form);
+    this.api.submitNewReport(this.form).then((resp) => {
+      if (resp.status === 201) {
+        this.router.navigate(['']);
+      }
+    });
   }
 
 }

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HttpModule } from '@angular/http';
+import { HttpModule, XSRFStrategy, CookieXSRFStrategy } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import {MatButtonModule, MatCheckboxModule, MatInputModule, MatToolbarModule, MatSelectModule} from '@angular/material';
@@ -33,7 +33,13 @@ const appRoutes: Routes = [
     MatToolbarModule,
     MatSelectModule,
   ],
-  providers: [ApiService],
+  providers: [
+    ApiService,
+    {
+      provide: XSRFStrategy,
+      useValue: new CookieXSRFStrategy('csrftoken', 'X-CSRFToken')
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
