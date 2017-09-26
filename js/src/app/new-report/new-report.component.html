@@ -1,0 +1,17 @@
+<form>
+    <md-form-field class="example-full-width">
+      <input mdInput placeholder="Report Name"/>
+    </md-form-field>
+
+    <md-form-field class="example-full-width">
+      <input mdInput placeholder="Description"/>
+    </md-form-field>
+
+    <md-select placeholder="Root Model">
+      <md-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
+        {{ model.name }}
+      </md-option>
+    </md-select>
+
+  <button md-raised-button>Ok</button>
+</form>
