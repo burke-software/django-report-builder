@@ -1,13 +1,13 @@
-<form>
+<form (ngSubmit)="submit()" #reportForm="ngForm">
     <md-form-field class="example-full-width">
-      <input mdInput placeholder="Report Name"/>
+      <input mdInput placeholder="Report Name" [(ngModel)]="form.name" name="name" required/>
     </md-form-field>
 
     <md-form-field class="example-full-width">
-      <input mdInput placeholder="Description"/>
+      <input mdInput placeholder="Description" [(ngModel)]="form.description" name="description"/>
     </md-form-field>
 
-    <md-select placeholder="Root Model">
+    <md-select placeholder="Root Model" [(ngModel)]="form.root_model" name="root_model" required>
       <md-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
         {{ model.name }}
       </md-option>
