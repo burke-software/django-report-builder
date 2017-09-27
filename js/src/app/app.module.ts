@@ -16,6 +16,18 @@ const appRoutes: Routes = [
   { path: 'report/add', component: NewReportComponent, data: {title: 'Add New Report'} },
 ];
 
+export function xsrfFactory() {
+  return new CookieXSRFStrategy('csrftoken', 'X-CSRFToken');
+}
+
+export const MatModules = [
+  MatButtonModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatToolbarModule,
+  MatSelectModule,
+];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,18 +39,11 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     HttpModule,
     FormsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatSelectModule,
+    ...MatModules,
   ],
   providers: [
     ApiService,
-    {
-      provide: XSRFStrategy,
-      useValue: new CookieXSRFStrategy('csrftoken', 'X-CSRFToken')
-    },
+    {provide: XSRFStrategy, useFactory: xsrfFactory},
   ],
   bootstrap: [AppComponent]
 })
