@@ -6,14 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { IReportForm } from './new-report/interfaces';
-
-interface IContentType {
-  'pk': number;
-  'name': string;
-}
-
-export type ContentTypeResponse = IContentType[];
-
+import { ReportsResponse, ContentTypeResponse } from './api.interfaces';
 
 @Injectable()
 export class ApiService {
@@ -28,5 +21,10 @@ export class ApiService {
 
   submitNewReport(form: IReportForm) {
     return this.http.post(this.apiUrl + 'report/', form).toPromise();
+  }
+
+  getReports(): Observable<ReportsResponse> {
+    return this.http.get(this.apiUrl + 'reports/')
+      .map(response => response.json());
   }
 }

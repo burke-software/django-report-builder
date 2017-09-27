@@ -23,7 +23,11 @@
     "@angular/platform-browser": "^4.4.3",
     "@angular/platform-browser-dynamic": "^4.4.3",
     "@angular/router": "^4.4.3",
+    "@ngrx/effects": "^4.0.5",
+    "@ngrx/store": "^4.0.3",
+    "@ngrx/store-devtools": "^4.0.0",
     "core-js": "^2.5.1",
+    "ngrx-store-freeze": "^0.2.0",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.17"
   },
