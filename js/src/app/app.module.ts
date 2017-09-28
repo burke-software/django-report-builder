@@ -23,11 +23,12 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { NewReportComponent } from './new-report/new-report.component';
 import { MainComponent } from './main/main.component';
+import { LeftSidebarComponent } from './main/left-sidebar/';
 
 import { ApiService } from './api.service';
 
 import { reducers, metaReducers } from './reducers';
-import { ReportEffects } from './main/main.effects';
+import { ReportEffects } from './effects/reports';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: {title: 'Reports'}},
@@ -52,6 +53,7 @@ export const MatModules = [
     AppComponent,
     NewReportComponent,
     MainComponent,
+    LeftSidebarComponent,
   ],
   imports: [
     BrowserAnimationsModule,

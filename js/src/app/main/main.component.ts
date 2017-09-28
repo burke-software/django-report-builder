@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State } from '../reducers';
+import { State, getReports } from '../reducers';
 import { GetReportList } from '../actions/reports';
 
 @Component({
   selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  template: `
+    <app-left-sidebar
+      [listReports]="listReports$ | async"
+    ></app-left-sidebar>
+  `,
 })
 export class MainComponent implements OnInit {
+  listReports$ = this.store.select(getReports);
 
   constructor(private store: Store<State>) { }
 

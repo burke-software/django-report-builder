@@ -23,4 +23,3 @@ export class ReportEffects {
     private api: ApiService,
   ) {}
 }
-
