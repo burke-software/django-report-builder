@@ -29,7 +29,7 @@ export class ApiService {
   }
 
   getReport(reportId: number): Observable<IReportDetailed> {
-    return this.http.get(this.apiUrl + `report/{reportId}/`)
+    return this.http.get(this.apiUrl + `report/${reportId}/`)
       .map(response => response.json());
   }
 }

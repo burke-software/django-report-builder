@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IReport } from '../../api.interfaces';
 
@@ -8,6 +8,11 @@ import { IReport } from '../../api.interfaces';
 })
 export class LeftSidebarComponent {
   @Input() listReports: IReport[];
+  @Output() onClickReport = new EventEmitter<number>();
 
   constructor() { }
+
+  clickReport(reportId: number) {
+    this.onClickReport.emit(reportId);
+  }
 }

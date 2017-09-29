@@ -1,10 +1,10 @@
 import { createSelector } from '@ngrx/store';
-import { IReport } from '../api.interfaces';
+import { IReport, IReportDetailed } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 
 export interface State {
   reports: IReport[];
-  selectedReport: number;
+  selectedReport: IReportDetailed;
 }
 
 export const initialState: State = {
@@ -20,6 +20,21 @@ export function reducer(state = initialState, action: reportActions.Actions): St
         reports: action.payload,
       };
     }
+
+    case reportActions.GET_REPORT: {
+      return {
+        ...state,
+        selectedReport: null,
+      };
+    }
+
+    case reportActions.GET_REPORT_SUCCESS: {
+      return {
+        ...state,
+        selectedReport: action.payload,
+      };
+    }
+
     default: {
       return state;
     }
@@ -27,3 +42,4 @@ export function reducer(state = initialState, action: reportActions.Actions): St
 }
 
 export const getReports = (state: State) => state.reports;
+export const getSelectedReport = (state: State) => state.selectedReport;

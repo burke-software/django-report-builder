@@ -12,6 +12,7 @@ import {
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
+  MatTabsModule,
 } from '@angular/material';
 
 import { StoreModule } from '@ngrx/store';
@@ -29,9 +30,11 @@ import { ApiService } from './api.service';
 
 import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
+import { HeaderComponent } from './header/header.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: {title: 'Reports'}},
+  { path: 'report/:id', component: MainComponent, data: {title: 'Report'}},
   { path: 'report/add', component: NewReportComponent, data: {title: 'Add New Report'} },
 ];
 
@@ -46,6 +49,7 @@ export const MatModules = [
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
+  MatTabsModule,
 ];
 
 @NgModule({
@@ -54,6 +58,7 @@ export const MatModules = [
     NewReportComponent,
     MainComponent,
     LeftSidebarComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserAnimationsModule,

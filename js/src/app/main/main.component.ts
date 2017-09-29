@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State, getReports } from '../reducers';
-import { GetReportList } from '../actions/reports';
+import { GetReportList, GetReport } from '../actions/reports';
 
 @Component({
   selector: 'app-main',
   template: `
     <app-left-sidebar
       [listReports]="listReports$ | async"
+      (onClickReport)="onClickReport($event)"
     ></app-left-sidebar>
   `,
 })
@@ -20,4 +21,7 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new GetReportList());
   }
 
+  onClickReport(reportId: number) {
+    this.store.dispatch(new GetReport(reportId));
+  }
 }

@@ -2,7 +2,9 @@
   <md-sidenav #sidenav mode="side" opened="true">
     <h3>Reports</h3>
     <div *ngFor="let report of listReports">
-      {{ report.name }}<br/>{{ report.user_created.first_name }}
+      <div (click)="clickReport(report.id)">
+        {{ report.name }}<br/>{{ report.user_created.first_name }}
+      </div>
     </div>
   </md-sidenav>
 

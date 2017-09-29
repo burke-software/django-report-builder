@@ -23,4 +23,6 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
 ? [storeFreeze]
 : [];
 
-export const getReports = createSelector((state: State) => state.reports, fromReports.getReports);
+const getReportsState = (state: State) => state.reports;
+export const getReports = createSelector(getReportsState, fromReports.getReports);
+export const getSelectedReport = createSelector(getReportsState, fromReports.getSelectedReport);
