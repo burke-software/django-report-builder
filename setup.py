@@ -21,7 +21,6 @@ setup(
         'Intended Audience :: System Administrators',
         "License :: OSI Approved :: BSD License",
     ],
-    python_requires='>=3.3',
     install_requires=[
         'openpyxl >= 2.2.1',
         'python-dateutil',
