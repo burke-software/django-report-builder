@@ -426,7 +426,7 @@ class Report(models.Model):
         return email_report(report_url, user=user, email=email)
 
     def async_report_save(self, objects_list,
-                          title, header, widths, user=None, file_type="xlsx", email_to:str = None):
+                          title, header, widths, user=None, file_type="xlsx", email_to=""):
         data_export = DataExportMixin()
         if file_type == 'csv':
             csv_file = data_export.list_to_csv_file(objects_list, title,
@@ -447,7 +447,7 @@ class Report(models.Model):
             if user.email:
                 self.email_report(user=user)
 
-    def run_report(self, file_type, user=None, queryset=None, async=False, scheduled=False, email_to:str = None):
+    def run_report(self, file_type, user=None, queryset=None, async=False, scheduled=False, email_to=""):
         """Generate this report file"""
         if not queryset:
             queryset = self.get_query()
