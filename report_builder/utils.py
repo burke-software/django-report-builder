@@ -199,11 +199,14 @@ def get_model_from_path_string(root_model, path):
             except FieldDoesNotExist:
                 return root_model
             if direct:
+                related_model = getattr(field, 'related_model', None)
                 if hasattr(field, 'related'):
                     try:
                         root_model = field.related.parent_model()
                     except AttributeError:
                         root_model = field.related.model
+                elif related_model:
+                    root_model = field.related_model
             else:
                 if hasattr(field, 'related_model'):
                     root_model = field.related_model
