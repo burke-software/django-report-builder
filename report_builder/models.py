@@ -88,7 +88,7 @@ class Report(models.Model):
         AUTH_USER_MODEL, blank=True,
         help_text="These users have starred this report for easy reference.",
         related_name="report_starred_set")
-    
+
     def __str__(self):
         return self.name
 
@@ -470,7 +470,7 @@ class Report(models.Model):
             if user is None:
                 raise Exception('Cannot run async report without a user')
             self.async_report_save(
-                self, objects_list, title, header, widths, user, file_type)
+                objects_list, title, header, widths, user, file_type)
         else:
             if file_type == 'csv':
                 return data_export.list_to_csv_response(
