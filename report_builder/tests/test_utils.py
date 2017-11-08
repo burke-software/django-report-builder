@@ -8,7 +8,7 @@ from ..utils import (
 from ..mixins import GetFieldsMixin
 from ..models import Report, DisplayField, FilterField
 from report_builder_demo.demo_models.models import (
-    Bar, Restaurant, Waiter, Comment)
+    Bar, Restaurant, Waiter, Comment, Place)
 
 
 class RelationUtilityFunctionTests(TestCase):
@@ -63,6 +63,12 @@ class UtilityFunctionTests(TestCase):
     def test_get_model_from_path_string(self):
         result = get_model_from_path_string(Restaurant, 'waiter__name')
         self.assertEqual(result, Waiter)
+
+    def test_get_model_from_path_string_one_to_one(self):
+        """Test that one-to-one relationships don't break this function"""
+        result = get_model_from_path_string(Restaurant, 'place__serves_pizza')
+        self.assertEqual(result, Place)
+
 
     def test_get_direct_fields_from_model(self):
         fields = get_direct_fields_from_model(Report)
