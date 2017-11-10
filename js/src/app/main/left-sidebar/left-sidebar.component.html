@@ -1,12 +1,12 @@
-<md-sidenav-container style="height: 700px">
-  <md-sidenav #sidenav mode="side" opened="true">
+<mat-sidenav-container style="height: 700px">
+  <mat-sidenav #sidenav mode="side" opened="true">
     <h3>Reports</h3>
     <div *ngFor="let report of listReports">
       <div (click)="clickReport(report.id)">
         {{ report.name }}<br/>{{ report.user_created.first_name }}
       </div>
     </div>
-  </md-sidenav>
+  </mat-sidenav>
 
   <div class="example-sidenav-content">
     <button type="button" md-button (click)="sidenav.open()">
@@ -14,4 +14,4 @@
     </button>
   </div>
 
-</md-sidenav-container>
+</mat-sidenav-container>

@@ -1,17 +1,17 @@
-<md-sidenav class="md-sidenav-left md-whiteframe-z2" component-id="left" is-locked-open="$media('md')">
+<mat-sidenav class="md-sidenav-left md-whiteframe-z2" component-id="left" is-locked-open="$media('md')">
 
-    <md-toolbar class="md-theme-indigo">
+    <mat-toolbar class="md-theme-indigo">
     <h1 class="md-toolbar-tools">Reports</h1>
-    </md-toolbar>
-    <md-content class="md-padding" ng-controller="LeftCtrl">
-    <md-button ng-click="close()" class="md-primary" hide-md>
+    </mat-toolbar>
+    <mat-content class="md-padding" ng-controller="LeftCtrl">
+    <mat-button ng-click="close()" class="md-primary" hide-md>
         Close Sidenav Left
-    </md-button>
+    </mat-button>
     <ul>
         <li ng-repeat="report in reports">
             {{ report.name }}
         </li>
     </ul>
-    </md-content>
+    </mat-content>
 
-</md-sidenav>
+</mat-sidenav>

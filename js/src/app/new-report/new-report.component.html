@@ -1,17 +1,17 @@
 <form (ngSubmit)="submit()" #reportForm="ngForm">
-    <md-form-field class="example-full-width">
+    <mat-form-field class="example-full-width">
       <input mdInput placeholder="Report Name" [(ngModel)]="form.name" name="name" required/>
-    </md-form-field>
+    </mat-form-field>
 
-    <md-form-field class="example-full-width">
+    <mat-form-field class="example-full-width">
       <input mdInput placeholder="Description" [(ngModel)]="form.description" name="description"/>
-    </md-form-field>
+    </mat-form-field>
 
-    <md-select placeholder="Root Model" [(ngModel)]="form.root_model" name="root_model" required>
-      <md-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
+    <mat-select placeholder="Root Model" [(ngModel)]="form.root_model" name="root_model" required>
+      <mat-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
         {{ model.name }}
-      </md-option>
-    </md-select>
+      </mat-option>
+    </mat-select>
 
   <button md-raised-button>Ok</button>
 </form>
