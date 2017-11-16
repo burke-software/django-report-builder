@@ -66,7 +66,7 @@ class DownloadFileView(DataExportMixin, View):
         if to_response:
             return report.run_report(file_type, user, queryset)
         else:
-            report.run_report(user, file_type, queryset, async=True)
+            report.run_report(file_type, user,  queryset, async=True)
 
     def get(self, request, *args, **kwargs):
         report_id = kwargs['pk']
