@@ -6,10 +6,15 @@ import { GetReportList, GetReport } from '../actions/reports';
 @Component({
   selector: 'app-main',
   template: `
-    <app-left-sidebar
-      [listReports]="listReports$ | async"
-      (onClickReport)="onClickReport($event)"
-    ></app-left-sidebar>
+    <mat-sidenav-container style="height: 700px">
+      <app-left-sidebar
+        [listReports]="listReports$ | async"
+        (onClickReport)="onClickReport($event)"
+      ></app-left-sidebar>
+      <div class="example-sidenav-content" style="padding-left: 100px;">
+        <app-tabs></app-tabs>
+      </div>
+    </mat-sidenav-container>
   `,
 })
 export class MainComponent implements OnInit {

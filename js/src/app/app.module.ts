@@ -31,6 +31,7 @@ import { ApiService } from './api.service';
 import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { HeaderComponent } from './header/header.component';
+import { TabsComponent } from './main/tabs/tabs.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: {title: 'Reports'}},
@@ -59,6 +60,7 @@ export const MatModules = [
     MainComponent,
     LeftSidebarComponent,
     HeaderComponent,
+    TabsComponent,
   ],
   imports: [
     BrowserAnimationsModule,

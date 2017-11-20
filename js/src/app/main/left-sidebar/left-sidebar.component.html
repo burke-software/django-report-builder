@@ -1,4 +1,3 @@
-<mat-sidenav-container style="height: 700px">
   <mat-sidenav #sidenav mode="side" opened="true">
     <h3>Reports</h3>
     <div *ngFor="let report of listReports">
@@ -7,11 +6,3 @@
       </div>
     </div>
   </mat-sidenav>
-
-  <div class="example-sidenav-content">
-    <button type="button" md-button (click)="sidenav.open()">
-      Open sidenav
-    </button>
-  </div>
-
-</mat-sidenav-container>
