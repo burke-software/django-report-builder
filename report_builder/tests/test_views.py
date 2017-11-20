@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core import mail
 from django.test import TestCase
-from django.urls import reverse
 from django.test.utils import override_settings
 
 from model_mommy import mommy
