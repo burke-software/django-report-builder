@@ -10,3 +10,5 @@ djangorestframework==3.6.3
 django_celery_beat==1.0.1
 coverage==4.4.1
 tox
+
+model_mommy

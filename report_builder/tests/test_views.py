@@ -2,7 +2,12 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core import mail
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
+
+from model_mommy import mommy
+from report_builder.tasks import report_builder_file_async_report_save
+from django.test.utils import override_settings
+from report_builder.views import DownloadFileView
 
 from ..email import email_report
 
@@ -34,3 +39,15 @@ class ViewTests(TestCase):
         settings.REPORT_BUILDER_EMAIL_NOTIFICATION = None
         settings.REPORT_BUILDER_EMAIL_TEMPLATE = None
         mail.outbox = []
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    def test_get_xlsx_report(self):
+        """
+        Test to ensure the celery task will succeed given proper params in the right order. 
+        """
+        user = User.objects.create(username='testy', is_staff=True, is_superuser=True)
+        report = mommy.make('Report')
+        res = report_builder_file_async_report_save.delay(report.id, user.id, 'xlsx')
+        self.assertEqual(res.successful(), True)
