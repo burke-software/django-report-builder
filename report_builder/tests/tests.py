@@ -13,11 +13,12 @@ from rest_framework.test import APIClient
 import time
 import csv
 import unittest
+from io import StringIO
+from freezegun import freeze_time
+from datetime import date, datetime, timedelta, time as dtime
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
-from io import StringIO
 
 
 def find_duplicates_in_contexttype():
@@ -168,8 +169,8 @@ class ReportBuilderTests(TestCase):
         for field in response.data:
             self.assertEqual(field['can_filter'], True)
 
-
 class ReportTests(TestCase):
+
     def setUp(self):
         user = User.objects.get_or_create(username='testy')[0]
         user.is_staff = True
@@ -182,7 +183,11 @@ class ReportTests(TestCase):
         self.report = Report.objects.create(root_model=ct, name="A")
         self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
-    
+        # time increments in seconds
+        self.min = 60
+        self.hour = self.min * self.min
+        self.day = self.hour * 24
+
     def test_property_position(self):
         bar = self.bar
 
@@ -279,7 +284,7 @@ class ReportTests(TestCase):
         self.assertContains(response, 'lol yes')
         self.assertNotContains(response, 'i_do_not_exist')
 
-    def test_filter_property(self):
+    def test_filter_property_contains(self):
         DisplayField.objects.create(
             report=self.report,
             field="i_want_char_field",
@@ -435,17 +440,38 @@ class ReportTests(TestCase):
 
         self.assertContains(response, '["TOTALS",""],[22.0,21.0]')
 
+    @freeze_time("2017-11-01 12:00:00")
     def make_people(self):
+        """
+        Make mock data from the Person and Child demo models.
+        Follows the format:
+            Person()
+                first_name      (CharField)
+                last_name       (CharField)
+                last_modifed    (DateField)
+                birth_date      (DateTimeField)
+                hammer_time     (TimeField)
+            Child()
+                parent          (ForeignKey(Person))
+                first_name      (CharField)
+                last_name       (CharField)
+                age             (IntegerField)
+                color           (CharField)
+        """
         people = (
             ('John', 'Doe', (
                 ('Will', 'Doe', 5, 'R'),
                 ('James', 'Doe', 8, ''),
                 ('Robert', 'Doe', 3, 'G'),
-            )),
+            ), date.today() - timedelta(seconds=self.day * 5),
+                datetime.today() - timedelta(seconds=self.day),
+                dtime(hour=12)),
             ('Maria', 'Smith', (
                 ('Susan', 'Smith', 1, 'Y'),
                 ('Karen', 'Smith', 4, 'B'),
-            )),
+            ), date.today() - timedelta(seconds=self.day * 10),
+                datetime.today() - timedelta(seconds=self.day * 30),
+                dtime(hour=16)),
             ('Donald', 'King', (
                 ('Charles', 'King', None, ''),
                 ('Helen', 'King', 7, 'G'),
@@ -453,19 +479,309 @@ class ReportTests(TestCase):
                 ('Karen', 'King', 4, 'R'),
                 ('Larry', 'King', 5, 'R'),
                 ('Lisa', 'King', 3, 'R'),
-            )),
-            ('Paul', 'Nelson', ()),
+            ), datetime.today() - timedelta(seconds=self.day * 15),
+                datetime.today() - timedelta(seconds=self.day * 60),
+                dtime(hour=20)),
+            ('Paul', 'Nelson', (),
+                date.today() - timedelta(seconds=self.day * 20),
+                datetime.today() - timedelta(seconds=self.day * 90),
+                dtime(hour=22)),
         )
-
-        for first_name, last_name, children in people:
-            person = Person(first_name=first_name, last_name=last_name)
+        for first, last, cn, lm, bd, ht in people:
+            person = Person(
+                first_name=first,
+                last_name=last,
+                last_modifed=lm,  # DateField
+                birth_date=bd,  # DateTimeField
+                hammer_time=ht)  # TimeField
             person.save()
-            for child_first, child_last, age, color in children:
+            for child_first, child_last, age, color in cn:
                 child = Child(
                     parent=person, first_name=child_first, last_name=child_last,
                     age=age, color=color
                 )
                 child.save()
+
+    @freeze_time("2017-11-01 12:00:00")
+    def make_people_report(self):
+        """
+        Make a mock report using the People demo model.
+
+        Creates mock People instances and returns a report including the 
+        following DisplayFields:
+            first_name      (CharField)
+            last_modifed    (DateField)
+            birth_date      (DateTimeField)
+            hammer_time     (TimeField)
+        """ 
+        self.make_people()
+        model = ContentType.objects.get(model="person",
+                                        app_label="demo_models")
+        people_report = Report.objects.create(
+            root_model=model,
+            name="A report of people")
+
+        DisplayField.objects.create(
+            report=people_report,
+            field='first_name',
+            field_verbose='First Name',
+            sort=4,
+            position=0,
+        )
+
+        DisplayField.objects.create(
+            report=people_report,
+            field='last_modifed',
+            field_verbose='Last Modifed',
+            sort=2,
+            position=2,
+        )
+
+        DisplayField.objects.create(
+            report=people_report,
+            field='birth_date',
+            field_verbose='Birth Date',
+            sort=1,
+            position=3,
+        )
+
+        DisplayField.objects.create(
+            report=people_report,
+            field='hammer_time',
+            field_verbose='Hammer Time',
+            sort=1,
+            position=3,
+        )
+        return people_report
+
+    @freeze_time("2017-11-01 12:00:00")
+    def test_filter_datetime_lte_filter(self):
+        """
+        Test filtering 'DateTime' field types using simple ORM filtering
+        (i.e. filter_type='lte')
+        """
+        people_report = self.make_people_report()
+
+        # DateField
+        ff = FilterField.objects.create(
+            report=people_report,
+            field='last_modifed', 
+            filter_type='lte',
+            filter_value=str(date.today() - timedelta(seconds=self.day * 10)),
+        )
+
+        generate_url = reverse('generate_report', args=[people_report.id])
+        response = self.client.get(generate_url)
+        # filter from 4 to 2 people
+        self.assertEquals(len(response.data['data']), 3)
+
+        # TimeField
+        ff.field = 'hammer_time' 
+        ff.filter_value = str(dtime(hour=13))
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+        # DateTimeField
+        ff.field = 'birth_date' 
+        ff.filter_value = str(datetime.today() - timedelta(seconds=self.day * 40))
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 2)
+
+    @freeze_time("2017-11-01 12:00:00")
+    def test_filter_datetime_range(self):
+        """
+        Test filtering 'DateTime' field types using a range filter.
+        
+        Each FilterField accepts 2 values of the respective field type to 
+        create the range.
+
+        Ex. Filter a TimeField for 'user logins between 10am - 1pm':
+            filter_type='range',
+            filter_value("HH:MM") = "10:00"
+            filter_value2("HH:MM") = "13:00"
+        """
+        people_report = self.make_people_report()
+
+        # DateField
+        ff = FilterField.objects.create(
+            report=people_report,
+            field='last_modifed', 
+            filter_type='range',
+            filter_value=str(date.today() - timedelta(seconds=self.day * 7)),
+            filter_value2=str(date.today()),
+        )
+
+        generate_url = reverse('generate_report', args=[people_report.id])
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+        # TimeField
+        ff.field = 'hammer_time' 
+        ff.filter_value = str(dtime(hour=10))
+        ff.filter_value2 = str(dtime(hour=13))
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+        # DateTimeField
+        ff.field = 'birth_date' 
+        ff.filter_value = str(datetime.now() - timedelta(seconds=self.day * 50))
+        ff.filter_value2 = str(datetime.now() - timedelta(seconds=self.day * 70))
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+    @freeze_time("2017-11-01 12:00:00")
+    def test_filter_datetime_relative_range(self):
+        """
+        Test filtering 'DateTime' field types using a relative range filter.
+
+        Each FilterField accepts a delta value (in seconds) which represents 
+        the range (positive or negative) off of the current date. 
+
+        Ex. Filter a TimeField for 'user logins in the last 3 hours':
+            filter_type='relative_range',
+            filter_delta = -60 * 60 * 3 (i.e. 3 hours)
+        """
+        people_report = self.make_people_report()
+
+        # DateField w/ full day
+        ff = FilterField.objects.create(
+            report=people_report,
+            field='last_modifed',
+            filter_type='relative_range',
+            filter_delta=self.day * -7,
+        )
+
+        generate_url = reverse('generate_report', args=[people_report.id])
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+        # DateField w/ partial day
+        ff.filter_delta = self.day * -7 + 5 
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+        # TimeField w/ hour delta
+        ff.field = 'hammer_time'
+        ff.filter_delta = self.hour * 5
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 2)
+
+        # TimeField w/ sec delta
+        ff.filter_delta = -5
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+        # DateTimeField w/ full day
+        ff.field = 'birth_date'
+        ff.filter_delta = self.day * -30
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 2)
+
+        # # DateTimeField w/ partial day
+        ff.filter_delta = (self.day + self.hour) * -1
+        ff.save()
+
+        response = self.client.get(generate_url)
+        self.assertEquals(len(response.data['data']), 1)
+
+    def test_filter_datefield_relative_range_over_time(self):
+        """
+        Test filtering DateField types using a relative range filter
+        over time. 
+        """
+        people_report = self.make_people_report()
+        generate_url = reverse('generate_report', args=[people_report.id])
+
+        initial_today = datetime(2017, 11, 1, 12)
+        ten_days_later = datetime(2017, 11, 10, 12)
+
+        # DateField with login 'today'
+        with freeze_time(initial_today) as frozen_today:
+            FilterField.objects.create(
+                report=people_report,
+                field='last_modifed',
+                filter_type='relative_range',
+                filter_delta=self.day * -16,
+            )
+            response = self.client.get(generate_url)
+            self.assertEquals(len(response.data['data']), 3)
+
+            # login again 10 days later
+            frozen_today.move_to(ten_days_later)
+            response = self.client.get(generate_url)
+            self.assertEquals(len(response.data['data']), 1)
+
+    def test_filter_timefield_relative_range_over_time(self):
+        """
+        Test filtering TimeField field types using a relative range filter
+        over time. 
+        """
+        
+        people_report = self.make_people_report()
+        generate_url = reverse('generate_report', args=[people_report.id])
+        
+        initial_today = datetime(2017, 11, 1, 12)
+        four_hours_later_today = datetime(2017, 11, 1, 16)
+        
+        # TimeField with login 'now'
+        with freeze_time(initial_today) as frozen_today:
+            FilterField.objects.create(
+                report=people_report,
+                field='hammer_time',
+                filter_type='relative_range',
+                filter_delta=self.hour * -10,
+            )
+            response = self.client.get(generate_url)
+            self.assertEquals(len(response.data['data']), 1)
+
+            # login 4 hours later
+            frozen_today.move_to(four_hours_later_today)
+            response = self.client.get(generate_url)
+            self.assertEquals(len(response.data['data']), 2)
+
+    def test_filter_datetimefield_relative_range_over_time(self):
+        """
+        Test filtering DateTimeField field types using a relative range filter
+        over time. 
+        """
+        people_report = self.make_people_report()
+        generate_url = reverse('generate_report', args=[people_report.id])
+        
+        initial_today = datetime(2017, 10, 1, 12)
+        one_month_later = datetime(2017, 11, 1, 12)
+
+        # DateTimeField with login today
+        with freeze_time(initial_today) as frozen_today:
+            FilterField.objects.create(
+                report=people_report,
+                field='birth_date',
+                filter_type='relative_range',
+                filter_delta=self.day * -30
+            )
+
+            response = self.client.get(generate_url)
+            self.assertEquals(len(response.data['data']), 1)
+
+            # # login one month later
+            frozen_today.move_to(one_month_later)
+            response = self.client.get(generate_url)
+            self.assertEquals(len(response.data['data']), 2)
 
     def test_groupby_id(self):
         self.make_people()

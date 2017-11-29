@@ -39,7 +39,7 @@ class FilterFieldSerializer(serializers.ModelSerializer):
         model = FilterField
         fields = ('id', 'path', 'path_verbose', 'field', 'field_verbose',
                   'field_type', 'filter_type', 'filter_value', 'filter_value2',
-                  'exclude', 'position', 'report')
+                  'exclude', 'position', 'report', 'filter_delta')
         read_only_fields = ('id', 'field_type')
 
     filter_value = NonStrictCharField()
