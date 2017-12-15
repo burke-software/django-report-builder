@@ -35,8 +35,8 @@ import { TabsComponent } from './main/tabs/tabs.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: {title: 'Reports'}},
-  { path: 'report/:id', component: MainComponent, data: {title: 'Report'}},
   { path: 'report/add', component: NewReportComponent, data: {title: 'Add New Report'} },
+  { path: 'report/:id', component: MainComponent, data: {title: 'Report'}},
 ];
 
 export function xsrfFactory() {

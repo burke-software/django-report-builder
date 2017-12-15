@@ -1,5 +1,6 @@
   <mat-sidenav #sidenav mode="side" opened="true">
     <h3>Reports</h3>
+    <span><a routerLink="/report/add">New Report</a></span>
     <div *ngFor="let report of listReports">
       <div (click)="clickReport(report.id)">
         {{ report.name }}<br/>{{ report.user_created.first_name }}
