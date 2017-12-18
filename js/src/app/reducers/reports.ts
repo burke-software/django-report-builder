@@ -56,3 +56,5 @@ export function reducer(state = initialState, action: reportActions.Actions): St
 
 export const getReports = (state: State) => state.reports;
 export const getSelectedReport = (state: State) => state.selectedReport;
+export const getFields = (state: State) => state.fields;
+export const getRelatedFields = (state: State) => state.relatedFields;

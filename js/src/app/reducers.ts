@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import * as fromReports from './reducers/reports';
+import { createSecureContext } from 'tls';
 
 export interface State {
   reports: fromReports.State;
@@ -24,3 +25,5 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
 const getReportsState = (state: State) => state.reports;
 export const getReports = createSelector(getReportsState, fromReports.getReports);
 export const getSelectedReport = createSelector(getReportsState, fromReports.getSelectedReport);
+export const getFields = createSelector(getReportsState, fromReports.getFields);
+export const getRelatedFields = createSelector(getReportsState, fromReports.getRelatedFields);
