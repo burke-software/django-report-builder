@@ -1,5 +1,4 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { IReport } from '../../api.interfaces';
 
 @Component({

@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
-import { IReport, IReportDetailed } from '../api.interfaces';
+import { IReport, IReportDetailed, IRelatedField, IField } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
 export const SET_REPORT_LIST = 'Set Report List';
 export const GET_REPORT = 'Get Report';
 export const GET_REPORT_SUCCESS = 'Get Report Success';
+export const GET_REPORT_FIELDS_SUCCESS = 'Get Report Fields Success';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -27,7 +28,13 @@ export class GetReportSuccess implements Action {
     constructor(public payload: IReportDetailed) {}
 }
 
+export class GetReportFieldsSuccess implements Action {
+    readonly type = GET_REPORT_FIELDS_SUCCESS;
+    constructor(public payload: {relatedFields: IRelatedField[], fields: IField[]}) {}
+}
+
 export type Actions = GetReportList
+  | GetReportFieldsSuccess
   | SetReportList
   | GetReport
   | GetReportSuccess;

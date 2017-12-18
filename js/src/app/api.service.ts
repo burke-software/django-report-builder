@@ -1,35 +1,46 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { IReportForm } from './new-report/interfaces';
-import { ReportsResponse, IReportDetailed, ContentTypeResponse } from './api.interfaces';
+import {
+  ReportsResponse,
+  IReportDetailed,
+  ContentTypeResponse,
+  IGetRelatedFieldRequest,
+  IRelatedField,
+  IField,
+} from './api.interfaces';
 
 @Injectable()
 export class ApiService {
   apiUrl = '/report_builder/api/';
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
-  getRootModels(): Observable<ContentTypeResponse> {
-    return this.http.get(this.apiUrl + 'contenttypes/')
-      .map(response => response.json());
+  getRootModels() {
+    return this.http.get<ContentTypeResponse>(this.apiUrl + 'contenttypes/');
   }
 
   submitNewReport(form: IReportForm) {
     return this.http.post(this.apiUrl + 'report/', form).toPromise();
   }
 
-  getReports(): Observable<ReportsResponse> {
-    return this.http.get(this.apiUrl + 'reports/')
-      .map(response => response.json());
+  getReports() {
+    return this.http.get<ReportsResponse>(this.apiUrl + 'reports/');
   }
 
-  getReport(reportId: number): Observable<IReportDetailed> {
-    return this.http.get(this.apiUrl + `report/${reportId}/`)
-      .map(response => response.json());
+  getReport(reportId: number) {
+    return this.http.get<IReportDetailed>(this.apiUrl + `report/${reportId}/`);
+  }
+
+  getRelatedFields(request: IGetRelatedFieldRequest) {
+    return this.http.post<IRelatedField[]>(this.apiUrl + 'related_fields/', request);
+  }
+
+  getFields(request: IGetRelatedFieldRequest) {
+    return this.http.post<IField[]>(this.apiUrl + 'fields/', request);
   }
 }

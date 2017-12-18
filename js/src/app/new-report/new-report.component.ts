@@ -25,9 +25,7 @@ export class NewReportComponent implements OnInit {
 
   submit() {
     this.api.submitNewReport(this.form).then((resp) => {
-      if (resp.status === 201) {
-        this.router.navigate(['']);
-      }
+      this.router.navigate(['']);
     });
   }
 

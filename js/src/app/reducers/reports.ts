@@ -1,15 +1,18 @@
-import { createSelector } from '@ngrx/store';
-import { IReport, IReportDetailed } from '../api.interfaces';
+import { IReport, IReportDetailed, IRelatedField, IField } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 
 export interface State {
   reports: IReport[];
-  selectedReport: IReportDetailed;
+  selectedReport: IReportDetailed | null;
+  relatedFields: IRelatedField[];
+  fields: IField[];
 }
 
 export const initialState: State = {
   reports: [],
   selectedReport: null,
+  relatedFields: [],
+  fields: [],
 };
 
 export function reducer(state = initialState, action: reportActions.Actions): State {
@@ -32,6 +35,16 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       return {
         ...state,
         selectedReport: action.payload,
+        relatedFields: initialState.relatedFields,
+        fields: initialState.fields,
+      };
+    }
+
+    case reportActions.GET_REPORT_FIELDS_SUCCESS: {
+      return {
+        ...state,
+        relatedFields: action.payload.relatedFields,
+        fields: action.payload.fields,
       };
     }
 

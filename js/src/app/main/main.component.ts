@@ -14,6 +14,8 @@ import { GetReportList, GetReport } from '../actions/reports';
       <div class="example-sidenav-content" style="padding-left: 100px;">
         <app-tabs></app-tabs>
       </div>
+      <app-right-sidebar
+      ></app-right-sidebar>
     </mat-sidenav-container>
   `,
 })

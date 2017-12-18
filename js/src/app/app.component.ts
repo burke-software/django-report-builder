@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
@@ -14,8 +13,7 @@ export class AppComponent implements OnInit {
   title: string;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    router: Router,
     private store: Store<State>,
   ) {
     let firstLoad = true;

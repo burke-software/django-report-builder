@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HttpModule, XSRFStrategy, CookieXSRFStrategy } from '@angular/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import {
@@ -32,16 +32,13 @@ import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
+import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: {title: 'Reports'}},
   { path: 'report/add', component: NewReportComponent, data: {title: 'Add New Report'} },
   { path: 'report/:id', component: MainComponent, data: {title: 'Report'}},
 ];
-
-export function xsrfFactory() {
-  return new CookieXSRFStrategy('csrftoken', 'X-CSRFToken');
-}
 
 export const MatModules = [
   MatButtonModule,
@@ -61,6 +58,7 @@ export const MatModules = [
     LeftSidebarComponent,
     HeaderComponent,
     TabsComponent,
+    RightSidebarComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -69,13 +67,16 @@ export const MatModules = [
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([ReportEffects]),
-    HttpModule,
+    HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'csrftoken',
+      headerName: 'X-CSRFToken',
+    }),
     FormsModule,
     ...MatModules,
   ],
   providers: [
     ApiService,
-    {provide: XSRFStrategy, useFactory: xsrfFactory},
   ],
   bootstrap: [AppComponent]
 })
