@@ -1,10 +1,10 @@
-import { IReport, IReportDetailed, IRelatedField, IField } from '../api.interfaces';
+import { IReport, IReportDetailed, INestedRelatedField, IField } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 
 export interface State {
   reports: IReport[];
   selectedReport: IReportDetailed | null;
-  relatedFields: IRelatedField[];
+  relatedFields: INestedRelatedField[];
   fields: IField[];
 }
 
@@ -41,9 +41,12 @@ export function reducer(state = initialState, action: reportActions.Actions): St
     }
 
     case reportActions.GET_REPORT_FIELDS_SUCCESS: {
+      const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map((relatedField) => {
+        return {...relatedField, children: []};
+      });
       return {
         ...state,
-        relatedFields: action.payload.relatedFields,
+        relatedFields: relatedFields,
         fields: action.payload.fields,
       };
     }

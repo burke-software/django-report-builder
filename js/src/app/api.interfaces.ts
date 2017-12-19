@@ -54,6 +54,11 @@ export interface IRelatedField {
     'included_model': boolean;
 }
 
+export interface INestedRelatedField extends IRelatedField {
+  children: INestedRelatedField[];
+}
+
+
 export interface IField {
     name: string;
     field: string;

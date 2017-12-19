@@ -1,8 +1,9 @@
 <mat-sidenav #sidenav mode="side" position="end" opened="true">
-  {{ modelName }} Fields
+  {{ modelName }} fields
   <div *ngFor="let relatedField of relatedFields">
     {{ relatedField.verbose_name }}
   </div>
+  <br/><br/>
   Fields
   <div *ngFor="let field of fields">
     {{ field.name }}

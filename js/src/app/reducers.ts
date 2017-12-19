@@ -8,7 +8,6 @@ import { environment } from '../environments/environment';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import * as fromReports from './reducers/reports';
-import { createSecureContext } from 'tls';
 
 export interface State {
   reports: fromReports.State;
