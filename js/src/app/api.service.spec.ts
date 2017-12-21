@@ -1,6 +1,7 @@
-import {MockBackend, MockConnection} from '@angular/http/testing';
-import {BaseRequestOptions, Http, Headers, ResponseOptions, Response} from '@angular/http';
-import { async, TestBed } from '@angular/core/testing';
+// import {MockBackend, MockConnection} from '@angular/http/testing';
+// import {BaseRequestOptions, Http, Headers, ResponseOptions, Response} from '@angular/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { ApiService } from './api.service';
 import { ReportsResponse, IReportDetailed, ContentTypeResponse } from './api.interfaces';
@@ -10,7 +11,7 @@ const defaultHeaders = new Headers({'Content-Type': 'application/json'});
 
 describe('Api service should', function () {
   let service: ApiService;
-  let mockBackend: MockBackend;
+  let mockBackend: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -67,7 +68,7 @@ describe('Api service should', function () {
           })));
       });
     service.submitNewReport(report).then((resp) => {
-      expect(resp.status).toBe(201);
+      expect(resp).toBe(201);
     });
   });
 

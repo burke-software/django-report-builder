@@ -33,7 +33,7 @@ import { ReportEffects } from './effects/reports';
 import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
-import { RelatedFieldComponent } from './main/right-sidebar/relatedField.component';
+import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: {title: 'Reports'}},

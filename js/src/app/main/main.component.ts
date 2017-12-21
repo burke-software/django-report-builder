@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State, getReports, getRelatedFields, getFields, getSelectedReport } from '../reducers';
+import { IRelatedField } from '../api.interfaces';
 import { GetReportList, GetReport } from '../actions/reports';
 
 @Component({
@@ -18,6 +19,7 @@ import { GetReportList, GetReport } from '../actions/reports';
         [modelName]="(selectedReport$ | async)?.name"
         [fields]="fields$ | async"
         [relatedFields]="relatedFields$ | async"
+        (selectRelatedField)="selectRelatedField($event)"
       ></app-right-sidebar>
     </mat-sidenav-container>
   `,
@@ -36,5 +38,9 @@ export class MainComponent implements OnInit {
 
   onClickReport(reportId: number) {
     this.store.dispatch(new GetReport(reportId));
+  }
+
+  selectRelatedField(relatedField: IRelatedField) {
+    // this.store.dispatch(new (relatedField));
   }
 }

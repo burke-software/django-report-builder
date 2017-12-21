@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { IField, INestedRelatedField } from '../../api.interfaces';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { IField, IRelatedField } from '../../api.interfaces';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -9,7 +9,8 @@ import { IField, INestedRelatedField } from '../../api.interfaces';
 export class RightSidebarComponent {
   @Input() modelName: string;
   @Input() fields: IField[];
-  @Input() relatedFields: INestedRelatedField[];
+  @Input() relatedFields: IRelatedField[];
+  @Output() selectRelatedField = new EventEmitter<IRelatedField>();
 
   constructor() { }
 }
