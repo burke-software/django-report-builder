@@ -6,6 +6,9 @@ import { StoreModule } from '@ngrx/store';
 import { MatModules } from '../app.module';
 import { MainComponent } from './main.component';
 import { LeftSidebarComponent } from './left-sidebar';
+import { TabsComponent } from './tabs/tabs.component';
+import { RelatedFieldComponent } from './right-sidebar/related-field.component';
+import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 import { reducers } from '../reducers';
 
@@ -17,7 +20,10 @@ describe('MainComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MainComponent,
-        LeftSidebarComponent
+        LeftSidebarComponent,
+        TabsComponent,
+        RightSidebarComponent,
+        RelatedFieldComponent,
       ],
       imports: [
         ...MatModules,

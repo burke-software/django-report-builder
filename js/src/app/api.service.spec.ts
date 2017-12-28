@@ -1,5 +1,3 @@
-// import {MockBackend, MockConnection} from '@angular/http/testing';
-// import {BaseRequestOptions, Http, Headers, ResponseOptions, Response} from '@angular/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
@@ -7,30 +5,24 @@ import { ApiService } from './api.service';
 import { ReportsResponse, IReportDetailed, ContentTypeResponse } from './api.interfaces';
 import { IReportForm } from './new-report/interfaces';
 
-const defaultHeaders = new Headers({'Content-Type': 'application/json'});
+const apiUrl = '/report_builder/api/';
 
 describe('Api service should', function () {
   let service: ApiService;
-  let mockBackend: HttpTestingController;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+      ],
       providers: [
         ApiService,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          },
-          deps: [MockBackend, BaseRequestOptions],
-        }
       ]
     });
 
     service = TestBed.get(ApiService);
-    mockBackend = TestBed.get(MockBackend);
+    httpMock = TestBed.get(HttpTestingController);
   });
 
   it('be able to get content types', () =>  {
@@ -38,18 +30,11 @@ describe('Api service should', function () {
       { 'pk': 1, 'name': 'log entry' },
       { 'pk': 2, 'name': 'permission'},
     ];
-    mockBackend.connections.subscribe(
-      (connection: MockConnection) => {
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            body: contentTypes,
-            status: 200,
-            headers: defaultHeaders
-          })));
-      });
     service.getRootModels().subscribe(data => {
       expect(data).toEqual(contentTypes);
     });
+    const req = httpMock.expectOne(apiUrl + 'contenttypes/');
+    req.flush(contentTypes);
   });
 
   it('be able to create new report', () =>  {
@@ -58,17 +43,13 @@ describe('Api service should', function () {
       description: '',
       root_model: 1,
     };
-    mockBackend.connections.subscribe(
-      (connection: MockConnection) => {
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            body: report,
-            status: 201,
-            headers: defaultHeaders
-          })));
-      });
     service.submitNewReport(report).then((resp) => {
-      expect(resp).toBe(201);
+      expect(resp).toBe(report);
+    });
+    const req = httpMock.expectOne(apiUrl + 'report/');
+    req.flush(report, {
+      status: 201,
+      statusText: 'Created',
     });
   });
 
@@ -85,18 +66,11 @@ describe('Api service should', function () {
         'id': 1
       }
     }];
-    mockBackend.connections.subscribe(
-      (connection: MockConnection) => {
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            body: reports,
-            status: 200,
-            headers: defaultHeaders
-          })));
-      });
     service.getReports().subscribe(data => {
       expect(data).toEqual(reports);
     });
+    const req = httpMock.expectOne(apiUrl + 'reports/');
+    req.flush(reports);
   });
 
   it('be able to get details of one report', () =>  {
@@ -134,17 +108,10 @@ describe('Api service should', function () {
       'report_file': 'http://localhost:8000/media/report_files/a_0928_2204.xlsx',
       'report_file_creation': '2017-09-28T22:04:49.407527Z'
     };
-    mockBackend.connections.subscribe(
-      (connection: MockConnection) => {
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            body: report,
-            status: 200,
-            headers: defaultHeaders
-          })));
-      });
     service.getReport(report.id).subscribe(data => {
       expect(data).toEqual(report);
     });
+    const req = httpMock.expectOne(apiUrl + 'report/1/');
+    req.flush(report);
   });
 });

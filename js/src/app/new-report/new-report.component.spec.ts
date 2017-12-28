@@ -8,7 +8,6 @@ import { ApiService } from '../api.service';
 import { NewReportComponent } from './new-report.component';
 
 import { Observable } from 'rxjs/Rx';
-import { of } from 'rxjs/observable/of';
 
 class FakeApiService {
   getRootModels() {

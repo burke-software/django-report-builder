@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { MatModules } from '../../app.module';
 import { TabsComponent } from './tabs.component';
 
 describe('TabsComponent', () => {
@@ -8,7 +10,11 @@ describe('TabsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabsComponent ]
+      declarations: [ TabsComponent ],
+      imports: [
+        ...MatModules,
+        NoopAnimationsModule,
+      ],
     })
     .compileComponents();
   }));

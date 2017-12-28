@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { MatModules } from '../../app.module';
 import { RightSidebarComponent } from './right-sidebar.component';
+import { RelatedFieldComponent } from './related-field.component';
 
 describe('RightSidebarComponent', () => {
   let component: RightSidebarComponent;
@@ -8,7 +11,14 @@ describe('RightSidebarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RightSidebarComponent ]
+      declarations: [
+        RightSidebarComponent,
+        RelatedFieldComponent,
+      ],
+      imports: [
+        ...MatModules,
+        NoopAnimationsModule,
+      ],
     })
     .compileComponents();
   }));
