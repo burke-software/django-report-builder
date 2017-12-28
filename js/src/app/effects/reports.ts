@@ -56,4 +56,18 @@ export class ReportEffects {
         this.api.getFields(request),
       ).map(([relatedFields, fields]) => new fromReports.GetReportFieldsSuccess({relatedFields, fields}));
     });
+
+  @Effect()
+  getFields$ = this.actions$
+    .ofType(fromReports.GET_FIELDS)
+    .map((action: fromReports.GetFields) => action.payload)
+    .mergeMap((relatedField) => {
+      const fieldReq: IGetRelatedFieldRequest = {
+        model: relatedField.model_id,
+        path: relatedField.path,
+        field: relatedField.field_name,
+      };
+      return this.api.getFields(fieldReq)
+        .map(fields => new fromReports.GetFieldsSuccess(fields));
+    });
 }

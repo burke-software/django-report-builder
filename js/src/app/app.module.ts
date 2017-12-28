@@ -19,8 +19,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { environment } from '../environments/environment';
-
 import { AppComponent } from './app.component';
 import { NewReportComponent } from './new-report/new-report.component';
 import { MainComponent } from './main/main.component';
@@ -67,7 +65,7 @@ export const MatModules = [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.forRoot(reducers, { metaReducers }),
-    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    StoreDevtoolsModule.instrument({maxAge: 25}),
     EffectsModule.forRoot([ReportEffects]),
     HttpClientModule,
     HttpClientXsrfModule.withOptions({

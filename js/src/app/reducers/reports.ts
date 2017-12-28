@@ -51,6 +51,13 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.GET_FIELDS_SUCCESS: {
+      return {
+        ...state,
+        fields: action.payload,
+      };
+    }
+
     default: {
       return state;
     }
