@@ -5,6 +5,25 @@ interface IContentType {
 
 export type ContentTypeResponse = IContentType[];
 
+export interface IDisplayField {
+    id: number;
+    path: string;
+    path_verbose: string;
+    field: string;
+    field_verbose: string;
+    name: string;
+    sort: any;
+    sort_reverse: boolean;
+    width: number;
+    aggregate: string;
+    position: number;
+    total: boolean;
+    group: boolean;
+    report: number;
+    display_format: any;
+    field_type: string;
+}
+
 export interface IReportDetailed {
     'id': number;
     'name': string;
@@ -12,7 +31,7 @@ export interface IReportDetailed {
     'modified': string;
     'root_model': number;
     'root_model_name': string;
-    'displayfield_set': any[];
+    'displayfield_set': IDisplayField[];
     'distinct': boolean;
     'user_created': number;
     'user_modified': any;
