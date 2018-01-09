@@ -1,6 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
+$navheight: 65px;
+
 body {
     margin: 0;
+}
+
+/* To make it fullscreen - use a fixed height for the nav and make something in the main component the full height - that fixed nav */
+.left-sidenav-container {
+    height: calc(100vh - #{$navheight});
 }

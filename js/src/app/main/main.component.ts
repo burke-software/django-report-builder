@@ -7,7 +7,7 @@ import { GetReportList, GetReport, GetFields } from '../actions/reports';
 @Component({
   selector: 'app-main',
   template: `
-    <mat-sidenav-container style="height: 700px">
+    <mat-sidenav-container class="left-sidenav-container">
       <app-left-sidebar
         [listReports]="listReports$ | async"
         (onClickReport)="onClickReport($event)"
