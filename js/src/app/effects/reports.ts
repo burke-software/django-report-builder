@@ -67,7 +67,7 @@ export class ReportEffects {
         path: relatedField.path,
         field: relatedField.field_name,
       };
-      return this.api.getFields(fieldReq)
-        .map(fields => new fromReports.GetFieldsSuccess(fields));
+      return Observable.forkJoin(this.api.getRelatedFields(fieldReq),this.api.getFields(fieldReq))
+        .map(([relatedFields, fields]) => new fromReports.GetFieldsSuccess({fields, relatedFields, parent: relatedField}));
     });
 }
