@@ -54,7 +54,13 @@ export function reducer(state = initialState, action: reportActions.Actions): St
     case reportActions.GET_FIELDS_SUCCESS: {
       return {
         ...state,
-        fields: action.payload.fields,
+        fields: action.payload,
+      };
+    }
+
+    case reportActions.GET_RELATED_FIELDS_SUCCESS: {
+      return {
+        ...state,
         relatedFields: state.relatedFields.map(populateChildren(action.payload.parent, action.payload.relatedFields))
       };
     }
@@ -74,7 +80,7 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
       replacement.children = replacement.children.map(replaceField);
     }
     return replacement;
-  }
+  };
 }
 
 export const getReports = (state: State) => state.reports;

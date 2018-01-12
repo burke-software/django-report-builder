@@ -67,9 +67,20 @@ export class ReportEffects {
         path: relatedField.path,
         field: relatedField.field_name,
       };
-      return Observable.forkJoin(
-        this.api.getRelatedFields(fieldReq),
-        this.api.getFields(fieldReq)
-      ).map(([relatedFields, fields]) => new fromReports.GetFieldsSuccess({fields, relatedFields, parent: relatedField}));
+      return this.api.getFields(fieldReq).map((fields) => new fromReports.GetFieldsSuccess(fields));
+    });
+
+  @Effect()
+  getRelatedFields$ = this.actions$
+    .ofType(fromReports.GET_RELATED_FIELDS)
+    .map((action: fromReports.GetRelatedFields) => action.payload)
+    .mergeMap((relatedField) => {
+      const fieldReq: IGetRelatedFieldRequest = {
+        model: relatedField.model_id,
+        path: relatedField.path,
+        field: relatedField.field_name,
+      };
+      return this.api.getRelatedFields(fieldReq)
+        .map((fields) => new fromReports.GetRelatedFieldsSuccess({parent: relatedField, relatedFields: fields}));
     });
 }
