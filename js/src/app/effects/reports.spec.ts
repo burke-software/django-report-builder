@@ -24,7 +24,7 @@ describe('Report Effects', () => {
         provideMockActions(() => actions),
         {
             provide: ApiService,
-            useValue: jasmine.createSpyObj('ApiService', ['getFields']),
+            useValue: jasmine.createSpyObj('ApiService', ['getFields', 'getRelatedFields']),
           },
       ],
     });
@@ -33,7 +33,7 @@ describe('Report Effects', () => {
     service = TestBed.get(ApiService);
   });
 
-  it('should get fields from a related field', () => {
+  it('GetFields should get fields from a related field', () => {
     const relatedField: IRelatedField = {
         field_name: 'scheduledreport',
         verbose_name: 'scheduledreport_set',
@@ -64,5 +64,36 @@ describe('Report Effects', () => {
     const expected = cold('-c', { c: new Actions.GetFieldsSuccess(responseFields) });
 
     expect(effects.getFields$).toBeObservable(expected);
+  });
+
+  it('GetRelatedFields should get fields from a related field', () => {
+    const relatedField: IRelatedField = {
+        field_name: 'scheduledreport',
+        verbose_name: 'scheduledreport_set',
+        path: '',
+        help_text: '',
+        model_id: 24,
+        parent_model_name: 'scheduledreport',
+        parent_model_app_label: false,
+        included_model: true,
+    };
+    actions = hot('a-', { a: new Actions.GetRelatedFields(relatedField)});
+
+    const responseFields: IRelatedField[] = [{
+        field_name: 'last_run_at',
+        verbose_name: 'last run at',
+        path: 'scheduledreport__',
+        help_text: '',
+        model_id: 5,
+        parent_model_name: 'scheduledreport__',
+        parent_model_app_label: false,
+        included_model: true
+    }];
+    const response = cold('-b', {b: responseFields});
+    service.getRelatedFields.and.returnValue(response);
+
+    const expected = cold('-c', { c: new Actions.GetRelatedFieldsSuccess({parent: relatedField, relatedFields: responseFields}) });
+
+    expect(effects.getRelatedFields$).toBeObservable(expected);
   });
 });

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State, getReports, getRelatedFields, getFields, getSelectedReport } from '../reducers';
 import { IRelatedField } from '../api.interfaces';
-import { GetReportList, GetReport, GetFields } from '../actions/reports';
+import { GetReportList, GetReport, GetFields, GetRelatedFields } from '../actions/reports';
 
 @Component({
   selector: 'app-main',
@@ -42,5 +42,6 @@ export class MainComponent implements OnInit {
 
   selectRelatedField(relatedField: IRelatedField) {
     this.store.dispatch(new GetFields(relatedField));
+    this.store.dispatch(new GetRelatedFields(relatedField));
   }
 }

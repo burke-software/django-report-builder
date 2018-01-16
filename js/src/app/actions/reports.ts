@@ -13,6 +13,8 @@ export const GET_REPORT_SUCCESS = 'Get Report Success';
 export const GET_REPORT_FIELDS_SUCCESS = 'Get Report Fields Success';
 export const GET_FIELDS = 'Get Fields';
 export const GET_FIELDS_SUCCESS = 'Get Fields Success';
+export const GET_RELATED_FIELDS = 'Get Related Fields';
+export const GET_RELATED_FIELDS_SUCCESS = 'Get Related Fields Success';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -50,10 +52,22 @@ export class GetFieldsSuccess implements Action {
     constructor(public payload: IField[]) {}
 }
 
+export class GetRelatedFields implements Action {
+    readonly type = GET_RELATED_FIELDS;
+    constructor(public payload: IRelatedField) {}
+}
+
+export class GetRelatedFieldsSuccess implements Action {
+    readonly type = GET_RELATED_FIELDS_SUCCESS;
+    constructor(public payload: {parent: IRelatedField, relatedFields: IRelatedField[]}) {}
+}
+
 export type Actions = GetReportList
   | GetReportFieldsSuccess
   | SetReportList
   | GetReport
   | GetReportSuccess
   | GetFields
-  | GetFieldsSuccess;
+  | GetFieldsSuccess
+  | GetRelatedFields
+  | GetRelatedFieldsSuccess;

@@ -1,4 +1,4 @@
-import { IReport, IReportDetailed, INestedRelatedField, IField } from '../api.interfaces';
+import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 
 export interface State {
@@ -58,10 +58,29 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.GET_RELATED_FIELDS_SUCCESS: {
+      return {
+        ...state,
+        relatedFields: state.relatedFields.map(populateChildren(action.payload.parent, action.payload.relatedFields))
+      };
+    }
+
     default: {
       return state;
     }
   }
+}
+
+function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
+  return function replaceField(field: INestedRelatedField): INestedRelatedField {
+    const replacement = {...field};
+    if (field === parent) {
+      replacement.children = [...children].map(child => ({...child, children: []}));
+    } else {
+      replacement.children = replacement.children.map(replaceField);
+    }
+    return replacement;
+  };
 }
 
 export const getReports = (state: State) => state.reports;
