@@ -71,58 +71,45 @@ export const populatedReports: State = {
   ]
 };
 
-export const relatedFieldsPayload = {
-  parent: {
-    field_name: 'content_type',
-    verbose_name: 'content type',
-    path: '',
+export const newRelatedFields = [
+  {
+    field_name: 'comment',
+    verbose_name: 'comment_set',
+    path: 'content_type__',
     help_text: '',
-    model_id: 16,
-    parent_model_name: 'content_type',
+    model_id: 5,
+    parent_model_name: 'comment',
     parent_model_app_label: false,
-    included_model: true,
-    children: []
+    included_model: true
   },
-  relatedFields: [
-    {
-      field_name: 'comment',
-      verbose_name: 'comment_set',
-      path: 'content_type__',
-      help_text: '',
-      model_id: 5,
-      parent_model_name: 'comment',
-      parent_model_app_label: false,
-      included_model: true
-    },
-    {
-      field_name: 'report',
-      verbose_name: 'report_set',
-      path: 'content_type__',
-      help_text: '',
-      model_id: 5,
-      parent_model_name: 'report',
-      parent_model_app_label: false,
-      included_model: true
-    },
-    {
-      field_name: 'permission',
-      verbose_name: 'permission_set',
-      path: 'content_type__',
-      help_text: '',
-      model_id: 5,
-      parent_model_name: 'permission',
-      parent_model_app_label: false,
-      included_model: true
-    },
-    {
-      field_name: 'logentry',
-      verbose_name: 'logentry_set',
-      path: 'content_type__',
-      help_text: '',
-      model_id: 5,
-      parent_model_name: 'logentry',
-      parent_model_app_label: false,
-      included_model: true
-    }
-  ]
-};
+  {
+    field_name: 'report',
+    verbose_name: 'report_set',
+    path: 'content_type__',
+    help_text: '',
+    model_id: 5,
+    parent_model_name: 'report',
+    parent_model_app_label: false,
+    included_model: true
+  },
+  {
+    field_name: 'permission',
+    verbose_name: 'permission_set',
+    path: 'content_type__',
+    help_text: '',
+    model_id: 5,
+    parent_model_name: 'permission',
+    parent_model_app_label: false,
+    included_model: true
+  },
+  {
+    field_name: 'logentry',
+    verbose_name: 'logentry_set',
+    path: 'content_type__',
+    help_text: '',
+    model_id: 5,
+    parent_model_name: 'logentry',
+    parent_model_app_label: false,
+    included_model: true
+  }
+];
