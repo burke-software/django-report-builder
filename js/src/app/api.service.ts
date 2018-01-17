@@ -43,4 +43,8 @@ export class ApiService {
   getFields(request: IGetRelatedFieldRequest) {
     return this.http.post<IField[]>(this.apiUrl + 'fields/', request);
   }
+
+  deleteReport(reportId: number) {
+    return this.http.delete(this.apiUrl + `report/${reportId}/`);
+  }
 }

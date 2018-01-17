@@ -4,7 +4,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { MatModules } from '../../app.module';
 import { TabsComponent } from './tabs.component';
 
-describe('TabsComponent', () => {
+xdescribe('TabsComponent', () => {
   let component: TabsComponent;
   let fixture: ComponentFixture<TabsComponent>;
 

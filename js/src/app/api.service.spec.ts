@@ -114,4 +114,13 @@ describe('Api service should', function () {
     const req = httpMock.expectOne(apiUrl + 'report/1/');
     req.flush(report);
   });
+
+  it('be able to delete a report', () => {
+    service.deleteReport(1).subscribe(response => {
+      expect(response).toEqual({});
+    });
+
+    const req = httpMock.expectOne(apiUrl + 'report/1/');
+    req.flush({});
+  });
 });

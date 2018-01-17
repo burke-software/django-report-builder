@@ -11,7 +11,14 @@ import { ChangeReportDescription, ToggleReportDistinct } from '../../../actions/
       <input matInput placeholder="Description" [value]="descriptionInput$ | async" (keyup)="onChange($event.currentTarget.value)" >
     </mat-form-field></div>
 
-    <div><mat-checkbox [checked]="isChecked$ | async" (change)="onClick($event.checked)">Is Distinct</mat-checkbox></div>
+    <div>
+      <mat-checkbox [checked]="isChecked$ | async" (change)="onClick($event.checked)">
+        Is Distinct (maybe help reduce duplicate rows) Read&nbsp;
+        <a
+          href="https://docs.djangoproject.com/en/2.0/ref/models/querysets/#django.db.models.query.QuerySet.distinct"
+        target="_blank">more</a>.
+      </mat-checkbox>
+    </div>
     <div><a>Copy this report</a></div>
     <div><a>Delete this report</a></div>
     <div><a>Download existing report generated at</a></div>
