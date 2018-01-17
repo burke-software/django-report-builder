@@ -16,6 +16,7 @@ export const GET_FIELDS_SUCCESS = 'Get Fields Success';
 export const GET_RELATED_FIELDS = 'Get Related Fields';
 export const GET_RELATED_FIELDS_SUCCESS = 'Get Related Fields Success';
 export const CHANGE_REPORT_DESCRIPTION = 'Change Report Description';
+export const TOGGLE_REPORT_DISTINCT = 'Toggle Report Distinct';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -68,6 +69,11 @@ export class ChangeReportDescription implements Action {
   constructor(public payload: string) {}
 }
 
+export class ToggleReportDistinct implements Action {
+  readonly type = TOGGLE_REPORT_DISTINCT;
+  constructor(public payload?: boolean) {}
+}
+
 export type Actions = GetReportList
   | GetReportFieldsSuccess
   | SetReportList
@@ -77,4 +83,5 @@ export type Actions = GetReportList
   | GetFieldsSuccess
   | GetRelatedFields
   | GetRelatedFieldsSuccess
-  | ChangeReportDescription;
+  | ChangeReportDescription
+  | ToggleReportDistinct;

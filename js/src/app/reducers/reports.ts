@@ -7,6 +7,7 @@ export interface State {
   relatedFields: INestedRelatedField[];
   fields: IField[];
   descriptionInput: string;
+  isDistinct: boolean;
 }
 
 export const initialState: State = {
@@ -14,7 +15,8 @@ export const initialState: State = {
   selectedReport: null,
   relatedFields: [],
   fields: [],
-  descriptionInput: ''
+  descriptionInput: '',
+  isDistinct: false,
 };
 
 export function reducer(state = initialState, action: reportActions.Actions): State {
@@ -76,6 +78,13 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.TOGGLE_REPORT_DISTINCT: {
+      return {
+        ...state,
+        isDistinct: action.payload !== undefined ? action.payload : !state.isDistinct
+      };
+    }
+
     default: {
       return state;
     }
@@ -99,3 +108,4 @@ export const getSelectedReport = (state: State) => state.selectedReport;
 export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
+export const getIsDistinct = (state: State) => state.isDistinct;

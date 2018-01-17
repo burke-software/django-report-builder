@@ -30,3 +30,4 @@ export const getSelectedReport = createSelector(getReportsState, fromReports.get
 export const getFields = createSelector(getReportsState, fromReports.getFields);
 export const getRelatedFields = createSelector(getReportsState, fromReports.getRelatedFields);
 export const getDescriptionInput = createSelector(getReportsState, fromReports.getDescriptionInput);
+export const getIsDistinct = createSelector(getReportsState, fromReports.getIsDistinct);
