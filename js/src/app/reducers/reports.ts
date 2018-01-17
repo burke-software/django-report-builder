@@ -105,6 +105,7 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
 
 export const getReports = (state: State) => state.reports;
 export const getSelectedReport = (state: State) => state.selectedReport;
+export const getSelectedReportId = (state: State) => getSelectedReport(state).id;
 export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;

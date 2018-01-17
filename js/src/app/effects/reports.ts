@@ -83,4 +83,14 @@ export class ReportEffects {
       return this.api.getRelatedFields(fieldReq)
         .map((fields) => new fromReports.GetRelatedFieldsSuccess({parent: relatedField, relatedFields: fields}));
     });
+
+
+  @Effect()
+  deleteReport$ = this.actions$
+    .ofType(fromReports.DELETE_REPORT)
+    .map((action: fromReports.DeleteReport) => action.payload)
+    .mergeMap(reportId => {
+      return this.api.deleteReport(reportId).map(() => new fromReports.DeleteReportSuccess());
+    });
 }
+

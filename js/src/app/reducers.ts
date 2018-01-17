@@ -27,6 +27,7 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
 const getReportsState = (state: State) => state.reports;
 export const getReports = createSelector(getReportsState, fromReports.getReports);
 export const getSelectedReport = createSelector(getReportsState, fromReports.getSelectedReport);
+export const getSelectedReportId = createSelector(getReportsState, fromReports.getSelectedReportId);
 export const getFields = createSelector(getReportsState, fromReports.getFields);
 export const getRelatedFields = createSelector(getReportsState, fromReports.getRelatedFields);
 export const getDescriptionInput = createSelector(getReportsState, fromReports.getDescriptionInput);

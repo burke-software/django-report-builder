@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getDescriptionInput, getIsDistinct } from '../../../reducers';
-import { ChangeReportDescription, ToggleReportDistinct } from '../../../actions/reports';
+import { State, getDescriptionInput, getIsDistinct, getSelectedReportId } from '../../../reducers';
+import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../../../actions/reports';
 
 @Component({
   selector: 'app-options-tab',
@@ -20,7 +20,7 @@ import { ChangeReportDescription, ToggleReportDistinct } from '../../../actions/
       </mat-checkbox>
     </div>
     <div><a>Copy this report</a></div>
-    <div><a>Delete this report</a></div>
+    <div><a (click)="onDelete($event)" href="#" alt="Delete this report">Delete this report</a></div>
     <div><a>Download existing report generated at</a></div>
   </form></div>
   `
@@ -36,6 +36,11 @@ export class OptionsTabComponent {
 
   onClick(value: boolean) {
     this.store.dispatch(new ToggleReportDistinct(!value));
+  }
+
+  onDelete(e: MouseEvent) {
+    e.preventDefault();
+    this.store.select(getSelectedReportId).map(id => this.store.dispatch(new DeleteReport(id)));
   }
 
   constructor(private store: Store<State>) { }

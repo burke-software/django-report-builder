@@ -12,7 +12,7 @@ import { ApiService } from '../api.service';
 describe('Report Effects', () => {
   let effects: ReportEffects;
   let actions: Observable<any>;
-  let service: any;
+  let service: jasmine.SpyObj<ApiService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,7 +24,8 @@ describe('Report Effects', () => {
         provideMockActions(() => actions),
         {
             provide: ApiService,
-            useValue: jasmine.createSpyObj('ApiService', ['getFields', 'getRelatedFields']),
+            // Next line mocks all the functions provided in api.service.ts
+            useValue: jasmine.createSpyObj('ApiService', Object.getOwnPropertyNames(ApiService.prototype)),
           },
       ],
     });
@@ -95,5 +96,15 @@ describe('Report Effects', () => {
     const expected = cold('-c', { c: new Actions.GetRelatedFieldsSuccess({parent: relatedField, relatedFields: responseFields}) });
 
     expect(effects.getRelatedFields$).toBeObservable(expected);
+  });
+
+  it('DeleteReport should delete the current report', () => {
+    actions = hot('a-', {a: new Actions.DeleteReport(1)});
+
+    const response = cold('-b', {b: null});
+    service.deleteReport.and.returnValue(response);
+
+    const expected = cold('-c', {c: new Actions.DeleteReportSuccess()});
+    expect(effects.deleteReport$).toBeObservable(expected);
   });
 });
