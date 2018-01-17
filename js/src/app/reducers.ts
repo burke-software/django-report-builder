@@ -29,3 +29,4 @@ export const getReports = createSelector(getReportsState, fromReports.getReports
 export const getSelectedReport = createSelector(getReportsState, fromReports.getSelectedReport);
 export const getFields = createSelector(getReportsState, fromReports.getFields);
 export const getRelatedFields = createSelector(getReportsState, fromReports.getRelatedFields);
+export const getDescriptionInput = createSelector(getReportsState, fromReports.getDescriptionInput);

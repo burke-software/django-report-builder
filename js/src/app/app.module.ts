@@ -30,6 +30,7 @@ import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
+import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 
@@ -57,6 +58,7 @@ export const MatModules = [
     LeftSidebarComponent,
     HeaderComponent,
     TabsComponent,
+    OptionsTabComponent,
     RightSidebarComponent,
     RelatedFieldComponent,
   ],
