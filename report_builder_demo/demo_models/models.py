@@ -89,6 +89,18 @@ class Waiter(models.Model):
 class Person(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    last_login = models.DateField(
+        auto_now=True)
+    last_modifed = models.DateField(
+        null=True,
+        blank=True)
+    birth_date = models.DateTimeField(
+        null=True,
+        blank=True)
+    hammer_time = models.TimeField(
+        null=True,
+        blank=True,
+        help_text="U Can't Touch This")
 
 
 class Child(models.Model):
