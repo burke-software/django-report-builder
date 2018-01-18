@@ -1467,7 +1467,13 @@ The `filter_type`s that are possible are returned when you do an OPTIONS on `/fi
 
 **Exporting using xlsx**
 
-GET request on `/report_builder/report/<id>/download_xlsx/`. This triggers a celery task to process the report. The response will be:
+Reports will download either directly or asynchronously. This is defined by `REPORT_BUILDER_ASYNC_REPORT` in settings.py
+
+Request a report by making a GET request to `/report_builder/report/<id>/download_file/xlsx/` (or /csv/)
+
+When async is false - the response will be the actual xlsx or csv file.
+
+When async is true - the GET request triggers a celery task to process the report. The response will be:
 
 ```json
 {
@@ -1477,4 +1483,4 @@ GET request on `/report_builder/report/<id>/download_xlsx/`. This triggers a cel
 
 `task_id` is the celery task id which can be used to check when the task is finished (or errored).
 
-Check the status of a report with `/report_builder/report/<report_id>/check_status/<task_id>`
+Check the status of a report with `/report_builder/report/<report_id>/check_status/<task_id>/`
