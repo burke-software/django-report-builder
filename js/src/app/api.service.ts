@@ -11,14 +11,14 @@ import {
   ContentTypeResponse,
   IGetRelatedFieldRequest,
   IRelatedField,
-  IField,
+  IField
 } from './api.interfaces';
 
 @Injectable()
 export class ApiService {
   apiUrl = '/report_builder/api/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getRootModels() {
     return this.http.get<ContentTypeResponse>(this.apiUrl + 'contenttypes/');
@@ -37,7 +37,10 @@ export class ApiService {
   }
 
   getRelatedFields(request: IGetRelatedFieldRequest) {
-    return this.http.post<IRelatedField[]>(this.apiUrl + 'related_fields/', request);
+    return this.http.post<IRelatedField[]>(
+      this.apiUrl + 'related_fields/',
+      request
+    );
   }
 
   getFields(request: IGetRelatedFieldRequest) {
@@ -46,5 +49,12 @@ export class ApiService {
 
   deleteReport(reportId: number) {
     return this.http.delete(this.apiUrl + `report/${reportId}/`);
+  }
+
+  editReport(form: IReportDetailed) {
+    return this.http.put<IReportDetailed>(
+      this.apiUrl + `report/${form.id}/`,
+      form
+    );
   }
 }
