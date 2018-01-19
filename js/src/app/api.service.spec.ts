@@ -236,4 +236,15 @@ describe('Api service should', function() {
     const req = httpMock.expectOne(apiUrl + 'report/1/');
     req.flush({});
   });
+
+  it('be able to generate a preview of the report', () => {
+    const expected = {data: [['place', 10], ['user', 4] ], meta: {titles: ['model', 'id']}};
+
+    service.generatePreview(1).subscribe(response => {
+      expect(response).toEqual(expected);
+    });
+
+    const req = httpMock.expectOne(apiUrl + 'report/1/generate/');
+    req.flush(expected);
+  });
 });

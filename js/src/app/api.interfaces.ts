@@ -96,3 +96,10 @@ export interface IField {
 }
 
 export type ReportsResponse = IReport[];
+
+export interface IReportPreview {
+  data: (string|number)[][];
+  meta: {
+    titles: string[];
+  }
+}

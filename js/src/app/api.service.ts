@@ -11,7 +11,8 @@ import {
   ContentTypeResponse,
   IGetRelatedFieldRequest,
   IRelatedField,
-  IField
+  IField,
+  IReportPreview
 } from './api.interfaces';
 
 @Injectable()
@@ -56,5 +57,9 @@ export class ApiService {
       this.apiUrl + `report/${form.id}/`,
       form
     );
+  }
+
+  generatePreview(reportId: number) {
+    return this.http.get<IReportPreview>(this.apiUrl + `report/${reportId}/generate/`);
   }
 }
