@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -12,7 +12,7 @@ import {
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
-  MatTabsModule,
+  MatTabsModule
 } from '@angular/material';
 
 import { StoreModule } from '@ngrx/store';
@@ -32,13 +32,18 @@ import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
+import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 
 const appRoutes: Routes = [
-  { path: '', component: MainComponent, data: {title: 'Reports'}},
-  { path: 'report/add', component: NewReportComponent, data: {title: 'Add New Report'} },
-  { path: 'report/:id', component: MainComponent, data: {title: 'Report'}},
+  { path: '', component: MainComponent, data: { title: 'Reports' } },
+  {
+    path: 'report/add',
+    component: NewReportComponent,
+    data: { title: 'Add New Report' }
+  },
+  { path: 'report/:id', component: MainComponent, data: { title: 'Report' } }
 ];
 
 export const MatModules = [
@@ -48,7 +53,7 @@ export const MatModules = [
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
-  MatTabsModule,
+  MatTabsModule
 ];
 
 @NgModule({
@@ -61,27 +66,26 @@ export const MatModules = [
     TabsComponent,
     OptionsTabComponent,
     ReportTabComponent,
+    ReportPreviewComponent,
     RightSidebarComponent,
-    RelatedFieldComponent,
+    RelatedFieldComponent
   ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument({maxAge: 25}),
+    StoreDevtoolsModule.instrument({ maxAge: 25 }),
     EffectsModule.forRoot([ReportEffects]),
     HttpClientModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
-      headerName: 'X-CSRFToken',
+      headerName: 'X-CSRFToken'
     }),
     FormsModule,
-    ...MatModules,
+    ...MatModules
   ],
-  providers: [
-    ApiService,
-  ],
+  providers: [ApiService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

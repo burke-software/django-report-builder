@@ -1,4 +1,4 @@
-import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField } from '../api.interfaces';
+import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField, IReportPreview } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 
 export interface State {
@@ -8,6 +8,7 @@ export interface State {
   fields: IField[];
   descriptionInput: string;
   isDistinct: boolean;
+  reportPreview?: IReportPreview;
 }
 
 export const initialState: State = {
@@ -16,7 +17,7 @@ export const initialState: State = {
   relatedFields: [],
   fields: [],
   descriptionInput: '',
-  isDistinct: false,
+  isDistinct: false
 };
 
 export function reducer(state = initialState, action: reportActions.Actions): State {
@@ -95,6 +96,13 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.GENERATE_PREVIEW_SUCCESS: {
+      return {
+        ...state,
+        reportPreview: action.payload
+      };
+    }
+
     default: {
       return state;
     }
@@ -126,3 +134,4 @@ export const getEditedReport = (state: State) => {
   editedReport.distinct = state.isDistinct;
   return editedReport;
 };
+export const getPreview = (state: State) => state.reportPreview;

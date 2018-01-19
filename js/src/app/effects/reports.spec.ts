@@ -138,4 +138,16 @@ describe('Report Effects', () => {
     // });
     // expect(effects.editReport$).toBeObservable(expected);
   });
+
+  it('GeneratePreview should get a preview of the currently selected report', () => {
+    actions = hot('a-', {a: new Actions.GeneratePreview() });
+
+    const reportPreview = {"data":[["place",10],["user",4]],"meta":{"titles":["model","id"]}};
+
+    const response = cold('-b', {b: reportPreview});
+    service.generatePreview.and.returnValue(response);
+
+    const expected = cold('-c', { c: new Actions.GeneratePreviewSuccess(reportPreview)});
+    expect(effects.generatePreview$).toBeObservable(expected);
+  });
 });

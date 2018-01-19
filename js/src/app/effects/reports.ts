@@ -15,7 +15,7 @@ import { Action, Store } from '@ngrx/store';
 import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
 import { IGetRelatedFieldRequest } from '../api.interfaces';
-import { State, getEditedReport } from '../reducers';
+import { State, getEditedReport, getSelectedReportId } from '../reducers';
 
 @Injectable()
 export class ReportEffects {
@@ -119,4 +119,13 @@ export class ReportEffects {
         response => new fromReports.EditReportSuccess(response)
       );
     });
+
+  @Effect()
+  generatePreview$ = this.actions$
+    .ofType(fromReports.GENERATE_PREVIEW)
+    .withLatestFrom(this.store$)
+    .mergeMap(([_, storeState]) => {
+      const reportId = getSelectedReportId(storeState);
+      return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response))
+    })
 }

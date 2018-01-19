@@ -3,7 +3,8 @@ import {
   IReport,
   IReportDetailed,
   IRelatedField,
-  IField
+  IField,
+  IReportPreview
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -21,6 +22,8 @@ export const DELETE_REPORT = 'Delete Report';
 export const DELETE_REPORT_SUCCESS = 'Delete Report Success';
 export const EDIT_REPORT = 'Edit Report';
 export const EDIT_REPORT_SUCCESS = 'Edit Report Success';
+export const GENERATE_PREVIEW = 'Generate Preview';
+export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -102,6 +105,16 @@ export class EditReportSuccess implements Action {
   constructor(public payload: IReportDetailed) {}
 }
 
+export class GeneratePreview implements Action {
+  readonly type = GENERATE_PREVIEW;
+  constructor() {}
+}
+
+export class GeneratePreviewSuccess implements Action {
+  readonly type = GENERATE_PREVIEW_SUCCESS;
+  constructor(public payload: IReportPreview) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -117,4 +130,6 @@ export type Actions =
   | DeleteReport
   | DeleteReportSuccess
   | EditReport
-  | EditReportSuccess;
+  | EditReportSuccess
+  | GeneratePreview
+  | GeneratePreviewSuccess;
