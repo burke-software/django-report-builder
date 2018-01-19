@@ -43,6 +43,7 @@ export function reducer(state = initialState, action: reportActions.Actions): St
         relatedFields: initialState.relatedFields,
         fields: initialState.fields,
         descriptionInput: action.payload.description,
+        isDistinct: action.payload.distinct,
       };
     }
 
@@ -85,6 +86,15 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.EDIT_REPORT_SUCCESS: {
+      return {
+        ...state,
+        selectedReport: action.payload,
+        descriptionInput: action.payload.description,
+        isDistinct: action.payload.distinct
+      };
+    }
+
     default: {
       return state;
     }
@@ -111,5 +121,8 @@ export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
 export const getIsDistinct = (state: State) => state.isDistinct;
 export const getEditedReport = (state: State) => {
-  return state.selectedReport;
+  const editedReport = {...state.selectedReport};
+  editedReport.description = state.descriptionInput;
+  editedReport.distinct = state.isDistinct;
+  return editedReport;
 };

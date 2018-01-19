@@ -35,7 +35,7 @@ export class OptionsTabComponent {
   }
 
   onClick(value: boolean) {
-    this.store.dispatch(new ToggleReportDistinct(!value));
+    this.store.dispatch(new ToggleReportDistinct(value));
   }
 
   onDelete(e: MouseEvent) {
