@@ -3,6 +3,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/observable/forkJoin';
 
 import { Injectable } from '@angular/core';
@@ -112,7 +113,10 @@ export class ReportEffects {
   editReport$ = this.actions$
     .ofType(fromReports.EDIT_REPORT)
     .withLatestFrom(this.store$)
-    .map(([action, storeState]) => {
-      console.log(getEditedReport(storeState));
+    .mergeMap(([_, storeState]) => {
+      const editedReport = getEditedReport(storeState);
+      return this.api.editReport(editedReport).map(
+        response => new fromReports.EditReportSuccess(response)
+      );
     });
 }
