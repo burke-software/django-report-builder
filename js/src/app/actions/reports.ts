@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 import {
-    IReport,
-    IReportDetailed,
-    IRelatedField,
-    IField,
+  IReport,
+  IReportDetailed,
+  IRelatedField,
+  IField
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -19,51 +19,57 @@ export const CHANGE_REPORT_DESCRIPTION = 'Change Report Description';
 export const TOGGLE_REPORT_DISTINCT = 'Toggle Report Distinct';
 export const DELETE_REPORT = 'Delete Report';
 export const DELETE_REPORT_SUCCESS = 'Delete Report Success';
+export const EDIT_REPORT = 'Edit Report';
+export const EDIT_REPORT_SUCCESS = 'Edit Report Success';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
-    readonly type = GET_REPORT_LIST;
+  readonly type = GET_REPORT_LIST;
 }
 
 export class SetReportList implements Action {
-    readonly type = SET_REPORT_LIST;
-    constructor(public payload: IReport[]) {}
+  readonly type = SET_REPORT_LIST;
+  constructor(public payload: IReport[]) {}
 }
 
 /** Get the report details for one report for active editing */
 export class GetReport implements Action {
-    readonly type = GET_REPORT;
-    constructor(public payload: number) {}
+  readonly type = GET_REPORT;
+  constructor(public payload: number) {}
 }
 
 export class GetReportSuccess implements Action {
-    readonly type = GET_REPORT_SUCCESS;
-    constructor(public payload: IReportDetailed) {}
+  readonly type = GET_REPORT_SUCCESS;
+  constructor(public payload: IReportDetailed) {}
 }
 
 export class GetReportFieldsSuccess implements Action {
-    readonly type = GET_REPORT_FIELDS_SUCCESS;
-    constructor(public payload: {relatedFields: IRelatedField[], fields: IField[]}) {}
+  readonly type = GET_REPORT_FIELDS_SUCCESS;
+  constructor(
+    public payload: { relatedFields: IRelatedField[]; fields: IField[] }
+  ) {}
 }
 
 export class GetFields implements Action {
-    readonly type = GET_FIELDS;
-    constructor(public payload: IRelatedField) {}
+  readonly type = GET_FIELDS;
+  constructor(public payload: IRelatedField) {}
 }
 
 export class GetFieldsSuccess implements Action {
-    readonly type = GET_FIELDS_SUCCESS;
-    constructor(public payload: IField[]) {}
+  readonly type = GET_FIELDS_SUCCESS;
+  constructor(public payload: IField[]) {}
 }
 
 export class GetRelatedFields implements Action {
-    readonly type = GET_RELATED_FIELDS;
-    constructor(public payload: IRelatedField) {}
+  readonly type = GET_RELATED_FIELDS;
+  constructor(public payload: IRelatedField) {}
 }
 
 export class GetRelatedFieldsSuccess implements Action {
-    readonly type = GET_RELATED_FIELDS_SUCCESS;
-    constructor(public payload: {parent: IRelatedField, relatedFields: IRelatedField[]}) {}
+  readonly type = GET_RELATED_FIELDS_SUCCESS;
+  constructor(
+    public payload: { parent: IRelatedField; relatedFields: IRelatedField[] }
+  ) {}
 }
 
 export class ChangeReportDescription implements Action {
@@ -86,7 +92,18 @@ export class DeleteReportSuccess implements Action {
   constructor() {}
 }
 
-export type Actions = GetReportList
+export class EditReport implements Action {
+  readonly type = EDIT_REPORT;
+  constructor() {}
+}
+
+export class EditReportSuccess implements Action {
+  readonly type = EDIT_REPORT_SUCCESS;
+  constructor(public payload: IReportDetailed) {}
+}
+
+export type Actions =
+  | GetReportList
   | GetReportFieldsSuccess
   | SetReportList
   | GetReport
@@ -98,4 +115,6 @@ export type Actions = GetReportList
   | ChangeReportDescription
   | ToggleReportDistinct
   | DeleteReport
-  | DeleteReportSuccess;
+  | DeleteReportSuccess
+  | EditReport
+  | EditReportSuccess;

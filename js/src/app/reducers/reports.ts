@@ -110,3 +110,6 @@ export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
 export const getIsDistinct = (state: State) => state.isDistinct;
+export const getEditedReport = (state: State) => {
+  return state.selectedReport;
+};

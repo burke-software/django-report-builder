@@ -9,11 +9,12 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Effect, Actions } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 
 import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
 import { IGetRelatedFieldRequest } from '../api.interfaces';
+import { State, getEditedReport } from '../reducers';
 
 @Injectable()
 export class ReportEffects {
@@ -21,12 +22,14 @@ export class ReportEffects {
   getReports$: Observable<Action> = this.actions$
     .ofType(fromReports.GET_REPORT_LIST)
     .mergeMap(() =>
-      this.api.getReports()
-        .map((reports) => new fromReports.SetReportList(reports))
+      this.api
+        .getReports()
+        .map(reports => new fromReports.SetReportList(reports))
     );
 
   constructor(
     private actions$: Actions,
+    private store$: Store<State>,
     private api: ApiService,
     private router: Router
   ) {}
@@ -35,8 +38,9 @@ export class ReportEffects {
   getReport$: Observable<Action> = this.actions$
     .ofType(fromReports.GET_REPORT)
     .map((action: fromReports.GetReport) => action.payload)
-    .mergeMap((reportId) =>
-      this.api.getReport(reportId)
+    .mergeMap(reportId =>
+      this.api
+        .getReport(reportId)
         .map(report => new fromReports.GetReportSuccess(report))
     );
 
@@ -44,53 +48,71 @@ export class ReportEffects {
   getReportSuccess$ = this.actions$
     .ofType(fromReports.GET_REPORT_SUCCESS)
     .map((action: fromReports.GetReportSuccess) => action.payload)
-    .do((report) => this.router.navigate(['/report', report.id]))
-    .mergeMap((report) => {
+    .do(report => this.router.navigate(['/report', report.id]))
+    .mergeMap(report => {
       const request: IGetRelatedFieldRequest = {
         model: report.root_model,
         path: '',
-        field: '',
+        field: ''
       };
       return Observable.forkJoin(
         this.api.getRelatedFields(request),
-        this.api.getFields(request),
-      ).map(([relatedFields, fields]) => new fromReports.GetReportFieldsSuccess({relatedFields, fields}));
+        this.api.getFields(request)
+      ).map(
+        ([relatedFields, fields]) =>
+          new fromReports.GetReportFieldsSuccess({ relatedFields, fields })
+      );
     });
 
   @Effect()
   getFields$ = this.actions$
     .ofType(fromReports.GET_FIELDS)
     .map((action: fromReports.GetFields) => action.payload)
-    .mergeMap((relatedField) => {
+    .mergeMap(relatedField => {
       const fieldReq: IGetRelatedFieldRequest = {
         model: relatedField.model_id,
         path: relatedField.path,
-        field: relatedField.field_name,
+        field: relatedField.field_name
       };
-      return this.api.getFields(fieldReq).map((fields) => new fromReports.GetFieldsSuccess(fields));
+      return this.api
+        .getFields(fieldReq)
+        .map(fields => new fromReports.GetFieldsSuccess(fields));
     });
 
   @Effect()
   getRelatedFields$ = this.actions$
     .ofType(fromReports.GET_RELATED_FIELDS)
     .map((action: fromReports.GetRelatedFields) => action.payload)
-    .mergeMap((relatedField) => {
+    .mergeMap(relatedField => {
       const fieldReq: IGetRelatedFieldRequest = {
         model: relatedField.model_id,
         path: relatedField.path,
-        field: relatedField.field_name,
+        field: relatedField.field_name
       };
-      return this.api.getRelatedFields(fieldReq)
-        .map((fields) => new fromReports.GetRelatedFieldsSuccess({parent: relatedField, relatedFields: fields}));
+      return this.api.getRelatedFields(fieldReq).map(
+        fields =>
+          new fromReports.GetRelatedFieldsSuccess({
+            parent: relatedField,
+            relatedFields: fields
+          })
+      );
     });
-
 
   @Effect()
   deleteReport$ = this.actions$
     .ofType(fromReports.DELETE_REPORT)
     .map((action: fromReports.DeleteReport) => action.payload)
     .mergeMap(reportId => {
-      return this.api.deleteReport(reportId).map(() => new fromReports.DeleteReportSuccess());
+      return this.api
+        .deleteReport(reportId)
+        .map(() => new fromReports.DeleteReportSuccess());
+    });
+
+  @Effect()
+  editReport$ = this.actions$
+    .ofType(fromReports.EDIT_REPORT)
+    .withLatestFrom(this.store$)
+    .map(([action, storeState]) => {
+      console.log(getEditedReport(storeState));
     });
 }
-
