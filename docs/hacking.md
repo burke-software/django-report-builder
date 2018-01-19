@@ -46,3 +46,12 @@ as well. Just try to think what would be most helpful, when someone looks
 back in the git history to see why this file was changed.
 
 Thanks :)
+
+# Frontend
+
+The frontend is a angular app. We use ngrx (redux) for state management and angular-cli for scaffolding and tests.
+
+# How to publish
+
+1. `./build_js.sh` will compile the webpack bundle and move it to the django static folder
+2. `python3 setup.py sdist bdist_wheel upload`
