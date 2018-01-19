@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getPreview } from '../../../reducers';
+import { State, getPreview, getLastSaved } from '../../../reducers';
 import { EditReport, GeneratePreview } from '../../../actions/reports';
 
 @Component({
@@ -12,7 +12,7 @@ import { EditReport, GeneratePreview } from '../../../actions/reports';
       <button mat-button (click)="this.makePreview()">Preview</button>
       <button mat-button>XLSX</button>
       <button mat-button>CSV</button>
-      Info here about last save
+      <app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp>
     </div>
     <div>
       <app-report-preview [previewData]="this.previewData$ | async" ></app-report-preview>
@@ -23,6 +23,7 @@ import { EditReport, GeneratePreview } from '../../../actions/reports';
 export class ReportTabComponent {
   constructor(private store: Store<State>) {}
   previewData$ = this.store.select(getPreview);
+  lastSaved$ = this.store.select(getLastSaved);
 
   onSave() {
     this.store.dispatch(new EditReport());

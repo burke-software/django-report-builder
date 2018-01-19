@@ -9,6 +9,7 @@ export interface State {
   descriptionInput: string;
   isDistinct: boolean;
   reportPreview?: IReportPreview;
+  reportSaved?: Date;
 }
 
 export const initialState: State = {
@@ -92,7 +93,8 @@ export function reducer(state = initialState, action: reportActions.Actions): St
         ...state,
         selectedReport: action.payload,
         descriptionInput: action.payload.description,
-        isDistinct: action.payload.distinct
+        isDistinct: action.payload.distinct,
+        reportSaved: new Date()
       };
     }
 
@@ -135,3 +137,4 @@ export const getEditedReport = (state: State) => {
   return editedReport;
 };
 export const getPreview = (state: State) => state.reportPreview;
+export const getLastSaved = (state: State) => state.reportSaved;
