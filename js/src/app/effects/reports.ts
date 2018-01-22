@@ -15,7 +15,7 @@ import { Action, Store } from '@ngrx/store';
 import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
 import { IGetRelatedFieldRequest } from '../api.interfaces';
-import { State, getEditedReport, getSelectedReportId } from '../reducers';
+import { State, getEditedReport, getSelectedReportId, getIsAsyncReport } from '../reducers';
 
 @Injectable()
 export class ReportEffects {
@@ -127,5 +127,31 @@ export class ReportEffects {
     .mergeMap(([_, storeState]) => {
       const reportId = getSelectedReportId(storeState);
       return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response))
-    })
+    });
+
+  @Effect()
+  exportReport$ = this.actions$
+    .ofType(fromReports.EXPORT_REPORT)
+    .withLatestFrom(this.store$)
+    .mergeMap(([action, storeState]: [fromReports.ExportReport, State]) => {
+      const reportId = getSelectedReportId(storeState);
+      const async = getIsAsyncReport(storeState);
+      const type = action.payload;
+
+      if (!async) {
+        return Observable.create( observer => {
+          observer.next(new fromReports.ExportReportSync({reportId, type}));
+          observer.complete();
+        });
+      }
+
+      return this.api.downloadReport({reportId, type});
+    });
+
+  @Effect({dispatch: false})
+  exportReportSync$ = this.actions$
+    .ofType(fromReports.EXPORT_REPORT_SYNC)
+    .mergeMap(({payload: {type, reportId}}: fromReports.ExportReportSync) =>
+      window.location.pathname = `/report_builder/report/${reportId}/download_file/${type}/`
+    );
 }

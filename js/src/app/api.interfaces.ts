@@ -107,3 +107,7 @@ export interface IReportPreview {
 export interface IConfig {
   async_report: boolean;
 }
+
+export interface IAsyncTaskId {
+  task_id: string;
+}

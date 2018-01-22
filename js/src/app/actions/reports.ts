@@ -24,6 +24,8 @@ export const EDIT_REPORT = 'Edit Report';
 export const EDIT_REPORT_SUCCESS = 'Edit Report Success';
 export const GENERATE_PREVIEW = 'Generate Preview';
 export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
+export const EXPORT_REPORT = 'Export Report';
+export const EXPORT_REPORT_SYNC = 'Export Report Sync';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -115,6 +117,17 @@ export class GeneratePreviewSuccess implements Action {
   constructor(public payload: IReportPreview) {}
 }
 
+export class ExportReport implements Action {
+  readonly type = EXPORT_REPORT;
+  constructor(public payload: string) {}
+}
+
+export class ExportReportSync implements Action {
+  readonly type = EXPORT_REPORT_SYNC;
+  constructor(public payload: {reportId: number; type: string; }) {}
+}
+
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -132,4 +145,6 @@ export type Actions =
   | EditReport
   | EditReportSuccess
   | GeneratePreview
-  | GeneratePreviewSuccess;
+  | GeneratePreviewSuccess
+  | ExportReport
+  | ExportReportSync;

@@ -150,4 +150,8 @@ describe('Report Effects', () => {
     const expected = cold('-c', { c: new Actions.GeneratePreviewSuccess(reportPreview)});
     expect(effects.generatePreview$).toBeObservable(expected);
   });
+
+  xit('ExportReport should download the report in the correct format if async reports is off', () => {
+
+  });
 });

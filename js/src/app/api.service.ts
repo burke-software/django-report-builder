@@ -71,6 +71,6 @@ export class ApiService {
 
   // type should only be 'xlsx' or 'csv'
   downloadReport({reportId, type}: { reportId: number; type: string; }) {
-    return this.http.get(this.baseUrl + `/report/${reportId}/download_file/${type}/`, {observe: 'response'});
+    return this.http.get(this.baseUrl + `report/${reportId}/download_file/${type}/`);
   }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State, getPreview, getLastSaved } from '../../../reducers';
-import { EditReport, GeneratePreview } from '../../../actions/reports';
+import { EditReport, GeneratePreview, ExportReport } from '../../../actions/reports';
 
 @Component({
   selector: 'app-report-tab',
@@ -10,8 +10,8 @@ import { EditReport, GeneratePreview } from '../../../actions/reports';
     <div>
       <button mat-button (click)="this.onSave()">Save</button>
       <button mat-button (click)="this.makePreview()">Preview</button>
-      <button mat-button>XLSX</button>
-      <button mat-button>CSV</button>
+      <button mat-button (click)="this.exportReport('xlsx')">XLSX</button>
+      <button mat-button (click)="this.exportReport('csv')">CSV</button>
       <app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp>
     </div>
     <div *ngIf="this.previewData$ | async">
@@ -31,5 +31,9 @@ export class ReportTabComponent {
 
   makePreview() {
     this.store.dispatch(new GeneratePreview());
+  }
+
+  exportReport(type: string) {
+    this.store.dispatch(new ExportReport(type));
   }
 }
