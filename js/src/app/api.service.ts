@@ -13,7 +13,9 @@ import {
   IField,
   IReportPreview,
   IConfig,
-  INewReport
+  INewReport,
+  IAsyncTaskId,
+  ITaskStatus
 } from './api.interfaces';
 
 @Injectable()
@@ -70,8 +72,12 @@ export class ApiService {
   }
 
   // type should only be 'xlsx' or 'csv'
-  downloadReport({reportId, type}: { reportId: number; type: string; }) {
-    return this.http.get(this.baseUrl + `report/${reportId}/download_file/${type}/`);
+  exportReport({reportId, type}: { reportId: number; type: string; }) {
+    return this.http.get<IAsyncTaskId>(this.baseUrl + `report/${reportId}/download_file/${type}/`);
+  }
+
+  checkStatus({reportId, taskId}: {reportId: number | string; taskId: string}) {
+    return this.http.get<ITaskStatus>(this.baseUrl + `report/${reportId}/check_status/${taskId}/`);
   }
 
   copyReport(reportId: number) {

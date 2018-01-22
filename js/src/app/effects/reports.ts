@@ -146,19 +146,35 @@ export class ReportEffects {
 
       if (!async) {
         return Observable.create( observer => {
-          observer.next(new fromReports.ExportReportSync({reportId, type}));
+          observer.next(new fromReports.DownloadExportedReport(`/report_builder/report/${reportId}/download_file/${type}/`));
           observer.complete();
         });
       }
 
-      return this.api.downloadReport({reportId, type});
+      return this.api.exportReport({reportId, type})
+        .map(({task_id}) => new fromReports.CheckExportStatus({reportId, taskId: task_id}));
     });
 
   @Effect({dispatch: false})
-  exportReportSync$ = this.actions$
-    .ofType(fromReports.EXPORT_REPORT_SYNC)
-    .mergeMap(({payload: {type, reportId}}: fromReports.ExportReportSync) =>
-      window.location.pathname = `/report_builder/report/${reportId}/download_file/${type}/`
+  downloadExportedReport$ = this.actions$
+    .ofType(fromReports.DOWNLOAD_EXPORTED_REPORT)
+    .mergeMap((action: fromReports.DownloadExportedReport) =>
+      window.location.pathname = action.payload
+    );
+
+  @Effect()
+  checkExportStatus$ = this.actions$
+    .ofType(fromReports.CHECK_EXPORT_STATUS)
+    .delay(500)
+    .mergeMap(({payload: {reportId, taskId}}: fromReports.CheckExportStatus) =>
+      this.api.checkStatus({reportId, taskId})
+        .map(({state, link}) => {
+          if (state === 'SUCCESS') {
+            return new fromReports.DownloadExportedReport(link);
+          } else {
+            return new fromReports.CheckExportStatus({reportId, taskId});
+          }
+        })
     );
 
   @Effect()

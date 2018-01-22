@@ -26,9 +26,10 @@ export const EDIT_REPORT_SUCCESS = 'Edit Report Success';
 export const GENERATE_PREVIEW = 'Generate Preview';
 export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 export const EXPORT_REPORT = 'Export Report';
-export const EXPORT_REPORT_SYNC = 'Export Report Sync';
 export const CREATE_REPORT = 'Create Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
+export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
+export const CHECK_EXPORT_STATUS = 'Check Export Status';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -125,9 +126,14 @@ export class ExportReport implements Action {
   constructor(public payload: string) {}
 }
 
-export class ExportReportSync implements Action {
-  readonly type = EXPORT_REPORT_SYNC;
-  constructor(public payload: {reportId: number; type: string; }) {}
+export class DownloadExportedReport implements Action {
+  readonly type = DOWNLOAD_EXPORTED_REPORT;
+  constructor(public payload: string) {}
+}
+
+export class CheckExportStatus implements Action {
+  readonly type = CHECK_EXPORT_STATUS;
+  constructor(public payload: {reportId: string | number; taskId: string; }) {}
 }
 
 export class CreateReport implements Action {
@@ -159,6 +165,7 @@ export type Actions =
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
-  | ExportReportSync
   | CreateReport
-  | CreateReportSuccess;
+  | CreateReportSuccess
+  | DownloadExportedReport
+  | CheckExportStatus;
