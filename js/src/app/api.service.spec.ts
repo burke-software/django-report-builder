@@ -103,7 +103,7 @@ describe('Api service should', function() {
       lastSaved: '2018-01-18T16:00:05.527Z'
     };
 
-    const expected = {
+    const expected: IReportDetailed = {
       id: 4,
       name: 'afasdf',
       description: 'adgsasfg',
@@ -211,7 +211,8 @@ describe('Api service should', function() {
           group: false,
           report: 1,
           display_format: null,
-          field_type: 'AutoField'
+          field_type: 'AutoField',
+          field_choices: []
         }
       ],
       distinct: false,

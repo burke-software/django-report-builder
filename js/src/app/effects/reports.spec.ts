@@ -11,7 +11,7 @@ import { ApiService } from '../api.service';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from '../reducers';
-import {initialState, editedReport} from './mockStoreInit';
+import {initialState} from './mockStoreInit';
 
 describe('Report Effects', () => {
   let effects: ReportEffects;
@@ -124,7 +124,7 @@ describe('Report Effects', () => {
     expect(effects.deleteReport$).toBeObservable(expected);
   });
 
-  xit('EditReport should save the changes to the current report', () => {
+  it('EditReport should save the changes to the current report', () => {
     actions = hot('a-', { a: new Actions.EditReport() });
 
     // prettier-ignore
@@ -133,10 +133,10 @@ describe('Report Effects', () => {
     const response = cold('-b', { b: savedReport });
     service.editReport.and.returnValue(response);
 
-    // const expected = cold('-c', {
-    //   c: new Actions.EditReportSuccess(savedReport)
-    // });
-    // expect(effects.editReport$).toBeObservable(expected);
+    const expected = cold('-c', {
+      c: new Actions.EditReportSuccess(savedReport)
+    });
+    expect(effects.editReport$).toBeObservable(expected);
   });
 
   it('GeneratePreview should get a preview of the currently selected report', () => {
@@ -149,9 +149,5 @@ describe('Report Effects', () => {
 
     const expected = cold('-c', { c: new Actions.GeneratePreviewSuccess(reportPreview)});
     expect(effects.generatePreview$).toBeObservable(expected);
-  });
-
-  xit('ExportReport should download the report in the correct format if async reports is off', () => {
-
   });
 });

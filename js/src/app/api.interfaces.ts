@@ -24,7 +24,7 @@ export interface IDisplayField {
   field_type: string;
   is_default?: boolean;
   can_filter?: boolean;
-  field_choices: any[];
+  field_choices?: any[];
   help_text?: string;
 }
 
