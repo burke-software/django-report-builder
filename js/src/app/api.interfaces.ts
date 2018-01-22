@@ -101,5 +101,9 @@ export interface IReportPreview {
   data: (string|number)[][];
   meta: {
     titles: string[];
-  }
+  };
+}
+
+export interface IConfig {
+  async_report: boolean;
 }

@@ -14,7 +14,7 @@ import { EditReport, GeneratePreview } from '../../../actions/reports';
       <button mat-button>CSV</button>
       <app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp>
     </div>
-    <div>
+    <div *ngIf="this.previewData$ | async">
       <app-report-preview [previewData]="this.previewData$ | async" ></app-report-preview>
     </div>
   </div>

@@ -12,14 +12,20 @@ import {
   IGetRelatedFieldRequest,
   IRelatedField,
   IField,
-  IReportPreview
+  IReportPreview,
+  IConfig
 } from './api.interfaces';
 
 @Injectable()
 export class ApiService {
-  apiUrl = '/report_builder/api/';
+  baseUrl = '/report_builder/';
+  apiUrl = this.baseUrl + 'api/';
 
   constructor(private http: HttpClient) {}
+
+  getConfig() {
+    return this.http.get<IConfig>(this.apiUrl + 'config/');
+  }
 
   getRootModels() {
     return this.http.get<ContentTypeResponse>(this.apiUrl + 'contenttypes/');
@@ -61,5 +67,10 @@ export class ApiService {
 
   generatePreview(reportId: number) {
     return this.http.get<IReportPreview>(this.apiUrl + `report/${reportId}/generate/`);
+  }
+
+  // type should only be 'xlsx' or 'csv'
+  downloadReport({reportId, type}: { reportId: number; type: string; }) {
+    return this.http.get(this.baseUrl + `/report/${reportId}/download_file/${type}/`, {observe: 'response'});
   }
 }

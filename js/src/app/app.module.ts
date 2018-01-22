@@ -28,6 +28,7 @@ import { ApiService } from './api.service';
 
 import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
+import { ConfigEffects } from './effects/config';
 import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
@@ -78,7 +79,7 @@ export const MatModules = [
     RouterModule.forRoot(appRoutes),
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
-    EffectsModule.forRoot([ReportEffects]),
+    EffectsModule.forRoot([ReportEffects, ConfigEffects]),
     HttpClientModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
