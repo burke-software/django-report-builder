@@ -3,6 +3,7 @@ import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
 import { GetReport } from './actions/reports';
+import { GetConfig } from './actions/config';
 
 @Component({
   selector: 'app-root',
@@ -35,5 +36,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.store.dispatch(new GetConfig());
   }
 }

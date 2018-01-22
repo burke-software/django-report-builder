@@ -1301,3 +1301,8 @@ class ReportTests(TestCase):
         data = '"data":[["John","Doe","Will","Doe",5],["Donald","King","Larry","King",5]]'
 
         self.assertContains(response, data)
+
+    def test_get_config(self):
+        settings.REPORT_BUILDER_ASYNC_REPORT = True
+        response = self.client.get('/report_builder/api/config/')
+        self.assertContains(response,'"async_report": true')

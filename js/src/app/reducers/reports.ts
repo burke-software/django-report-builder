@@ -1,4 +1,4 @@
-import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField } from '../api.interfaces';
+import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField, IReportPreview } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 
 export interface State {
@@ -6,6 +6,10 @@ export interface State {
   selectedReport: IReportDetailed | null;
   relatedFields: INestedRelatedField[];
   fields: IField[];
+  descriptionInput: string;
+  isDistinct: boolean;
+  reportPreview?: IReportPreview;
+  reportSaved?: Date;
 }
 
 export const initialState: State = {
@@ -13,6 +17,8 @@ export const initialState: State = {
   selectedReport: null,
   relatedFields: [],
   fields: [],
+  descriptionInput: '',
+  isDistinct: false
 };
 
 export function reducer(state = initialState, action: reportActions.Actions): State {
@@ -28,6 +34,7 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       return {
         ...state,
         selectedReport: null,
+        descriptionInput: initialState.descriptionInput,
       };
     }
 
@@ -37,6 +44,8 @@ export function reducer(state = initialState, action: reportActions.Actions): St
         selectedReport: action.payload,
         relatedFields: initialState.relatedFields,
         fields: initialState.fields,
+        descriptionInput: action.payload.description,
+        isDistinct: action.payload.distinct,
       };
     }
 
@@ -65,6 +74,37 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.CHANGE_REPORT_DESCRIPTION: {
+      return {
+        ...state,
+        descriptionInput: action.payload,
+      };
+    }
+
+    case reportActions.TOGGLE_REPORT_DISTINCT: {
+      return {
+        ...state,
+        isDistinct: action.payload !== undefined ? action.payload : !state.isDistinct
+      };
+    }
+
+    case reportActions.EDIT_REPORT_SUCCESS: {
+      return {
+        ...state,
+        selectedReport: action.payload,
+        descriptionInput: action.payload.description,
+        isDistinct: action.payload.distinct,
+        reportSaved: new Date()
+      };
+    }
+
+    case reportActions.GENERATE_PREVIEW_SUCCESS: {
+      return {
+        ...state,
+        reportPreview: action.payload
+      };
+    }
+
     default: {
       return state;
     }
@@ -85,5 +125,16 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
 
 export const getReports = (state: State) => state.reports;
 export const getSelectedReport = (state: State) => state.selectedReport;
+export const getSelectedReportId = (state: State) => getSelectedReport(state).id;
 export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
+export const getDescriptionInput = (state: State) => state.descriptionInput;
+export const getIsDistinct = (state: State) => state.isDistinct;
+export const getEditedReport = (state: State) => {
+  const editedReport = {...state.selectedReport};
+  editedReport.description = state.descriptionInput;
+  editedReport.distinct = state.isDistinct;
+  return editedReport;
+};
+export const getPreview = (state: State) => state.reportPreview;
+export const getLastSaved = (state: State) => state.reportSaved;

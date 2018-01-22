@@ -1,7 +1,7 @@
 import * as ReportActions from '../actions/reports';
 import * as ReportReducer from './reports';
 
-import * as testdata from './testdata';
+import * as testdata from './testdata.spec';
 
 describe('ReportsReducer', () => {
   describe('GET_REPORT', () => {

@@ -1,6 +1,7 @@
 import copy
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from django.utils.functional import cached_property
 from django.conf import settings
 from rest_framework import viewsets
@@ -28,6 +29,11 @@ class ReportBuilderViewMixin:
     """ Set up explicit settings so that project defaults
     don't interfer with report builder's api. """
     pagination_class = None
+
+class ConfigView(APIView):
+    def get(self, request):
+        data = { 'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False )}
+        return JsonResponse(data)
 
 
 class FormatViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
