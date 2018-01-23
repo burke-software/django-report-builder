@@ -1,0 +1,14 @@
+mat-card {
+    background: white;
+    width: 50%;
+    margin: auto;
+}
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .example-container > * {
+    width: 100%;
+  }
