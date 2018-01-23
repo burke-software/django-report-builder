@@ -201,6 +201,7 @@ describe('Report Effects', () => {
     const state = Object.assign({}, initialState, {config: {async_report: true}});
     const reportId = state.reports.selectedReport.id;
     const taskId = '12345';
+    const delay = Array(52).join('-');
 
     beforeEach(() => {
       const originalDelay = Observable.prototype.delay;
@@ -226,21 +227,21 @@ describe('Report Effects', () => {
       expect(effects.exportReport$).toBeObservable(expected);
     });
 
-    xit('CheckExportStatus should dispatch another CheckExportStatus action if the download isn\'t ready', () => {
-      actions = hot(        'a-', {a: new Actions.CheckExportStatus({reportId, taskId})});
+    it('CheckExportStatus should dispatch another CheckExportStatus action if the download isn\'t ready', () => {
+      actions = hot('a', {a: new Actions.CheckExportStatus({reportId, taskId})});
       const response = cold('-b', {b: {state: 'newp'}});
-      const expected = cold('-c', {c: new Actions.CheckExportStatus({reportId, taskId })});
+      const expected = cold(delay + 'c', {c: new Actions.CheckExportStatus({reportId, taskId })});
 
       service.checkStatus.and.returnValue(response);
 
-      expect(effects.exportReport$).toBeObservable(expected);
+      expect(effects.checkExportStatus$).toBeObservable(expected);
     });
 
-    xit('CheckExportStatus should dispatch another CheckExportStatus action if the download is ready', () => {
+    it('CheckExportStatus should dispatch a download request if the download is ready', () => {
       const link = 'place/download';
-      actions = hot(        'a-', {a: new Actions.CheckExportStatus({reportId, taskId})});
+      actions = hot('a', {a: new Actions.CheckExportStatus({reportId, taskId})});
       const response = cold('-b', {b: {state: 'SUCCESS', link }});
-      const expected = cold('-c', {c: new Actions.DownloadExportedReport(link) });
+      const expected = cold(delay + 'c', {c: new Actions.DownloadExportedReport(link) });
 
       service.checkStatus.and.returnValue(response);
 
