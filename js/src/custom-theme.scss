@@ -6,6 +6,7 @@
 // Define the default theme (same as the example above).
 $custom-theme-primary:  mat-palette($mat-light-blue, 200);
 $custom-theme-accent: mat-palette($mat-blue-grey, 500);
+$custom-theme-warn: mat-palette($mat-red, 500);
 $custom-theme-theme:   mat-light-theme($custom-theme-primary, $custom-theme-accent);
 
 // Include the default theme styles.
