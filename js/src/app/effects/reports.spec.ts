@@ -13,8 +13,7 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from '../reducers';
 import {initialState} from './mockStoreInit';
 
-
-
+import { getTestScheduler } from 'jasmine-marbles';
 
 describe('Report Effects', () => {
   let effects: ReportEffects;
@@ -204,6 +203,11 @@ describe('Report Effects', () => {
     const taskId = '12345';
 
     beforeEach(() => {
+      const originalDelay = Observable.prototype.delay;
+      const scheduler = getTestScheduler();
+      spyOn(Observable.prototype, 'delay').and.callFake(function(time) {
+        return originalDelay.call(this, time, scheduler);
+      });
       TestBed.configureTestingModule(makeTestbedConfig(state));
 
       effects = TestBed.get(ReportEffects);
@@ -240,7 +244,7 @@ describe('Report Effects', () => {
 
       service.checkStatus.and.returnValue(response);
 
-      expect(effects.exportReport$).toBeObservable(expected);
+      expect(effects.checkExportStatus$).toBeObservable(expected);
     });
   });
 });
