@@ -178,9 +178,9 @@
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-4.1.1.tgz#ce82347ad96891955e80818c6dcc561c05c7a4ce"
 
-"@ngrx/store-devtools@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-4.1.1.tgz#20745c39c7560fdc05fa4f22638442a7ec7dd676"
+"@ngrx/store-devtools@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-5.0.0.tgz#df30d79f524c2b7c73077c084732d1b7ebefab95"
 
 "@ngrx/store@^4.1.1":
   version "4.1.1"

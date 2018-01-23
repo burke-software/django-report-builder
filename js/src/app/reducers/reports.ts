@@ -114,6 +114,16 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.DOWNLOAD_EXPORTED_REPORT: {
+      return {
+        ...state,
+        selectedReport: Object.assign({}, state.selectedReport, {
+          report_file: action.payload,
+          report_file_creation: (new Date()).toISOString()
+        })
+      }
+    }
+
     default: {
       return state;
     }
