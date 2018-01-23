@@ -42,3 +42,4 @@ export const getEditedReport = createSelector(getReportsState, fromReports.getEd
 export const getPreview = createSelector(getReportsState, fromReports.getPreview);
 export const getLastSaved = createSelector(getReportsState, fromReports.getLastSaved);
 export const getNewReportInfo = createSelector(getReportsState, fromReports.getNewReportInfo);
+export const getLastGeneratedReport = createSelector(getReportsState, fromReports.getLastGeneratedReport);

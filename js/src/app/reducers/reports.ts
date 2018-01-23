@@ -1,5 +1,6 @@
 import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField, IReportPreview } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
+import { createSelector } from '@ngrx/store/src/selector';
 
 export interface State {
   reports: IReport[];
@@ -158,3 +159,12 @@ export const getNewReportInfo = (state: State) => {
     return {name, description, root_model};
   }
 };
+export const getLastGeneratedReport = createSelector(
+  getSelectedReport,
+  selectedReport => {
+    if (selectedReport) {
+      const {report_file, report_file_creation} = selectedReport;
+      return {report_file, report_file_creation};
+    }
+  }
+);
