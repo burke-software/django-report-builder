@@ -1,17 +1,21 @@
-<form (ngSubmit)="submit()" #reportForm="ngForm">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Report Name" [(ngModel)]="form.name" name="name" required/>
-    </mat-form-field>
+<mat-card>
+  <form (ngSubmit)="submit()" #reportForm="ngForm">
+      <mat-form-field>
+        <input matInput placeholder="Report Name" [(ngModel)]="form.name" name="name" required/>
+      </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Description" [(ngModel)]="form.description" name="description"/>
-    </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Description" [(ngModel)]="form.description" name="description"/>
+      </mat-form-field>
 
-    <mat-select placeholder="Root Model" [(ngModel)]="form.root_model" name="root_model" required>
-      <mat-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
-        {{ model.name }}
-      </mat-option>
-    </mat-select>
+      <mat-form-field>
+        <mat-select placeholder="Root Model" [(ngModel)]="form.root_model" name="root_model" required>
+          <mat-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
+            {{ model.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <button md-raised-button>Ok</button>
-</form>
+    <button mat-raised-button>Ok</button>
+  </form>
+</mat-card>

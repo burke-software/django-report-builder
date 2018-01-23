@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 import {
   MatButtonModule,
+  MatCardModule,
   MatCheckboxModule,
   MatInputModule,
   MatToolbarModule,
@@ -50,6 +51,7 @@ const appRoutes: Routes = [
 
 export const MatModules = [
   MatButtonModule,
+  MatCardModule,
   MatCheckboxModule,
   MatInputModule,
   MatToolbarModule,
