@@ -73,4 +73,8 @@ export class ApiService {
   downloadReport({reportId, type}: { reportId: number; type: string; }) {
     return this.http.get(this.baseUrl + `report/${reportId}/download_file/${type}/`);
   }
+
+  copyReport(reportId: number) {
+    return this.http.get(this.baseUrl + `report/${reportId}/create_copy/`, {observe: 'response'}).toPromise();
+  }
 }
