@@ -1,0 +1,27 @@
+mat-card {
+    width: 50%;
+    border: 3px solid #dbdbdb;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: table;
+}
+
+mat-card-title {
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+  }
+  
+  .container > * {
+    width: 100%;
+  }
