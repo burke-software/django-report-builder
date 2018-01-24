@@ -115,12 +115,12 @@ describe('Report Effects', () => {
   });
 
   it('DeleteReport should delete the current report', () => {
-    actions = hot('a-', { a: new Actions.DeleteReport(1) });
+    actions = hot('a-', { a: new Actions.DeleteReport() });
 
     const response = cold('-b', { b: null });
     service.deleteReport.and.returnValue(response);
 
-    const expected = cold('-c', { c: new Actions.DeleteReportSuccess() });
+    const expected = cold('-c', { c: new Actions.DeleteReportSuccess(4) });
     expect(effects.deleteReport$).toBeObservable(expected);
   });
 

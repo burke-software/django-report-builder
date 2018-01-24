@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getDescriptionInput, getIsDistinct, getSelectedReportId, getNewReportInfo } from '../../../reducers';
+import { State, getDescriptionInput, getIsDistinct, getNewReportInfo } from '../../../reducers';
 import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../../../actions/reports';
 
 @Component({
