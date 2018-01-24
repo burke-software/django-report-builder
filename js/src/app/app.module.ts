@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { TreeModule } from 'angular-tree-component';
+import { TreeComponent } from './main/right-sidebar/tree-view.component';
 
 import {
   MatButtonModule,
@@ -73,7 +75,8 @@ export const MatModules = [
     ReportPreviewComponent,
     SavedTimestampComponent,
     RightSidebarComponent,
-    RelatedFieldComponent
+    RelatedFieldComponent,
+    TreeComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -83,6 +86,7 @@ export const MatModules = [
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
     EffectsModule.forRoot([ReportEffects, ConfigEffects]),
     HttpClientModule,
+    TreeModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
       headerName: 'X-CSRFToken'
