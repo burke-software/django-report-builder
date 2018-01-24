@@ -4,7 +4,8 @@ import {
   IReportDetailed,
   IRelatedField,
   IField,
-  IReportPreview
+  IReportPreview,
+  INewReport
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -26,6 +27,9 @@ export const GENERATE_PREVIEW = 'Generate Preview';
 export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 export const EXPORT_REPORT = 'Export Report';
 export const EXPORT_REPORT_SYNC = 'Export Report Sync';
+export const CREATE_REPORT = 'Create Report';
+export const COPY_REPORT = 'Copy Report';
+export const CREATE_REPORT_SUCCESS = 'Create Report Success';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -127,6 +131,20 @@ export class ExportReportSync implements Action {
   constructor(public payload: {reportId: number; type: string; }) {}
 }
 
+export class CreateReport implements Action {
+  readonly type = CREATE_REPORT;
+  constructor(public payload: INewReport) {}
+}
+
+export class CopyReport implements Action {
+  readonly type = COPY_REPORT;
+  constructor() {}
+}
+
+export class CreateReportSuccess implements Action {
+  readonly type = CREATE_REPORT_SUCCESS;
+  constructor(public payload: IReportDetailed) {}
+}
 
 export type Actions =
   | GetReportList
@@ -147,4 +165,7 @@ export type Actions =
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
-  | ExportReportSync;
+  | ExportReportSync
+  | CreateReport
+  | CopyReport
+  | CreateReportSuccess;

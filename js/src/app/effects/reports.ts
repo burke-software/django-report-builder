@@ -110,9 +110,10 @@ export class ReportEffects {
         .map(() => new fromReports.DeleteReportSuccess(reportId));
     });
 
+  @Effect({dispatch: false})
   deleteReportSuccess$ = this.actions$
     .ofType(fromReports.DELETE_REPORT_SUCCESS)
-    .map(() => this.router.navigate(['']));
+    .do(_ => this.router.navigate(['']));
 
   @Effect()
   editReport$ = this.actions$
@@ -159,4 +160,5 @@ export class ReportEffects {
     .mergeMap(({payload: {type, reportId}}: fromReports.ExportReportSync) =>
       window.location.pathname = `/report_builder/report/${reportId}/download_file/${type}/`
     );
+
 }
