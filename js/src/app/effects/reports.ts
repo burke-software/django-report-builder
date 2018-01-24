@@ -102,12 +102,17 @@ export class ReportEffects {
   @Effect()
   deleteReport$ = this.actions$
     .ofType(fromReports.DELETE_REPORT)
-    .map((action: fromReports.DeleteReport) => action.payload)
+    .withLatestFrom(this.store$)
+    .map(([_, storeState]) => getSelectedReportId(storeState))
     .mergeMap(reportId => {
       return this.api
         .deleteReport(reportId)
-        .map(() => new fromReports.DeleteReportSuccess());
+        .map(() => new fromReports.DeleteReportSuccess(reportId));
     });
+
+  deleteReportSuccess$ = this.actions$
+    .ofType(fromReports.DELETE_REPORT_SUCCESS)
+    .map(() => this.router.navigate(['']));
 
   @Effect()
   editReport$ = this.actions$

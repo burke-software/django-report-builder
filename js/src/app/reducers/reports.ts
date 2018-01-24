@@ -105,6 +105,14 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.DELETE_REPORT_SUCCESS: {
+      return {
+        ...state,
+        reports: state.reports.filter(r => r.id !== action.reportId),
+        selectedReport: initialState.selectedReport,
+      };
+    }
+
     default: {
       return state;
     }
@@ -138,3 +146,10 @@ export const getEditedReport = (state: State) => {
 };
 export const getPreview = (state: State) => state.reportPreview;
 export const getLastSaved = (state: State) => state.reportSaved;
+export const getNewReportInfo = (state: State) => {
+  const report = getSelectedReport(state);
+  if (report) {
+    const {name, description, root_model} = report;
+    return {name, description, root_model};
+  }
+};

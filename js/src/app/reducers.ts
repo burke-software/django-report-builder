@@ -41,3 +41,4 @@ export const getIsDistinct = createSelector(getReportsState, fromReports.getIsDi
 export const getEditedReport = createSelector(getReportsState, fromReports.getEditedReport);
 export const getPreview = createSelector(getReportsState, fromReports.getPreview);
 export const getLastSaved = createSelector(getReportsState, fromReports.getLastSaved);
+export const getNewReportInfo = createSelector(getReportsState, fromReports.getNewReportInfo);

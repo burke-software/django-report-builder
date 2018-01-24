@@ -89,12 +89,12 @@ export class ToggleReportDistinct implements Action {
 
 export class DeleteReport implements Action {
   readonly type = DELETE_REPORT;
-  constructor(public payload: number) {}
+  constructor() {}
 }
 
 export class DeleteReportSuccess implements Action {
   readonly type = DELETE_REPORT_SUCCESS;
-  constructor() {}
+  constructor(public reportId: number) {}
 }
 
 export class EditReport implements Action {
