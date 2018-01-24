@@ -28,7 +28,6 @@ export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 export const EXPORT_REPORT = 'Export Report';
 export const EXPORT_REPORT_SYNC = 'Export Report Sync';
 export const CREATE_REPORT = 'Create Report';
-export const COPY_REPORT = 'Copy Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
 
 /** Request an updated list of all reports from the api */
@@ -136,11 +135,6 @@ export class CreateReport implements Action {
   constructor(public payload: INewReport) {}
 }
 
-export class CopyReport implements Action {
-  readonly type = COPY_REPORT;
-  constructor() {}
-}
-
 export class CreateReportSuccess implements Action {
   readonly type = CREATE_REPORT_SUCCESS;
   constructor(public payload: IReportDetailed) {}
@@ -167,5 +161,4 @@ export type Actions =
   | ExportReport
   | ExportReportSync
   | CreateReport
-  | CopyReport
   | CreateReportSuccess;

@@ -132,7 +132,7 @@ export class ReportEffects {
     .withLatestFrom(this.store$)
     .mergeMap(([_, storeState]) => {
       const reportId = getSelectedReportId(storeState);
-      return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response))
+      return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response));
     });
 
   @Effect()
@@ -171,6 +171,6 @@ export class ReportEffects {
   @Effect({dispatch: false})
   createReportSuccess$ = this.actions$
     .ofType(fromReports.CREATE_REPORT_SUCCESS)
-    .map((action: fromReports.CreateReportSuccess)=> action.payload.id )
+    .map((action: fromReports.CreateReportSuccess) => action.payload.id )
     .do(reportId => this.router.navigate([`/report/${reportId}/`]));
 }
