@@ -161,4 +161,16 @@ export class ReportEffects {
       window.location.pathname = `/report_builder/report/${reportId}/download_file/${type}/`
     );
 
+  @Effect()
+  createReport$ = this.actions$
+    .ofType(fromReports.CREATE_REPORT)
+    .map((action: fromReports.CreateReport) => action.payload)
+    .mergeMap(newReport => this.api.submitNewReport(newReport))
+    .map(createdReport => new fromReports.CreateReportSuccess(createdReport));
+
+  @Effect({dispatch: false})
+  createReportSuccess$ = this.actions$
+    .ofType(fromReports.CREATE_REPORT_SUCCESS)
+    .map((action: fromReports.CreateReportSuccess)=> action.payload.id )
+    .do(reportId => this.router.navigate([`/report/${reportId}/`]));
 }

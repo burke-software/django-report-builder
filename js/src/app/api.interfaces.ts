@@ -116,4 +116,4 @@ export interface INewReport {
   name: string;
   description: string;
   root_model: number;
-};
+}

@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getDescriptionInput, getIsDistinct, getNewReportInfo } from '../../../reducers';
-import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../../../actions/reports';
+import { State, getDescriptionInput, getIsDistinct } from '../../../reducers';
+import { ChangeReportDescription, ToggleReportDistinct, DeleteReport, CopyReport } from '../../../actions/reports';
 
 @Component({
   selector: 'app-options-tab',
@@ -20,7 +20,7 @@ import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../
       </mat-checkbox>
     </div>
     <app-copy-report [report]="newReport$ | async"></app-copy-report>
-    <div><a (click)="onDelete($event)" href="#" alt="Delete this report">Delete this report</a></div>
+    <div><a (click)="this.onCopy($event)" href="#">Copy this report</a></div>
     <div><a>Download existing report generated at</a></div>
   </form></div>
   `
@@ -28,7 +28,6 @@ import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../
 export class OptionsTabComponent {
   descriptionInput$ = this.store.select(getDescriptionInput);
   isChecked$ = this.store.select(getIsDistinct);
-  newReport$ = this.store.select(getNewReportInfo);
   @Output() changeDescription = new EventEmitter<string>();
 
   onChange(value: string) {
@@ -42,6 +41,11 @@ export class OptionsTabComponent {
   onDelete(e: MouseEvent) {
     e.preventDefault();
     this.store.dispatch(new DeleteReport());
+  }
+
+  onCopy(e: MouseEvent) {
+    e.preventDefault();
+    this.store.dispatch(new CopyReport());
   }
 
   constructor(private store: Store<State>) { }
