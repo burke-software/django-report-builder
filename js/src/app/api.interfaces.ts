@@ -117,3 +117,9 @@ export interface INewReport {
   description: string;
   root_model: number;
 }
+
+export interface ITaskStatus {
+  state: string;
+  link?: string;
+  email?: boolean;
+}
