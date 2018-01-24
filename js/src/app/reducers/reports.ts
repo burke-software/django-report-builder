@@ -105,6 +105,14 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.DELETE_REPORT_SUCCESS: {
+      return {
+        ...state,
+        reports: state.reports.filter(r => r.id !== action.reportId),
+        selectedReport: initialState.selectedReport,
+      };
+    }
+
     default: {
       return state;
     }
@@ -125,7 +133,12 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
 
 export const getReports = (state: State) => state.reports;
 export const getSelectedReport = (state: State) => state.selectedReport;
-export const getSelectedReportId = (state: State) => getSelectedReport(state).id;
+export const getSelectedReportId = (state: State) => {
+  const report = getSelectedReport(state);
+  if (report) {
+    return report.id;
+  }
+};
 export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
@@ -138,3 +151,10 @@ export const getEditedReport = (state: State) => {
 };
 export const getPreview = (state: State) => state.reportPreview;
 export const getLastSaved = (state: State) => state.reportSaved;
+export const getNewReportInfo = (state: State) => {
+  const report = getSelectedReport(state);
+  if (report) {
+    const {name, description, root_model} = report;
+    return {name, description, root_model};
+  }
+};

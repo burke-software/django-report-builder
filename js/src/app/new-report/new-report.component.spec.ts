@@ -19,7 +19,7 @@ class FakeApiService {
   }
 }
 
-describe('NewReportComponent', () => {
+xdescribe('NewReportComponent', () => {
   let component: NewReportComponent;
   let fixture: ComponentFixture<NewReportComponent>;
 

@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ReportEffects } from './reports';
 import * as Actions from '../actions/reports';
-import { IRelatedField, IField } from '../api.interfaces';
+import { IRelatedField, IField, INewReport, IReportDetailed } from '../api.interfaces';
 import { ApiService } from '../api.service';
 
 import { StoreModule } from '@ngrx/store';
@@ -115,12 +115,12 @@ describe('Report Effects', () => {
   });
 
   it('DeleteReport should delete the current report', () => {
-    actions = hot('a-', { a: new Actions.DeleteReport(1) });
+    actions = hot('a-', { a: new Actions.DeleteReport() });
 
     const response = cold('-b', { b: null });
     service.deleteReport.and.returnValue(response);
 
-    const expected = cold('-c', { c: new Actions.DeleteReportSuccess() });
+    const expected = cold('-c', { c: new Actions.DeleteReportSuccess(4) });
     expect(effects.deleteReport$).toBeObservable(expected);
   });
 
@@ -149,5 +149,22 @@ describe('Report Effects', () => {
 
     const expected = cold('-c', { c: new Actions.GeneratePreviewSuccess(reportPreview)});
     expect(effects.generatePreview$).toBeObservable(expected);
+  });
+
+  it('CreateReport should make an api call and return a success', () => {
+    const newReport: INewReport = {
+      name: 'testy',
+      description: 'descy',
+      root_model: 2
+    };
+    actions = hot('a-', {a: new Actions.CreateReport(newReport)});
+    // prettier-ignore
+    const newReportDetailed: IReportDetailed = {"id":8,"name":"asdad","description":"asdadc","modified":"2018-01-24","root_model":1,"root_model_name":"log entry","displayfield_set":[],"distinct":false,"user_created":1,"user_modified":null,"filterfield_set":[],"report_file":null,"report_file_creation":null}
+
+    const response = cold('-b', {b: newReportDetailed});
+    service.submitNewReport.and.returnValue(response);
+
+    const expected = cold('-c', {c: new Actions.CreateReportSuccess(newReportDetailed)})
+    expect(effects.createReport$).toBeObservable(expected);
   });
 });

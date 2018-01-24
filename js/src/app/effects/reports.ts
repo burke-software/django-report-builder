@@ -102,12 +102,18 @@ export class ReportEffects {
   @Effect()
   deleteReport$ = this.actions$
     .ofType(fromReports.DELETE_REPORT)
-    .map((action: fromReports.DeleteReport) => action.payload)
+    .withLatestFrom(this.store$)
+    .map(([_, storeState]) => getSelectedReportId(storeState))
     .mergeMap(reportId => {
       return this.api
         .deleteReport(reportId)
-        .map(() => new fromReports.DeleteReportSuccess());
+        .map(() => new fromReports.DeleteReportSuccess(reportId));
     });
+
+  @Effect({dispatch: false})
+  deleteReportSuccess$ = this.actions$
+    .ofType(fromReports.DELETE_REPORT_SUCCESS)
+    .do(_ => this.router.navigate(['']));
 
   @Effect()
   editReport$ = this.actions$
@@ -126,7 +132,7 @@ export class ReportEffects {
     .withLatestFrom(this.store$)
     .mergeMap(([_, storeState]) => {
       const reportId = getSelectedReportId(storeState);
-      return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response))
+      return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response));
     });
 
   @Effect()
@@ -154,4 +160,17 @@ export class ReportEffects {
     .mergeMap(({payload: {type, reportId}}: fromReports.ExportReportSync) =>
       window.location.pathname = `/report_builder/report/${reportId}/download_file/${type}/`
     );
+
+  @Effect()
+  createReport$ = this.actions$
+    .ofType(fromReports.CREATE_REPORT)
+    .map((action: fromReports.CreateReport) => action.payload)
+    .mergeMap(newReport => this.api.submitNewReport(newReport))
+    .map(createdReport => new fromReports.CreateReportSuccess(createdReport));
+
+  @Effect({dispatch: false})
+  createReportSuccess$ = this.actions$
+    .ofType(fromReports.CREATE_REPORT_SUCCESS)
+    .map((action: fromReports.CreateReportSuccess) => action.payload.id )
+    .do(reportId => this.router.navigate([`/report/${reportId}/`]));
 }

@@ -111,3 +111,9 @@ export interface IConfig {
 export interface IAsyncTaskId {
   task_id: string;
 }
+
+export interface INewReport {
+  name: string;
+  description: string;
+  root_model: number;
+}

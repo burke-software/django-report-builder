@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { IReportForm } from './new-report/interfaces';
 import {
   ReportsResponse,
   IReportDetailed,
@@ -13,7 +12,8 @@ import {
   IRelatedField,
   IField,
   IReportPreview,
-  IConfig
+  IConfig,
+  INewReport
 } from './api.interfaces';
 
 @Injectable()
@@ -31,8 +31,8 @@ export class ApiService {
     return this.http.get<ContentTypeResponse>(this.apiUrl + 'contenttypes/');
   }
 
-  submitNewReport(form: IReportForm) {
-    return this.http.post(this.apiUrl + 'report/', form).toPromise();
+  submitNewReport(form: INewReport) {
+    return this.http.post<IReportDetailed>(this.apiUrl + 'report/', form);
   }
 
   getReports() {
@@ -72,5 +72,9 @@ export class ApiService {
   // type should only be 'xlsx' or 'csv'
   downloadReport({reportId, type}: { reportId: number; type: string; }) {
     return this.http.get(this.baseUrl + `report/${reportId}/download_file/${type}/`);
+  }
+
+  copyReport(reportId: number) {
+    return this.http.get(this.baseUrl + `report/${reportId}/create_copy/`, {observe: 'response'}).toPromise();
   }
 }

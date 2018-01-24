@@ -19,8 +19,8 @@ import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../
         target="_blank">more</a>.
       </mat-checkbox>
     </div>
-    <div><a>Copy this report</a></div>
     <div><a (click)="onDelete($event)" href="#" alt="Delete this report">Delete this report</a></div>
+    <app-copy-report *ngIf="copyId$ | async" [id]="copyId$ | async"></app-copy-report>
     <div><a>Download existing report generated at</a></div>
   </form></div>
   `
@@ -28,6 +28,7 @@ import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../
 export class OptionsTabComponent {
   descriptionInput$ = this.store.select(getDescriptionInput);
   isChecked$ = this.store.select(getIsDistinct);
+  copyId$ = this.store.select(getSelectedReportId);
   @Output() changeDescription = new EventEmitter<string>();
 
   onChange(value: string) {
@@ -40,7 +41,7 @@ export class OptionsTabComponent {
 
   onDelete(e: MouseEvent) {
     e.preventDefault();
-    this.store.select(getSelectedReportId).map(id => this.store.dispatch(new DeleteReport(id)));
+    this.store.dispatch(new DeleteReport());
   }
 
   constructor(private store: Store<State>) { }
