@@ -11,8 +11,4 @@ export class TabsComponent implements OnInit {
 
   ngOnInit() {}
 
-  toggleMenu() {
-    console.log("toggle");
-  }
-
 }

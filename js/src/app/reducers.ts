@@ -84,4 +84,8 @@ export const getEditedReport = createSelector(getReportsState, fromReports.getEd
 export const getPreview = createSelector(getReportsState, fromReports.getPreview);
 export const getLastSaved = createSelector(getReportsState, fromReports.getLastSaved);
 export const getSearchTerm = createSelector(getReportsState, fromReports.getSearchTerm);
+<<<<<<< 36de6659fb37cb55a363ebd7441790340f52e5ec
 >>>>>>> Add basic style and search ability to left nav bar.
+=======
+export const getShowReports = createSelector(getReportsState, fromReports.getShowReports);
+>>>>>>> Add side panel toggle functionality.

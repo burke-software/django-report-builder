@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
+<<<<<<< 36de6659fb37cb55a363ebd7441790340f52e5ec
 import { State, getReports, getRelatedFields, getFields, getShowReports,
          getSearchTerm, getSelectedReport, getSortTerm, getSortOrder} from '../reducers';
 import { IRelatedField } from '../api.interfaces';
@@ -23,6 +24,12 @@ import {
   GetFields,
   GetRelatedFields
 } from '../actions/reports';
+=======
+import { State, getReports, getRelatedFields, getFields, getShowReports, getSearchTerm, getSelectedReport } from '../reducers';
+import { IRelatedField } from '../api.interfaces';
+import { GetReportList, GetReport, GetFields, GetRelatedFields, SetSearchText, ShowReports } from '../actions/reports';
+import { filterSearch } from './filterSearch';
+>>>>>>> Add side panel toggle functionality.
 
 @Component({
   selector: 'app-main',
@@ -32,11 +39,15 @@ import {
         [listReports]="listReports$ | async"
         (onClickReport)="onClickReport($event)"
         (searchReports)="setSearchTerm($event)"
+<<<<<<< 36de6659fb37cb55a363ebd7441790340f52e5ec
         (sortReports)="sortReports($event)"
+=======
+>>>>>>> Add side panel toggle functionality.
         [showReports]="showReports$ | async"
       ></app-left-sidebar>
       <div class="example-sidenav-content" style="padding-left: 100px;">
-        <app-tabs></app-tabs>
+        <app-tabs>
+        </app-tabs>
       </div>
       <app-right-sidebar
         [modelName]="(selectedReport$ | async)?.name"

@@ -1,5 +1,12 @@
-  <mat-sidenav #sidenav mode="side" opened="true">
+  <mat-sidenav #sidenav mode="side" opened={{showReports}}>
     <span><a routerLink="/report/add">+ Add Report</a></span>
+  
+  <div class="sort">Sort By:</div>
+  <section layout="row" class="sort-section">
+    <a><span>NAME</span></a>
+    <a><span>DATE</span></a>
+    <a><span>USER</span></a>
+  </section>
 
     <form class="Search">
       <span><input type="text" class="Search-box" id="Search-box" placeholder="Search Reports"
@@ -17,7 +24,8 @@
     <h4>My Reports</h4>
     <div class="reports" *ngFor="let report of listReports">
       <div (click)="clickReport(report.id)">
-        {{ report.name }}<br/>{{ report.user_created.first_name }}
+        <div>{{ report.name }}</div><br/>
+        <div>{{ report.user_created.first_name }}<div layout="column" class="modified">{{report.modified}}</div></div>
       </div>
     </div>
   </div>

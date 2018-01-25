@@ -19,6 +19,7 @@ export interface State {
   reportPreview?: IReportPreview;
   reportSaved?: Date;
   searchText: string;
+  showReports: boolean;
 }
 
 export const initialState: State = {
@@ -28,7 +29,8 @@ export const initialState: State = {
   fields: [],
   descriptionInput: '',
   isDistinct: false,
-  searchText: ''
+  searchText: '',
+  showReports: false
 };
 
 export function reducer(
@@ -48,6 +50,13 @@ export function reducer(
         ...state,
         selectedReport: null,
         descriptionInput: initialState.descriptionInput
+      };
+    }
+
+    case reportActions.SHOW_REPORTS: {
+      return {
+        ...state,
+        showReports: !state.showReports,
       };
     }
 
@@ -205,3 +214,4 @@ export const getLastGeneratedReport = createSelector(
   }
 );
 export const getSearchTerm = (state: State) => state.searchText;
+export const getShowReports = (state: State) => state.showReports;

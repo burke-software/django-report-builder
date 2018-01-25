@@ -32,6 +32,7 @@ export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
 export const CHECK_EXPORT_STATUS = 'Check Export Status';
 export const EXPORT_REPORT_SYNC = 'Export Report Sync';
 export const SET_SEARCH_TEXT = 'Set Report Search Text';
+export const SHOW_REPORTS = 'Show Reports';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -152,6 +153,10 @@ export class SetSearchText implements Action {
   constructor(public payload: string) {}
 }
 
+export class ShowReports implements Action {
+  readonly type = SHOW_REPORTS;
+}
+
 
 export type Actions =
   | GetReportList
@@ -177,4 +182,5 @@ export type Actions =
   | DownloadExportedReport
   | CheckExportStatus
   | SetSearchText
-  | ExportReportSync;
+  | ExportReportSync
+  | ShowReports;
