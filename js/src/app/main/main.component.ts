@@ -14,9 +14,13 @@ import {
   getReportSearchTerm,
   getFieldSearchTerm,
   getRelationsSearchTerm,
-  getSelectedReport
+  getShowReports,
+  getSearchTerm,
+  getSelectedReport,
+  getSortTerm,
+  getSortOrder,
 } from '../reducers';
-import { IRelatedField } from '../api.interfaces';
+import { IRelatedField, IField } from '../api.interfaces';
 import {
   GetReportList,
   GetReport,
@@ -26,7 +30,10 @@ import {
   SetFieldSearchText,
   SetRelationsSearchText,
   ToggleLeftNav,
-  ToggleRightNav
+  ToggleRightNav,
+  SetSearchText,
+  SortReports,
+  AddDisplayFieldToReport,
 } from '../actions/reports';
 
 @Component({
@@ -57,10 +64,9 @@ import {
         [rightNavIsOpen]="rightNavIsOpen$ | async"
       ></app-right-sidebar>
     </mat-sidenav-container>
-  `
+  `,
 })
 export class MainComponent implements OnInit {
-
   listReports$ = Observable.combineLatest(
     this.store.select(getReports),
     this.store.select(getReportSearchTerm),
@@ -78,7 +84,7 @@ export class MainComponent implements OnInit {
     this.store.select(getRelationsSearchTerm),
     setSearch
   );
-  
+
   selectedReport$ = this.store.select(getSelectedReport);
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
@@ -100,11 +106,11 @@ export class MainComponent implements OnInit {
   }
 
   searchReports(searchTerm: string) {
-   this.store.dispatch(new SetReportSearchText(searchTerm));
+    this.store.dispatch(new SetReportSearchText(searchTerm));
   }
 
   searchFields(searchTerm: string) {
-   this.store.dispatch(new SetFieldSearchText(searchTerm));
+    this.store.dispatch(new SetFieldSearchText(searchTerm));
   }
 
   searchRelations(searchTerm: string) {
@@ -119,4 +125,7 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new ToggleRightNav());
   }
 
+  addReportField(field: IField) {
+    this.store.dispatch(new AddDisplayFieldToReport(field));
+  }
 }

@@ -15,7 +15,7 @@ import {
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
-  MatTabsModule
+  MatTabsModule,
 } from '@angular/material';
 
 import { StoreModule } from '@ngrx/store';
@@ -42,6 +42,7 @@ import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.co
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
+import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
@@ -49,9 +50,9 @@ const appRoutes: Routes = [
   {
     path: 'report/add',
     component: NewReportComponent,
-    data: { title: 'Add New Report' }
+    data: { title: 'Add New Report' },
   },
-  { path: 'report/:id', component: MainComponent, data: { title: 'Report' } }
+  { path: 'report/:id', component: MainComponent, data: { title: 'Report' } },
 ];
 
 export const MatModules = [
@@ -62,7 +63,7 @@ export const MatModules = [
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
-  MatTabsModule
+  MatTabsModule,
 ];
 
 @NgModule({
@@ -80,7 +81,8 @@ export const MatModules = [
     ReportPreviewComponent,
     SavedTimestampComponent,
     RightSidebarComponent,
-    RelatedFieldComponent
+    RelatedFieldComponent,
+    FieldComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -95,12 +97,12 @@ export const MatModules = [
     MatSortModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
-      headerName: 'X-CSRFToken'
+      headerName: 'X-CSRFToken',
     }),
     FormsModule,
-    ...MatModules
+    ...MatModules,
   ],
   providers: [ApiService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
