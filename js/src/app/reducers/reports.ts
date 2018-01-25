@@ -1,5 +1,6 @@
 import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField, IReportPreview } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
+import { createSelector } from '@ngrx/store/src/selector';
 
 export interface State {
   reports: IReport[];
@@ -113,6 +114,16 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       };
     }
 
+    case reportActions.DOWNLOAD_EXPORTED_REPORT: {
+      return {
+        ...state,
+        selectedReport: Object.assign({}, state.selectedReport, {
+          report_file: action.payload,
+          report_file_creation: (new Date()).toISOString()
+        })
+      }
+    }
+
     default: {
       return state;
     }
@@ -158,3 +169,12 @@ export const getNewReportInfo = (state: State) => {
     return {name, description, root_model};
   }
 };
+export const getLastGeneratedReport = createSelector(
+  getSelectedReport,
+  selectedReport => {
+    if (selectedReport) {
+      const {report_file, report_file_creation} = selectedReport;
+      return {report_file, report_file_creation};
+    }
+  }
+);

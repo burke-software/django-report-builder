@@ -34,6 +34,7 @@ import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
 import { CopyReportComponent } from './main/tabs/options-tab/copy-report.component';
+import { LastReportComponent } from './main/tabs/options-tab/last-report.component';
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
@@ -71,6 +72,7 @@ export const MatModules = [
     TabsComponent,
     OptionsTabComponent,
     CopyReportComponent,
+    LastReportComponent,
     ReportTabComponent,
     ReportPreviewComponent,
     SavedTimestampComponent,
