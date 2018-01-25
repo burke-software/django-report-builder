@@ -69,7 +69,6 @@ import {
   `,
 })
 export class MainComponent implements OnInit {
-
   title$ = this.store.select(getTitle);
 
   listReports$ = Observable.combineLatest(
