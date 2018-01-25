@@ -13,7 +13,7 @@ export interface State {
 
 export const reducers: ActionReducerMap<State> = {
   reports: fromReports.reducer,
-  config: fromConfig.reducer
+  config: fromConfig.reducer,
 };
 
 export const metaReducers: MetaReducer<State>[] = !environment.production

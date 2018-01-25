@@ -7,12 +7,12 @@ import {
   IField,
   IDisplayField,
   IRelatedField,
-  IReportPreview
+  IReportPreview,
 } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
-  DisplayFieldActionTypes
+  DisplayFieldActionTypes,
 } from '../actions/display-field';
 
 export interface State {
@@ -50,7 +50,7 @@ export const initialState: State = {
   leftNavIsOpen: false,
   rightNavIsOpen: false,
   activeTab: 0,
-  displayFields: displayFieldAdapter.getInitialState()
+  displayFields: displayFieldAdapter.getInitialState(),
 };
 
 export function reducer(
@@ -61,7 +61,7 @@ export function reducer(
     case reportActions.SET_REPORT_LIST: {
       return {
         ...state,
-        reports: action.payload
+        reports: action.payload,
       };
     }
 
@@ -69,21 +69,21 @@ export function reducer(
       return {
         ...state,
         selectedReport: null,
-        descriptionInput: initialState.descriptionInput
+        descriptionInput: initialState.descriptionInput,
       };
     }
 
     case reportActions.TOGGLE_LEFT_NAV: {
       return {
         ...state,
-        leftNavIsOpen: !state.leftNavIsOpen
+        leftNavIsOpen: !state.leftNavIsOpen,
       };
     }
 
     case reportActions.TOGGLE_RIGHT_NAV: {
       return {
         ...state,
-        rightNavIsOpen: !state.rightNavIsOpen
+        rightNavIsOpen: !state.rightNavIsOpen,
       };
     }
 
@@ -94,7 +94,7 @@ export function reducer(
         relatedFields: initialState.relatedFields,
         fields: initialState.fields,
         descriptionInput: action.payload.description,
-        isDistinct: action.payload.distinct
+        isDistinct: action.payload.distinct,
       };
     }
 
@@ -107,14 +107,14 @@ export function reducer(
       return {
         ...state,
         relatedFields: relatedFields,
-        fields: action.payload.fields
+        fields: action.payload.fields,
       };
     }
 
     case reportActions.GET_FIELDS_SUCCESS: {
       return {
         ...state,
-        fields: action.payload
+        fields: action.payload,
       };
     }
 
@@ -123,14 +123,14 @@ export function reducer(
         ...state,
         relatedFields: state.relatedFields.map(
           populateChildren(action.payload.parent, action.payload.relatedFields)
-        )
+        ),
       };
     }
 
     case reportActions.CHANGE_REPORT_DESCRIPTION: {
       return {
         ...state,
-        descriptionInput: action.payload
+        descriptionInput: action.payload,
       };
     }
 
@@ -138,7 +138,7 @@ export function reducer(
       return {
         ...state,
         isDistinct:
-          action.payload !== undefined ? action.payload : !state.isDistinct
+          action.payload !== undefined ? action.payload : !state.isDistinct,
       };
     }
 
@@ -148,14 +148,14 @@ export function reducer(
         selectedReport: action.payload,
         descriptionInput: action.payload.description,
         isDistinct: action.payload.distinct,
-        reportSaved: new Date()
+        reportSaved: new Date(),
       };
     }
 
     case reportActions.GENERATE_PREVIEW_SUCCESS: {
       return {
         ...state,
-        reportPreview: action.payload
+        reportPreview: action.payload,
       };
     }
 
@@ -163,7 +163,7 @@ export function reducer(
       return {
         ...state,
         reports: state.reports.filter(r => r.id !== action.reportId),
-        selectedReport: initialState.selectedReport
+        selectedReport: initialState.selectedReport,
       };
     }
 
@@ -172,8 +172,8 @@ export function reducer(
         ...state,
         selectedReport: Object.assign({}, state.selectedReport, {
           report_file: action.payload,
-          report_file_creation: new Date().toISOString()
-        })
+          report_file_creation: new Date().toISOString(),
+        }),
       };
     }
 
@@ -181,7 +181,7 @@ export function reducer(
       console.log(action.payload);
       return {
         ...state,
-        reportSearchText: action.payload
+        reportSearchText: action.payload,
       };
     }
 
@@ -189,21 +189,21 @@ export function reducer(
       console.log(action.payload);
       return {
         ...state,
-        fieldSearchText: action.payload
+        fieldSearchText: action.payload,
       };
     }
 
     case reportActions.SET_RELATIONS_SEARCH_TEXT: {
       return {
         ...state,
-        relationsSearchText: action.payload
+        relationsSearchText: action.payload,
       };
     }
 
     case reportActions.CHANGE_TAB: {
       return {
         ...state,
-        activeTab: action.payload
+        activeTab: action.payload,
       };
     }
 
@@ -213,7 +213,7 @@ export function reducer(
         displayFields: displayFieldAdapter.addOne(
           action.payload,
           state.displayFields
-        )
+        ),
       };
 
     default: {
@@ -230,7 +230,7 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
     if (field === parent) {
       replacement.children = [...children].map(child => ({
         ...child,
-        children: []
+        children: [],
       }));
     } else {
       replacement.children = replacement.children.map(replaceField);
@@ -287,7 +287,7 @@ const {
   selectIds: notSelectIds,
   selectEntities: notSelectEntities,
   selectAll: notSelectAll,
-  selectTotal: notSelectTotal
+  selectTotal: notSelectTotal,
 } = displayFieldAdapter.getSelectors();
 export const selectIds = createSelector(getDisplayFieldsState, notSelectIds);
 export const selectEntities = createSelector(

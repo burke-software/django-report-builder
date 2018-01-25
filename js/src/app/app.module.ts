@@ -16,6 +16,7 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
+  MatTableModule,
 } from '@angular/material';
 
 import { StoreModule } from '@ngrx/store';
@@ -40,6 +41,7 @@ import { LastReportComponent } from './main/tabs/options-tab/last-report.compone
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
+import { DisplayTabComponent } from './main/tabs/display-tab/display-tab.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 import { FieldComponent } from './main/right-sidebar/field.component';
@@ -64,6 +66,7 @@ export const MatModules = [
   MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
+  MatTableModule,
 ];
 
 @NgModule({
@@ -80,6 +83,7 @@ export const MatModules = [
     ReportTabComponent,
     ReportPreviewComponent,
     SavedTimestampComponent,
+    DisplayTabComponent,
     RightSidebarComponent,
     RelatedFieldComponent,
     FieldComponent,
