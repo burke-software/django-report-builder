@@ -254,7 +254,10 @@ describe('Api service should', function() {
   });
 
   it('be able to generate a preview of the report', () => {
-    const expected = {data: [['place', 10], ['user', 4] ], meta: {titles: ['model', 'id']}};
+    const expected = {
+      data: [['place', 10], ['user', 4]],
+      meta: { titles: ['model', 'id'] }
+    };
 
     service.generatePreview(1).subscribe(response => {
       expect(response).toEqual(expected);

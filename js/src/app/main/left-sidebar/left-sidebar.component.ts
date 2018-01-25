@@ -10,7 +10,7 @@ export class LeftSidebarComponent {
   @Input() listReports: IReport[];
   @Output() onClickReport = new EventEmitter<number>();
 
-  constructor() { }
+  constructor() {}
 
   clickReport(reportId: number) {
     this.onClickReport.emit(reportId);

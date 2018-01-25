@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
   reportName: string;
 
   constructor(private store: Store<State>) {
-    this.store.select(getSelectedReport).subscribe((report) => {
+    this.store.select(getSelectedReport).subscribe(report => {
       if (report) {
         this.reportName = report.name;
       } else {
@@ -21,7 +21,5 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

@@ -1,8 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getReports, getRelatedFields, getFields, getSelectedReport } from '../reducers';
+import {
+  State,
+  getReports,
+  getRelatedFields,
+  getFields,
+  getSelectedReport
+} from '../reducers';
 import { IRelatedField } from '../api.interfaces';
-import { GetReportList, GetReport, GetFields, GetRelatedFields } from '../actions/reports';
+import {
+  GetReportList,
+  GetReport,
+  GetFields,
+  GetRelatedFields
+} from '../actions/reports';
 
 @Component({
   selector: 'app-main',
@@ -22,7 +33,7 @@ import { GetReportList, GetReport, GetFields, GetRelatedFields } from '../action
         (selectRelatedField)="selectRelatedField($event)"
       ></app-right-sidebar>
     </mat-sidenav-container>
-  `,
+  `
 })
 export class MainComponent implements OnInit {
   listReports$ = this.store.select(getReports);
@@ -30,7 +41,7 @@ export class MainComponent implements OnInit {
   fields$ = this.store.select(getFields);
   relatedFields$ = this.store.select(getRelatedFields);
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());

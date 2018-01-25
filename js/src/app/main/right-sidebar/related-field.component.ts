@@ -9,11 +9,11 @@ import { IRelatedField } from '../../api.interfaces';
     <app-related-field [relatedFields]="relatedField.children" (selectRelatedField)="selectRelatedField.emit($event)">
     </app-related-field>
   </div>
-  `,
+  `
 })
 export class RelatedFieldComponent {
   @Input() relatedFields: IRelatedField[];
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
 
-  constructor() { }
+  constructor() {}
 }

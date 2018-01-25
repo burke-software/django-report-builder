@@ -98,7 +98,7 @@ export interface IField {
 export type ReportsResponse = IReport[];
 
 export interface IReportPreview {
-  data: (string|number)[][];
+  data: (string | number)[][];
   meta: {
     titles: string[];
   };

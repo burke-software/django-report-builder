@@ -1,4 +1,11 @@
-import { IReport, IReportDetailed, INestedRelatedField, IField, IRelatedField, IReportPreview } from '../api.interfaces';
+import {
+  IReport,
+  IReportDetailed,
+  INestedRelatedField,
+  IField,
+  IRelatedField,
+  IReportPreview
+} from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 import { createSelector } from '@ngrx/store/src/selector';
 
@@ -22,12 +29,15 @@ export const initialState: State = {
   isDistinct: false
 };
 
-export function reducer(state = initialState, action: reportActions.Actions): State {
+export function reducer(
+  state = initialState,
+  action: reportActions.Actions
+): State {
   switch (action.type) {
     case reportActions.SET_REPORT_LIST: {
       return {
         ...state,
-        reports: action.payload,
+        reports: action.payload
       };
     }
 
@@ -35,7 +45,7 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       return {
         ...state,
         selectedReport: null,
-        descriptionInput: initialState.descriptionInput,
+        descriptionInput: initialState.descriptionInput
       };
     }
 
@@ -46,46 +56,51 @@ export function reducer(state = initialState, action: reportActions.Actions): St
         relatedFields: initialState.relatedFields,
         fields: initialState.fields,
         descriptionInput: action.payload.description,
-        isDistinct: action.payload.distinct,
+        isDistinct: action.payload.distinct
       };
     }
 
     case reportActions.GET_REPORT_FIELDS_SUCCESS: {
-      const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map((relatedField) => {
-        return {...relatedField, children: []};
-      });
+      const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map(
+        relatedField => {
+          return { ...relatedField, children: [] };
+        }
+      );
       return {
         ...state,
         relatedFields: relatedFields,
-        fields: action.payload.fields,
+        fields: action.payload.fields
       };
     }
 
     case reportActions.GET_FIELDS_SUCCESS: {
       return {
         ...state,
-        fields: action.payload,
+        fields: action.payload
       };
     }
 
     case reportActions.GET_RELATED_FIELDS_SUCCESS: {
       return {
         ...state,
-        relatedFields: state.relatedFields.map(populateChildren(action.payload.parent, action.payload.relatedFields))
+        relatedFields: state.relatedFields.map(
+          populateChildren(action.payload.parent, action.payload.relatedFields)
+        )
       };
     }
 
     case reportActions.CHANGE_REPORT_DESCRIPTION: {
       return {
         ...state,
-        descriptionInput: action.payload,
+        descriptionInput: action.payload
       };
     }
 
     case reportActions.TOGGLE_REPORT_DISTINCT: {
       return {
         ...state,
-        isDistinct: action.payload !== undefined ? action.payload : !state.isDistinct
+        isDistinct:
+          action.payload !== undefined ? action.payload : !state.isDistinct
       };
     }
 
@@ -110,7 +125,7 @@ export function reducer(state = initialState, action: reportActions.Actions): St
       return {
         ...state,
         reports: state.reports.filter(r => r.id !== action.reportId),
-        selectedReport: initialState.selectedReport,
+        selectedReport: initialState.selectedReport
       };
     }
 
@@ -119,9 +134,9 @@ export function reducer(state = initialState, action: reportActions.Actions): St
         ...state,
         selectedReport: Object.assign({}, state.selectedReport, {
           report_file: action.payload,
-          report_file_creation: (new Date()).toISOString()
+          report_file_creation: new Date().toISOString()
         })
-      }
+      };
     }
 
     default: {
@@ -131,10 +146,15 @@ export function reducer(state = initialState, action: reportActions.Actions): St
 }
 
 function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
-  return function replaceField(field: INestedRelatedField): INestedRelatedField {
-    const replacement = {...field};
+  return function replaceField(
+    field: INestedRelatedField
+  ): INestedRelatedField {
+    const replacement = { ...field };
     if (field === parent) {
-      replacement.children = [...children].map(child => ({...child, children: []}));
+      replacement.children = [...children].map(child => ({
+        ...child,
+        children: []
+      }));
     } else {
       replacement.children = replacement.children.map(replaceField);
     }
@@ -155,7 +175,7 @@ export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
 export const getIsDistinct = (state: State) => state.isDistinct;
 export const getEditedReport = (state: State) => {
-  const editedReport = {...state.selectedReport};
+  const editedReport = { ...state.selectedReport };
   editedReport.description = state.descriptionInput;
   editedReport.distinct = state.isDistinct;
   return editedReport;
@@ -165,16 +185,16 @@ export const getLastSaved = (state: State) => state.reportSaved;
 export const getNewReportInfo = (state: State) => {
   const report = getSelectedReport(state);
   if (report) {
-    const {name, description, root_model} = report;
-    return {name, description, root_model};
+    const { name, description, root_model } = report;
+    return { name, description, root_model };
   }
 };
 export const getLastGeneratedReport = createSelector(
   getSelectedReport,
   selectedReport => {
     if (selectedReport) {
-      const {report_file, report_file_creation} = selectedReport;
-      return {report_file, report_file_creation};
+      const { report_file, report_file_creation } = selectedReport;
+      return { report_file, report_file_creation };
     }
   }
 );

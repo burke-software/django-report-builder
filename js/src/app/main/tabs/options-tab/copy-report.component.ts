@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApiService } from '../../../api.service';
 
 @Component({
@@ -18,6 +18,9 @@ export class CopyReportComponent {
       window.location.pathname = `/report/${redirectId}/`;
     };
 
-    this.api.copyReport(this.id).then(redirect).catch(redirect);
+    this.api
+      .copyReport(this.id)
+      .then(redirect)
+      .catch(redirect);
   }
 }

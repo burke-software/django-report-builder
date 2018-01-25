@@ -68,19 +68,35 @@ export class ApiService {
   }
 
   generatePreview(reportId: number) {
-    return this.http.get<IReportPreview>(this.apiUrl + `report/${reportId}/generate/`);
+    return this.http.get<IReportPreview>(
+      this.apiUrl + `report/${reportId}/generate/`
+    );
   }
 
   // type should only be 'xlsx' or 'csv'
-  exportReport({reportId, type}: { reportId: number; type: string; }) {
-    return this.http.get<IAsyncTaskId>(this.baseUrl + `report/${reportId}/download_file/${type}/`);
+  exportReport({ reportId, type }: { reportId: number; type: string }) {
+    return this.http.get<IAsyncTaskId>(
+      this.baseUrl + `report/${reportId}/download_file/${type}/`
+    );
   }
 
-  checkStatus({reportId, taskId}: {reportId: number | string; taskId: string}) {
-    return this.http.get<ITaskStatus>(this.baseUrl + `report/${reportId}/check_status/${taskId}/`);
+  checkStatus({
+    reportId,
+    taskId
+  }: {
+    reportId: number | string;
+    taskId: string;
+  }) {
+    return this.http.get<ITaskStatus>(
+      this.baseUrl + `report/${reportId}/check_status/${taskId}/`
+    );
   }
 
   copyReport(reportId: number) {
-    return this.http.get(this.baseUrl + `report/${reportId}/create_copy/`, {observe: 'response'}).toPromise();
+    return this.http
+      .get(this.baseUrl + `report/${reportId}/create_copy/`, {
+        observe: 'response'
+      })
+      .toPromise();
   }
 }
