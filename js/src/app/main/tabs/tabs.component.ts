@@ -10,4 +10,9 @@ export class TabsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  toggleMenu() {
+    console.log("toggle");
+  }
+
 }

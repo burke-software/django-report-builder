@@ -18,6 +18,7 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
+  searchText: string;
 }
 
 export const initialState: State = {
@@ -26,7 +27,8 @@ export const initialState: State = {
   relatedFields: [],
   fields: [],
   descriptionInput: '',
-  isDistinct: false
+  isDistinct: false,
+  searchText: ''
 };
 
 export function reducer(
@@ -136,6 +138,10 @@ export function reducer(
           report_file: action.payload,
           report_file_creation: new Date().toISOString()
         })
+    case reportActions.SET_SEARCH_TEXT: {
+      return {
+        ...state,
+        searchText: action.payload
       };
     }
 
@@ -198,3 +204,4 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
+export const getSearchTerm = (state: State) => state.searchText;

@@ -43,6 +43,7 @@ export const getSelectedReportId = createSelector(
   fromReports.getSelectedReportId
 );
 export const getFields = createSelector(getReportsState, fromReports.getFields);
+<<<<<<< f0b1d86f94b33700f96d04705520bc7ea79351c6
 export const getRelatedFields = createSelector(
   getReportsState,
   fromReports.getRelatedFields
@@ -75,3 +76,12 @@ export const getLastGeneratedReport = createSelector(
   getReportsState,
   fromReports.getLastGeneratedReport
 );
+=======
+export const getRelatedFields = createSelector(getReportsState, fromReports.getRelatedFields);
+export const getDescriptionInput = createSelector(getReportsState, fromReports.getDescriptionInput);
+export const getIsDistinct = createSelector(getReportsState, fromReports.getIsDistinct);
+export const getEditedReport = createSelector(getReportsState, fromReports.getEditedReport);
+export const getPreview = createSelector(getReportsState, fromReports.getPreview);
+export const getLastSaved = createSelector(getReportsState, fromReports.getLastSaved);
+export const getSearchTerm = createSelector(getReportsState, fromReports.getSearchTerm);
+>>>>>>> Add basic style and search ability to left nav bar.

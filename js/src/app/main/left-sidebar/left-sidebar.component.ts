@@ -8,11 +8,14 @@ import { IReport } from '../../api.interfaces';
 })
 export class LeftSidebarComponent {
   @Input() listReports: IReport[];
+  @Input() searchTerm: string;
   @Output() onClickReport = new EventEmitter<number>();
+  @Output() searchReports = new EventEmitter<string>();
 
   constructor() {}
 
   clickReport(reportId: number) {
     this.onClickReport.emit(reportId);
   }
+
 }

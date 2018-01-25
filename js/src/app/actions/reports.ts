@@ -30,6 +30,8 @@ export const CREATE_REPORT = 'Create Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
 export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
 export const CHECK_EXPORT_STATUS = 'Check Export Status';
+export const EXPORT_REPORT_SYNC = 'Export Report Sync';
+export const SET_SEARCH_TEXT = 'Set Report Search Text';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -145,6 +147,11 @@ export class CreateReportSuccess implements Action {
   readonly type = CREATE_REPORT_SUCCESS;
   constructor(public payload: IReportDetailed) {}
 }
+export class SetSearchText implements Action {
+  readonly type = SET_SEARCH_TEXT;
+  constructor(public payload: string) {}
+}
+
 
 export type Actions =
   | GetReportList
@@ -168,4 +175,6 @@ export type Actions =
   | CreateReport
   | CreateReportSuccess
   | DownloadExportedReport
-  | CheckExportStatus;
+  | CheckExportStatus
+  | SetSearchText
+  | ExportReportSync;
