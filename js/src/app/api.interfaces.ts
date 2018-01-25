@@ -88,7 +88,7 @@ export interface IField {
   field_verbose: string;
   field_type: string;
   is_default: boolean;
-  field_choices: any;
+  field_choices?: any;
   can_filter: boolean;
   path: string;
   path_verbose: string;

@@ -37,6 +37,7 @@ export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
 export const SORT_REPORTS = 'Sort Reports';
 export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
+export const ADD_DISPLAY_FIELD_TO_REPORT = 'Add Display Field To Report';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -186,6 +187,11 @@ export class ChangeTab implements Action {
   constructor(public payload: number) {}
 }
 
+export class AddDisplayFieldToReport implements Action {
+  readonly type = ADD_DISPLAY_FIELD_TO_REPORT;
+  constructor(public payload: IField) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -216,4 +222,5 @@ export type Actions =
   | SortReports
   | ToggleRightNav
   | SortReports
-  | ChangeTab;
+  | ChangeTab
+  | AddDisplayFieldToReport;
