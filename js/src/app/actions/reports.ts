@@ -187,6 +187,5 @@ export type Actions =
   | DownloadExportedReport
   | CheckExportStatus
   | SetSearchText
-  | ExportReportSync
   | ShowReports
   | SortReports;
