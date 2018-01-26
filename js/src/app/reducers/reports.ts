@@ -18,6 +18,12 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
+  searchText: string;
+  showReports: boolean;
+  sortReportBy: {
+    sort: string;
+    ascending: boolean;
+  };
 }
 
 export const initialState: State = {
@@ -26,7 +32,13 @@ export const initialState: State = {
   relatedFields: [],
   fields: [],
   descriptionInput: '',
-  isDistinct: false
+  isDistinct: false,
+  searchText: '',
+  showReports: false,
+  sortReportBy: {
+    sort: '',
+    ascending: true
+  }
 };
 
 export function reducer(
@@ -46,6 +58,13 @@ export function reducer(
         ...state,
         selectedReport: null,
         descriptionInput: initialState.descriptionInput
+      };
+    }
+
+    case reportActions.SHOW_REPORTS: {
+      return {
+        ...state,
+        showReports: !state.showReports,
       };
     }
 
@@ -136,6 +155,30 @@ export function reducer(
           report_file: action.payload,
           report_file_creation: new Date().toISOString()
         })
+      }
+    }
+    
+
+    case reportActions.SET_SEARCH_TEXT: {
+      return {
+        ...state,
+        searchText: action.payload
+      };
+    }
+
+    case reportActions.SORT_REPORTS: {
+      let order;
+      if (action.payload === state.sortReportBy.sort) {
+        order = !state.sortReportBy.ascending;
+      } else {
+        order = state.sortReportBy.ascending;
+      }
+      return {
+        ...state,
+        sortReportBy: {
+          sort: action.payload,
+          ascending: order
+       }
       };
     }
 
@@ -198,3 +241,7 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
+export const getSearchTerm = (state: State) => state.searchText;
+export const getShowReports = (state: State) => state.showReports;
+export const getSortTerm = (state: State) => state.sortReportBy.sort;
+export const getSortOrder = (state: State) => state.sortReportBy.ascending;
