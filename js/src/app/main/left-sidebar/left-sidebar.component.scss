@@ -9,6 +9,9 @@ a, a:visited, a:hover, a:active {
   text-decoration: none;
   color: #79aec8;
   font-size: 14px;
+}
+
+a span {
   padding: 20px;
 }
 
@@ -22,15 +25,11 @@ a, a:visited, a:hover, a:active {
     margin-top: -10px;
 }
 
-.add-report, .sort {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-.sort {
+.sort, .add-report {
   padding: 10px;
   padding-left: 5px;
   padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 section span {
