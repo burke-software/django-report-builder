@@ -33,7 +33,7 @@ import { filterSearch } from './filterSearch';
 >>>>>>> Add side panel toggle functionality.
 =======
 import { State, getReports, getRelatedFields, getFields, getShowReports,
-  getSearchTerm, getSelectedReport, getSortTerm, getSortOrder} from '../reducers';
+         getSearchTerm, getSelectedReport, getSortTerm, getSortOrder} from '../reducers';
 import { IRelatedField } from '../api.interfaces';
 import { GetReportList, GetReport, GetFields, GetRelatedFields, SetSearchText, SortReports } from '../actions/reports';
 import { filterSearch } from './utils/filterSearch';
@@ -60,8 +60,7 @@ import { sortReports } from './utils/sort';
         [showReports]="showReports$ | async"
       ></app-left-sidebar>
       <div class="example-sidenav-content" style="padding-left: 100px;">
-        <app-tabs>
-        </app-tabs>
+        <app-tabs></app-tabs>
       </div>
       <app-right-sidebar
         [modelName]="(selectedReport$ | async)?.name"
@@ -81,23 +80,26 @@ export class MainComponent implements OnInit {
     sortReports
   );
 
+<<<<<<< 7e67c5772e76936ab8f34b8730ade3c4856390ec
 <<<<<<< 93a4cc32210daf774df7713c132fb36e1b62170e
 =======
   sort$ = this.store.select(getSortOrder);
 
 >>>>>>> Add sort method. Need to refactor.
+=======
+>>>>>>> Fix sort issue.
   listReports$ = Observable.combineLatest(
     this.sortReportsBy$,
     this.store.select(getSearchTerm),
     filterSearch
   );
 
-
   selectedReport$ = this.store.select(getSelectedReport);
   showReports$ = this.store.select(getShowReports);
   fields$ = this.store.select(getFields);
   relatedFields$ = this.store.select(getRelatedFields);
 
+<<<<<<< 7e67c5772e76936ab8f34b8730ade3c4856390ec
 <<<<<<< 93a4cc32210daf774df7713c132fb36e1b62170e
   constructor(private store: Store<State>) {}
 =======
@@ -106,6 +108,9 @@ export class MainComponent implements OnInit {
     this.sort$.subscribe((value) => console.log(value));
   }
 >>>>>>> Add sort method. Need to refactor.
+=======
+  constructor(private store: Store<State>) {}
+>>>>>>> Fix sort issue.
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());

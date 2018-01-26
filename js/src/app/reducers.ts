@@ -93,4 +93,7 @@ export const getShowReports = createSelector(getReportsState, fromReports.getSho
 =======
 export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
 export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
+<<<<<<< 7e67c5772e76936ab8f34b8730ade3c4856390ec
 >>>>>>> Add sort method. Need to refactor.
+=======
+>>>>>>> Fix sort issue.

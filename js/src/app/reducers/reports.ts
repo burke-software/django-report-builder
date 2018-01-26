@@ -155,6 +155,10 @@ export function reducer(
           report_file: action.payload,
           report_file_creation: new Date().toISOString()
         })
+      }
+    }
+    
+
     case reportActions.SET_SEARCH_TEXT: {
       return {
         ...state,
@@ -202,7 +206,6 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
 }
 
 export const getReports = (state: State) => state.reports;
-
 export const getSelectedReport = (state: State) => state.selectedReport;
 export const getSelectedReportId = (state: State) => {
   const report = getSelectedReport(state);
@@ -240,6 +243,5 @@ export const getLastGeneratedReport = createSelector(
 );
 export const getSearchTerm = (state: State) => state.searchText;
 export const getShowReports = (state: State) => state.showReports;
-
 export const getSortTerm = (state: State) => state.sortReportBy.sort;
 export const getSortOrder = (state: State) => state.sortReportBy.ascending;

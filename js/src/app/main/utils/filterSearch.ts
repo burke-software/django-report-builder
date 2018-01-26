@@ -1,4 +1,4 @@
-import { IReport } from '../api.interfaces';
+import { IReport } from '../../api.interfaces';
 
  export const filterSearch = (reports: IReport[], searchTerm: string) => {
     if (!searchTerm) {

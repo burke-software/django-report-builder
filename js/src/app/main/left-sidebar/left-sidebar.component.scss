@@ -1,25 +1,25 @@
 mat-sidenav {
-    padding: 10px;
-    width: 25%;
-    border-right: 2px solid #ededed;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-span {
-  justify-content: center;
-  margin: auto;
+  padding: 10px;
+  width: 25%;
+  border-right: 2px solid #ededed;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 a, a:visited, a:hover, a:active {
   text-decoration: none;
   color: #79aec8;
   font-size: 14px;
-  text-align: center;
+  padding: 20px;
 }
 
 .reports {
     padding: 10px;
     color: #79aec8;
+}
+
+.reports-container {
+    float: left;
+    margin-top: -10px;
 }
 
 .add-report, .sort {
@@ -35,6 +35,8 @@ a, a:visited, a:hover, a:active {
 
 section span {
   cursor: pointer;
+  justify-content: center;
+  margin: auto;
 }
 
 .modified {
@@ -47,11 +49,7 @@ section {
   padding: 10px;
 }
 
-section a {
-  padding: 20px;
-}
-
-.Search {
+.search {
   @extend %cf;
   position: relative;
   float: left;
@@ -60,12 +58,12 @@ section a {
   margin: 25px auto;
 }
 
-#Search-box {
+#search-box {
   border-bottom: 1px solid #ededed;
   padding-bottom: 1rem;
 }
 
-.Search-box {
+.search-box {
   float: left;
   width: 50%;
   height: 100%;
@@ -81,20 +79,20 @@ section a {
     transform: translateY(0);
     opacity: 1;
     
-    + .Search-box-label {
+    + .search-box-label {
       z-index: -1;
       opacity: 0;
     }
     
-    ~ .Search-close {
+    ~ .search-close {
       z-index: 3;
       opacity: 1;
     }
   }
 }
 
-.Search-box-label,
-.Search-close {
+.search-box-label,
+.search-close {
   position: absolute;
   left: 0;
   z-index: 2;
@@ -104,13 +102,13 @@ section a {
   transition: opacity ease 250ms 250ms;
 }
 
-.Search-close {
+.search-close {
   opacity: 0;
   z-index: 0;
 }
 
-.Search-icon,
-.Search-close-icon {
+.search-icon,
+.search-close-icon {
   @extend %hide-text;
   @extend %icon;
   position: absolute;
@@ -119,7 +117,7 @@ section a {
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><defs><path fill='#555' d='M15.477 13.356C16.437 11.98 17 10.306 17 8.5 17 3.806 13.194 0 8.5 0S0 3.806 0 8.5 3.806 17 8.5 17c1.805 0 3.48-.563 4.855-1.522l6.304 6.303c.114.12.3.12.42 0l1.7-1.696c.116-.116.11-.31 0-.423l-6.305-6.303zM8.5 15c3.59 0 6.5-2.91 6.5-6.5S12.09 2 8.5 2 2 4.91 2 8.5 4.91 15 8.5 15z' id='a'/></defs><g fill='none' fill-rule='evenodd'><use xlink:href='#a'/></g></svg>");
 }
 
-.Search-close-icon {
+.search-close-icon {
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path fill='#555' d='M77.6 21.1l-28 28.1-28.1-28.1-1.9 1.9 28 28.1-28 28.1 1.9 1.9L49.6 53l28 28.1 2-1.9-28.1-28.1L79.6 23z'/></svg>");
 }
 
@@ -139,9 +137,4 @@ section a {
   width: 15px;
   height: 15px;
   background-repeat: no-repeat;
-}
-
-.reports-container {
-    float: left;
-    margin-top: -10px;
 }

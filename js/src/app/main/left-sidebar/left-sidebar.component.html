@@ -4,18 +4,18 @@
   <div class="sort">Sort By:</div>
   <section layout="row" class="sort-section">
     <a><span (click)="onSortReports('name')">NAME</span></a>
-    <a><span (click)="onSortReports('date')">DATE</span></a>
-    <a><span (click)="onSortReports('user')">USER</span></a>
+    <a><span (click)="onSortReports('modified')">DATE</span></a>
+    <a><span (click)="onSortReports('user_created.first_name')">USER</span></a>
   </section>
 
-    <form class="Search">
-      <span><input type="text" class="Search-box" id="Search-box" placeholder="Search Reports"
+    <form class="search">
+      <span><input type="text" class="search-box" id="search-box" placeholder="Search Reports"
       (keyup)="searchReports.emit($event.target.value)">
-      <label for="Search-box" class="Search-box-label">
-        <span class="Search-icon">Search</span>
+      <label for="search-box" class="search-box-label">
+        <span class="search-icon">Search</span>
       </label>
-      <span class="Search-close">
-        <i class="Search-close-icon">Close</i>
+      <span class="search-close">
+        <i class="search-close-icon">Close</i>
       </span>
     </span>
     </form>  
