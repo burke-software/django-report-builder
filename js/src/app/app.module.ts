@@ -75,8 +75,7 @@ export const MatModules = [
     ReportPreviewComponent,
     SavedTimestampComponent,
     RightSidebarComponent,
-    RelatedFieldComponent,
-    TreeComponent
+    RelatedFieldComponent
   ],
   imports: [
     BrowserAnimationsModule,

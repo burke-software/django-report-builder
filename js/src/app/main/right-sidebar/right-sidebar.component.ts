@@ -13,7 +13,10 @@ export class RightSidebarComponent {
   @Input() relatedFields: IRelatedField[];
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
 
-  constructor() { }
+  constructor() {
+    console.log(this.fields);
+  }
+
     nodes = [
       {
         id: 1,
@@ -41,15 +44,12 @@ export class RightSidebarComponent {
     options: ITreeOptions = {
       displayField: 'verbose_name'
     };
-    
+
     getRelatedFields() {
       return this.relatedFields.map(deepCopy);
     }
-  }
 }
 
-
-  
 function deepCopy(obj) {
   const copy = {...obj};
   copy.children = copy.children.map(deepCopy);

@@ -4,7 +4,7 @@
     [relatedFields]="getRelatedFields()"
     (selectRelatedField)="selectRelatedField.emit($event)"
     ></app-related-field> -->
-    <tree-root [nodes]="getRelatedFields()" [options]="options"></tree-root>
+    <tree-root [nodes]="getRelatedFields()" (selectRelatedField)="selectRelatedField.emit($event)" [options]="options"></tree-root>
   <br/><br/>
   Fields
   <div *ngFor="let field of fields">
