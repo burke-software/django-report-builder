@@ -12,11 +12,35 @@
   <div class="mat-row" *ngFor="let row of fields">
     <div class="mat-cell"></div>
     <div class="mat-cell">{{row.field_verbose}} [{{row.field_type}}]</div>
-    <div class="mat-cell">{{row.name}}</div>
-    <div class="mat-cell"></div>
-    <div class="mat-cell"></div>
-    <div class="mat-cell"></div>
-    <div class="mat-cell"></div>
-    <div class="mat-cell"></div>
+    <div class="mat-cell">
+      <mat-form-field>
+        <input matInput value="{{row.name}}">
+      </mat-form-field>
+    </div>
+    <div class="mat-cell">
+      <mat-checkbox [checked]="row.sort_reverse"></mat-checkbox>
+    </div>
+    <div class="mat-cell">
+      <mat-form-field>
+        <mat-select placeholder="----------">
+          <mat-option value="sum">Sum</mat-option>
+          <mat-option value="count">Count</mat-option>
+          <mat-option value="avg">Avg</mat-option>
+          <mat-option value="max">Max</mat-option>
+          <mat-option value="min">Min</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="mat-cell">
+      <mat-form-field>
+        <mat-select></mat-select>
+      </mat-form-field>
+    </div>
+    <div class="mat-cell">
+      <mat-checkbox [checked]="row.total"></mat-checkbox>
+    </div>
+    <div class="mat-cell">
+      <mat-checkbox [checked]="row.group"></mat-checkbox>
+    </div>
   </div>
 </div>
