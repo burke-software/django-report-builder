@@ -15,7 +15,7 @@ export class RelatedFieldComponent {
   @Input() relatedFields: IRelatedField[];
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
 
-  constructor() { }
+  constructor() {}
 
   nodes = [
     {
@@ -41,6 +41,6 @@ export class RelatedFieldComponent {
       ]
     }
   ];
-  options = this.relatedFields;
+  options = {};
 }
 

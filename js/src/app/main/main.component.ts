@@ -30,7 +30,9 @@ export class MainComponent implements OnInit {
   fields$ = this.store.select(getFields);
   relatedFields$ = this.store.select(getRelatedFields);
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) { 
+    this.relatedFields$.subscribe((value) => console.log(value));
+  }
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());

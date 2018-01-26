@@ -1,9 +1,10 @@
 <mat-sidenav #sidenav mode="side" position="end" opened="true">
   {{ modelName }} relations
-  <app-related-field
-    [relatedFields]="relatedFields"
+  <!-- <app-related-field
+    [relatedFields]="getRelatedFields()"
     (selectRelatedField)="selectRelatedField.emit($event)"
-  ></app-related-field>
+    ></app-related-field> -->
+    <tree-root [nodes]="getRelatedFields()" [options]="options"></tree-root>
   <br/><br/>
   Fields
   <div *ngFor="let field of fields">
