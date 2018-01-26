@@ -1,7 +1,17 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getDescriptionInput, getIsDistinct, getSelectedReportId, getLastGeneratedReport } from '../../../reducers';
-import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../../../actions/reports';
+import {
+  State,
+  getDescriptionInput,
+  getIsDistinct,
+  getSelectedReportId,
+  getLastGeneratedReport
+} from '../../../reducers';
+import {
+  ChangeReportDescription,
+  ToggleReportDistinct,
+  DeleteReport
+} from '../../../actions/reports';
 
 @Component({
   selector: 'app-options-tab',
@@ -45,5 +55,5 @@ export class OptionsTabComponent {
     this.store.dispatch(new DeleteReport());
   }
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) {}
 }

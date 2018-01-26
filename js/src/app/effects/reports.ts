@@ -15,7 +15,12 @@ import { Action, Store } from '@ngrx/store';
 import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
 import { IGetRelatedFieldRequest } from '../api.interfaces';
-import { State, getEditedReport, getSelectedReportId, getIsAsyncReport } from '../reducers';
+import {
+  State,
+  getEditedReport,
+  getSelectedReportId,
+  getIsAsyncReport
+} from '../reducers';
 
 @Injectable()
 export class ReportEffects {
@@ -110,7 +115,7 @@ export class ReportEffects {
         .map(() => new fromReports.DeleteReportSuccess(reportId));
     });
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   deleteReportSuccess$ = this.actions$
     .ofType(fromReports.DELETE_REPORT_SUCCESS)
     .do(_ => this.router.navigate(['']));
@@ -121,9 +126,9 @@ export class ReportEffects {
     .withLatestFrom(this.store$)
     .mergeMap(([_, storeState]) => {
       const editedReport = getEditedReport(storeState);
-      return this.api.editReport(editedReport).map(
-        response => new fromReports.EditReportSuccess(response)
-      );
+      return this.api
+        .editReport(editedReport)
+        .map(response => new fromReports.EditReportSuccess(response));
     });
 
   @Effect()
@@ -132,7 +137,9 @@ export class ReportEffects {
     .withLatestFrom(this.store$)
     .mergeMap(([_, storeState]) => {
       const reportId = getSelectedReportId(storeState);
-      return this.api.generatePreview(reportId).map(response => new fromReports.GeneratePreviewSuccess(response));
+      return this.api
+        .generatePreview(reportId)
+        .map(response => new fromReports.GeneratePreviewSuccess(response));
     });
 
   @Effect()
@@ -145,34 +152,43 @@ export class ReportEffects {
       const type = action.payload;
 
       if (!async) {
-        return Observable.create( observer => {
-          observer.next(new fromReports.DownloadExportedReport(`/report_builder/report/${reportId}/download_file/${type}/`));
+        return Observable.create(observer => {
+          observer.next(
+            new fromReports.DownloadExportedReport(
+              `/report_builder/report/${reportId}/download_file/${type}/`
+            )
+          );
           observer.complete();
         });
       }
 
-      return this.api.exportReport({reportId, type})
-        .map(({task_id}) => new fromReports.CheckExportStatus({reportId, taskId: task_id}));
+      return this.api
+        .exportReport({ reportId, type })
+        .map(
+          ({ task_id }) =>
+            new fromReports.CheckExportStatus({ reportId, taskId: task_id })
+        );
     });
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   downloadExportedReport$ = this.actions$
     .ofType(fromReports.DOWNLOAD_EXPORTED_REPORT)
-    .mergeMap((action: fromReports.DownloadExportedReport) =>
-      window.location.pathname = action.payload
+    .mergeMap(
+      (action: fromReports.DownloadExportedReport) =>
+        (window.location.pathname = action.payload)
     );
 
   @Effect()
   checkExportStatus$ = this.actions$
     .ofType(fromReports.CHECK_EXPORT_STATUS)
     .delay(500)
-    .mergeMap(({payload: {reportId, taskId}}: fromReports.CheckExportStatus) =>
-      this.api.checkStatus({reportId, taskId})
-        .map(({state, link}) => {
+    .mergeMap(
+      ({ payload: { reportId, taskId } }: fromReports.CheckExportStatus) =>
+        this.api.checkStatus({ reportId, taskId }).map(({ state, link }) => {
           if (state === 'SUCCESS') {
             return new fromReports.DownloadExportedReport(link);
           } else {
-            return new fromReports.CheckExportStatus({reportId, taskId});
+            return new fromReports.CheckExportStatus({ reportId, taskId });
           }
         })
     );
@@ -184,9 +200,9 @@ export class ReportEffects {
     .mergeMap(newReport => this.api.submitNewReport(newReport))
     .map(createdReport => new fromReports.CreateReportSuccess(createdReport));
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   createReportSuccess$ = this.actions$
     .ofType(fromReports.CREATE_REPORT_SUCCESS)
-    .map((action: fromReports.CreateReportSuccess) => action.payload.id )
+    .map((action: fromReports.CreateReportSuccess) => action.payload.id)
     .do(reportId => this.router.navigate([`/report/${reportId}/`]));
 }

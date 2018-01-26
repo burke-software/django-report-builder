@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State, getPreview, getLastSaved } from '../../../reducers';
-import { EditReport, GeneratePreview, ExportReport } from '../../../actions/reports';
+import {
+  EditReport,
+  GeneratePreview,
+  ExportReport
+} from '../../../actions/reports';
 
 @Component({
   selector: 'app-report-tab',

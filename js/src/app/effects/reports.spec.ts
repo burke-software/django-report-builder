@@ -6,12 +6,17 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ReportEffects } from './reports';
 import * as Actions from '../actions/reports';
-import { IRelatedField, IField, INewReport, IReportDetailed } from '../api.interfaces';
+import {
+  IRelatedField,
+  IField,
+  INewReport,
+  IReportDetailed
+} from '../api.interfaces';
 import { ApiService } from '../api.service';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from '../reducers';
-import {initialState} from './mockStoreInit';
+import { initialState } from './mockStoreInit';
 
 import { getTestScheduler } from 'jasmine-marbles';
 
@@ -21,22 +26,24 @@ describe('Report Effects', () => {
   let service: jasmine.SpyObj<ApiService>;
 
   const makeTestbedConfig = state => ({
-    imports: [RouterTestingModule.withRoutes([]), StoreModule.forRoot(reducers, {metaReducers, initialState: state})],
-  providers: [
-    ReportEffects,
-    provideMockActions(() => actions),
-    {
-      provide: ApiService,
-      // Next line mocks all the functions provided in api.service.ts
-      useValue: jasmine.createSpyObj(
-        'ApiService',
-        Object.getOwnPropertyNames(ApiService.prototype)
-      )
-    }
-  ]
+    imports: [
+      RouterTestingModule.withRoutes([]),
+      StoreModule.forRoot(reducers, { metaReducers, initialState: state })
+    ],
+    providers: [
+      ReportEffects,
+      provideMockActions(() => actions),
+      {
+        provide: ApiService,
+        // Next line mocks all the functions provided in api.service.ts
+        useValue: jasmine.createSpyObj(
+          'ApiService',
+          Object.getOwnPropertyNames(ApiService.prototype)
+        )
+      }
+    ]
   });
   describe('using default initial state', () => {
-
     beforeEach(() => {
       TestBed.configureTestingModule(makeTestbedConfig(initialState));
 
@@ -122,7 +129,7 @@ describe('Report Effects', () => {
     it('DeleteReport should delete the current report', () => {
       actions = hot('a-', { a: new Actions.DeleteReport() });
 
-      const response = cold('-b', {b: {id: 4}});
+      const response = cold('-b', { b: { id: 4 } });
 
       service.deleteReport.and.returnValue(response);
 
@@ -130,16 +137,20 @@ describe('Report Effects', () => {
       expect(effects.deleteReport$).toBeObservable(expected);
     });
 
-
     it('GeneratePreview should get a preview of the currently selected report', () => {
-      actions = hot('a-', {a: new Actions.GeneratePreview() });
+      actions = hot('a-', { a: new Actions.GeneratePreview() });
 
-      const reportPreview = {"data":[["place",10],["user",4]],"meta":{"titles":["model","id"]}};
+      const reportPreview = {
+        data: [['place', 10], ['user', 4]],
+        meta: { titles: ['model', 'id'] }
+      };
 
-      const response = cold('-b', {b: reportPreview});
+      const response = cold('-b', { b: reportPreview });
       service.generatePreview.and.returnValue(response);
 
-      const expected = cold('-c', { c: new Actions.GeneratePreviewSuccess(reportPreview)});
+      const expected = cold('-c', {
+        c: new Actions.GeneratePreviewSuccess(reportPreview)
+      });
       expect(effects.generatePreview$).toBeObservable(expected);
     });
 
@@ -164,20 +175,24 @@ describe('Report Effects', () => {
         description: 'descy',
         root_model: 2
       };
-      actions = hot('a-', {a: new Actions.CreateReport(newReport)});
+      actions = hot('a-', { a: new Actions.CreateReport(newReport) });
       // prettier-ignore
       const newReportDetailed: IReportDetailed = {"id":8,"name":"asdad","description":"asdadc","modified":"2018-01-24","root_model":1,"root_model_name":"log entry","displayfield_set":[],"distinct":false,"user_created":1,"user_modified":null,"filterfield_set":[],"report_file":null,"report_file_creation":null}
 
-      const response = cold('-b', {b: newReportDetailed});
+      const response = cold('-b', { b: newReportDetailed });
       service.submitNewReport.and.returnValue(response);
 
-      const expected = cold('-c', {c: new Actions.CreateReportSuccess(newReportDetailed)})
+      const expected = cold('-c', {
+        c: new Actions.CreateReportSuccess(newReportDetailed)
+      });
       expect(effects.createReport$).toBeObservable(expected);
     });
   });
 
   describe('with async === false', () => {
-    const state = Object.assign({}, initialState, {config: {async_report: false}});
+    const state = Object.assign({}, initialState, {
+      config: { async_report: false }
+    });
     const reportId = state.reports.selectedReport.id;
 
     beforeEach(() => {
@@ -190,15 +205,21 @@ describe('Report Effects', () => {
     it('ExportReport should dispatch a download action', () => {
       const type = 'csv';
 
-      actions = hot('a', {a: new Actions.ExportReport(type)});
+      actions = hot('a', { a: new Actions.ExportReport(type) });
 
-      const expected = hot('c', {c: new Actions.DownloadExportedReport(`/report_builder/report/${reportId}/download_file/${type}/`)});
+      const expected = hot('c', {
+        c: new Actions.DownloadExportedReport(
+          `/report_builder/report/${reportId}/download_file/${type}/`
+        )
+      });
       expect(effects.exportReport$).toBeObservable(expected);
     });
   });
 
   describe('with async === true', () => {
-    const state = Object.assign({}, initialState, {config: {async_report: true}});
+    const state = Object.assign({}, initialState, {
+      config: { async_report: true }
+    });
     const reportId = state.reports.selectedReport.id;
     const taskId = '12345';
     const delay = Array(52).join('-');
@@ -218,19 +239,25 @@ describe('Report Effects', () => {
     it('ExportReport should start the task', () => {
       const type = 'csv';
 
-      actions = hot('a-', {a: new Actions.ExportReport(type)});
-      const response = cold('-b', {b: {task_id: taskId}});
+      actions = hot('a-', { a: new Actions.ExportReport(type) });
+      const response = cold('-b', { b: { task_id: taskId } });
 
       service.exportReport.and.returnValue(response);
 
-      const expected = cold('-c', {c: new Actions.CheckExportStatus({reportId, taskId })});
+      const expected = cold('-c', {
+        c: new Actions.CheckExportStatus({ reportId, taskId })
+      });
       expect(effects.exportReport$).toBeObservable(expected);
     });
 
-    it('CheckExportStatus should dispatch another CheckExportStatus action if the download isn\'t ready', () => {
-      actions = hot('a', {a: new Actions.CheckExportStatus({reportId, taskId})});
-      const response = cold('-b', {b: {state: 'newp'}});
-      const expected = cold(delay + 'c', {c: new Actions.CheckExportStatus({reportId, taskId })});
+    it("CheckExportStatus should dispatch another CheckExportStatus action if the download isn't ready", () => {
+      actions = hot('a', {
+        a: new Actions.CheckExportStatus({ reportId, taskId })
+      });
+      const response = cold('-b', { b: { state: 'newp' } });
+      const expected = cold(delay + 'c', {
+        c: new Actions.CheckExportStatus({ reportId, taskId })
+      });
 
       service.checkStatus.and.returnValue(response);
 
@@ -239,9 +266,13 @@ describe('Report Effects', () => {
 
     it('CheckExportStatus should dispatch a download request if the download is ready', () => {
       const link = 'place/download';
-      actions = hot('a', {a: new Actions.CheckExportStatus({reportId, taskId})});
-      const response = cold('-b', {b: {state: 'SUCCESS', link }});
-      const expected = cold(delay + 'c', {c: new Actions.DownloadExportedReport(link) });
+      actions = hot('a', {
+        a: new Actions.CheckExportStatus({ reportId, taskId })
+      });
+      const response = cold('-b', { b: { state: 'SUCCESS', link } });
+      const expected = cold(delay + 'c', {
+        c: new Actions.DownloadExportedReport(link)
+      });
 
       service.checkStatus.and.returnValue(response);
 

@@ -133,7 +133,7 @@ export class DownloadExportedReport implements Action {
 
 export class CheckExportStatus implements Action {
   readonly type = CHECK_EXPORT_STATUS;
-  constructor(public payload: {reportId: string | number; taskId: string; }) {}
+  constructor(public payload: { reportId: string | number; taskId: string }) {}
 }
 
 export class CreateReport implements Action {

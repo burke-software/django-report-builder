@@ -14,18 +14,17 @@ export class NewReportComponent implements OnInit {
   root_model_choices$ = this.api.getRootModels();
   form: INewReport;
 
-  constructor(private store: Store<State>, private api: ApiService) { }
+  constructor(private store: Store<State>, private api: ApiService) {}
 
   ngOnInit() {
     this.form = {
-      'name': '',
-      'description': '',
-      'root_model': null,
+      name: '',
+      description: '',
+      root_model: null
     };
   }
 
   submit() {
     this.store.dispatch(new CreateReport(this.form));
   }
-
 }

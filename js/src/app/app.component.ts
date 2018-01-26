@@ -13,12 +13,9 @@ import { GetConfig } from './actions/config';
 export class AppComponent implements OnInit {
   title: string;
 
-  constructor(
-    router: Router,
-    private store: Store<State>,
-  ) {
+  constructor(router: Router, private store: Store<State>) {
     let firstLoad = true;
-    router.events.subscribe((event) => {
+    router.events.subscribe(event => {
       if (event instanceof RoutesRecognized) {
         const child = event.state.root.firstChild;
         if (child) {

@@ -12,5 +12,5 @@ export class RightSidebarComponent {
   @Input() relatedFields: IRelatedField[];
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
 
-  constructor() { }
+  constructor() {}
 }
