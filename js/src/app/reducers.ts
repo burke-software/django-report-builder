@@ -43,7 +43,10 @@ export const getSelectedReportId = createSelector(
   fromReports.getSelectedReportId
 );
 export const getFields = createSelector(getReportsState, fromReports.getFields);
-<<<<<<< f0b1d86f94b33700f96d04705520bc7ea79351c6
+export const getSearchTerm = createSelector(getReportsState, fromReports.getSearchTerm);
+export const getShowReports = createSelector(getReportsState, fromReports.getShowReports);
+export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
+export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
 export const getRelatedFields = createSelector(
   getReportsState,
   fromReports.getRelatedFields
@@ -76,24 +79,3 @@ export const getLastGeneratedReport = createSelector(
   getReportsState,
   fromReports.getLastGeneratedReport
 );
-=======
-export const getRelatedFields = createSelector(getReportsState, fromReports.getRelatedFields);
-export const getDescriptionInput = createSelector(getReportsState, fromReports.getDescriptionInput);
-export const getIsDistinct = createSelector(getReportsState, fromReports.getIsDistinct);
-export const getEditedReport = createSelector(getReportsState, fromReports.getEditedReport);
-export const getPreview = createSelector(getReportsState, fromReports.getPreview);
-export const getLastSaved = createSelector(getReportsState, fromReports.getLastSaved);
-export const getSearchTerm = createSelector(getReportsState, fromReports.getSearchTerm);
-<<<<<<< 36de6659fb37cb55a363ebd7441790340f52e5ec
->>>>>>> Add basic style and search ability to left nav bar.
-=======
-export const getShowReports = createSelector(getReportsState, fromReports.getShowReports);
-<<<<<<< 93a4cc32210daf774df7713c132fb36e1b62170e
->>>>>>> Add side panel toggle functionality.
-=======
-export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
-export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
-<<<<<<< 7e67c5772e76936ab8f34b8730ade3c4856390ec
->>>>>>> Add sort method. Need to refactor.
-=======
->>>>>>> Fix sort issue.
