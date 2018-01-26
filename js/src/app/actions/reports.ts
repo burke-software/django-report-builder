@@ -30,7 +30,6 @@ export const CREATE_REPORT = 'Create Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
 export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
 export const CHECK_EXPORT_STATUS = 'Check Export Status';
-export const EXPORT_REPORT_SYNC = 'Export Report Sync';
 export const SET_SEARCH_TEXT = 'Set Report Search Text';
 export const SHOW_REPORTS = 'Show Reports';
 export const SORT_REPORTS = 'Sort Reports';
