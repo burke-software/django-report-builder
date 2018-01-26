@@ -20,6 +20,10 @@ export interface State {
   reportSaved?: Date;
   searchText: string;
   showReports: boolean;
+  sortReportBy: {
+    sort: string;
+    ascending: boolean;
+  };
 }
 
 export const initialState: State = {
@@ -30,7 +34,11 @@ export const initialState: State = {
   descriptionInput: '',
   isDistinct: false,
   searchText: '',
-  showReports: false
+  showReports: false,
+  sortReportBy: {
+    sort: '',
+    ascending: true
+  }
 };
 
 export function reducer(
@@ -154,6 +162,22 @@ export function reducer(
       };
     }
 
+    case reportActions.SORT_REPORTS: {
+      let order;
+      if (action.payload === state.sortReportBy.sort) {
+        order = !state.sortReportBy.ascending;
+      } else {
+        order = state.sortReportBy.ascending;
+      }
+      return {
+        ...state,
+        sortReportBy: {
+          sort: action.payload,
+          ascending: order
+       }
+      };
+    }
+
     default: {
       return state;
     }
@@ -178,6 +202,7 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
 }
 
 export const getReports = (state: State) => state.reports;
+
 export const getSelectedReport = (state: State) => state.selectedReport;
 export const getSelectedReportId = (state: State) => {
   const report = getSelectedReport(state);
@@ -215,3 +240,6 @@ export const getLastGeneratedReport = createSelector(
 );
 export const getSearchTerm = (state: State) => state.searchText;
 export const getShowReports = (state: State) => state.showReports;
+
+export const getSortTerm = (state: State) => state.sortReportBy.sort;
+export const getSortOrder = (state: State) => state.sortReportBy.ascending;

@@ -1,7 +1,7 @@
 mat-sidenav {
     padding: 10px;
     width: 25%;
-    border-right: 1px solid #ededed;
+    border-right: 2px solid #ededed;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -22,10 +22,19 @@ a, a:visited, a:hover, a:active {
     color: #79aec8;
 }
 
+.add-report, .sort {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 .sort {
   padding: 10px;
   padding-left: 5px;
   padding-top: 20px;
+}
+
+section span {
+  cursor: pointer;
 }
 
 .modified {

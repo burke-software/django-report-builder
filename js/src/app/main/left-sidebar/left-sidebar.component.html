@@ -1,11 +1,11 @@
   <mat-sidenav #sidenav mode="side" opened={{showReports}}>
-    <span><a routerLink="/report/add">+ Add Report</a></span>
+    <div class="add-report"><a routerLink="/report/add">+ Add Report</a></div>
   
   <div class="sort">Sort By:</div>
   <section layout="row" class="sort-section">
-    <a><span>NAME</span></a>
-    <a><span>DATE</span></a>
-    <a><span>USER</span></a>
+    <a><span (click)="onSortReports('name')">NAME</span></a>
+    <a><span (click)="onSortReports('date')">DATE</span></a>
+    <a><span (click)="onSortReports('user')">USER</span></a>
   </section>
 
     <form class="Search">

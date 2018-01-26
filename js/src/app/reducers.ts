@@ -88,4 +88,9 @@ export const getSearchTerm = createSelector(getReportsState, fromReports.getSear
 >>>>>>> Add basic style and search ability to left nav bar.
 =======
 export const getShowReports = createSelector(getReportsState, fromReports.getShowReports);
+<<<<<<< 93a4cc32210daf774df7713c132fb36e1b62170e
 >>>>>>> Add side panel toggle functionality.
+=======
+export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
+export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
+>>>>>>> Add sort method. Need to refactor.

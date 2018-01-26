@@ -13,6 +13,7 @@ export class LeftSidebarComponent {
 
   @Output() onClickReport = new EventEmitter<number>();
   @Output() searchReports = new EventEmitter<string>();
+  @Output() sortReports = new EventEmitter<string>();
 
   constructor() {}
 
@@ -21,7 +22,7 @@ export class LeftSidebarComponent {
   }
 
   onSortReports(searchTerm: string) {
-    console.log(searchTerm);
+    this.sortReports.emit(searchTerm);
   }
 
 }
