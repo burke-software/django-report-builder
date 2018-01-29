@@ -30,9 +30,12 @@ export const CREATE_REPORT = 'Create Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
 export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
 export const CHECK_EXPORT_STATUS = 'Check Export Status';
-export const SET_SEARCH_TEXT = 'Set Report Search Text';
+export const SET_FIELD_SEARCH_TEXT = 'Set Field Search Text';
+export const SET_REPORT_SEARCH_TEXT = 'Set Report Search Text';
+export const SET_RELATIONS_SEARCH_TEXT = 'Set Relations Search Text';
 export const SHOW_REPORTS = 'Show Reports';
 export const SORT_REPORTS = 'Sort Reports';
+export const SHOW_FIELDS = 'Show Fields';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -148,13 +151,28 @@ export class CreateReportSuccess implements Action {
   readonly type = CREATE_REPORT_SUCCESS;
   constructor(public payload: IReportDetailed) {}
 }
-export class SetSearchText implements Action {
-  readonly type = SET_SEARCH_TEXT;
+
+export class SetReportSearchText implements Action {
+  readonly type = SET_REPORT_SEARCH_TEXT;
+  constructor(public payload: string) {}
+}
+
+export class SetFieldSearchText implements Action {
+  readonly type = SET_FIELD_SEARCH_TEXT;
+  constructor(public payload: string) {}
+}
+
+export class SetRelationsSearchText implements Action {
+  readonly type = SET_RELATIONS_SEARCH_TEXT;
   constructor(public payload: string) {}
 }
 
 export class ShowReports implements Action {
   readonly type = SHOW_REPORTS;
+}
+
+export class ShowFields implements Action {
+  readonly type = SHOW_FIELDS;
 }
 
 export class SortReports implements Action {
@@ -185,6 +203,9 @@ export type Actions =
   | CreateReportSuccess
   | DownloadExportedReport
   | CheckExportStatus
-  | SetSearchText
+  | SetReportSearchText
+  | SetFieldSearchText
+  | SetRelationsSearchText
   | ShowReports
-  | SortReports;
+  | SortReports
+  | ShowFields;

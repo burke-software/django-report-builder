@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
-import { GetReport, ShowReports } from './actions/reports';
+import { GetReport, ShowFields, ShowReports } from './actions/reports';
 import { GetConfig } from './actions/config';
+import { IReportDetailed } from './api.interfaces';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,8 @@ import { GetConfig } from './actions/config';
 })
 export class AppComponent implements OnInit {
   title: string;
+
+  @Input() selectedReport: IReportDetailed;
 
   constructor(router: Router, private store: Store<State>) {
     let firstLoad = true;
@@ -36,9 +39,12 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new GetConfig());
   }
 
-  onToggleNav() {
+  onToggleLeftNav() {
     this.store.dispatch(new ShowReports());
   }
 
+  onToggleRightNav() {
+      this.store.dispatch(new ShowFields());
+  }
 
 }

@@ -43,8 +43,11 @@ export const getSelectedReportId = createSelector(
   fromReports.getSelectedReportId
 );
 export const getFields = createSelector(getReportsState, fromReports.getFields);
-export const getSearchTerm = createSelector(getReportsState, fromReports.getSearchTerm);
+export const getReportSearchTerm = createSelector(getReportsState, fromReports.getReportSearchTerm);
+export const getFieldSearchTerm = createSelector(getReportsState, fromReports.getFieldSearchTerm);
+export const getRelationsSearchTerm = createSelector(getReportsState, fromReports.getRelationsSearchTerm);
 export const getShowReports = createSelector(getReportsState, fromReports.getShowReports);
+export const getShowFields = createSelector(getReportsState, fromReports.getShowFields);
 export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
 export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
 export const getRelatedFields = createSelector(

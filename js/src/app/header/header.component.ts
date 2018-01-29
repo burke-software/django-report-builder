@@ -9,7 +9,8 @@ import { State, getSelectedReport } from '../reducers';
 })
 export class HeaderComponent implements OnInit {
   @Input() title: string;
-  @Output() onToggleNav = new EventEmitter();
+  @Output() onToggleLeftNav = new EventEmitter();
+  @Output() onToggleRightNav = new EventEmitter();
 
   reportName: string;
 
@@ -25,14 +26,13 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {}
 
-  toggleNav() {
-    this.onToggleNav.emit();
-    // const element = document.getElementById('sidenav')
-    // setTimeout(() => element.focus(), 20000);
+  toggleLeftNav() {
+    this.onToggleLeftNav.emit();
   }
 
-  onClickedOutside(e: Event) {
-    console.log('Clicked outside:', e);
+  toggleRightNav() {
+    this.onToggleRightNav.emit();
   }
+
 
 }

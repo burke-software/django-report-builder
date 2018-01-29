@@ -18,8 +18,11 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
-  searchText: string;
+  reportSearchText: string;
+  fieldSearchText: string;
+  relationsSearchText: string;
   showReports: boolean;
+  showFields: boolean;
   sortReportBy: {
     sort: string;
     ascending: boolean;
@@ -33,8 +36,11 @@ export const initialState: State = {
   fields: [],
   descriptionInput: '',
   isDistinct: false,
-  searchText: '',
+  reportSearchText: '',
+  fieldSearchText: '',
+  relationsSearchText: '',
   showReports: false,
+  showFields: false,
   sortReportBy: {
     sort: '',
     ascending: true
@@ -65,6 +71,13 @@ export function reducer(
       return {
         ...state,
         showReports: !state.showReports,
+      };
+    }
+
+    case reportActions.SHOW_FIELDS: {
+      return {
+        ...state,
+        showFields: !state.showFields,
       };
     }
 
@@ -159,10 +172,26 @@ export function reducer(
     }
     
 
-    case reportActions.SET_SEARCH_TEXT: {
+    case reportActions.SET_REPORT_SEARCH_TEXT: {
+      console.log(action.payload);
       return {
         ...state,
-        searchText: action.payload
+        reportSearchText: action.payload
+      };
+    }
+
+    case reportActions.SET_FIELD_SEARCH_TEXT: {
+      console.log(action.payload);
+      return {
+        ...state,
+        fieldSearchText: action.payload
+      };
+    }
+
+    case reportActions.SET_RELATIONS_SEARCH_TEXT: {
+      return {
+        ...state,
+        relationsSearchText: action.payload
       };
     }
 
@@ -241,7 +270,10 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
-export const getSearchTerm = (state: State) => state.searchText;
+export const getReportSearchTerm = (state: State) => state.reportSearchText;
+export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
+export const getRelationsSearchTerm = (state: State) => state.relationsSearchText;
 export const getShowReports = (state: State) => state.showReports;
+export const getShowFields = (state: State) => state.showFields;
 export const getSortTerm = (state: State) => state.sortReportBy.sort;
 export const getSortOrder = (state: State) => state.sortReportBy.ascending;

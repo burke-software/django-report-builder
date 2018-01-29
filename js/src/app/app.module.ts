@@ -67,7 +67,6 @@ export const MatModules = [
 @NgModule({
   declarations: [
     AppComponent,
-    ClickOutsideModule,
     NewReportComponent,
     MainComponent,
     LeftSidebarComponent,
@@ -85,6 +84,7 @@ export const MatModules = [
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
+    ClickOutsideModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),

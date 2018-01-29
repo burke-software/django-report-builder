@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
-import { filterSearch } from './utils/filterSearch';
+import { setSearch } from './utils/filterSearch';
 import { sortReports } from './utils/sort';
 
 import {
@@ -10,8 +10,11 @@ import {
   getReports,
   getRelatedFields,
   getFields,
+  getShowFields,
   getShowReports,
-  getSearchTerm,
+  getReportSearchTerm,
+  getFieldSearchTerm,
+  getRelationsSearchTerm,
   getSelectedReport,
   getSortTerm,
   getSortOrder
@@ -22,7 +25,11 @@ import {
   GetReport,
   GetFields,
   GetRelatedFields,
-  SetSearchText,
+  SetReportSearchText,
+  SetFieldSearchText,
+  SetRelationsSearchText,
+  ShowReports,
+  ShowFields,
   SortReports
 } from '../actions/reports';
 
@@ -33,9 +40,12 @@ import {
       <app-left-sidebar
         [listReports]="listReports$ | async"
         (onClickReport)="onClickReport($event)"
-        (searchReports)="setSearchTerm($event)"
+        (searchReports)="searchReports($event)"
+        (onToggleLeftNav)="onToggleLeftNav()"
+        (onToggleRightNav)="onToggleRightNav()"
         (sortReports)="sortReports($event)"
         [showReports]="showReports$ | async"
+        [showFields]="showFields$ | async"
       ></app-left-sidebar>
       <div class="example-sidenav-content" style="padding-left: 100px;">
         <app-tabs>
@@ -43,9 +53,13 @@ import {
       </div>
       <app-right-sidebar
         [modelName]="(selectedReport$ | async)?.name"
-        [fields]="fields$ | async"
         [relatedFields]="relatedFields$ | async"
+        [fields]="fields$ | async"
         (selectRelatedField)="selectRelatedField($event)"
+        (searchFields)="searchFields($event)"
+        (searchRelations)="searchRelations($event)"
+        (onToggleRightNav)="onToggleRightNav()"
+        [showFields]="showFields$ | async"
       ></app-right-sidebar>
     </mat-sidenav-container>
   `
@@ -61,17 +75,29 @@ export class MainComponent implements OnInit {
 
   listReports$ = Observable.combineLatest(
     this.sortReportsBy$,
-    this.store.select(getSearchTerm),
-    filterSearch
+    this.store.select(getReportSearchTerm),
+    setSearch
   );
 
+  fields$ = Observable.combineLatest(
+    this.store.select(getFields),
+    this.store.select(getFieldSearchTerm),
+    setSearch
+  );
+
+  relatedFields$ = Observable.combineLatest(
+    this.store.select(getRelatedFields),
+    this.store.select(getRelationsSearchTerm),
+    setSearch
+  );
+  
   selectedReport$ = this.store.select(getSelectedReport);
   showReports$ = this.store.select(getShowReports);
-  fields$ = this.store.select(getFields);
-  relatedFields$ = this.store.select(getRelatedFields);
+  showFields$ = this.store.select(getShowFields);
+  getFields$ = this.store.select(getFields);
 
   constructor(private store: Store<State>) {
-    this.relatedFields$.subscribe((value) => console.log(value));
+    this.fields$.subscribe((value) => console.log(value))
   }
 
   ngOnInit() {
@@ -87,12 +113,28 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new GetRelatedFields(relatedField));
   }
 
-  setSearchTerm(searchTerm: string) {
-    this.store.dispatch(new SetSearchText(searchTerm));
+  searchReports(searchTerm: string) {
+   this.store.dispatch(new SetReportSearchText(searchTerm));
   }
 
+  searchFields(searchTerm: string) {
+   this.store.dispatch(new SetFieldSearchText(searchTerm));
+  }
+
+  searchRelations(searchTerm: string) {
+    this.store.dispatch(new SetRelationsSearchText(searchTerm));
+  }
+ 
   sortReports(sortBy: string) {
     this.store.dispatch(new SortReports(sortBy));
+  }
+
+  onToggleLeftNav() {
+    this.store.dispatch(new ShowReports());
+  }
+
+  onToggleRightNav() {
+    this.store.dispatch(new ShowFields());
   }
 
 }

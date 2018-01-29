@@ -1,11 +1,20 @@
-<mat-sidenav #sidenav mode="side" position="end" opened="true">
+<mat-sidenav (clickOutside)="toggleRightNav()" [exclude]="'button, #toggleRight, mat-sidenav'" #sidenav mode="side" position="end" opened="{{showFields}}">
   <div class="header"><h3>{{ modelName }} relations</h3></div>
+
+  <input type="text" class="search-box" placeholder="Search Relations"
+  (keyup)="searchRelations.emit($event.target.value)">
+
     <tree-root 
+     #tree
     [nodes]="getRelatedFields()" 
-    (activate)="handler($event.node.data)"
+    (activate)="onActivate($event.node.data)"
     ></tree-root>
-    <br/><br/>
+    
   <div class="header"><h3>Fields</h3></div>
+
+  <input type="text" class="search-box" id="search-box" placeholder="Search Fields"
+    (keyup)="searchFields.emit($event.target.value)">
+
   <div class="fields" *ngFor="let field of fields">
     {{ field.name }}
   </div>

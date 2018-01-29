@@ -1,7 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IField, IRelatedField } from '../../api.interfaces';
-import { TREE_ACTIONS, ITreeOptions } from 'angular-tree-component';
-
 
 @Component({
   selector: 'app-right-sidebar',
@@ -12,7 +10,13 @@ export class RightSidebarComponent {
   @Input() modelName: string;
   @Input() fields: IField[];
   @Input() relatedFields: IRelatedField[];
+
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
+  @Output() onToggleRightNav = new EventEmitter();
+  @Output() searchFields = new EventEmitter<string>();
+  @Output() searchRelations = new EventEmitter<string>();
+
+  @Input() showFields: boolean;
 
   constructor() {}
 
@@ -38,23 +42,16 @@ export class RightSidebarComponent {
             ]
           }
         ]
-      },
+      }
     ];
-    options: ITreeOptions = {
-      isExpandedField: 'expanded',
-      hasChildrenField: 'nodes',
-      actionMapping: {
-        mouse: {
-          dblClick: (tree, node, $event) => {
-            if (node.hasChildren) { 
-              TREE_ACTIONS.TOGGLE_EXPANDED(tree, node, $event); 
-            }
-          }
-        },
-      },
-    };
 
-    handler($event) {
+    toggleRightNav() {
+      if (this.showFields === true) {
+        this.onToggleRightNav.emit();
+      }
+    }
+
+    onActivate($event) {
       this.selectRelatedField.emit($event);
     }
     
