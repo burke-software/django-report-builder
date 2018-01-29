@@ -96,9 +96,7 @@ export class MainComponent implements OnInit {
   showFields$ = this.store.select(getShowFields);
   getFields$ = this.store.select(getFields);
 
-  constructor(private store: Store<State>) {
-    this.fields$.subscribe((value) => console.log(value))
-  }
+  constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());
