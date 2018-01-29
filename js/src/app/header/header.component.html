@@ -1,1 +1,5 @@
-<mat-toolbar>{{ title }} {{ reportName }}</mat-toolbar>
+<mat-toolbar>
+    <button type="button" (click)="toggleNav()" class="list">
+    </button>
+    <div (clickOutside)="onClickedOutside($event)">{{ title }} {{ reportName }}</div>
+</mat-toolbar>

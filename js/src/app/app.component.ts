@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
-import { GetReport } from './actions/reports';
+import { GetReport, ShowReports } from './actions/reports';
 import { GetConfig } from './actions/config';
 
 @Component({
@@ -13,12 +13,9 @@ import { GetConfig } from './actions/config';
 export class AppComponent implements OnInit {
   title: string;
 
-  constructor(
-    router: Router,
-    private store: Store<State>,
-  ) {
+  constructor(router: Router, private store: Store<State>) {
     let firstLoad = true;
-    router.events.subscribe((event) => {
+    router.events.subscribe(event => {
       if (event instanceof RoutesRecognized) {
         const child = event.state.root.firstChild;
         if (child) {
@@ -38,4 +35,10 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new GetConfig());
   }
+
+  onToggleNav() {
+    this.store.dispatch(new ShowReports());
+  }
+
+
 }

@@ -14,13 +14,14 @@ import { ApiService } from '../api.service';
 
 @Injectable()
 export class ConfigEffects {
-  constructor(
-    private actions$: Actions,
-    private api: ApiService,
-  ) {}
+  constructor(private actions$: Actions, private api: ApiService) {}
 
   @Effect()
   getConfig$: Observable<Action> = this.actions$
     .ofType(fromConfig.GET_CONFIG)
-    .mergeMap(() => this.api.getConfig().map(response => new fromConfig.GetConfigSuccess(response)));
+    .mergeMap(() =>
+      this.api
+        .getConfig()
+        .map(response => new fromConfig.GetConfigSuccess(response))
+    );
 }

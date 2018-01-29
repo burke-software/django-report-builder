@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IField, IRelatedField } from '../../api.interfaces';
-import { ITreeOptions } from 'angular-tree-component';
+import { TREE_ACTIONS, ITreeOptions } from 'angular-tree-component';
+
 
 @Component({
   selector: 'app-right-sidebar',
@@ -13,9 +14,7 @@ export class RightSidebarComponent {
   @Input() relatedFields: IRelatedField[];
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
 
-  constructor() {
-    console.log(this.fields);
-  }
+  constructor() {}
 
     nodes = [
       {
@@ -39,19 +38,37 @@ export class RightSidebarComponent {
             ]
           }
         ]
-      }
+      },
     ];
     options: ITreeOptions = {
-      displayField: 'verbose_name'
+      isExpandedField: 'expanded',
+      hasChildrenField: 'nodes',
+      actionMapping: {
+        mouse: {
+          dblClick: (tree, node, $event) => {
+            if (node.hasChildren) { 
+              TREE_ACTIONS.TOGGLE_EXPANDED(tree, node, $event); 
+            }
+          }
+        },
+      },
     };
 
-    getRelatedFields() {
-      return this.relatedFields.map(deepCopy);
+    handler($event) {
+      this.selectRelatedField.emit($event);
     }
+    
+    getRelatedFields() {
+       return this.relatedFields
+      .map(deepCopy);
+    }
+
 }
 
-function deepCopy(obj) {
-  const copy = {...obj};
-  copy.children = copy.children.map(deepCopy);
-  return copy;
-}
+ function deepCopy(obj) {
+   const copy = {...obj};
+   copy.name = copy.verbose_name;
+   copy.id = copy.model_id;
+   copy.children = copy.children.map(deepCopy);
+   return copy;
+ }

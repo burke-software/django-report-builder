@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
 import { ApiService } from '../api.service';
-
-import { IReportForm } from './interfaces';
+import { INewReport } from '../api.interfaces';
+import { Store } from '@ngrx/store';
+import { State } from '../reducers';
+import { CreateReport } from '../actions/reports';
 
 @Component({
   selector: 'app-new-report',
@@ -11,22 +12,19 @@ import { IReportForm } from './interfaces';
 })
 export class NewReportComponent implements OnInit {
   root_model_choices$ = this.api.getRootModels();
-  form: IReportForm;
+  form: INewReport;
 
-  constructor(private router: Router, private api: ApiService) { }
+  constructor(private store: Store<State>, private api: ApiService) {}
 
   ngOnInit() {
     this.form = {
-      'name': '',
-      'description': '',
-      'root_model': null,
+      name: '',
+      description: '',
+      root_model: null
     };
   }
 
   submit() {
-    this.api.submitNewReport(this.form).then((resp) => {
-      this.router.navigate(['']);
-    });
+    this.store.dispatch(new CreateReport(this.form));
   }
-
 }

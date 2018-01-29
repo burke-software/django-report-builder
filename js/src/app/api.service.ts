@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { IReportForm } from './new-report/interfaces';
 import {
   ReportsResponse,
   IReportDetailed,
@@ -13,7 +12,10 @@ import {
   IRelatedField,
   IField,
   IReportPreview,
-  IConfig
+  IConfig,
+  INewReport,
+  IAsyncTaskId,
+  ITaskStatus
 } from './api.interfaces';
 
 @Injectable()
@@ -31,8 +33,8 @@ export class ApiService {
     return this.http.get<ContentTypeResponse>(this.apiUrl + 'contenttypes/');
   }
 
-  submitNewReport(form: IReportForm) {
-    return this.http.post(this.apiUrl + 'report/', form).toPromise();
+  submitNewReport(form: INewReport) {
+    return this.http.post<IReportDetailed>(this.apiUrl + 'report/', form);
   }
 
   getReports() {
@@ -66,11 +68,35 @@ export class ApiService {
   }
 
   generatePreview(reportId: number) {
-    return this.http.get<IReportPreview>(this.apiUrl + `report/${reportId}/generate/`);
+    return this.http.get<IReportPreview>(
+      this.apiUrl + `report/${reportId}/generate/`
+    );
   }
 
   // type should only be 'xlsx' or 'csv'
-  downloadReport({reportId, type}: { reportId: number; type: string; }) {
-    return this.http.get(this.baseUrl + `report/${reportId}/download_file/${type}/`);
+  exportReport({ reportId, type }: { reportId: number; type: string }) {
+    return this.http.get<IAsyncTaskId>(
+      this.baseUrl + `report/${reportId}/download_file/${type}/`
+    );
+  }
+
+  checkStatus({
+    reportId,
+    taskId
+  }: {
+    reportId: number | string;
+    taskId: string;
+  }) {
+    return this.http.get<ITaskStatus>(
+      this.baseUrl + `report/${reportId}/check_status/${taskId}/`
+    );
+  }
+
+  copyReport(reportId: number) {
+    return this.http
+      .get(this.baseUrl + `report/${reportId}/create_copy/`, {
+        observe: 'response'
+      })
+      .toPromise();
   }
 }

@@ -1,3 +1,46 @@
 mat-sidenav {
     width: 20%;
+    height: 100%;
+    border-left: 2px solid #ededed;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+tree-root /deep/ {
+    height: 35;
+    tree-viewport {
+        height: 35%;
+    }
+}
+
+.header {
+    width: 100%;
+    height: 8%;
+    background-color: #79aec8;
+    margin-top: -19px;
+    border-bottom: 2px solid #ededed;
+}
+
+.fields {
+    padding-left: 10px;
+    padding: 5px;
+}
+
+.tree {
+    width: 300px;
+  }
+  
+  .node-content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  
+  .node-content-wrapper {
+    flex-grow: 1;
+    position: relative;
+  }
+  
+  .pull-right {
+    position: absolute;
+    right: 10px;
+  }

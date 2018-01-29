@@ -98,7 +98,7 @@ export interface IField {
 export type ReportsResponse = IReport[];
 
 export interface IReportPreview {
-  data: (string|number)[][];
+  data: (string | number)[][];
   meta: {
     titles: string[];
   };
@@ -110,4 +110,16 @@ export interface IConfig {
 
 export interface IAsyncTaskId {
   task_id: string;
+}
+
+export interface INewReport {
+  name: string;
+  description: string;
+  root_model: number;
+}
+
+export interface ITaskStatus {
+  state: string;
+  link?: string;
+  email?: boolean;
 }

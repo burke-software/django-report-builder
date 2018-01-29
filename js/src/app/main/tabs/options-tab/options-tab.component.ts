@@ -1,7 +1,17 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getDescriptionInput, getIsDistinct, getSelectedReportId } from '../../../reducers';
-import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../../../actions/reports';
+import {
+  State,
+  getDescriptionInput,
+  getIsDistinct,
+  getSelectedReportId,
+  getLastGeneratedReport
+} from '../../../reducers';
+import {
+  ChangeReportDescription,
+  ToggleReportDistinct,
+  DeleteReport
+} from '../../../actions/reports';
 
 @Component({
   selector: 'app-options-tab',
@@ -19,15 +29,17 @@ import { ChangeReportDescription, ToggleReportDistinct, DeleteReport } from '../
         target="_blank">more</a>.
       </mat-checkbox>
     </div>
-    <div><a>Copy this report</a></div>
     <div><a (click)="onDelete($event)" href="#" alt="Delete this report">Delete this report</a></div>
-    <div><a>Download existing report generated at</a></div>
+    <app-copy-report *ngIf="copyId$ | async" [id]="copyId$ | async"></app-copy-report>
+    <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
   </form></div>
   `
 })
 export class OptionsTabComponent {
   descriptionInput$ = this.store.select(getDescriptionInput);
   isChecked$ = this.store.select(getIsDistinct);
+  copyId$ = this.store.select(getSelectedReportId);
+  lastGeneratedReport$ = this.store.select(getLastGeneratedReport);
   @Output() changeDescription = new EventEmitter<string>();
 
   onChange(value: string) {
@@ -40,8 +52,8 @@ export class OptionsTabComponent {
 
   onDelete(e: MouseEvent) {
     e.preventDefault();
-    this.store.select(getSelectedReportId).map(id => this.store.dispatch(new DeleteReport(id)));
+    this.store.dispatch(new DeleteReport());
   }
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) {}
 }

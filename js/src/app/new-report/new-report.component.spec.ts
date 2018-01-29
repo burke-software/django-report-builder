@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatModules } from '../app.module';
 import { ApiService } from '../api.service';
@@ -12,32 +12,31 @@ import { Observable } from 'rxjs/Rx';
 class FakeApiService {
   getRootModels() {
     const contentTypes = [
-      { 'pk': 1, 'name': 'log entry' },
-      { 'pk': 2, 'name': 'permission'},
+      { pk: 1, name: 'log entry' },
+      { pk: 2, name: 'permission' }
     ];
     return Observable.of(contentTypes);
   }
 }
 
-describe('NewReportComponent', () => {
+xdescribe('NewReportComponent', () => {
   let component: NewReportComponent;
   let fixture: ComponentFixture<NewReportComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NewReportComponent ],
-      imports: [
-        ...MatModules,
-        RouterTestingModule,
-        FormsModule,
-        NoopAnimationsModule,
-      ],
-      providers: [
-        {provide: ApiService, useClass: FakeApiService},
-      ],
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        declarations: [NewReportComponent],
+        imports: [
+          ...MatModules,
+          RouterTestingModule,
+          FormsModule,
+          NoopAnimationsModule
+        ],
+        providers: [{ provide: ApiService, useClass: FakeApiService }]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NewReportComponent);

@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'angular-tree-component';
-import { TreeComponent } from './main/right-sidebar/tree-view.component';
 
 import {
   MatButtonModule,
@@ -35,11 +34,14 @@ import { ConfigEffects } from './effects/config';
 import { HeaderComponent } from './header/header.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
+import { CopyReportComponent } from './main/tabs/options-tab/copy-report.component';
+import { LastReportComponent } from './main/tabs/options-tab/last-report.component';
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: { title: 'Reports' } },
@@ -65,12 +67,15 @@ export const MatModules = [
 @NgModule({
   declarations: [
     AppComponent,
+    ClickOutsideModule,
     NewReportComponent,
     MainComponent,
     LeftSidebarComponent,
     HeaderComponent,
     TabsComponent,
     OptionsTabComponent,
+    CopyReportComponent,
+    LastReportComponent,
     ReportTabComponent,
     ReportPreviewComponent,
     SavedTimestampComponent,

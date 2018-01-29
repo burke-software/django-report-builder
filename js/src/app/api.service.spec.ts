@@ -8,9 +8,9 @@ import { ApiService } from './api.service';
 import {
   ReportsResponse,
   IReportDetailed,
-  ContentTypeResponse
+  ContentTypeResponse,
+  INewReport
 } from './api.interfaces';
-import { IReportForm } from './new-report/interfaces';
 
 const apiUrl = '/report_builder/api/';
 
@@ -41,16 +41,31 @@ describe('Api service should', function() {
   });
 
   it('be able to create new report', () => {
-    const report: IReportForm = {
+    const report: INewReport = {
       name: 'Test Report',
       description: '',
       root_model: 1
     };
-    service.submitNewReport(report).then(resp => {
-      expect(resp).toBe(report);
+    const detailedReport: IReportDetailed = {
+      id: 1,
+      name: 'Test Report',
+      description: '',
+      root_model: 1,
+      modified: 'nevarrr',
+      root_model_name: 'butts',
+      displayfield_set: [],
+      distinct: false,
+      user_created: 3,
+      user_modified: 'def dunno',
+      filterfield_set: [],
+      report_file_creation: null,
+      report_file: null
+    };
+    service.submitNewReport(report).subscribe(resp => {
+      expect(resp).toBe(detailedReport);
     });
     const req = httpMock.expectOne(apiUrl + 'report/');
-    req.flush(report, {
+    req.flush(detailedReport, {
       status: 201,
       statusText: 'Created'
     });
@@ -239,7 +254,10 @@ describe('Api service should', function() {
   });
 
   it('be able to generate a preview of the report', () => {
-    const expected = {data: [['place', 10], ['user', 4] ], meta: {titles: ['model', 'id']}};
+    const expected = {
+      data: [['place', 10], ['user', 4]],
+      meta: { titles: ['model', 'id'] }
+    };
 
     service.generatePreview(1).subscribe(response => {
       expect(response).toEqual(expected);

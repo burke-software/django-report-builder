@@ -1,17 +1,22 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
-import { DisplayFieldActions, DisplayFieldActionTypes } from '../actions/display-field';
+import {
+  DisplayFieldActions,
+  DisplayFieldActionTypes
+} from '../actions/display-field';
 import { IDisplayField } from '../api.interfaces';
 
 export interface State extends EntityState<IDisplayField> {}
 
-export const adapter: EntityAdapter<IDisplayField> = createEntityAdapter<IDisplayField>();
+export const adapter: EntityAdapter<IDisplayField> = createEntityAdapter<
+  IDisplayField
+>();
 
 const initialState: State = adapter.getInitialState();
 
 export function reducer(
   state: State = initialState,
-  action: DisplayFieldActions,
+  action: DisplayFieldActions
 ): State {
   switch (action.type) {
     case DisplayFieldActionTypes.ADD_ONE:
@@ -26,5 +31,5 @@ export const {
   selectIds,
   selectEntities,
   selectAll,
-  selectTotal,
+  selectTotal
 } = adapter.getSelectors();

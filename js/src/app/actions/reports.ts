@@ -4,7 +4,8 @@ import {
   IReportDetailed,
   IRelatedField,
   IField,
-  IReportPreview
+  IReportPreview,
+  INewReport
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -25,7 +26,13 @@ export const EDIT_REPORT_SUCCESS = 'Edit Report Success';
 export const GENERATE_PREVIEW = 'Generate Preview';
 export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 export const EXPORT_REPORT = 'Export Report';
-export const EXPORT_REPORT_SYNC = 'Export Report Sync';
+export const CREATE_REPORT = 'Create Report';
+export const CREATE_REPORT_SUCCESS = 'Create Report Success';
+export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
+export const CHECK_EXPORT_STATUS = 'Check Export Status';
+export const SET_SEARCH_TEXT = 'Set Report Search Text';
+export const SHOW_REPORTS = 'Show Reports';
+export const SORT_REPORTS = 'Sort Reports';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -89,12 +96,12 @@ export class ToggleReportDistinct implements Action {
 
 export class DeleteReport implements Action {
   readonly type = DELETE_REPORT;
-  constructor(public payload: number) {}
+  constructor() {}
 }
 
 export class DeleteReportSuccess implements Action {
   readonly type = DELETE_REPORT_SUCCESS;
-  constructor() {}
+  constructor(public reportId: number) {}
 }
 
 export class EditReport implements Action {
@@ -122,11 +129,38 @@ export class ExportReport implements Action {
   constructor(public payload: string) {}
 }
 
-export class ExportReportSync implements Action {
-  readonly type = EXPORT_REPORT_SYNC;
-  constructor(public payload: {reportId: number; type: string; }) {}
+export class DownloadExportedReport implements Action {
+  readonly type = DOWNLOAD_EXPORTED_REPORT;
+  constructor(public payload: string) {}
 }
 
+export class CheckExportStatus implements Action {
+  readonly type = CHECK_EXPORT_STATUS;
+  constructor(public payload: { reportId: string | number; taskId: string }) {}
+}
+
+export class CreateReport implements Action {
+  readonly type = CREATE_REPORT;
+  constructor(public payload: INewReport) {}
+}
+
+export class CreateReportSuccess implements Action {
+  readonly type = CREATE_REPORT_SUCCESS;
+  constructor(public payload: IReportDetailed) {}
+}
+export class SetSearchText implements Action {
+  readonly type = SET_SEARCH_TEXT;
+  constructor(public payload: string) {}
+}
+
+export class ShowReports implements Action {
+  readonly type = SHOW_REPORTS;
+}
+
+export class SortReports implements Action {
+  readonly type = SORT_REPORTS;
+  constructor(public payload: string) {}
+}
 
 export type Actions =
   | GetReportList
@@ -147,4 +181,10 @@ export type Actions =
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
-  | ExportReportSync;
+  | CreateReport
+  | CreateReportSuccess
+  | DownloadExportedReport
+  | CheckExportStatus
+  | SetSearchText
+  | ShowReports
+  | SortReports;

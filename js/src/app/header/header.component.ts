@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State, getSelectedReport } from '../reducers';
 
@@ -9,10 +9,12 @@ import { State, getSelectedReport } from '../reducers';
 })
 export class HeaderComponent implements OnInit {
   @Input() title: string;
+  @Output() onToggleNav = new EventEmitter();
+
   reportName: string;
 
   constructor(private store: Store<State>) {
-    this.store.select(getSelectedReport).subscribe((report) => {
+    this.store.select(getSelectedReport).subscribe(report => {
       if (report) {
         this.reportName = report.name;
       } else {
@@ -21,7 +23,16 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  toggleNav() {
+    this.onToggleNav.emit();
+    // const element = document.getElementById('sidenav')
+    // setTimeout(() => element.focus(), 20000);
+  }
+
+  onClickedOutside(e: Event) {
+    console.log('Clicked outside:', e);
   }
 
 }
