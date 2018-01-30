@@ -27,6 +27,7 @@ export interface State {
     sort: string;
     ascending: boolean;
   };
+  activeTab: number;
 }
 
 export const initialState: State = {
@@ -44,7 +45,8 @@ export const initialState: State = {
   sortReportBy: {
     sort: '',
     ascending: true
-  }
+  },
+  activeTab: 0,
 };
 
 export function reducer(
@@ -170,7 +172,7 @@ export function reducer(
         })
       }
     }
-    
+
 
     case reportActions.SET_REPORT_SEARCH_TEXT: {
       console.log(action.payload);
@@ -209,6 +211,13 @@ export function reducer(
           ascending: order
        }
       };
+    }
+
+    case reportActions.CHANGE_TAB: {
+      return {
+        ...state,
+        activeTab: action.payload
+      }
     }
 
     default: {
