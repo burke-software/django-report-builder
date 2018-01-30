@@ -5,20 +5,20 @@ mat-sidenav {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+th {
+  padding: 10px;
+}
+
+td {
+  padding: 10px;
+  color: #79aec8;  
+  cursor: pointer;
+}
+
 a, a:visited, a:hover, a:active {
   text-decoration: none;
   color: #79aec8;
   font-size: 14px;
-}
-
-a span {
-  padding: 20px;
-}
-
-.reports {
-    padding: 15px;
-    padding-bottom: 20px;
-    color: #79aec8;
 }
 
 .reports-container {
@@ -32,27 +32,15 @@ a span {
   padding-bottom: 20px;
 }
 
-.sort, .add-report {
+.add-report {
   padding: 10px;
   padding-left: 5px;
   padding-top: 20px;
 }
 
-section span {
-  cursor: pointer;
-  justify-content: center;
-  margin: auto;
-}
-
 .modified {
-  font-size: 0.5rem;
+  font-size: 0.75rem;
   color: #e0e0e0;
-  float: right;
-}
-
-section {
-  padding-left: 5px;
-  padding: 10px;
 }
 
 .search-box {

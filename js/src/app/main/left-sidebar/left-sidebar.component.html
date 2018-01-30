@@ -10,13 +10,13 @@
 
     <table matSort matSortDisableClear="true" (matSortChange)="sortData($event)">
         <tr class="sort-section">
-          <th mat-sort-header="name">NAME</th>
+          <th mat-sort-header="Name">NAME</th>
           <th mat-sort-header="User">USER</th>
           <th mat-sort-header="Date">DATE</th>
         </tr>
       
         <tr class="reports" *ngFor="let report of sortedData">
-          <td>{{ report.name }}</td>
+          <td (click)="clickReport(report.id)">{{ report.name }}</td>
           <td>{{ report.user_created.first_name }}</td>
           <td class="modified">{{report.modified}}</td>
         </tr>

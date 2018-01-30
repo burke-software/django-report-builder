@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { IReport } from '../../api.interfaces';
 import {Sort} from '@angular/material';
 
@@ -7,8 +7,7 @@ import {Sort} from '@angular/material';
   templateUrl: './left-sidebar.component.html',
   styleUrls: ['./left-sidebar.component.scss']
 })
-export class LeftSidebarComponent implements OnInit {
-  @Input() listReports: IReport[];
+export class LeftSidebarComponent {
   @Input() searchTerm: string;
   @Input() leftNavIsOpen: boolean;
   @Input() rightNavIsOpen: boolean;
@@ -20,14 +19,15 @@ export class LeftSidebarComponent implements OnInit {
   @Output() onToggleRightNav = new EventEmitter();
   
   sortedData;
-  
-  constructor() {
-    // this.sortedData = this.listReports.slice(0);
-  }
+  reports;
 
-  ngOnInit() {
-    this.sortedData = this.listReports.slice();
-  }
+  @Input() 
+  set listReports(value: IReport[]) {
+    this.sortedData = value;
+    this.reports = value;
+  };
+  
+  constructor() {}
 
   clickReport(reportId: number) {
     this.onClickReport.emit(reportId);
@@ -43,10 +43,7 @@ export class LeftSidebarComponent implements OnInit {
   }
 
   sortData(sort: Sort) {
-    console.log(sort);
-    console.log(this.sortedData);
-    const data = this.listReports.slice();
-    console.log(data);
+    const data = this.reports.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
       return;
