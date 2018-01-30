@@ -1,6 +1,6 @@
 <mat-tab-group #tabs (selectedTabChange)="tabChange($event.index)">
   <mat-tab label="Display">
-    <app-display-tab [fields]="displayFields$ | async"></app-display-tab>
+    <app-display-tab *ngIf="displayFields$ | async" [fields]="displayFields$ | async"></app-display-tab>
   </mat-tab>
   <mat-tab label="Filter">Filter</mat-tab>
   <mat-tab label="Report">

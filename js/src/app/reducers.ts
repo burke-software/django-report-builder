@@ -20,6 +20,12 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
   ? [storeFreeze]
   : [];
 
+const getDisplayFieldsState = (state: State) => state.displayFields;
+export const getDisplayFields = createSelector(
+  getDisplayFieldsState,
+  fromDisplayField.selectAll
+);
+
 const getConfigState = (state: State) => state.config;
 export const getIsAsyncReport = createSelector(
   getConfigState,

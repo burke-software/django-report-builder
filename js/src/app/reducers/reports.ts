@@ -35,7 +35,10 @@ export interface State {
 
 export const displayFieldAdapter: EntityAdapter<
   IDisplayField
-> = createEntityAdapter<IDisplayField>();
+> = createEntityAdapter<IDisplayField>({
+  sortComparer: (x, y) => x.position - y.position,
+  selectId: x => x.position,
+});
 
 export const initialState: State = {
   reports: [],
@@ -207,6 +210,15 @@ export function reducer(
       };
     }
 
+    case DisplayFieldActionTypes.LOAD_ALL:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.addAll(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
     case DisplayFieldActionTypes.ADD_ONE:
       return {
         ...state,
@@ -216,9 +228,35 @@ export function reducer(
         ),
       };
 
-    default: {
+    case DisplayFieldActionTypes.UPDATE_ONE:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.updateOne(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
+    case DisplayFieldActionTypes.UPDATE_MANY:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.updateMany(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
+    case DisplayFieldActionTypes.DELETE_ONE:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.removeOne(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
+    default:
       return state;
-    }
   }
 }
 

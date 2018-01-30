@@ -6,6 +6,7 @@ import {
   IField,
   IReportPreview,
   INewReport,
+  IDisplayField,
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -38,6 +39,7 @@ export const SORT_REPORTS = 'Sort Reports';
 export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
 export const CLICK_FIELD = 'Click Field';
+export const EDIT_DISPLAY_FIELD = 'Edit Display Field';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -192,6 +194,11 @@ export class ClickField implements Action {
   constructor(public payload: IField) {}
 }
 
+export class EditDisplayField implements Action {
+  readonly type = EDIT_DISPLAY_FIELD;
+  constructor(public payload: IDisplayField) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -223,4 +230,5 @@ export type Actions =
   | ToggleRightNav
   | SortReports
   | ChangeTab
-  | ClickField;
+  | ClickField
+  | EditDisplayField;

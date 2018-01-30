@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ChangeTab } from '../../actions/reports';
-import { State, getCurrentDisplayedFields, getActiveTab } from '../../reducers';
+import { State, getActiveTab, getDisplayFields } from '../../reducers';
 import { MatTabGroup } from '@angular/material';
 
 @Component({
@@ -12,7 +12,7 @@ import { MatTabGroup } from '@angular/material';
 })
 export class TabsComponent implements OnInit {
   constructor(private store: Store<State>) {}
-  displayFields$ = this.store.select(getCurrentDisplayedFields);
+  displayFields$ = this.store.select(getDisplayFields);
   activeTab$ = this.store.select(getActiveTab);
   @ViewChild('tabs') tabs: MatTabGroup;
 

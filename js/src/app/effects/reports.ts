@@ -14,12 +14,13 @@ import { Action, Store } from '@ngrx/store';
 
 import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
+import * as fromDisplay from '../actions/display-field';
 import { IGetRelatedFieldRequest } from '../api.interfaces';
 import {
   State,
   getEditedReport,
   getSelectedReportId,
-  getIsAsyncReport
+  getIsAsyncReport,
 } from '../reducers';
 
 @Injectable()
@@ -51,6 +52,14 @@ export class ReportEffects {
     );
 
   @Effect()
+  loadDisplayFields$ = this.actions$
+    .ofType(fromReports.GET_REPORT_SUCCESS, fromReports.EDIT_REPORT_SUCCESS)
+    .map(
+      (action: fromReports.GetReportSuccess | fromReports.EditReportSuccess) =>
+        new fromDisplay.LoadAll(action.payload.displayfield_set)
+    );
+
+  @Effect()
   getReportSuccess$ = this.actions$
     .ofType(fromReports.GET_REPORT_SUCCESS)
     .map((action: fromReports.GetReportSuccess) => action.payload)
@@ -59,7 +68,7 @@ export class ReportEffects {
       const request: IGetRelatedFieldRequest = {
         model: report.root_model,
         path: '',
-        field: ''
+        field: '',
       };
       return Observable.forkJoin(
         this.api.getRelatedFields(request),
@@ -78,7 +87,7 @@ export class ReportEffects {
       const fieldReq: IGetRelatedFieldRequest = {
         model: relatedField.model_id,
         path: relatedField.path,
-        field: relatedField.field_name
+        field: relatedField.field_name,
       };
       return this.api
         .getFields(fieldReq)
@@ -93,13 +102,13 @@ export class ReportEffects {
       const fieldReq: IGetRelatedFieldRequest = {
         model: relatedField.model_id,
         path: relatedField.path,
-        field: relatedField.field_name
+        field: relatedField.field_name,
       };
       return this.api.getRelatedFields(fieldReq).map(
         fields =>
           new fromReports.GetRelatedFieldsSuccess({
             parent: relatedField,
-            relatedFields: fields
+            relatedFields: fields,
           })
       );
     });
