@@ -35,11 +35,8 @@ export const SET_REPORT_SEARCH_TEXT = 'Set Report Search Text';
 export const SET_RELATIONS_SEARCH_TEXT = 'Set Relations Search Text';
 export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
 export const SORT_REPORTS = 'Sort Reports';
-<<<<<<< HEAD
 export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
-=======
 export const CHANGE_TAB = 'Change Tab';
->>>>>>> ngx
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
