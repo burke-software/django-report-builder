@@ -21,8 +21,8 @@ export interface State {
   reportSearchText: string;
   fieldSearchText: string;
   relationsSearchText: string;
-  showReports: boolean;
-  showFields: boolean;
+  leftNavIsOpen: boolean;
+  rightNavIsOpen: boolean;
   sortReportBy: {
     sort: string;
     ascending: boolean;
@@ -39,8 +39,8 @@ export const initialState: State = {
   reportSearchText: '',
   fieldSearchText: '',
   relationsSearchText: '',
-  showReports: false,
-  showFields: false,
+  leftNavIsOpen: false,
+  rightNavIsOpen: false,
   sortReportBy: {
     sort: '',
     ascending: true
@@ -67,17 +67,17 @@ export function reducer(
       };
     }
 
-    case reportActions.SHOW_REPORTS: {
+    case reportActions.TOGGLE_LEFT_NAV: {
       return {
         ...state,
-        showReports: !state.showReports,
+        leftNavIsOpen: !state.leftNavIsOpen,
       };
     }
 
-    case reportActions.SHOW_FIELDS: {
+    case reportActions.TOGGLE_RIGHT_NAV: {
       return {
         ...state,
-        showFields: !state.showFields,
+        rightNavIsOpen: !state.rightNavIsOpen,
       };
     }
 
@@ -273,7 +273,7 @@ export const getLastGeneratedReport = createSelector(
 export const getReportSearchTerm = (state: State) => state.reportSearchText;
 export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
 export const getRelationsSearchTerm = (state: State) => state.relationsSearchText;
-export const getShowReports = (state: State) => state.showReports;
-export const getShowFields = (state: State) => state.showFields;
+export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
+export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 export const getSortTerm = (state: State) => state.sortReportBy.sort;
 export const getSortOrder = (state: State) => state.sortReportBy.ascending;

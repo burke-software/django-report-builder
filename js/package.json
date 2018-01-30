@@ -31,7 +31,6 @@
     "@ngrx/store": "^4.1.1",
     "@ngrx/store-devtools": "^5.0.0",
     "angular-tree-component": "^7.0.1",
-    "angular2-click-outside": "^0.1.0",
     "core-js": "^2.5.1",
     "jasmine-marbles": "^0.2.0",
     "ng-click-outside": "^3.2.0",

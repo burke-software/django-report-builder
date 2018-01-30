@@ -10,8 +10,8 @@ import {
   getReports,
   getRelatedFields,
   getFields,
-  getShowFields,
-  getShowReports,
+  getRightNavIsOpen,
+  getLeftNavIsOpen,
   getReportSearchTerm,
   getFieldSearchTerm,
   getRelationsSearchTerm,
@@ -28,8 +28,8 @@ import {
   SetReportSearchText,
   SetFieldSearchText,
   SetRelationsSearchText,
-  ShowReports,
-  ShowFields,
+  ToggleLeftNav,
+  ToggleRightNav,
   SortReports
 } from '../actions/reports';
 
@@ -44,8 +44,8 @@ import {
         (onToggleLeftNav)="onToggleLeftNav()"
         (onToggleRightNav)="onToggleRightNav()"
         (sortReports)="sortReports($event)"
-        [showReports]="showReports$ | async"
-        [showFields]="showFields$ | async"
+        [leftNavIsOpen]="leftNavIsOpen$ | async"
+        [rightNavIsOpen]="rightNavIsOpen$ | async"
       ></app-left-sidebar>
       <div class="example-sidenav-content" style="padding-left: 100px;">
         <app-tabs>
@@ -59,7 +59,7 @@ import {
         (searchFields)="searchFields($event)"
         (searchRelations)="searchRelations($event)"
         (onToggleRightNav)="onToggleRightNav()"
-        [showFields]="showFields$ | async"
+        [rightNavIsOpen]="rightNavIsOpen$ | async"
       ></app-right-sidebar>
     </mat-sidenav-container>
   `
@@ -92,8 +92,8 @@ export class MainComponent implements OnInit {
   );
   
   selectedReport$ = this.store.select(getSelectedReport);
-  showReports$ = this.store.select(getShowReports);
-  showFields$ = this.store.select(getShowFields);
+  leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
+  rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
 
   constructor(private store: Store<State>) {}
@@ -128,11 +128,11 @@ export class MainComponent implements OnInit {
   }
 
   onToggleLeftNav() {
-    this.store.dispatch(new ShowReports());
+    this.store.dispatch(new ToggleLeftNav());
   }
 
   onToggleRightNav() {
-    this.store.dispatch(new ShowFields());
+    this.store.dispatch(new ToggleRightNav());
   }
 
 }

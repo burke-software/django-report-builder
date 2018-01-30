@@ -1,4 +1,4 @@
-<mat-sidenav (clickOutside)="toggleRightNav()" [exclude]="'button, #toggleRight, mat-sidenav'" #sidenav mode="side" position="end" opened="{{showFields}}">
+<mat-sidenav (clickOutside)="toggleRightNav()" [exclude]="'button, #toggleRight, mat-sidenav'" #sidenav mode="side" position="end" opened="{{rightNavIsOpen}}">
   <div class="header"><h3>{{ modelName }} relations</h3></div>
 
   <input type="text" class="search-box" placeholder="Search Relations"

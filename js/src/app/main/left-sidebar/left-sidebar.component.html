@@ -1,4 +1,4 @@
-  <mat-sidenav (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{showReports}}>
+  <mat-sidenav (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
     <a routerLink="/report/add"><div class="add-report">+ Add Report</div></a>
   
   <div class="sort">Sort By:</div>

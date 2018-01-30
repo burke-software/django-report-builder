@@ -33,9 +33,9 @@ export const CHECK_EXPORT_STATUS = 'Check Export Status';
 export const SET_FIELD_SEARCH_TEXT = 'Set Field Search Text';
 export const SET_REPORT_SEARCH_TEXT = 'Set Report Search Text';
 export const SET_RELATIONS_SEARCH_TEXT = 'Set Relations Search Text';
-export const SHOW_REPORTS = 'Show Reports';
+export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
 export const SORT_REPORTS = 'Sort Reports';
-export const SHOW_FIELDS = 'Show Fields';
+export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -167,12 +167,12 @@ export class SetRelationsSearchText implements Action {
   constructor(public payload: string) {}
 }
 
-export class ShowReports implements Action {
-  readonly type = SHOW_REPORTS;
+export class ToggleLeftNav implements Action {
+  readonly type = TOGGLE_LEFT_NAV;
 }
 
-export class ShowFields implements Action {
-  readonly type = SHOW_FIELDS;
+export class ToggleRightNav implements Action {
+  readonly type = TOGGLE_RIGHT_NAV;
 }
 
 export class SortReports implements Action {
@@ -206,6 +206,6 @@ export type Actions =
   | SetReportSearchText
   | SetFieldSearchText
   | SetRelationsSearchText
-  | ShowReports
+  | ToggleLeftNav
   | SortReports
-  | ShowFields;
+  | ToggleRightNav;

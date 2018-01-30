@@ -9,8 +9,8 @@ import { IReport } from '../../api.interfaces';
 export class LeftSidebarComponent {
   @Input() listReports: IReport[];
   @Input() searchTerm: string;
-  @Input() showReports: boolean;
-  @Input() showFields: boolean;
+  @Input() leftNavIsOpen: boolean;
+  @Input() rightNavIsOpen: boolean;
 
   @Output() onClickReport = new EventEmitter<number>();
   @Output() searchReports = new EventEmitter<string>();
@@ -22,7 +22,7 @@ export class LeftSidebarComponent {
 
   clickReport(reportId: number) {
     this.onClickReport.emit(reportId);
-    if (this.showFields === false) {
+    if (this.rightNavIsOpen === false) {
       this.onToggleRightNav.emit();
     }
   }
@@ -32,7 +32,7 @@ export class LeftSidebarComponent {
   }
 
   toggleLeftNav() {
-    if (this.showReports === true) {
+    if (this.leftNavIsOpen === true) {
       this.onToggleLeftNav.emit();
     }
   }
