@@ -1,4 +1,4 @@
-<mat-tab-group (selectedTabChange)="tabChange($event.index)">
+<mat-tab-group #tabs (selectedTabChange)="tabChange($event.index)">
   <mat-tab label="Display">
     <app-display-tab [fields]="displayFields$ | async"></app-display-tab>
   </mat-tab>

@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ChangeTab } from '../../actions/reports';
-import { State, getCurrentDisplayedFields } from '../../reducers';
+import { State, getCurrentDisplayedFields, getActiveTab } from '../../reducers';
+import { MatTabGroup } from '@angular/material';
 
 @Component({
   selector: 'app-tabs',
@@ -12,10 +13,14 @@ import { State, getCurrentDisplayedFields } from '../../reducers';
 export class TabsComponent implements OnInit {
   constructor(private store: Store<State>) {}
   displayFields$ = this.store.select(getCurrentDisplayedFields);
+  activeTab$ = this.store.select(getActiveTab);
+  @ViewChild('tabs') tabs: MatTabGroup;
 
   tabChange(index: number) {
     this.store.dispatch(new ChangeTab(index));
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.activeTab$.subscribe(number => (this.tabs.selectedIndex = number));
+  }
 }

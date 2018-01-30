@@ -92,3 +92,7 @@ export const getLastGeneratedReport = createSelector(
   getReportsState,
   fromReports.getLastGeneratedReport
 );
+export const getActiveTab = createSelector(
+  getReportsState,
+  fromReports.getActiveTab
+);

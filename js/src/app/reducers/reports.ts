@@ -299,3 +299,4 @@ export const selectTotal = createSelector(
   getDisplayFieldsState,
   notSelectTotal
 );
+export const getActiveTab = (state: State) => state.activeTab;
