@@ -36,6 +36,10 @@ import {
 @Component({
   selector: 'app-main',
   template: `
+  <app-header
+  (onToggleLeftNav)="onToggleLeftNav()"
+  (onToggleRightNav)="onToggleRightNav()">
+  </app-header>
     <mat-sidenav-container class="left-sidenav-container">
       <app-left-sidebar
         [listReports]="listReports$ | async"

@@ -1,6 +1,6 @@
 mat-card {
     width: 50%;
-    border: 3px solid #dbdbdb;
+    border: 1px solid #dbdbdb;
     position: absolute;
     margin: auto;
     top: 0;
@@ -8,11 +8,26 @@ mat-card {
     bottom: 0;
     right: 0;
     display: table;
+    border-radius: 5px;
+}
+
+mat-toolbar {
+    background: #417690;
+    color: white;
+    height: 15%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-left: -23px;
+    width: 107%;
 }
 
 mat-card-title {
-    width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    font-weight: 200;
+    letter-spacing: 0.05em;
+}
+
+form {
+    padding-top: 20px;
 }
 
 .container {
@@ -22,6 +37,6 @@ mat-card-title {
     align-items: center;
   }
   
-  .container > * {
+  .container > mat-form-field {
     width: 100%;
   }
