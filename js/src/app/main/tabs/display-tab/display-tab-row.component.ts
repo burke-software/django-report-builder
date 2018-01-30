@@ -2,12 +2,9 @@ import { Component, Input } from '@angular/core';
 import { IDisplayField } from '../../../api.interfaces';
 
 @Component({
-  selector: 'app-display-tab',
-  templateUrl: './display-tab.component.html',
+  selector: 'app-display-tab-row',
+  templateUrl: './display-tab-row.component.html',
   styles: [
-    `.mat-table {
-    display: block;
-  }`,
     `.mat-row,
   .mat-header-row {
     display: flex;
@@ -25,7 +22,7 @@ import { IDisplayField } from '../../../api.interfaces';
 }`,
   ],
 })
-export class DisplayTabComponent {
+export class DisplayTabRowComponent {
   constructor() {}
-  @Input() fields: IDisplayField[];
+  @Input() field: IDisplayField;
 }

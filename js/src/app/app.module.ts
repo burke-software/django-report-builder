@@ -43,6 +43,7 @@ import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component'
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
 import { DisplayTabComponent } from './main/tabs/display-tab/display-tab.component';
+import { DisplayTabRowComponent } from './main/tabs/display-tab/display-tab-row.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 import { FieldComponent } from './main/right-sidebar/field.component';
@@ -86,6 +87,7 @@ export const MatModules = [
     ReportPreviewComponent,
     SavedTimestampComponent,
     DisplayTabComponent,
+    DisplayTabRowComponent,
     RightSidebarComponent,
     RelatedFieldComponent,
     FieldComponent,
