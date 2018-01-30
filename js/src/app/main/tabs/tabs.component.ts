@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ChangeTab } from '../../actions/reports';
+import { UpdateOne, DeleteOne } from '../../actions/display-field';
 import { State, getActiveTab, getDisplayFields } from '../../reducers';
 import { MatTabGroup } from '@angular/material';
+import { Update } from '@ngrx/entity';
+import { IDisplayField } from '../../api.interfaces';
 
 @Component({
   selector: 'app-tabs',
@@ -18,6 +21,14 @@ export class TabsComponent implements OnInit {
 
   tabChange(index: number) {
     this.store.dispatch(new ChangeTab(index));
+  }
+
+  updateDisplayField(update: Update<IDisplayField>) {
+    this.store.dispatch(new UpdateOne(update));
+  }
+
+  deleteDisplayField(id: number) {
+    this.store.dispatch(new DeleteOne(id));
   }
 
   ngOnInit() {

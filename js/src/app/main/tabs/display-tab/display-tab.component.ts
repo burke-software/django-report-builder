@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IDisplayField } from '../../../api.interfaces';
+import { Update } from '@ngrx/entity';
 
 @Component({
   selector: 'app-display-tab',
@@ -28,4 +29,6 @@ import { IDisplayField } from '../../../api.interfaces';
 export class DisplayTabComponent {
   constructor() {}
   @Input() fields: IDisplayField[];
+  @Output() deleteField = new EventEmitter<number>();
+  @Output() updateField = new EventEmitter<Update<IDisplayField>>();
 }
