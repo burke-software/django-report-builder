@@ -7,7 +7,7 @@ import {
   IReportPreview
 } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
-import { createSelector } from '@ngrx/store/src/selector';
+import { createSelector } from '@ngrx/store';
 
 export interface State {
   reports: IReport[];

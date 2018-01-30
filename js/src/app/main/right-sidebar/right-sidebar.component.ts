@@ -9,7 +9,7 @@ import { IField, IRelatedField } from '../../api.interfaces';
 export class RightSidebarComponent {
   @Input() modelName: string;
   @Input() fields: IField[];
-  @Input() relatedFields: IRelatedField[];
+  @Input() relatedFields: IRelatedField[] = [];
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
   @Output() onToggleRightNav = new EventEmitter();
@@ -31,8 +31,7 @@ export class RightSidebarComponent {
     }
     
     getRelatedFields() {
-       return this.relatedFields
-      .map(deepCopy);
+       return this.relatedFields.map(deepCopy);
     }
 
 }
