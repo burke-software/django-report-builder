@@ -33,6 +33,7 @@ export const CHECK_EXPORT_STATUS = 'Check Export Status';
 export const SET_SEARCH_TEXT = 'Set Report Search Text';
 export const SHOW_REPORTS = 'Show Reports';
 export const SORT_REPORTS = 'Sort Reports';
+export const CHANGE_TAB = 'Change Tab';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -162,6 +163,11 @@ export class SortReports implements Action {
   constructor(public payload: string) {}
 }
 
+export class ChangeTab implements Action {
+  readonly type = CHANGE_TAB;
+  constructor(public payload: number) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -187,4 +193,5 @@ export type Actions =
   | CheckExportStatus
   | SetSearchText
   | ShowReports
-  | SortReports;
+  | SortReports
+  | ChangeTab;
