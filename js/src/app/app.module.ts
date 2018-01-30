@@ -41,7 +41,7 @@ import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.co
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
-import { ClickOutsideModule } from 'ng-click-outside';
+import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: { title: 'Reports' } },
