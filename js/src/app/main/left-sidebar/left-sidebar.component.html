@@ -1,5 +1,5 @@
 
-}  <mat-sidenav (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
+  <mat-sidenav (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
     <a routerLink="/report/add"><div class="add-report">+ Add Report</div></a>
 
   <div class="reports-container">
@@ -9,11 +9,19 @@
       (keyup)="searchReports.emit($event.target.value)">
     <br><br><br>
 
-    <div class="reports" *ngFor="let report of listReports">
-      <div (click)="clickReport(report.id)">
-        <div>{{ report.name }}</div>
-        <div>{{ report.user_created.first_name }}<div class="modified">{{report.modified}}</div></div>
-      </div>
-    </div>
+    <table matSort matSortDisableClear="true" (matSortChange)="sortData($event)">
+        <tr class="sort-section">
+          <th mat-sort-header="name">NAME</th>
+          <th mat-sort-header="user">USER</th>
+          <th mat-sort-header="date">DATE</th>
+        </tr>
+      
+        <tr class="reports" *ngFor="let report of sortedData">
+          <td (click)="clickReport(report.id)">{{ report.name }}</td>
+          <td>{{ report.user_created.first_name }}</td>
+          <td class="modified">{{report.modified}}</td>
+        </tr>
+    </table>
   </div>
+
   </mat-sidenav>
