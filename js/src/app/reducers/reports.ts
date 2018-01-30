@@ -18,8 +18,11 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
-  searchText: string;
-  showReports: boolean;
+  reportSearchText: string;
+  fieldSearchText: string;
+  relationsSearchText: string;
+  leftNavIsOpen: boolean;
+  rightNavIsOpen: boolean;
   sortReportBy: {
     sort: string;
     ascending: boolean;
@@ -34,8 +37,11 @@ export const initialState: State = {
   fields: [],
   descriptionInput: '',
   isDistinct: false,
-  searchText: '',
-  showReports: false,
+  reportSearchText: '',
+  fieldSearchText: '',
+  relationsSearchText: '',
+  leftNavIsOpen: false,
+  rightNavIsOpen: false,
   sortReportBy: {
     sort: '',
     ascending: true
@@ -63,10 +69,17 @@ export function reducer(
       };
     }
 
-    case reportActions.SHOW_REPORTS: {
+    case reportActions.TOGGLE_LEFT_NAV: {
       return {
         ...state,
-        showReports: !state.showReports,
+        leftNavIsOpen: !state.leftNavIsOpen,
+      };
+    }
+
+    case reportActions.TOGGLE_RIGHT_NAV: {
+      return {
+        ...state,
+        rightNavIsOpen: !state.rightNavIsOpen,
       };
     }
 
@@ -161,10 +174,26 @@ export function reducer(
     }
 
 
-    case reportActions.SET_SEARCH_TEXT: {
+    case reportActions.SET_REPORT_SEARCH_TEXT: {
+      console.log(action.payload);
       return {
         ...state,
-        searchText: action.payload
+        reportSearchText: action.payload
+      };
+    }
+
+    case reportActions.SET_FIELD_SEARCH_TEXT: {
+      console.log(action.payload);
+      return {
+        ...state,
+        fieldSearchText: action.payload
+      };
+    }
+
+    case reportActions.SET_RELATIONS_SEARCH_TEXT: {
+      return {
+        ...state,
+        relationsSearchText: action.payload
       };
     }
 
@@ -250,7 +279,10 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
-export const getSearchTerm = (state: State) => state.searchText;
-export const getShowReports = (state: State) => state.showReports;
+export const getReportSearchTerm = (state: State) => state.reportSearchText;
+export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
+export const getRelationsSearchTerm = (state: State) => state.relationsSearchText;
+export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
+export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 export const getSortTerm = (state: State) => state.sortReportBy.sort;
 export const getSortOrder = (state: State) => state.sortReportBy.ascending;

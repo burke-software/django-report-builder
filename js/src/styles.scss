@@ -1,11 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 @import './custom-theme';
+@import 'angular-tree-component/dist/angular-tree-component.css';
 
 $navheight: 65px;
 
 body {
     margin: 0;
     background: #fafafa;
+}
+
+.node-content-wrapper-active, .node-content-wrapper-focused, .node-content-wrapper:hover {
+    background: white !important;
+    -webkit-box-shadow: inset 0 0 0 #fff !important;
+    box-shadow: inset 0 0 0 #fff !important;
+    border: 0 !important;
 }
 
 /* To make it fullscreen - use a fixed height for the nav and make something in the main component the full height - that fixed nav */

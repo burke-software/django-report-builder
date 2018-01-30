@@ -1,15 +1,32 @@
-import { IReport } from '../../api.interfaces';
+import { IField, IReport, IRelatedField } from '../../api.interfaces';
 
- export const filterSearch = (reports: IReport[], searchTerm: string) => {
-    if (!searchTerm) {
-      return reports;
-    }
-    const term = searchTerm.toLowerCase();
-    return reports.filter((report) => {
-      let name = report.name;
+  export const setSearch = (searchArray: (IField|IReport|IRelatedField)[], searchTerm: string) => {
+
+      if (!searchTerm) {
+        return searchArray;
+      }
+
+      const isIRelatedField = (object: IField|IReport|IRelatedField): object is IRelatedField => {
+        return "verbose_name" in object;
+      };
+
+      const term = searchTerm.toLowerCase();
+      return (searchArray.filter((report) => {
+
+      let name;
+      if (isIRelatedField(report)) {
+          name = report.verbose_name;
+      } else {
+          name = report.name;
+      }
+
       if (name) {
         name = name.toLowerCase();
       }
       return name.indexOf(term) >= 0;
-    });
+  }));
 };
+
+
+
+  

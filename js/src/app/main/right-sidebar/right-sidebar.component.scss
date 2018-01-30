@@ -1,0 +1,45 @@
+mat-sidenav {
+    width: 20%;
+    height: 100%;
+    border-left: 2px solid #ededed;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+tree-root /deep/ {
+    height: 35;
+    tree-viewport {
+        height: 35%;
+    }
+}
+
+.header {
+    width: 100%;
+    height: 8%;
+    background-color: #79aec8;
+    margin-top: -19px;
+    padding-left: 10px;
+}
+
+.fields {
+    padding: 10px;
+}
+
+.search {
+    position: relative;
+    width: 100%;
+    height: 2rem;
+    margin: 25px auto;
+    padding-bottom: 5px;
+    padding-top: -20px;
+}
+
+.search-box {
+    font-style: italic;
+    margin-top: -20px;
+    width: 100%;
+    height: 3%;
+}
+
+
+
+  

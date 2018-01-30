@@ -30,9 +30,12 @@
     "@ngrx/entity": "^4.1.1",
     "@ngrx/store": "^4.1.1",
     "@ngrx/store-devtools": "^5.0.0",
+    "angular-tree-component": "^7.0.1",
     "core-js": "^2.5.1",
     "jasmine-marbles": "^0.2.0",
+    "ng4-click-outside": "^1.0.1",
     "ngrx-store-freeze": "^0.2.0",
+    "node-sass": "^4.7.2",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.18"
   },

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { TreeModule } from 'angular-tree-component';
 
 import {
   MatButtonModule,
@@ -40,6 +41,7 @@ import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.co
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
+import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, data: { title: 'Reports' } },
@@ -82,11 +84,13 @@ export const MatModules = [
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
+    ClickOutsideModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
     EffectsModule.forRoot([ReportEffects, ConfigEffects]),
     HttpClientModule,
+    TreeModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
       headerName: 'X-CSRFToken'

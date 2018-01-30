@@ -9,20 +9,32 @@ import { IReport } from '../../api.interfaces';
 export class LeftSidebarComponent {
   @Input() listReports: IReport[];
   @Input() searchTerm: string;
-  @Input() showReports: boolean;
+  @Input() leftNavIsOpen: boolean;
+  @Input() rightNavIsOpen: boolean;
 
   @Output() onClickReport = new EventEmitter<number>();
   @Output() searchReports = new EventEmitter<string>();
   @Output() sortReports = new EventEmitter<string>();
+  @Output() onToggleLeftNav = new EventEmitter();
+  @Output() onToggleRightNav = new EventEmitter();
 
   constructor() {}
 
   clickReport(reportId: number) {
     this.onClickReport.emit(reportId);
+    if (this.rightNavIsOpen === false) {
+      this.onToggleRightNav.emit();
+    }
   }
 
   onSortReports(searchTerm: string) {
     this.sortReports.emit(searchTerm);
+  }
+
+  toggleLeftNav() {
+    if (this.leftNavIsOpen === true) {
+      this.onToggleLeftNav.emit();
+    }
   }
 
 }
