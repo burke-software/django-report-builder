@@ -1,4 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { State } from '../../reducers';
+import { ChangeTab } from '../../actions/reports';
 
 @Component({
   selector: 'app-tabs',
@@ -7,8 +10,11 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class TabsComponent implements OnInit {
-  constructor() {}
+  constructor(private store: Store<State>) {}
+
+  tabChange(index: number) {
+    this.store.dispatch(new ChangeTab(index));
+  }
 
   ngOnInit() {}
-
 }

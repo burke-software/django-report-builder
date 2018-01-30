@@ -1,6 +1,10 @@
-<mat-tab-group>
+<mat-tab-group (selectedTabChange)="tabChange($event.index)">
   <mat-tab label="Display">Display</mat-tab>
   <mat-tab label="Filter">Filter</mat-tab>
-  <mat-tab label="Report"><app-report-tab></app-report-tab></mat-tab>
-  <mat-tab label="Options"><app-options-tab></app-options-tab></mat-tab>
+  <mat-tab label="Report">
+    <app-report-tab></app-report-tab>
+  </mat-tab>
+  <mat-tab label="Options">
+    <app-options-tab></app-options-tab>
+  </mat-tab>
 </mat-tab-group>
