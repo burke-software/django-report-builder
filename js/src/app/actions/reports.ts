@@ -5,7 +5,7 @@ import {
   IRelatedField,
   IField,
   IReportPreview,
-  INewReport
+  INewReport,
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -37,7 +37,7 @@ export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
 export const SORT_REPORTS = 'Sort Reports';
 export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
-export const ADD_DISPLAY_FIELD_TO_REPORT = 'Add Display Field To Report';
+export const CLICK_FIELD = 'Click Field';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -187,8 +187,8 @@ export class ChangeTab implements Action {
   constructor(public payload: number) {}
 }
 
-export class AddDisplayFieldToReport implements Action {
-  readonly type = ADD_DISPLAY_FIELD_TO_REPORT;
+export class ClickField implements Action {
+  readonly type = CLICK_FIELD;
   constructor(public payload: IField) {}
 }
 
@@ -223,4 +223,4 @@ export type Actions =
   | ToggleRightNav
   | SortReports
   | ChangeTab
-  | AddDisplayFieldToReport;
+  | ClickField;

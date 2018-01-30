@@ -33,7 +33,7 @@ import {
   ToggleRightNav,
   SetSearchText,
   SortReports,
-  AddDisplayFieldToReport,
+  ClickField,
 } from '../actions/reports';
 
 @Component({
@@ -126,6 +126,6 @@ export class MainComponent implements OnInit {
   }
 
   addReportField(field: IField) {
-    this.store.dispatch(new AddDisplayFieldToReport(field));
+    this.store.dispatch(new ClickField(field));
   }
 }
