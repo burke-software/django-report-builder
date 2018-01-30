@@ -1,5 +1,5 @@
-mat-card {
-    width: 50%;
+.report-form {
+    width: 45%;
     border: 1px solid #dbdbdb;
     position: absolute;
     margin: auto;
@@ -9,25 +9,26 @@ mat-card {
     right: 0;
     display: table;
     border-radius: 5px;
+    padding-top: 0;
 }
 
-mat-toolbar {
+.report-title {
     background: #417690;
     color: white;
     height: 15%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    margin-left: -23px;
-    width: 107%;
+    margin: 0 -24px 16px;
+    padding-left: 20px;
+    padding-top: 10px;
+    font-weight: 300;
 }
 
-mat-card-title {
-    font-weight: 200;
-    letter-spacing: 0.05em;
-}
-
-form {
-    padding-top: 20px;
+@media screen and (max-width: 600px) {
+    .report-title {
+        margin: 0 -16px 16px;
+        padding: 10px 16px;
+    }
 }
 
 .container {
@@ -40,3 +41,7 @@ form {
   .container > mat-form-field {
     width: 100%;
   }
+
+button {
+    margin-bottom: 20px;
+}
