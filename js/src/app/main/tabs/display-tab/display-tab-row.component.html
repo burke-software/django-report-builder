@@ -18,12 +18,13 @@
   </div>
   <div class="mat-cell">
     <mat-form-field>
-      <mat-select placeholder="----------">
-        <mat-option value="sum">Sum</mat-option>
-        <mat-option value="count">Count</mat-option>
-        <mat-option value="avg">Avg</mat-option>
-        <mat-option value="max">Max</mat-option>
-        <mat-option value="min">Min</mat-option>
+      <mat-select (selectionChange)="editField({aggregate: $event.value})" [value]="field.aggregate || ''">
+        <mat-option value="">----------</mat-option>
+        <mat-option value="Sum">Sum</mat-option>
+        <mat-option value="Count">Count</mat-option>
+        <mat-option value="Avg">Avg</mat-option>
+        <mat-option value="Max">Max</mat-option>
+        <mat-option value="Min">Min</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
