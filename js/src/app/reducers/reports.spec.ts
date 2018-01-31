@@ -2,7 +2,6 @@ import * as ReportActions from '../actions/reports';
 import * as ReportReducer from './reports';
 
 import * as testdata from './testdata.spec';
-import { IField } from '../api.interfaces';
 
 describe('ReportsReducer', () => {
   describe('GET_REPORT', () => {

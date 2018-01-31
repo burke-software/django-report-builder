@@ -20,12 +20,6 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
   ? [storeFreeze]
   : [];
 
-const getDisplayFieldsState = (state: State) => state.displayFields;
-export const getDisplayFields = createSelector(
-  getDisplayFieldsState,
-  fromDisplayField.selectAll
-);
-
 const getConfigState = (state: State) => state.config;
 export const getIsAsyncReport = createSelector(
   getConfigState,
@@ -78,14 +72,14 @@ export const getIsDistinct = createSelector(
   getReportsState,
   fromReports.getIsDistinct
 );
-export const getEditedReport = (state: State) =>
-  Object.assign({}, fromReports.getEditedReport(getReportsState(state)), {
-    displayfield_set: getDisplayFields(state),
-  });
-// export const getEditedReport = createSelector(
-//   getReportsState,
-//   fromReports.getEditedReport
-// );
+// export const getEditedReport = (state: State) =>
+//   Object.assign({}, fromReports.getEditedReport(getReportsState(state)), {
+//     displayfield_set: getDisplayFields(state),
+//   });
+export const getEditedReport = createSelector(
+  getReportsState,
+  fromReports.getEditedReport
+);
 export const getPreview = createSelector(
   getReportsState,
   fromReports.getPreview
@@ -105,4 +99,8 @@ export const getLastGeneratedReport = createSelector(
 export const getActiveTab = createSelector(
   getReportsState,
   fromReports.getActiveTab
+);
+export const getDisplayFields = createSelector(
+  getReportsState,
+  fromReports.getDisplayFields
 );

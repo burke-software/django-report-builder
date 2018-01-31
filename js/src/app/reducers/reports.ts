@@ -223,7 +223,7 @@ export function reducer(
       return {
         ...state,
         displayFields: displayFieldAdapter.addOne(
-          action.payload,
+          { ...action.payload, position: state.displayFields.ids.length },
           state.displayFields
         ),
       };
@@ -289,12 +289,6 @@ export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
 export const getIsDistinct = (state: State) => state.isDistinct;
-export const getEditedReport = (state: State) => {
-  const editedReport = { ...state.selectedReport };
-  editedReport.description = state.descriptionInput;
-  editedReport.distinct = state.isDistinct;
-  return editedReport;
-};
 export const getPreview = (state: State) => state.reportPreview;
 export const getLastSaved = (state: State) => state.reportSaved;
 export const getNewReportInfo = (state: State) => {
@@ -322,19 +316,17 @@ export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 
 export const getDisplayFieldsState = (state: State) => state.displayFields;
 const {
-  selectIds: notSelectIds,
-  selectEntities: notSelectEntities,
-  selectAll: notSelectAll,
-  selectTotal: notSelectTotal,
+  selectAll: selectAllDisplayFields,
 } = displayFieldAdapter.getSelectors();
-export const selectIds = createSelector(getDisplayFieldsState, notSelectIds);
-export const selectEntities = createSelector(
+export const getDisplayFields = createSelector(
   getDisplayFieldsState,
-  notSelectEntities
-);
-export const selectAll = createSelector(getDisplayFieldsState, notSelectAll);
-export const selectTotal = createSelector(
-  getDisplayFieldsState,
-  notSelectTotal
+  selectAllDisplayFields
 );
 export const getActiveTab = (state: State) => state.activeTab;
+
+export const getEditedReport = (state: State) => ({
+  ...state.selectedReport,
+  description: getDescriptionInput(state),
+  distinct: getIsDistinct(state),
+  displayfield_set: getDisplayFields(state),
+});

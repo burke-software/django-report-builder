@@ -16,7 +16,7 @@ export interface IDisplayField {
   sort_reverse?: boolean;
   width?: number;
   aggregate?: string;
-  position: number;
+  position?: number;
   total?: boolean;
   group?: boolean;
   report?: number;
