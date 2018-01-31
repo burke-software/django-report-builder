@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'angular-tree-component';
+import { MatSortModule } from '@angular/material/sort';
 
 import {
   MatButtonModule,
@@ -91,6 +92,7 @@ export const MatModules = [
     EffectsModule.forRoot([ReportEffects, ConfigEffects]),
     HttpClientModule,
     TreeModule,
+    MatSortModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
       headerName: 'X-CSRFToken'

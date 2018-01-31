@@ -23,10 +23,6 @@ export interface State {
   relationsSearchText: string;
   leftNavIsOpen: boolean;
   rightNavIsOpen: boolean;
-  sortReportBy: {
-    sort: string;
-    ascending: boolean;
-  };
   activeTab: number;
 }
 
@@ -42,10 +38,6 @@ export const initialState: State = {
   relationsSearchText: '',
   leftNavIsOpen: false,
   rightNavIsOpen: false,
-  sortReportBy: {
-    sort: '',
-    ascending: true
-  },
   activeTab: 0,
 };
 
@@ -197,22 +189,6 @@ export function reducer(
       };
     }
 
-    case reportActions.SORT_REPORTS: {
-      let order;
-      if (action.payload === state.sortReportBy.sort) {
-        order = !state.sortReportBy.ascending;
-      } else {
-        order = state.sortReportBy.ascending;
-      }
-      return {
-        ...state,
-        sortReportBy: {
-          sort: action.payload,
-          ascending: order
-       }
-      };
-    }
-
     case reportActions.CHANGE_TAB: {
       return {
         ...state,
@@ -284,5 +260,3 @@ export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
 export const getRelationsSearchTerm = (state: State) => state.relationsSearchText;
 export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
 export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
-export const getSortTerm = (state: State) => state.sortReportBy.sort;
-export const getSortOrder = (state: State) => state.sortReportBy.ascending;

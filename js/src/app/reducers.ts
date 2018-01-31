@@ -48,8 +48,6 @@ export const getFieldSearchTerm = createSelector(getReportsState, fromReports.ge
 export const getRelationsSearchTerm = createSelector(getReportsState, fromReports.getRelationsSearchTerm);
 export const getLeftNavIsOpen = createSelector(getReportsState, fromReports.getLeftNavIsOpen);
 export const getRightNavIsOpen = createSelector(getReportsState, fromReports.getRightNavIsOpen);
-export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
-export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
 export const getRelatedFields = createSelector(
   getReportsState,
   fromReports.getRelatedFields
