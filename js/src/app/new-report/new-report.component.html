@@ -1,6 +1,7 @@
-<div class="background"> 
-<mat-card>
-  <mat-card-title>Add New Report</mat-card-title>
+<mat-card class="report-form">
+
+  <mat-card-title class="report-title">Add New Report</mat-card-title>
+
   <form (ngSubmit)="submit()" #reportForm="ngForm" class="container">
     <mat-form-field>
         <input matInput placeholder="Report Name" [(ngModel)]="form.name" name="name" required/>
@@ -18,8 +19,8 @@
         </mat-select>
       </mat-form-field>
     <br><br>
-    <button mat-raised-button color="accent">Create Report</button>
+    <button mat-raised-button color="primary">Create Report</button>
   </form>
 </mat-card>
-</div>
+
 
