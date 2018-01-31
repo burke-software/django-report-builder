@@ -37,7 +37,6 @@ export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
 export const SORT_REPORTS = 'Sort Reports';
 export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
-export const CLICK_FIELD = 'Click Field';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -187,11 +186,6 @@ export class ChangeTab implements Action {
   constructor(public payload: number) {}
 }
 
-export class ClickField implements Action {
-  readonly type = CLICK_FIELD;
-  constructor(public payload: IField) {}
-}
-
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -222,5 +216,4 @@ export type Actions =
   | SortReports
   | ToggleRightNav
   | SortReports
-  | ChangeTab
-  | ClickField;
+  | ChangeTab;

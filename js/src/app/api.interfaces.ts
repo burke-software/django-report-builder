@@ -19,7 +19,7 @@ export interface IDisplayField {
   position: number;
   total?: boolean;
   group?: boolean;
-  report: number;
+  report?: number;
   display_format?: any;
   field_type: string;
   is_default?: boolean;

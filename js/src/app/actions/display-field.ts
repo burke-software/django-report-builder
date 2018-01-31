@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { IDisplayField } from '../api.interfaces';
+import { IDisplayField, IField } from '../api.interfaces';
 
 export enum DisplayFieldActionTypes {
   LOAD_ALL = '[Display Fields] Load All',
@@ -17,7 +17,7 @@ export class LoadAll implements Action {
 
 export class AddOne implements Action {
   readonly type = DisplayFieldActionTypes.ADD_ONE;
-  constructor(public payload: IDisplayField) {}
+  constructor(public payload: IField) {}
 }
 
 export class UpdateOne implements Action {
