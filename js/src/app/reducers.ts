@@ -4,18 +4,15 @@ import { environment } from '../environments/environment';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import * as fromReports from './reducers/reports';
-import * as fromDisplayField from './reducers/display-field';
 import * as fromConfig from './reducers/config';
 
 export interface State {
   reports: fromReports.State;
-  displayFields: fromDisplayField.State;
   config: fromConfig.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
   reports: fromReports.reducer,
-  displayFields: fromDisplayField.reducer,
   config: fromConfig.reducer
 };
 
@@ -44,13 +41,26 @@ export const getSelectedReportId = createSelector(
 );
 export const getFields = createSelector(getReportsState, fromReports.getFields);
 export const getTitle = createSelector(getReportsState, fromReports.getTitle);
-export const getReportSearchTerm = createSelector(getReportsState, fromReports.getReportSearchTerm);
-export const getFieldSearchTerm = createSelector(getReportsState, fromReports.getFieldSearchTerm);
-export const getRelationsSearchTerm = createSelector(getReportsState, fromReports.getRelationsSearchTerm);
-export const getLeftNavIsOpen = createSelector(getReportsState, fromReports.getLeftNavIsOpen);
-export const getRightNavIsOpen = createSelector(getReportsState, fromReports.getRightNavIsOpen);
-export const getSortTerm = createSelector(getReportsState, fromReports.getSortTerm);
-export const getSortOrder = createSelector(getReportsState, fromReports.getSortOrder);
+export const getReportSearchTerm = createSelector(
+  getReportsState,
+  fromReports.getReportSearchTerm
+);
+export const getFieldSearchTerm = createSelector(
+  getReportsState,
+  fromReports.getFieldSearchTerm
+);
+export const getRelationsSearchTerm = createSelector(
+  getReportsState,
+  fromReports.getRelationsSearchTerm
+);
+export const getLeftNavIsOpen = createSelector(
+  getReportsState,
+  fromReports.getLeftNavIsOpen
+);
+export const getRightNavIsOpen = createSelector(
+  getReportsState,
+  fromReports.getRightNavIsOpen
+);
 export const getRelatedFields = createSelector(
   getReportsState,
   fromReports.getRelatedFields

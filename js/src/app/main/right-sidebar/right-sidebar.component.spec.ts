@@ -4,6 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatModules } from '../../app.module';
 import { RightSidebarComponent } from './right-sidebar.component';
 import { RelatedFieldComponent } from './related-field.component';
+import { ClickOutsideModule } from 'ng4-click-outside';
+import { TreeModule } from 'angular-tree-component';
 
 describe('RightSidebarComponent', () => {
   let component: RightSidebarComponent;
@@ -13,7 +15,12 @@ describe('RightSidebarComponent', () => {
     async(() => {
       TestBed.configureTestingModule({
         declarations: [RightSidebarComponent, RelatedFieldComponent],
-        imports: [...MatModules, NoopAnimationsModule]
+        imports: [
+          ...MatModules,
+          NoopAnimationsModule,
+          ClickOutsideModule,
+          TreeModule,
+        ]
       }).compileComponents();
     })
   );

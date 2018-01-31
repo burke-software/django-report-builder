@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { setSearch } from './utils/filterSearch';
-import { sortReports } from './utils/sort';
 
 import {
   State,
@@ -16,9 +15,7 @@ import {
   getReportSearchTerm,
   getFieldSearchTerm,
   getRelationsSearchTerm,
-  getSelectedReport,
-  getSortTerm,
-  getSortOrder
+  getSelectedReport
 } from '../reducers';
 import { IRelatedField } from '../api.interfaces';
 import {
@@ -30,8 +27,7 @@ import {
   SetFieldSearchText,
   SetRelationsSearchText,
   ToggleLeftNav,
-  ToggleRightNav,
-  SortReports
+  ToggleRightNav
 } from '../actions/reports';
 
 @Component({
@@ -49,7 +45,6 @@ import {
         (searchReports)="searchReports($event)"
         (onToggleLeftNav)="onToggleLeftNav()"
         (onToggleRightNav)="onToggleRightNav()"
-        (sortReports)="sortReports($event)"
         [leftNavIsOpen]="leftNavIsOpen$ | async"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
       ></app-left-sidebar>
@@ -74,15 +69,8 @@ export class MainComponent implements OnInit {
 
   title$ = this.store.select(getTitle);
 
-  sortReportsBy$ = Observable.combineLatest(
-    this.store.select(getSortTerm),
-    this.store.select(getReports),
-    this.store.select(getSortOrder),
-    sortReports
-  );
-
   listReports$ = Observable.combineLatest(
-    this.sortReportsBy$,
+    this.store.select(getReports),
     this.store.select(getReportSearchTerm),
     setSearch
   );
@@ -129,10 +117,6 @@ export class MainComponent implements OnInit {
 
   searchRelations(searchTerm: string) {
     this.store.dispatch(new SetRelationsSearchText(searchTerm));
-  }
- 
-  sortReports(sortBy: string) {
-    this.store.dispatch(new SortReports(sortBy));
   }
 
   onToggleLeftNav() {

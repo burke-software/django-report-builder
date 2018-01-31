@@ -1,13 +1,19 @@
+import { createSelector } from '@ngrx/store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import {
   IReport,
   IReportDetailed,
   INestedRelatedField,
   IField,
+  IDisplayField,
   IRelatedField,
   IReportPreview
 } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
-import { createSelector } from '@ngrx/store/src/selector';
+import {
+  DisplayFieldActions,
+  DisplayFieldActionTypes
+} from '../actions/display-field';
 
 export interface State {
   reports: IReport[];
@@ -24,12 +30,13 @@ export interface State {
   relationsSearchText: string;
   leftNavIsOpen: boolean;
   rightNavIsOpen: boolean;
-  sortReportBy: {
-    sort: string;
-    ascending: boolean;
-  };
   activeTab: number;
+  displayFields: EntityState<IDisplayField>;
 }
+
+export const displayFieldAdapter: EntityAdapter<
+  IDisplayField
+> = createEntityAdapter<IDisplayField>();
 
 export const initialState: State = {
   reports: [],
@@ -44,16 +51,13 @@ export const initialState: State = {
   relationsSearchText: '',
   leftNavIsOpen: false,
   rightNavIsOpen: false,
-  sortReportBy: {
-    sort: '',
-    ascending: true
-  },
   activeTab: 0,
+  displayFields: displayFieldAdapter.getInitialState()
 };
 
 export function reducer(
   state = initialState,
-  action: reportActions.Actions
+  action: reportActions.Actions | DisplayFieldActions
 ): State {
   switch (action.type) {
     case reportActions.SET_REPORT_LIST: {
@@ -82,14 +86,14 @@ export function reducer(
     case reportActions.TOGGLE_LEFT_NAV: {
       return {
         ...state,
-        leftNavIsOpen: !state.leftNavIsOpen,
+        leftNavIsOpen: !state.leftNavIsOpen
       };
     }
 
     case reportActions.TOGGLE_RIGHT_NAV: {
       return {
         ...state,
-        rightNavIsOpen: !state.rightNavIsOpen,
+        rightNavIsOpen: !state.rightNavIsOpen
       };
     }
 
@@ -180,9 +184,8 @@ export function reducer(
           report_file: action.payload,
           report_file_creation: new Date().toISOString()
         })
-      }
+      };
     }
-
 
     case reportActions.SET_REPORT_SEARCH_TEXT: {
       console.log(action.payload);
@@ -207,28 +210,21 @@ export function reducer(
       };
     }
 
-    case reportActions.SORT_REPORTS: {
-      let order;
-      if (action.payload === state.sortReportBy.sort) {
-        order = !state.sortReportBy.ascending;
-      } else {
-        order = state.sortReportBy.ascending;
-      }
-      return {
-        ...state,
-        sortReportBy: {
-          sort: action.payload,
-          ascending: order
-       }
-      };
-    }
-
     case reportActions.CHANGE_TAB: {
       return {
         ...state,
         activeTab: action.payload
-      }
+      };
     }
+
+    case DisplayFieldActionTypes.ADD_ONE:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.addOne(
+          action.payload,
+          state.displayFields
+        )
+      };
 
     default: {
       return state;
@@ -292,8 +288,25 @@ export const getLastGeneratedReport = createSelector(
 );
 export const getReportSearchTerm = (state: State) => state.reportSearchText;
 export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
-export const getRelationsSearchTerm = (state: State) => state.relationsSearchText;
+export const getRelationsSearchTerm = (state: State) =>
+  state.relationsSearchText;
 export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
 export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
-export const getSortTerm = (state: State) => state.sortReportBy.sort;
-export const getSortOrder = (state: State) => state.sortReportBy.ascending;
+
+export const getDisplayFieldsState = (state: State) => state.displayFields;
+const {
+  selectIds: notSelectIds,
+  selectEntities: notSelectEntities,
+  selectAll: notSelectAll,
+  selectTotal: notSelectTotal
+} = displayFieldAdapter.getSelectors();
+export const selectIds = createSelector(getDisplayFieldsState, notSelectIds);
+export const selectEntities = createSelector(
+  getDisplayFieldsState,
+  notSelectEntities
+);
+export const selectAll = createSelector(getDisplayFieldsState, notSelectAll);
+export const selectTotal = createSelector(
+  getDisplayFieldsState,
+  notSelectTotal
+);
