@@ -16,10 +16,10 @@ export interface IDisplayField {
   sort_reverse?: boolean;
   width?: number;
   aggregate?: string;
-  position?: number;
+  position: number;
   total?: boolean;
   group?: boolean;
-  report?: number;
+  report: number;
   display_format?: any;
   field_type: string;
   is_default?: boolean;

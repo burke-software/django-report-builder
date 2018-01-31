@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { setSearch } from './utils/filterSearch';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEventPattern';
-import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 import {
   State,
@@ -17,9 +16,8 @@ import {
   getFieldSearchTerm,
   getRelationsSearchTerm,
   getSelectedReport,
-  getActiveTab,
 } from '../reducers';
-import { IRelatedField } from '../api.interfaces';
+import { IRelatedField, IField } from '../api.interfaces';
 import {
   GetReportList,
   GetReport,
@@ -30,8 +28,8 @@ import {
   SetRelationsSearchText,
   ToggleLeftNav,
   ToggleRightNav,
+  AddReportField,
 } from '../actions/reports';
-import { AddOne as AddDisplayField } from '../actions/display-field';
 
 @Component({
   selector: 'app-main',
@@ -50,7 +48,7 @@ import { AddOne as AddDisplayField } from '../actions/display-field';
         <app-tabs>
         </app-tabs>
       </div>
-      <app-right-sidebar #rightMenu
+      <app-right-sidebar
         [modelName]="(selectedReport$ | async)?.name"
         [relatedFields]="relatedFields$ | async"
         [fields]="fields$ | async"
@@ -59,6 +57,7 @@ import { AddOne as AddDisplayField } from '../actions/display-field';
         (searchRelations)="searchRelations($event)"
         (onToggleRightNav)="onToggleRightNav()"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
+        (addReportField)="addReportField($event)"
       ></app-right-sidebar>
     </mat-sidenav-container>
   `,
@@ -86,22 +85,11 @@ export class MainComponent implements OnInit {
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
-  currentTab$ = this.store.select(getActiveTab);
-  @ViewChild('rightMenu') rightMenu: RightSidebarComponent;
 
   constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());
-    this.rightMenu.addReportField
-      .asObservable()
-      .withLatestFrom(this.currentTab$)
-      .subscribe(([field, tabI]) => {
-        switch (tabI) {
-          case 0:
-            this.store.dispatch(new AddDisplayField(field));
-        }
-      });
   }
 
   onClickReport(reportId: number) {
@@ -131,5 +119,9 @@ export class MainComponent implements OnInit {
 
   onToggleRightNav() {
     this.store.dispatch(new ToggleRightNav());
+  }
+
+  addReportField(field: IField) {
+    this.store.dispatch(new AddReportField(field));
   }
 }

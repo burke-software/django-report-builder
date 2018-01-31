@@ -1,10 +1,9 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { IDisplayField, IField } from '../api.interfaces';
+import { IDisplayField } from '../api.interfaces';
 
 export enum DisplayFieldActionTypes {
   LOAD_ALL = '[Display Fields] Load All',
-  ADD_ONE = '[Display Fields] Add One',
   UPDATE_ONE = '[Display Fields] Update One',
   UPDATE_MANY = '[Display Fields] Update Many',
   DELETE_ONE = '[Display Fields] Delete One',
@@ -13,11 +12,6 @@ export enum DisplayFieldActionTypes {
 export class LoadAll implements Action {
   readonly type = DisplayFieldActionTypes.LOAD_ALL;
   constructor(public payload: IDisplayField[]) {}
-}
-
-export class AddOne implements Action {
-  readonly type = DisplayFieldActionTypes.ADD_ONE;
-  constructor(public payload: IField) {}
 }
 
 export class UpdateOne implements Action {
@@ -35,9 +29,4 @@ export class DeleteOne implements Action {
   constructor(public payload: number) {}
 }
 
-export type DisplayFieldActions =
-  | LoadAll
-  | AddOne
-  | UpdateOne
-  | UpdateMany
-  | DeleteOne;
+export type DisplayFieldActions = LoadAll | UpdateOne | UpdateMany | DeleteOne;

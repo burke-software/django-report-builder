@@ -219,15 +219,6 @@ export function reducer(
         ),
       };
 
-    case DisplayFieldActionTypes.ADD_ONE:
-      return {
-        ...state,
-        displayFields: displayFieldAdapter.addOne(
-          { ...action.payload, position: state.displayFields.ids.length },
-          state.displayFields
-        ),
-      };
-
     case DisplayFieldActionTypes.UPDATE_ONE:
       return {
         ...state,
@@ -254,6 +245,26 @@ export function reducer(
           state.displayFields
         ),
       };
+
+    case reportActions.ADD_REPORT_FIELD: {
+      switch (getActiveTab(state)) {
+        case 0:
+          return {
+            ...state,
+            displayFields: displayFieldAdapter.addOne(
+              {
+                ...action.payload,
+                position: state.displayFields.ids.length,
+                report: state.selectedReport.id,
+              },
+              state.displayFields
+            ),
+          };
+
+        default:
+          return state;
+      }
+    }
 
     default:
       return state;
@@ -317,12 +328,19 @@ export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 export const getDisplayFieldsState = (state: State) => state.displayFields;
 const {
   selectAll: selectAllDisplayFields,
+  selectTotal: selectDisplayFieldsCount,
 } = displayFieldAdapter.getSelectors();
 export const getDisplayFields = createSelector(
   getDisplayFieldsState,
   selectAllDisplayFields
 );
-export const getActiveTab = (state: State) => state.activeTab;
+export const getDisplayFieldsCount = createSelector(
+  getDisplayFieldsState,
+  selectDisplayFieldsCount
+);
+export function getActiveTab(state: State) {
+  return state.activeTab;
+}
 
 export const getEditedReport = (state: State) => ({
   ...state.selectedReport,
