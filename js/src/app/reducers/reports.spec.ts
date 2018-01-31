@@ -2,7 +2,7 @@ import * as ReportActions from '../actions/reports';
 import * as ReportReducer from './reports';
 
 import * as testdata from './testdata.spec';
-import { IField, IDisplayField } from '../api.interfaces';
+import { IField } from '../api.interfaces';
 
 describe('ReportsReducer', () => {
   describe('GET_REPORT', () => {
@@ -32,7 +32,7 @@ describe('ReportsReducer', () => {
         user_modified: null,
         filterfield_set: [],
         report_file: null,
-        report_file_creation: null
+        report_file_creation: null,
       };
 
       const getReportSuccessAction = new ReportActions.GetReportSuccess(
@@ -47,7 +47,7 @@ describe('ReportsReducer', () => {
         jasmine.objectContaining({
           selectedReport: newReport,
           relatedFields: ReportReducer.initialState.relatedFields,
-          fields: ReportReducer.initialState.fields
+          fields: ReportReducer.initialState.fields,
         })
       );
     });
@@ -58,7 +58,7 @@ describe('ReportsReducer', () => {
       const parent = testdata.populatedReports.relatedFields[0];
       const successAction = new ReportActions.GetRelatedFieldsSuccess({
         parent,
-        relatedFields: testdata.newRelatedFields
+        relatedFields: testdata.newRelatedFields,
       });
 
       const result = ReportReducer.reducer(
@@ -72,37 +72,6 @@ describe('ReportsReducer', () => {
 
       expect(expectedParent.children.map(f => f.field_name)).toEqual(
         testdata.newRelatedFields.map(f => f.field_name)
-      );
-    });
-  });
-
-  describe('ADD_DISPLAY_FIELD_TO_REPORT', () => {
-    const clickedField: IField = {
-      path: '',
-      path_verbose: '',
-      field: 'is_staff',
-      field_verbose: 'staff status',
-      name: 'is_staff',
-      field_type: 'BooleanField',
-      help_text: 'designates whether the user can admin site',
-      is_default: true,
-      can_filter: true
-    };
-
-    it('adds a field to the currently active report at the end of the list', () => {
-      const action = new ReportActions.AddDisplayFieldToReport(clickedField);
-
-      const { selectedReport } = testdata.populatedReports;
-
-      const addedField: IDisplayField = {
-        ...clickedField,
-        position: selectedReport.displayfield_set.length,
-        report: selectedReport.id
-      };
-
-      const result = ReportReducer.reducer(testdata.populatedReports, action);
-      expect(result.selectedReport.displayfield_set).toContain(
-        jasmine.objectContaining(addedField)
       );
     });
   });

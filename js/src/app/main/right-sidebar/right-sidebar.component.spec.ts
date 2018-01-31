@@ -20,7 +20,7 @@ describe('RightSidebarComponent', () => {
           NoopAnimationsModule,
           ClickOutsideModule,
           TreeModule,
-        ]
+        ],
       }).compileComponents();
     })
   );
@@ -31,7 +31,7 @@ describe('RightSidebarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  xit('should create', () => {
     expect(component).toBeTruthy();
   });
 });
