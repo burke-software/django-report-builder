@@ -102,6 +102,15 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());
+    this.rightMenu.addReportField
+      .asObservable()
+      .withLatestFrom(this.currentTab$)
+      .subscribe(([field, tabI]) => {
+        switch (tabI) {
+          case 0:
+            this.store.dispatch(new AddDisplayField(field));
+        }
+      });
   }
 
   onClickReport(reportId: number) {
