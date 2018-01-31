@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
@@ -10,6 +10,7 @@ import {
   getReports,
   getRelatedFields,
   getFields,
+  getTitle,
   getRightNavIsOpen,
   getLeftNavIsOpen,
   getReportSearchTerm,
@@ -38,7 +39,8 @@ import {
   template: `
   <app-header
   (onToggleLeftNav)="onToggleLeftNav()"
-  (onToggleRightNav)="onToggleRightNav()">
+  (onToggleRightNav)="onToggleRightNav()"
+  [title]="title$ | async">
   </app-header>
     <mat-sidenav-container class="left-sidenav-container">
       <app-left-sidebar
@@ -69,6 +71,8 @@ import {
   `
 })
 export class MainComponent implements OnInit {
+
+  title$ = this.store.select(getTitle);
 
   sortReportsBy$ = Observable.combineLatest(
     this.store.select(getSortTerm),
