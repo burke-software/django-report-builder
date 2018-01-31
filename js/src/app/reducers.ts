@@ -78,10 +78,14 @@ export const getIsDistinct = createSelector(
   getReportsState,
   fromReports.getIsDistinct
 );
-export const getEditedReport = createSelector(
-  getReportsState,
-  fromReports.getEditedReport
-);
+export const getEditedReport = (state: State) =>
+  Object.assign({}, fromReports.getEditedReport(getReportsState(state)), {
+    displayfield_set: getDisplayFields(state),
+  });
+// export const getEditedReport = createSelector(
+//   getReportsState,
+//   fromReports.getEditedReport
+// );
 export const getPreview = createSelector(
   getReportsState,
   fromReports.getPreview
