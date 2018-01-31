@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { setSearch } from './utils/filterSearch';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEventPattern';
+import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 import {
   State,
@@ -17,6 +18,7 @@ import {
   getFieldSearchTerm,
   getRelationsSearchTerm,
   getSelectedReport,
+  getActiveTab,
 } from '../reducers';
 import { IRelatedField, IField } from '../api.interfaces';
 import {
@@ -54,7 +56,7 @@ import {
         <app-tabs>
         </app-tabs>
       </div>
-      <app-right-sidebar
+      <app-right-sidebar #rightMenu
         [modelName]="(selectedReport$ | async)?.name"
         [relatedFields]="relatedFields$ | async"
         [fields]="fields$ | async"
@@ -93,6 +95,8 @@ export class MainComponent implements OnInit {
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
+  currentTab$ = this.store.select(getActiveTab);
+  @ViewChild('rightMenu') rightMenu: RightSidebarComponent;
 
   constructor(private store: Store<State>) {}
 
