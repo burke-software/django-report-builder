@@ -51,15 +51,18 @@
     </mat-form-field>
 
     <div *ngSwitchCase="'isnull'">
-      <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })" arial-label="Is Null"></mat-checkbox>
+      <mat-checkbox [checked]="filter.filter_value === 'True'" (change)="editFilter({filter_value: $event.checked ? 'True' : 'False' })"
+        arial-label="Is Null"></mat-checkbox>
     </div>
 
     <div *ngSwitchCase="'max'">
-      <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })" arial-label="Max (annotation-filter)"></mat-checkbox>
+      <mat-checkbox [checked]="filter.filter_value === 'True'" (change)="editFilter({filter_value: $event.checked ? 'True' : 'False' })"
+        arial-label="Max (annotation-filter)"></mat-checkbox>
     </div>
 
     <div *ngSwitchCase="'min'">
-      <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })" arial-label="Min (annotation-filter)"></mat-checkbox>
+      <mat-checkbox [checked]="filter.filter_value === 'True'" (change)="editFilter({filter_value: $event.checked ? 'True' : 'False' })"
+        arial-label="Min (annotation-filter)"></mat-checkbox>
     </div>
 
     <div *ngSwitchDefault [ngSwitch]="filter.field_type">
