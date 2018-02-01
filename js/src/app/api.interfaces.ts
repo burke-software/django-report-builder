@@ -5,17 +5,24 @@ interface IContentType {
 
 export type ContentTypeResponse = IContentType[];
 
-interface IBase {
+export interface IBase {
   field: string;
   field_verbose: string;
   field_type: string;
   path: string;
   path_verbose: string;
+  name: string;
+}
+
+export interface IField extends IBase {
+  is_default: boolean;
+  field_choices?: any;
+  can_filter: boolean;
+  help_text: string;
 }
 
 export interface IDisplayField extends IBase {
   id?: number;
-  name: string;
   sort?: any;
   sort_reverse?: boolean;
   width?: number;
@@ -32,7 +39,7 @@ export interface IDisplayField extends IBase {
 }
 
 export interface IFilter extends IBase {
-  exclude: boolean;
+  exclude?: boolean;
   filter_type: string;
   filter_value: any;
   filter_value2?: any;
@@ -93,14 +100,6 @@ export interface IRelatedField {
 
 export interface INestedRelatedField extends IRelatedField {
   children: INestedRelatedField[];
-}
-
-export interface IField extends IBase {
-  name: string;
-  is_default: boolean;
-  field_choices?: any;
-  can_filter: boolean;
-  help_text: string;
 }
 
 export type ReportsResponse = IReport[];
