@@ -1,6 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { IReport } from '../../api.interfaces';
 import {Sort} from '@angular/material';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-left-sidebar',
@@ -21,6 +22,8 @@ export class LeftSidebarComponent {
   sortedData;
   reports;
   title = "Reports";
+  displayedColumns = ['name', 'modified', 'user_created.first_name'];
+  dataSource = new MatTableDataSource(this.sortedData);
 
   @Input() 
   set listReports(value: IReport[]) {
@@ -42,6 +45,13 @@ export class LeftSidebarComponent {
     if (this.leftNavIsOpen === true) {
       this.onToggleLeftNav.emit();
     }
+  }
+
+  applyFilter(filterValue: string) {
+    console.log(filterValue);
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
   }
 
   sortData(sort: Sort) {

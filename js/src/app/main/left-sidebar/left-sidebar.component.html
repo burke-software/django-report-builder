@@ -1,5 +1,6 @@
 
-  <mat-sidenav class="left-side-nav" (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
+  <mat-sidenav class="left-side-nav" #table
+  (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
    <h3 class="header">Reports</h3> 
    
     <a routerLink="/report/add"><div class="add-report">+ Add Report</div></a>
@@ -7,11 +8,18 @@
   <div class="reports-container">
     <h3>My Reports</h3>
 
-    <input type="text" class="search-box" placeholder="Search Reports"
+    <!-- <input type="text" class="search-box" placeholder="Search Reports"
       (keyup)="searchReports.emit($event.target.value)">
-    <br><br><br>
+    <br><br><br> -->
 
-    <table matSort matSortDisableClear="true" (matSortChange)="sortData($event)">
+    <div class="example-header">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" class="search-box" placeholder="Search Reports">
+      </mat-form-field>
+    </div>
+    <br>
+
+    <table matSort  #table matSortDisableClear="true" (matSortChange)="sortData($event)">
         <tr>
           <th mat-sort-header="name">NAME</th>
           <th mat-sort-header="user_created.first_name">USER</th>

@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IField, IRelatedField } from '../../api.interfaces';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -8,7 +9,6 @@ import { IField, IRelatedField } from '../../api.interfaces';
 })
 export class RightSidebarComponent {
   @Input() modelName: string;
-  @Input() fields: IField[];
   @Input() relatedFields: IRelatedField[] = [];
   @Input() selectedField: IField;
 
@@ -20,6 +20,15 @@ export class RightSidebarComponent {
   @Input() rightNavIsOpen: boolean;
   @Output() addReportField = new EventEmitter<IField>();
   @Output() selectField = new EventEmitter<IField>();
+
+  @Input() 
+  set fields(value: IField[]) {
+    this.fieldDataSource = new MatTableDataSource(value);
+  };
+
+    fieldDataSource: MatTableDataSource<IField>;
+  
+    displayedColumnsField = ['name'];
 
   constructor() {}
 
