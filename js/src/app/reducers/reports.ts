@@ -62,7 +62,7 @@ export const initialState: State = {
   relationsSearchText: '',
   leftNavIsOpen: false,
   rightNavIsOpen: false,
-  activeTab: 0,
+  activeTab: 1,
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
 };

@@ -15,6 +15,7 @@ import { Action, Store } from '@ngrx/store';
 import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
 import * as fromDisplay from '../actions/display-field';
+import * as fromFilter from '../actions/filter';
 import { IGetRelatedFieldRequest } from '../api.interfaces';
 import {
   State,
@@ -57,6 +58,14 @@ export class ReportEffects {
     .map(
       (action: fromReports.GetReportSuccess | fromReports.EditReportSuccess) =>
         new fromDisplay.LoadAll(action.payload.displayfield_set)
+    );
+
+  @Effect()
+  loadFilterFields$ = this.actions$
+    .ofType(fromReports.GET_REPORT_SUCCESS, fromReports.EDIT_REPORT_SUCCESS)
+    .map(
+      (action: fromReports.GetReportSuccess | fromReports.EditReportSuccess) =>
+        new fromFilter.LoadAll(action.payload.filterfield_set)
     );
 
   @Effect()

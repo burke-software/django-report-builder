@@ -11,6 +11,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatDatepickerModule,
   MatIconModule,
   MatInputModule,
   MatToolbarModule,
@@ -44,6 +45,8 @@ import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.co
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
 import { DisplayTabComponent } from './main/tabs/display-tab/display-tab.component';
 import { DisplayTabRowComponent } from './main/tabs/display-tab/display-tab-row.component';
+import { FilterTabComponent } from './main/tabs/filter-tab/filter-tab.component';
+import { FilterTabRowComponent } from './main/tabs/filter-tab/filter-tab-row.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 import { FieldComponent } from './main/right-sidebar/field.component';
@@ -63,6 +66,7 @@ export const MatModules = [
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatDatepickerModule,
   MatIconModule,
   MatInputModule,
   MatToolbarModule,
@@ -88,6 +92,8 @@ export const MatModules = [
     SavedTimestampComponent,
     DisplayTabComponent,
     DisplayTabRowComponent,
+    FilterTabComponent,
+    FilterTabRowComponent,
     RightSidebarComponent,
     RelatedFieldComponent,
     FieldComponent,

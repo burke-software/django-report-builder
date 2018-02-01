@@ -1,11 +1,17 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ChangeTab } from '../../actions/reports';
-import { UpdateOne, DeleteOne } from '../../actions/display-field';
-import { State, getActiveTab, getDisplayFields } from '../../reducers';
+import * as DisplayFieldActions from '../../actions/display-field';
+import * as FilterActions from '../../actions/filter';
+import {
+  State,
+  getActiveTab,
+  getDisplayFields,
+  getFilters,
+} from '../../reducers';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
-import { IDisplayField } from '../../api.interfaces';
+import { IDisplayField, IFilter } from '../../api.interfaces';
 
 @Component({
   selector: 'app-tabs',
@@ -16,6 +22,7 @@ import { IDisplayField } from '../../api.interfaces';
 export class TabsComponent implements OnInit {
   constructor(private store: Store<State>) {}
   displayFields$ = this.store.select(getDisplayFields);
+  filters$ = this.store.select(getFilters);
   activeTab$ = this.store.select(getActiveTab);
   @ViewChild('tabs') tabs: MatTabGroup;
 
@@ -24,11 +31,19 @@ export class TabsComponent implements OnInit {
   }
 
   updateDisplayField(update: Update<IDisplayField>) {
-    this.store.dispatch(new UpdateOne(update));
+    this.store.dispatch(new DisplayFieldActions.UpdateOne(update));
   }
 
   deleteDisplayField(id: number) {
-    this.store.dispatch(new DeleteOne(id));
+    this.store.dispatch(new DisplayFieldActions.DeleteOne(id));
+  }
+
+  updateFilter(update: Update<IFilter>) {
+    this.store.dispatch(new FilterActions.UpdateOne(update));
+  }
+
+  deleteFilter(id: number) {
+    this.store.dispatch(new FilterActions.DeleteOne(id));
   }
 
   ngOnInit() {
