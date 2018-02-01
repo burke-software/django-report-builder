@@ -37,11 +37,6 @@ import {
 @Component({
   selector: 'app-main',
   template: `
-  <app-header
-  (onToggleLeftNav)="onToggleLeftNav()"
-  (onToggleRightNav)="onToggleRightNav()"
-  [title]="title$ | async">
-  </app-header>
     <mat-sidenav-container class="left-sidenav-container">
       <app-left-sidebar
         [listReports]="listReports$ | async"
@@ -52,6 +47,11 @@ import {
         [leftNavIsOpen]="leftNavIsOpen$ | async"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
       ></app-left-sidebar>
+      <app-header
+      (onToggleLeftNav)="onToggleLeftNav()"
+      (onToggleRightNav)="onToggleRightNav()"
+      [title]="title$ | async">
+      </app-header>
       <div class="example-sidenav-content" style="padding-left: 100px;">
         <app-tabs>
         </app-tabs>

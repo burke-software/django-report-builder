@@ -1,23 +1,34 @@
 mat-sidenav {
-    width: 22%;
+    width: 300px;
+    position: fixed;
     height: 100%;
-    border-left: 2px solid #ededed;
+    border-left: 1px solid #ededed;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 tree-root /deep/ {
-    height: 35;
+    height: 38%;
     tree-viewport {
-        height: 35%;
+        height: 38%;
     }
 }
 
 .header {
     width: 100%;
-    height: 8%;
-    background-color: #79aec8;
+    height: 65px;
+    background-color: #417690;
+    color: white;
     margin-top: -19px;
     padding-left: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    letter-spacing: 0.005em;
+    box-sizing: border-box;
+    font-weight: 300;
+    padding-left: 10px;
+    padding-top: 20px;
 }
 
 .fields {
@@ -39,6 +50,14 @@ tree-root /deep/ {
     width: 100%;
     height: 3%;
 }
+
+@media screen and (max-width: 620px) {
+    .header {
+      height: 63px;
+    }
+  }
+  
+  
 
 
 

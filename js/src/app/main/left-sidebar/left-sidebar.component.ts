@@ -20,6 +20,7 @@ export class LeftSidebarComponent {
   
   sortedData;
   reports;
+  title = "Reports";
 
   @Input() 
   set listReports(value: IReport[]) {

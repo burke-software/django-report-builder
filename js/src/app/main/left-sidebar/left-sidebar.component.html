@@ -1,6 +1,7 @@
 
   <mat-sidenav class="left-side-nav" (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
-    
+   <h3 class="header">Reports</h3> 
+   
     <a routerLink="/report/add"><div class="add-report">+ Add Report</div></a>
 
   <div class="reports-container">
