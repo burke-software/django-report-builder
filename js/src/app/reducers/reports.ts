@@ -20,6 +20,7 @@ export interface State {
   selectedReport: IReportDetailed | null;
   relatedFields: INestedRelatedField[];
   fields: IField[];
+  title: string;
   descriptionInput: string;
   isDistinct: boolean;
   reportPreview?: IReportPreview;
@@ -45,6 +46,7 @@ export const initialState: State = {
   selectedReport: null,
   relatedFields: [],
   fields: [],
+  title: '',
   descriptionInput: '',
   isDistinct: false,
   reportSearchText: '',
@@ -75,6 +77,14 @@ export function reducer(
         descriptionInput: initialState.descriptionInput,
       };
     }
+
+    case reportActions.GET_TITLE: {
+      return {
+        ...state,
+        title: action.payload
+      };
+    }
+
 
     case reportActions.TOGGLE_LEFT_NAV: {
       return {
@@ -289,6 +299,7 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
 }
 
 export const getReports = (state: State) => state.reports;
+export const getTitle = (state: State) => state.title;
 export const getSelectedReport = (state: State) => state.selectedReport;
 export const getSelectedReportId = (state: State) => {
   const report = getSelectedReport(state);

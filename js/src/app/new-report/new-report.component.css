@@ -1,6 +1,6 @@
-mat-card {
-    width: 50%;
-    border: 3px solid #dbdbdb;
+.report-form {
+    width: 45%;
+    border: 1px solid #dbdbdb;
     position: absolute;
     margin: auto;
     top: 0;
@@ -8,11 +8,27 @@ mat-card {
     bottom: 0;
     right: 0;
     display: table;
+    border-radius: 5px;
+    padding-top: 0;
 }
 
-mat-card-title {
-    width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+.report-title {
+    background: #417690;
+    color: white;
+    height: 15%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin: 0 -24px 16px;
+    padding-left: 20px;
+    padding-top: 10px;
+    font-weight: 300;
+}
+
+@media screen and (max-width: 600px) {
+    .report-title {
+        margin: 0 -16px 16px;
+        padding: 10px 16px;
+    }
 }
 
 .container {
@@ -22,6 +38,10 @@ mat-card-title {
     align-items: center;
   }
   
-  .container > * {
+  .container > mat-form-field {
     width: 100%;
   }
+
+button {
+    margin-bottom: 20px;
+}

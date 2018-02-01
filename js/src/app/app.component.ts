@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
-import { GetReport, ToggleRightNav, ToggleLeftNav } from './actions/reports';
+import { GetReport, GetTitle, ToggleRightNav, ToggleLeftNav } from './actions/reports';
 import { GetConfig } from './actions/config';
 import { IReportDetailed } from './api.interfaces';
 
@@ -12,7 +12,6 @@ import { IReportDetailed } from './api.interfaces';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title: string;
 
   @Input() selectedReport: IReportDetailed;
 
@@ -23,7 +22,7 @@ export class AppComponent implements OnInit {
         const child = event.state.root.firstChild;
         if (child) {
           if (child.data) {
-            this.title = child.data['title'];
+            this.store.dispatch(new GetTitle(child.data['title']))
           }
           // Load in report if user opened app from this url (instead of clicking)
           if (child.params && child.params['id'] && firstLoad) {

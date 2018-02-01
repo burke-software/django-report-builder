@@ -11,6 +11,7 @@ import {
 export const GET_REPORT_LIST = 'Get Report List';
 export const SET_REPORT_LIST = 'Set Report List';
 export const GET_REPORT = 'Get Report';
+export const GET_TITLE = 'Get Title';
 export const GET_REPORT_SUCCESS = 'Get Report Success';
 export const GET_REPORT_FIELDS_SUCCESS = 'Get Report Fields Success';
 export const GET_FIELDS = 'Get Fields';
@@ -53,6 +54,11 @@ export class SetReportList implements Action {
 export class GetReport implements Action {
   readonly type = GET_REPORT;
   constructor(public payload: number) {}
+}
+
+export class GetTitle implements Action {
+  readonly type = GET_TITLE;
+  constructor(public payload: string) {}
 }
 
 export class GetReportSuccess implements Action {
@@ -197,6 +203,7 @@ export type Actions =
   | GetReportFieldsSuccess
   | SetReportList
   | GetReport
+  | GetTitle
   | GetReportSuccess
   | GetFields
   | GetFieldsSuccess
