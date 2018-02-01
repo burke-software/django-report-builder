@@ -3,7 +3,7 @@
     <button mat-icon-button>
       <mat-icon>reorder</mat-icon>
     </button>
-    <button mat-icon-button (click)="deleteFilter.emit(field.position)">
+    <button mat-icon-button (click)="deleteFilter.emit(filter.position)">
       <mat-icon>delete</mat-icon>
     </button>
   </div>
@@ -38,7 +38,7 @@
     </mat-form-field>
   </div>
   <div class="mat-cell" [ngSwitch]="filter.filter_type">
-    <mat-form-field *ngSwitchCase="week_day">
+    <mat-form-field *ngSwitchCase="'week_day'">
       <mat-select (selectionChange)="editFilter({filter_value: $event.value})" [value]="filter.filter_value">
         <mat-option value="1">Sunday</mat-option>
         <mat-option value="2">Monday</mat-option>
@@ -50,26 +50,26 @@
       </mat-select>
     </mat-form-field>
 
-    <div *ngSwitchCase="isnull">
+    <div *ngSwitchCase="'isnull'">
       <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })" arial-label="Is Null"></mat-checkbox>
     </div>
 
-    <div *ngSwitchCase="max">
+    <div *ngSwitchCase="'max'">
       <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })" arial-label="Max (annotation-filter)"></mat-checkbox>
     </div>
 
-    <div *ngSwitchCase="min">
+    <div *ngSwitchCase="'min'">
       <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })" arial-label="Min (annotation-filter)"></mat-checkbox>
     </div>
 
     <div *ngSwitchDefault [ngSwitch]="filter.field_type">
-      <mat-form-field *ngSwitchCase="DateField">
-        <input matInput [matDatepicker]="'picker' + filter.position" [value]="filter.filter_value" (dateChange)="editFilter({filter_value: $event.value})">
-        <mat-datepicker-toggle matSuffix [for]="'picker' + filter.position"></mat-datepicker-toggle>
-        <mat-datepicker id="'picker' + filter.position"></mat-datepicker>
+      <mat-form-field *ngSwitchCase="'DateField'">
+        <input matInput [matDatepicker]="picker" [value]="filter.filter_value" (dateChange)="editFilter({filter_value: $event.value})">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <div *ngSwitchCase="BooleanField">
+      <div *ngSwitchCase="'BooleanField'">
         <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })"></mat-checkbox>
       </div>
 
@@ -80,10 +80,10 @@
   </div>
   <div class="mat-cell">
     <div *ngIf="filter.filter_type==='range'" [ngSwitch]="filter.field_type">
-      <mat-form-field *ngSwitchCase="DateField">
-        <input matInput [matDatepicker]="'picker' + filter.position + '2'" [value]="filter.filter_value2" (dateChange)="editFilter({filter_value2: $event.value})">
-        <mat-datepicker-toggle matSuffix [for]="'picker' + filter.position + '2'"></mat-datepicker-toggle>
-        <mat-datepicker id="'picker' + filter.position + '2'"></mat-datepicker>
+      <mat-form-field *ngSwitchCase="'DateField'">
+        <input matInput [matDatepicker]="picker2" [value]="filter.filter_value2" (dateChange)="editFilter({filter_value2: $event.value})">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field *ngSwitchDefault>
@@ -92,6 +92,6 @@
     </div>
   </div>
   <div class="mat-cell">
-    <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })"></mat-checkbox>
+    <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })" aria-label="Exclude?"></mat-checkbox>
   </div>
 </div>

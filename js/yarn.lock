@@ -155,6 +155,12 @@
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-5.2.2.tgz#2829214885096c4168566a9f74364a8fed641a49"
 
+"@angular/material-moment-adapter@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-5.1.1.tgz#2d3de5068cc603f746176dd594a223ca5e97fe9b"
+  dependencies:
+    tslib "^1.7.1"
+
 "@angular/material@^5.0.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@angular/material/-/material-5.1.1.tgz#fafbd6bd98f2521ac5e3e2b2f720214386e3f31d"
@@ -3986,6 +3992,10 @@ mobx-angular@>=1:
 mobx@>=3:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
+
+moment@^2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
 
 move-concurrently@^1.0.1:
   version "1.0.1"

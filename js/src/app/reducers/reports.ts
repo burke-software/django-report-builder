@@ -62,7 +62,7 @@ export const initialState: State = {
   relationsSearchText: '',
   leftNavIsOpen: false,
   rightNavIsOpen: false,
-  activeTab: 1,
+  activeTab: 0,
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
 };
@@ -312,7 +312,6 @@ export function reducer(
                 position: state.filters.ids.length,
                 report: state.selectedReport.id,
                 filter_type: 'exact',
-                filter_value: '',
               },
               state.filters
             ),

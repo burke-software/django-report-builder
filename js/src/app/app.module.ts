@@ -20,6 +20,7 @@ import {
   MatTabsModule,
   MatTableModule,
 } from '@angular/material';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -69,6 +70,7 @@ export const MatModules = [
   MatDatepickerModule,
   MatIconModule,
   MatInputModule,
+  MatMomentDateModule,
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,

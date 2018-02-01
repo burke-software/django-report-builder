@@ -41,7 +41,7 @@ export interface IDisplayField extends IBase {
 export interface IFilter extends IBase {
   exclude?: boolean;
   filter_type: string;
-  filter_value: any;
+  filter_value?: any;
   filter_value2?: any;
   id?: number;
   position: number;
