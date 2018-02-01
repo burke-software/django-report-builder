@@ -1,8 +1,12 @@
 .left-side-nav {
-  padding: 10px;
   width: 22%;
   border-right: 2px solid #ededed;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  z-index: 3;
+}
+
+h3 {
+  padding-left: 15px;
 }
 
 th {
@@ -29,13 +33,7 @@ a, a:visited, a:hover, a:active {
 .add-report {
   height: 5px;
   text-align: center;
-  padding-bottom: 20px;
-}
-
-.add-report {
-  padding: 10px;
-  padding-left: 5px;
-  padding-top: 20px;
+  padding: 20px 10px 20px 5px;
 }
 
 .modified {
@@ -52,12 +50,7 @@ a, a:visited, a:hover, a:active {
   border-bottom: 1px solid #ededed;
   font-style: italic;
   padding-bottom: 1rem;
-}
-
-@media screen and (max-width: 1100px) {
-  .left-side-nav {
-      width: 25%;
-  }
+  margin-left: 15px;
 }
 
 @media screen and (max-width: 488px) {
@@ -66,13 +59,7 @@ a, a:visited, a:hover, a:active {
   }
 }
 
-@media screen and (min-width: 489px) and (max-width:800px) {
-  .left-side-nav {
-      width: 60%;
-  }
-}
-
-@media screen and (min-width: 801px) and (max-width:1100px) {
+@media screen and (min-width: 489px) and (max-width:1100px) {
   .left-side-nav {
       width: 40%;
   }
