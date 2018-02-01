@@ -40,6 +40,7 @@ export const SORT_REPORTS = 'Sort Reports';
 export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
 export const ADD_REPORT_FIELD = 'Add Report Field';
+export const SELECT_FIELD = 'Select Field';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -199,6 +200,11 @@ export class AddReportField implements Action {
   constructor(public payload: IBase) {}
 }
 
+export class SelectField implements Action {
+  readonly type = SELECT_FIELD;
+  constructor(public payload: IField) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -231,4 +237,5 @@ export type Actions =
   | ToggleRightNav
   | SortReports
   | ChangeTab
-  | AddReportField;
+  | AddReportField
+  | SelectField;

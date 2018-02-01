@@ -10,6 +10,7 @@ export class RightSidebarComponent {
   @Input() modelName: string;
   @Input() fields: IField[];
   @Input() relatedFields: IRelatedField[] = [];
+  @Input() selectedField: IField;
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
   @Output() onToggleRightNav = new EventEmitter();
@@ -18,6 +19,7 @@ export class RightSidebarComponent {
 
   @Input() rightNavIsOpen: boolean;
   @Output() addReportField = new EventEmitter<IField>();
+  @Output() selectField = new EventEmitter<IField>();
 
   constructor() {}
 

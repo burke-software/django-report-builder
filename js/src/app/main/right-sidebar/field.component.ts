@@ -4,12 +4,13 @@ import { IField } from '../../api.interfaces';
 @Component({
   selector: 'app-field-component',
   template: `<div>
-    <span (click)="addReportField.emit(field)">{{field.name}}</span>
-  </div>`
+    <span (click)="selectField.emit(field)">{{field.name}}</span><mat-icon (click)="addReportField.emit(field)">add</mat-icon>
+  </div>`,
 })
 export class FieldComponent {
   constructor() {}
 
   @Input() field: IField;
   @Output() addReportField = new EventEmitter<IField>();
+  @Output() selectField = new EventEmitter<IField>();
 }

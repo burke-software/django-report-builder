@@ -15,6 +15,9 @@
   <input type="text" class="search-box" id="search-box" placeholder="Search Fields" (keyup)="searchFields.emit($event.target.value)">
 
   <div class="fields" *ngFor="let field of fields">
-    <app-field-component (addReportField)="addReportField.emit($event)" [field]="field"></app-field-component>
+    <app-field-component (addReportField)="addReportField.emit($event)" (selectField)="selectField.emit($event)" [field]="field"></app-field-component>
+  </div>
+  <div *ngIf="selectedField">
+    [{{selectedField.field_type}}] {{selectedField.help_text}}
   </div>
 </mat-sidenav>
