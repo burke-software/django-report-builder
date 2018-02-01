@@ -1,4 +1,4 @@
-<mat-tab-group #tabs (selectedTabChange)="tabChange($event.index)">
+<mat-tab-group #tabs class="tab-group" (selectedTabChange)="tabChange($event.index)">
   <mat-tab label="Display">
     <app-display-tab *ngIf="displayFields$ | async" [fields]="displayFields$ | async" (updateField)="updateDisplayField($event)"
       (deleteField)="deleteDisplayField($event)"></app-display-tab>

@@ -9,6 +9,10 @@ body {
     background: #fafafa;
 }
 
+.mat-drawer-content {
+    position: initial !important;
+}
+
 .node-content-wrapper-active, .node-content-wrapper-focused, .node-content-wrapper:hover {
     background: white !important;
     -webkit-box-shadow: inset 0 0 0 #fff !important;
@@ -20,3 +24,4 @@ body {
 .left-sidenav-container {
     height: calc(100vh - #{$navheight});
 }
+

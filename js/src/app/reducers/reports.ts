@@ -200,7 +200,6 @@ export function reducer(
     }
 
     case reportActions.SET_REPORT_SEARCH_TEXT: {
-      console.log(action.payload);
       return {
         ...state,
         reportSearchText: action.payload,
@@ -208,7 +207,6 @@ export function reducer(
     }
 
     case reportActions.SET_FIELD_SEARCH_TEXT: {
-      console.log(action.payload);
       return {
         ...state,
         fieldSearchText: action.payload,

@@ -30,6 +30,7 @@ export class LeftSidebarComponent {
   constructor() {}
 
   clickReport(reportId: number) {
+    this.onToggleLeftNav.emit();
     this.onClickReport.emit(reportId);
     if (this.rightNavIsOpen === false) {
       this.onToggleRightNav.emit();

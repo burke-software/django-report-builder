@@ -1,0 +1,15 @@
+.tab-group {
+    width: 92%;
+}
+
+.mat-tab-label {
+    padding: 10px;
+    width: 100%;
+}
+
+@media screen and (max-width: 800px) {
+    .mat-tab-label {
+        padding: 0 12px !important;
+        min-width: 80px !important;
+    }
+}
