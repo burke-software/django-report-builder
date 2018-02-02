@@ -10,32 +10,23 @@
 
     <div class="example-header">
       <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Reports">
+        <input matInput (keyup)="searchReports.emit($event.target.value)" placeholder="Search Reports">
       </mat-form-field>
     </div>
 
-    <mat-table [dataSource]="dataSource" matSort  #table matSortDisableClear="true"
-    (matSortChange)="sortData($event)">
-        
-    <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>NAME</mat-header-cell>
-        <mat-cell *matCellDef="let report" (click)="clickReport(report.id)"> {{report.name}} </mat-cell>
-      </ng-container>
+    <table matSort matSortDisableClear="true" (matSortChange)="sortData($event)">
+      <tr class="sort-section">
+      <th mat-sort-header="name">NAME</th>
+      <th mat-sort-header="user_created.first_name">USER</th>
+      <th mat-sort-header="modified">DATE</th>
+      </tr>
+      <tr class="reports" *ngFor="let report of sortedData">
+      <td (click)="clickReport(report.id)">{{ report.name }}</td>
+      <td>{{ report.user_created.first_name }}</td>
+      <td class="modified">{{report.modified}}</td>
+      </tr>
+      </table>
 
-    <ng-container matColumnDef="user">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>USER</mat-header-cell>
-        <mat-cell *matCellDef="let report"> {{report.user_created.first_name}} </mat-cell>
-      </ng-container>
-
-    <ng-container matColumnDef="date">
-        <mat-header-cell *matHeaderCellDef mat-sort-header >DATE</mat-header-cell>
-        <mat-cell *matCellDef="let report" class="modified"> {{report.modified}} </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  
-    </mat-table>
   </div>
 
   </mat-sidenav>

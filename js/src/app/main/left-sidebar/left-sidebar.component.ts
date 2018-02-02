@@ -58,7 +58,6 @@ export class LeftSidebarComponent {
   }
 
   applyFilter(filterValue: string) {
-    console.log(filterValue);
     filterValue = filterValue.trim(); 
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;

@@ -42,15 +42,15 @@ export class RightSidebarComponent {
     this.selectRelatedField.emit($event);
   }
 
-  getRelatedFields() {
-    return this.relatedFields.map(deepCopy);
-  }
-
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); 
     filterValue = filterValue.toLowerCase();
     this.fieldDataSource.filter = filterValue;
   }
+
+    getRelatedFields() {
+      return this.relatedFields.map(deepCopy);
+   }
 
 }
 
