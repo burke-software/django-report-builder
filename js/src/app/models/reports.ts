@@ -28,6 +28,7 @@ export interface State {
   displayFields: EntityState<IDisplayField>;
   filters: EntityState<IFilter>;
   selectedField?: IField;
+  nextRelatedFieldId: number;
 }
 
 export const displayFieldAdapter: EntityAdapter<

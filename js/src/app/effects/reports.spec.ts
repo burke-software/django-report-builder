@@ -11,6 +11,7 @@ import {
   IField,
   INewReport,
   IReportDetailed,
+  INestedRelatedField,
 } from '../models/api';
 import { ApiService } from '../api.service';
 
@@ -89,7 +90,7 @@ describe('Report Effects', () => {
     });
 
     it('GetRelatedFields should get fields from a related field', () => {
-      const relatedField: IRelatedField = {
+      const relatedField: INestedRelatedField = {
         field_name: 'scheduledreport',
         verbose_name: 'scheduledreport_set',
         path: '',
@@ -98,6 +99,8 @@ describe('Report Effects', () => {
         parent_model_name: 'scheduledreport',
         parent_model_app_label: false,
         included_model: true,
+        children: [],
+        id: 0,
       };
       actions = hot('a-', { a: new Actions.GetRelatedFields(relatedField) });
 
@@ -118,7 +121,7 @@ describe('Report Effects', () => {
 
       const expected = cold('-c', {
         c: new Actions.GetRelatedFieldsSuccess({
-          parent: relatedField,
+          parentId: relatedField.id,
           relatedFields: responseFields,
         }),
       });

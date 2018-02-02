@@ -1,5 +1,5 @@
-import { INestedRelatedField, IRelatedField } from '../models/api';
 import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
+import { INestedRelatedField } from '../models/api';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
@@ -24,6 +24,7 @@ export const initialState: State = {
   activeTab: 0,
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
+  nextRelatedFieldId: 0,
 };
 
 export function reducer(
@@ -79,15 +80,18 @@ export function reducer(
     }
 
     case reportActions.GET_REPORT_FIELDS_SUCCESS: {
+      let { nextRelatedFieldId } = state;
       const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map(
         relatedField => {
-          return { ...relatedField, children: [] };
+          const id = nextRelatedFieldId++;
+          return { ...relatedField, children: [], id };
         }
       );
       return {
         ...state,
         relatedFields: relatedFields,
         fields: action.payload.fields,
+        nextRelatedFieldId,
       };
     }
 
@@ -99,16 +103,18 @@ export function reducer(
     }
 
     case reportActions.GET_RELATED_FIELDS_SUCCESS: {
+      let { nextRelatedFieldId } = state;
+      const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map(
+        relatedField => {
+          const id = nextRelatedFieldId++;
+          return { ...relatedField, children: [], id };
+        }
+      );
       return {
         ...state,
         relatedFields: selectors
           .getRelatedFields(state)
-          .map(
-            populateChildren(
-              action.payload.parent,
-              action.payload.relatedFields
-            )
-          ),
+          .map(populateChildren(action.payload.parentId, relatedFields)),
       };
     }
 
@@ -308,12 +314,12 @@ export function reducer(
   }
 }
 
-function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
+function populateChildren(parentId: number, children: INestedRelatedField[]) {
   return function replaceField(
     field: INestedRelatedField
   ): INestedRelatedField {
     const replacement = { ...field };
-    if (field === parent) {
+    if (field.id === parentId) {
       replacement.children = [...children].map(child => ({
         ...child,
         children: [],

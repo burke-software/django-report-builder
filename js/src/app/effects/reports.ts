@@ -116,7 +116,7 @@ export class ReportEffects {
       return this.api.getRelatedFields(fieldReq).map(
         fields =>
           new fromReports.GetRelatedFieldsSuccess({
-            parent: relatedField,
+            parentId: relatedField.id,
             relatedFields: fields,
           })
       );

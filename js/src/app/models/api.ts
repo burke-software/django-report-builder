@@ -99,6 +99,7 @@ export interface IRelatedField {
 }
 
 export interface INestedRelatedField extends IRelatedField {
+  id: number;
   children: INestedRelatedField[];
 }
 
