@@ -1,7 +1,9 @@
 import { getEditedReport } from '../reducers';
+import { initialState as initialReportState } from '../reducers/reports';
 
 export const initialState = {
   reports: {
+    ...initialReportState,
     reports: [
       {
         id: 4,
@@ -12,9 +14,9 @@ export const initialState = {
         user_created: {
           first_name: '',
           last_name: '',
-          id: 1
-        }
-      }
+          id: 1,
+        },
+      },
     ],
     selectedReport: {
       id: 4,
@@ -40,7 +42,7 @@ export const initialState = {
           group: false,
           report: 4,
           display_format: null,
-          field_type: 'CharField'
+          field_type: 'CharField',
         },
         {
           id: 2,
@@ -58,15 +60,15 @@ export const initialState = {
           group: false,
           report: 4,
           display_format: null,
-          field_type: 'AutoField'
-        }
+          field_type: 'AutoField',
+        },
       ],
       distinct: false,
       user_created: 1,
       user_modified: null,
       filterfield_set: [],
       report_file: null,
-      report_file_creation: null
+      report_file_creation: null,
     },
     relatedFields: [
       {
@@ -78,7 +80,7 @@ export const initialState = {
         parent_model_name: 'comment',
         parent_model_app_label: false,
         included_model: true,
-        children: []
+        children: [],
       },
       {
         field_name: 'report',
@@ -89,7 +91,7 @@ export const initialState = {
         parent_model_name: 'report',
         parent_model_app_label: false,
         included_model: true,
-        children: []
+        children: [],
       },
       {
         field_name: 'permission',
@@ -100,7 +102,7 @@ export const initialState = {
         parent_model_name: 'permission',
         parent_model_app_label: false,
         included_model: true,
-        children: []
+        children: [],
       },
       {
         field_name: 'logentry',
@@ -111,8 +113,8 @@ export const initialState = {
         parent_model_name: 'logentry',
         parent_model_app_label: false,
         included_model: true,
-        children: []
-      }
+        children: [],
+      },
     ],
     fields: [
       {
@@ -125,7 +127,7 @@ export const initialState = {
         can_filter: true,
         path: '',
         path_verbose: '',
-        help_text: ''
+        help_text: '',
       },
       {
         name: 'app_label',
@@ -137,7 +139,7 @@ export const initialState = {
         can_filter: true,
         path: '',
         path_verbose: '',
-        help_text: ''
+        help_text: '',
       },
       {
         name: 'id',
@@ -149,16 +151,16 @@ export const initialState = {
         can_filter: true,
         path: '',
         path_verbose: '',
-        help_text: ''
-      }
+        help_text: '',
+      },
     ],
     descriptionInput: 'adgsasfg',
-    isDistinct: false
+    isDistinct: false,
   },
   displayFields: {
     ids: [],
-    entities: {}
-  }
+    entities: {},
+  },
 };
 
 export const editedReport = getEditedReport(initialState as any);

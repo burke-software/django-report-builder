@@ -11,11 +11,13 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatIconModule,
   MatInputModule,
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
-  MatTabsModule
+  MatTabsModule,
+  MatTableModule,
 } from '@angular/material';
 
 import { StoreModule } from '@ngrx/store';
@@ -40,8 +42,11 @@ import { LastReportComponent } from './main/tabs/options-tab/last-report.compone
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
+import { DisplayTabComponent } from './main/tabs/display-tab/display-tab.component';
+import { DisplayTabRowComponent } from './main/tabs/display-tab/display-tab-row.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
+import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
@@ -49,20 +54,22 @@ const appRoutes: Routes = [
   {
     path: 'report/add',
     component: NewReportComponent,
-    data: { title: 'Add New Report' }
+    data: { title: 'Add New Report' },
   },
-  { path: 'report/:id', component: MainComponent, data: { title: 'Report' } }
+  { path: 'report/:id', component: MainComponent, data: { title: 'Report' } },
 ];
 
 export const MatModules = [
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatIconModule,
   MatInputModule,
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
-  MatTabsModule
+  MatTabsModule,
+  MatTableModule,
 ];
 
 @NgModule({
@@ -79,8 +86,11 @@ export const MatModules = [
     ReportTabComponent,
     ReportPreviewComponent,
     SavedTimestampComponent,
+    DisplayTabComponent,
+    DisplayTabRowComponent,
     RightSidebarComponent,
-    RelatedFieldComponent
+    RelatedFieldComponent,
+    FieldComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -95,12 +105,12 @@ export const MatModules = [
     MatSortModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
-      headerName: 'X-CSRFToken'
+      headerName: 'X-CSRFToken',
     }),
     FormsModule,
-    ...MatModules
+    ...MatModules,
   ],
   providers: [ApiService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

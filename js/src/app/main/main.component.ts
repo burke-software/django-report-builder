@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { setSearch } from './utils/filterSearch';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/fromEventPattern';
 
 import {
   State,
@@ -15,9 +16,9 @@ import {
   getReportSearchTerm,
   getFieldSearchTerm,
   getRelationsSearchTerm,
-  getSelectedReport
+  getSelectedReport,
 } from '../reducers';
-import { IRelatedField } from '../api.interfaces';
+import { IRelatedField, IField } from '../api.interfaces';
 import {
   GetReportList,
   GetReport,
@@ -27,7 +28,8 @@ import {
   SetFieldSearchText,
   SetRelationsSearchText,
   ToggleLeftNav,
-  ToggleRightNav
+  ToggleRightNav,
+  AddReportField,
 } from '../actions/reports';
 
 @Component({
@@ -61,9 +63,10 @@ import {
         (searchRelations)="searchRelations($event)"
         (onToggleRightNav)="onToggleRightNav()"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
+        (addReportField)="addReportField($event)"
       ></app-right-sidebar>
     </mat-sidenav-container>
-  `
+  `,
 })
 export class MainComponent implements OnInit {
 
@@ -86,7 +89,7 @@ export class MainComponent implements OnInit {
     this.store.select(getRelationsSearchTerm),
     setSearch
   );
-  
+
   selectedReport$ = this.store.select(getSelectedReport);
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
@@ -108,11 +111,11 @@ export class MainComponent implements OnInit {
   }
 
   searchReports(searchTerm: string) {
-   this.store.dispatch(new SetReportSearchText(searchTerm));
+    this.store.dispatch(new SetReportSearchText(searchTerm));
   }
 
   searchFields(searchTerm: string) {
-   this.store.dispatch(new SetFieldSearchText(searchTerm));
+    this.store.dispatch(new SetFieldSearchText(searchTerm));
   }
 
   searchRelations(searchTerm: string) {
@@ -127,4 +130,7 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new ToggleRightNav());
   }
 
+  addReportField(field: IField) {
+    this.store.dispatch(new AddReportField(field));
+  }
 }

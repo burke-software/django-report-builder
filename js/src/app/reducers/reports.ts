@@ -7,12 +7,12 @@ import {
   IField,
   IDisplayField,
   IRelatedField,
-  IReportPreview
+  IReportPreview,
 } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
-  DisplayFieldActionTypes
+  DisplayFieldActionTypes,
 } from '../actions/display-field';
 
 export interface State {
@@ -36,7 +36,10 @@ export interface State {
 
 export const displayFieldAdapter: EntityAdapter<
   IDisplayField
-> = createEntityAdapter<IDisplayField>();
+> = createEntityAdapter<IDisplayField>({
+  sortComparer: (x, y) => x.position - y.position,
+  selectId: x => x.position,
+});
 
 export const initialState: State = {
   reports: [],
@@ -52,7 +55,7 @@ export const initialState: State = {
   leftNavIsOpen: false,
   rightNavIsOpen: false,
   activeTab: 0,
-  displayFields: displayFieldAdapter.getInitialState()
+  displayFields: displayFieldAdapter.getInitialState(),
 };
 
 export function reducer(
@@ -63,7 +66,7 @@ export function reducer(
     case reportActions.SET_REPORT_LIST: {
       return {
         ...state,
-        reports: action.payload
+        reports: action.payload,
       };
     }
 
@@ -71,7 +74,7 @@ export function reducer(
       return {
         ...state,
         selectedReport: null,
-        descriptionInput: initialState.descriptionInput
+        descriptionInput: initialState.descriptionInput,
       };
     }
 
@@ -86,14 +89,14 @@ export function reducer(
     case reportActions.TOGGLE_LEFT_NAV: {
       return {
         ...state,
-        leftNavIsOpen: !state.leftNavIsOpen
+        leftNavIsOpen: !state.leftNavIsOpen,
       };
     }
 
     case reportActions.TOGGLE_RIGHT_NAV: {
       return {
         ...state,
-        rightNavIsOpen: !state.rightNavIsOpen
+        rightNavIsOpen: !state.rightNavIsOpen,
       };
     }
 
@@ -104,7 +107,7 @@ export function reducer(
         relatedFields: initialState.relatedFields,
         fields: initialState.fields,
         descriptionInput: action.payload.description,
-        isDistinct: action.payload.distinct
+        isDistinct: action.payload.distinct,
       };
     }
 
@@ -117,14 +120,14 @@ export function reducer(
       return {
         ...state,
         relatedFields: relatedFields,
-        fields: action.payload.fields
+        fields: action.payload.fields,
       };
     }
 
     case reportActions.GET_FIELDS_SUCCESS: {
       return {
         ...state,
-        fields: action.payload
+        fields: action.payload,
       };
     }
 
@@ -133,14 +136,14 @@ export function reducer(
         ...state,
         relatedFields: state.relatedFields.map(
           populateChildren(action.payload.parent, action.payload.relatedFields)
-        )
+        ),
       };
     }
 
     case reportActions.CHANGE_REPORT_DESCRIPTION: {
       return {
         ...state,
-        descriptionInput: action.payload
+        descriptionInput: action.payload,
       };
     }
 
@@ -148,7 +151,7 @@ export function reducer(
       return {
         ...state,
         isDistinct:
-          action.payload !== undefined ? action.payload : !state.isDistinct
+          action.payload !== undefined ? action.payload : !state.isDistinct,
       };
     }
 
@@ -158,14 +161,14 @@ export function reducer(
         selectedReport: action.payload,
         descriptionInput: action.payload.description,
         isDistinct: action.payload.distinct,
-        reportSaved: new Date()
+        reportSaved: new Date(),
       };
     }
 
     case reportActions.GENERATE_PREVIEW_SUCCESS: {
       return {
         ...state,
-        reportPreview: action.payload
+        reportPreview: action.payload,
       };
     }
 
@@ -173,7 +176,7 @@ export function reducer(
       return {
         ...state,
         reports: state.reports.filter(r => r.id !== action.reportId),
-        selectedReport: initialState.selectedReport
+        selectedReport: initialState.selectedReport,
       };
     }
 
@@ -182,8 +185,8 @@ export function reducer(
         ...state,
         selectedReport: Object.assign({}, state.selectedReport, {
           report_file: action.payload,
-          report_file_creation: new Date().toISOString()
-        })
+          report_file_creation: new Date().toISOString(),
+        }),
       };
     }
 
@@ -191,7 +194,7 @@ export function reducer(
       console.log(action.payload);
       return {
         ...state,
-        reportSearchText: action.payload
+        reportSearchText: action.payload,
       };
     }
 
@@ -199,36 +202,82 @@ export function reducer(
       console.log(action.payload);
       return {
         ...state,
-        fieldSearchText: action.payload
+        fieldSearchText: action.payload,
       };
     }
 
     case reportActions.SET_RELATIONS_SEARCH_TEXT: {
       return {
         ...state,
-        relationsSearchText: action.payload
+        relationsSearchText: action.payload,
       };
     }
 
     case reportActions.CHANGE_TAB: {
       return {
         ...state,
-        activeTab: action.payload
+        activeTab: action.payload,
       };
     }
 
-    case DisplayFieldActionTypes.ADD_ONE:
+    case DisplayFieldActionTypes.LOAD_ALL:
       return {
         ...state,
-        displayFields: displayFieldAdapter.addOne(
+        displayFields: displayFieldAdapter.addAll(
           action.payload,
           state.displayFields
-        )
+        ),
       };
 
-    default: {
-      return state;
+    case DisplayFieldActionTypes.UPDATE_ONE:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.updateOne(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
+    case DisplayFieldActionTypes.UPDATE_MANY:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.updateMany(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
+    case DisplayFieldActionTypes.DELETE_ONE:
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.removeOne(
+          action.payload,
+          state.displayFields
+        ),
+      };
+
+    case reportActions.ADD_REPORT_FIELD: {
+      switch (getActiveTab(state)) {
+        case 0:
+          return {
+            ...state,
+            displayFields: displayFieldAdapter.addOne(
+              {
+                ...action.payload,
+                position: state.displayFields.ids.length,
+                report: state.selectedReport.id,
+              },
+              state.displayFields
+            ),
+          };
+
+        default:
+          return state;
+      }
     }
+
+    default:
+      return state;
   }
 }
 
@@ -240,7 +289,7 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
     if (field === parent) {
       replacement.children = [...children].map(child => ({
         ...child,
-        children: []
+        children: [],
       }));
     } else {
       replacement.children = replacement.children.map(replaceField);
@@ -262,12 +311,6 @@ export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
 export const getIsDistinct = (state: State) => state.isDistinct;
-export const getEditedReport = (state: State) => {
-  const editedReport = { ...state.selectedReport };
-  editedReport.description = state.descriptionInput;
-  editedReport.distinct = state.isDistinct;
-  return editedReport;
-};
 export const getPreview = (state: State) => state.reportPreview;
 export const getLastSaved = (state: State) => state.reportSaved;
 export const getNewReportInfo = (state: State) => {
@@ -295,18 +338,24 @@ export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 
 export const getDisplayFieldsState = (state: State) => state.displayFields;
 const {
-  selectIds: notSelectIds,
-  selectEntities: notSelectEntities,
-  selectAll: notSelectAll,
-  selectTotal: notSelectTotal
+  selectAll: selectAllDisplayFields,
+  selectTotal: selectDisplayFieldsCount,
 } = displayFieldAdapter.getSelectors();
-export const selectIds = createSelector(getDisplayFieldsState, notSelectIds);
-export const selectEntities = createSelector(
+export const getDisplayFields = createSelector(
   getDisplayFieldsState,
-  notSelectEntities
+  selectAllDisplayFields
 );
-export const selectAll = createSelector(getDisplayFieldsState, notSelectAll);
-export const selectTotal = createSelector(
+export const getDisplayFieldsCount = createSelector(
   getDisplayFieldsState,
-  notSelectTotal
+  selectDisplayFieldsCount
 );
+export function getActiveTab(state: State) {
+  return state.activeTab;
+}
+
+export const getEditedReport = (state: State) => ({
+  ...state.selectedReport,
+  description: getDescriptionInput(state),
+  distinct: getIsDistinct(state),
+  displayfield_set: getDisplayFields(state),
+});

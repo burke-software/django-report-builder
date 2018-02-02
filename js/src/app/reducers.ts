@@ -13,7 +13,7 @@ export interface State {
 
 export const reducers: ActionReducerMap<State> = {
   reports: fromReports.reducer,
-  config: fromConfig.reducer
+  config: fromConfig.reducer,
 };
 
 export const metaReducers: MetaReducer<State>[] = !environment.production
@@ -73,6 +73,10 @@ export const getIsDistinct = createSelector(
   getReportsState,
   fromReports.getIsDistinct
 );
+// export const getEditedReport = (state: State) =>
+//   Object.assign({}, fromReports.getEditedReport(getReportsState(state)), {
+//     displayfield_set: getDisplayFields(state),
+//   });
 export const getEditedReport = createSelector(
   getReportsState,
   fromReports.getEditedReport
@@ -92,4 +96,12 @@ export const getNewReportInfo = createSelector(
 export const getLastGeneratedReport = createSelector(
   getReportsState,
   fromReports.getLastGeneratedReport
+);
+export const getActiveTab = createSelector(
+  getReportsState,
+  fromReports.getActiveTab
+);
+export const getDisplayFields = createSelector(
+  getReportsState,
+  fromReports.getDisplayFields
 );

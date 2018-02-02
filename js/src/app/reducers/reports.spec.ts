@@ -31,7 +31,7 @@ describe('ReportsReducer', () => {
         user_modified: null,
         filterfield_set: [],
         report_file: null,
-        report_file_creation: null
+        report_file_creation: null,
       };
 
       const getReportSuccessAction = new ReportActions.GetReportSuccess(
@@ -46,7 +46,7 @@ describe('ReportsReducer', () => {
         jasmine.objectContaining({
           selectedReport: newReport,
           relatedFields: ReportReducer.initialState.relatedFields,
-          fields: ReportReducer.initialState.fields
+          fields: ReportReducer.initialState.fields,
         })
       );
     });
@@ -57,7 +57,7 @@ describe('ReportsReducer', () => {
       const parent = testdata.populatedReports.relatedFields[0];
       const successAction = new ReportActions.GetRelatedFieldsSuccess({
         parent,
-        relatedFields: testdata.newRelatedFields
+        relatedFields: testdata.newRelatedFields,
       });
 
       const result = ReportReducer.reducer(

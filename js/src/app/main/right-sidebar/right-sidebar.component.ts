@@ -4,7 +4,7 @@ import { IField, IRelatedField } from '../../api.interfaces';
 @Component({
   selector: 'app-right-sidebar',
   templateUrl: './right-sidebar.component.html',
-  styleUrls: ['./right-sidebar.component.scss']
+  styleUrls: ['./right-sidebar.component.scss'],
 })
 export class RightSidebarComponent {
   @Input() modelName: string;
@@ -17,29 +17,29 @@ export class RightSidebarComponent {
   @Output() searchRelations = new EventEmitter<string>();
 
   @Input() rightNavIsOpen: boolean;
+  @Output() addReportField = new EventEmitter<IField>();
 
   constructor() {}
 
-    toggleRightNav() {
-      if (this.rightNavIsOpen === true) {
-        this.onToggleRightNav.emit();
-      }
+  toggleRightNav() {
+    if (this.rightNavIsOpen === true) {
+      this.onToggleRightNav.emit();
     }
+  }
 
-    onActivate($event) {
-      this.selectRelatedField.emit($event);
-    }
-    
-    getRelatedFields() {
-       return this.relatedFields.map(deepCopy);
-    }
+  onActivate($event) {
+    this.selectRelatedField.emit($event);
+  }
 
+  getRelatedFields() {
+    return this.relatedFields.map(deepCopy);
+  }
 }
 
- function deepCopy(obj) {
-   const copy = {...obj};
-   copy.name = copy.verbose_name;
-   copy.id = copy.model_id;
-   copy.children = copy.children.map(deepCopy);
-   return copy;
- }
+function deepCopy(obj) {
+  const copy = { ...obj };
+  copy.name = copy.verbose_name;
+  copy.id = copy.model_id;
+  copy.children = copy.children.map(deepCopy);
+  return copy;
+}
