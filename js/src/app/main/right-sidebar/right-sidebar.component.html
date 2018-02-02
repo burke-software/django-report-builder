@@ -4,20 +4,37 @@
     <h3>{{ modelName }} relations</h3>
   </div>
 
-  <input type="text" class="search-box" placeholder="Search Relations" (keyup)="searchRelations.emit($event.target.value)">
-
   <tree-root #tree [nodes]="getRelatedFields()" (activate)="onActivate($event.node.data)"></tree-root>
+  <div class="example-header">
+      <mat-form-field>
+        <input matInput (keyup)="searchRelations.emit($event.target.value)" placeholder="Search Related Fields">
+      </mat-form-field>
+    </div>
 
   <div class="header">
     <h3>Fields</h3>
   </div>
 
-  <input type="text" class="search-box" id="search-box" placeholder="Search Fields" (keyup)="searchFields.emit($event.target.value)">
+  <div class="example-header">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Fields">
+      </mat-form-field>
+    </div>
 
-  <div class="fields" *ngFor="let field of fields">
-    <app-field-component (addReportField)="addReportField.emit($event)" (selectField)="selectField.emit($event)" [field]="field"></app-field-component>
-  </div>
+  <mat-table [dataSource]="fieldDataSource" matSort  #table matSortDisableClear="true">
+      
+  <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Field Name</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{ field.name }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumnsField"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsField;"></mat-row>
+
+  </mat-table>
+
   <div *ngIf="selectedField">
-    [{{selectedField.field_type}}] {{selectedField.help_text}}
+      [{{selectedField.field_type}}] {{selectedField.help_text}}
   </div>
+
 </mat-sidenav>

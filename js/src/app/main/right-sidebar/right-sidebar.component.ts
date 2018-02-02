@@ -45,6 +45,13 @@ export class RightSidebarComponent {
   getRelatedFields() {
     return this.relatedFields.map(deepCopy);
   }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); 
+    filterValue = filterValue.toLowerCase();
+    this.fieldDataSource.filter = filterValue;
+  }
+
 }
 
 function deepCopy(obj) {

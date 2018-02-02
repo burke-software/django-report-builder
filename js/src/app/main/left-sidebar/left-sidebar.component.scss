@@ -42,7 +42,6 @@ a, a:visited, a:hover, a:active {
 }
 
 .reports-container {
-    padding-top: 20px;
     margin: auto;
 }
 
@@ -52,8 +51,13 @@ a, a:visited, a:hover, a:active {
   padding: 20px 10px 20px 5px;
 }
 
+.mat-header-row, .mat-row {
+  border-bottom: 0;
+}
+
+
+
 .modified {
-  font-size: 0.75rem;
   color: #e0e0e0;
 }
 
@@ -73,3 +77,25 @@ a, a:visited, a:hover, a:active {
   }
 }
 
+
+/* Structure */
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
