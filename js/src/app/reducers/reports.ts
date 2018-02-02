@@ -1,54 +1,15 @@
-import { createSelector } from '@ngrx/store';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import {
-  IReport,
-  IReportDetailed,
-  INestedRelatedField,
-  IField,
-  IDisplayField,
-  IRelatedField,
-  IReportPreview,
-  IFilter,
-} from '../api.interfaces';
+import { INestedRelatedField, IRelatedField } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
   DisplayFieldActionTypes,
 } from '../actions/display-field';
 import { FilterActions, FilterActionTypes } from '../actions/filter';
+import * as selectors from './reports.selectors';
+import { State, displayFieldAdapter, filterAdapter } from './reports.init';
 
-export interface State {
-  reports: IReport[];
-  selectedReport: IReportDetailed | null;
-  relatedFields: INestedRelatedField[];
-  fields: IField[];
-  title: string;
-  descriptionInput: string;
-  isDistinct: boolean;
-  reportPreview?: IReportPreview;
-  reportSaved?: Date;
-  reportSearchText: string;
-  fieldSearchText: string;
-  relationsSearchText: string;
-  leftNavIsOpen: boolean;
-  rightNavIsOpen: boolean;
-  activeTab: number;
-  displayFields: EntityState<IDisplayField>;
-  filters: EntityState<IFilter>;
-  selectedField?: IField;
-}
-
-export const displayFieldAdapter: EntityAdapter<
-  IDisplayField
-> = createEntityAdapter<IDisplayField>({
-  sortComparer: (x, y) => x.position - y.position,
-  selectId: x => x.position,
-});
-
-export const filterAdapter: EntityAdapter<IFilter> = createEntityAdapter({
-  sortComparer: (x, y) => x.position - y.position,
-  selectId: x => x.position,
-});
+export * from './reports.selectors';
+export * from './reports.init';
 
 export const initialState: State = {
   reports: [],
@@ -84,7 +45,7 @@ export function reducer(
       return {
         ...state,
         selectedReport: null,
-        descriptionInput: initialState.descriptionInput,
+        descriptionInput: selectors.getDescriptionInput(initialState),
       };
     }
 
@@ -113,8 +74,8 @@ export function reducer(
       return {
         ...state,
         selectedReport: action.payload,
-        relatedFields: initialState.relatedFields,
-        fields: initialState.fields,
+        relatedFields: selectors.getRelatedFields(initialState),
+        fields: selectors.getFields(initialState),
         descriptionInput: action.payload.description,
         isDistinct: action.payload.distinct,
       };
@@ -143,9 +104,14 @@ export function reducer(
     case reportActions.GET_RELATED_FIELDS_SUCCESS: {
       return {
         ...state,
-        relatedFields: state.relatedFields.map(
-          populateChildren(action.payload.parent, action.payload.relatedFields)
-        ),
+        relatedFields: selectors
+          .getRelatedFields(state)
+          .map(
+            populateChildren(
+              action.payload.parent,
+              action.payload.relatedFields
+            )
+          ),
       };
     }
 
@@ -185,22 +151,22 @@ export function reducer(
       return {
         ...state,
         reports: state.reports.filter(r => r.id !== action.reportId),
-        selectedReport: initialState.selectedReport,
+        selectedReport: selectors.getSelectedReport(initialState),
       };
     }
 
     case reportActions.DOWNLOAD_EXPORTED_REPORT: {
       return {
         ...state,
-        selectedReport: Object.assign({}, state.selectedReport, {
+        selectedReport: {
+          ...selectors.getSelectedReport(state),
           report_file: action.payload,
           report_file_creation: new Date().toISOString(),
-        }),
+        },
       };
     }
 
     case reportActions.SET_REPORT_SEARCH_TEXT: {
-      console.log(action.payload);
       return {
         ...state,
         reportSearchText: action.payload,
@@ -208,7 +174,6 @@ export function reducer(
     }
 
     case reportActions.SET_FIELD_SEARCH_TEXT: {
-      console.log(action.payload);
       return {
         ...state,
         fieldSearchText: action.payload,
@@ -234,7 +199,7 @@ export function reducer(
         ...state,
         displayFields: displayFieldAdapter.addAll(
           action.payload,
-          state.displayFields
+          selectors.getDisplayFieldsState(state)
         ),
       };
 
@@ -243,7 +208,7 @@ export function reducer(
         ...state,
         displayFields: displayFieldAdapter.updateOne(
           action.payload,
-          state.displayFields
+          selectors.getDisplayFieldsState(state)
         ),
       };
 
@@ -252,7 +217,7 @@ export function reducer(
         ...state,
         displayFields: displayFieldAdapter.updateMany(
           action.payload,
-          state.displayFields
+          selectors.getDisplayFieldsState(state)
         ),
       };
 
@@ -261,46 +226,58 @@ export function reducer(
         ...state,
         displayFields: displayFieldAdapter.removeOne(
           action.payload,
-          state.displayFields
+          selectors.getDisplayFieldsState(state)
         ),
       };
 
     case FilterActionTypes.LOAD_ALL:
       return {
         ...state,
-        filters: filterAdapter.addAll(action.payload, state.filters),
+        filters: filterAdapter.addAll(
+          action.payload,
+          selectors.getFiltersState(state)
+        ),
       };
 
     case FilterActionTypes.UPDATE_ONE:
       return {
         ...state,
-        filters: filterAdapter.updateOne(action.payload, state.filters),
+        filters: filterAdapter.updateOne(
+          action.payload,
+          selectors.getFiltersState(state)
+        ),
       };
 
     case FilterActionTypes.UPDATE_MANY:
       return {
         ...state,
-        filters: filterAdapter.updateMany(action.payload, state.filters),
+        filters: filterAdapter.updateMany(
+          action.payload,
+          selectors.getFiltersState(state)
+        ),
       };
 
     case FilterActionTypes.DELETE_ONE:
       return {
         ...state,
-        filters: filterAdapter.removeOne(action.payload, state.filters),
+        filters: filterAdapter.removeOne(
+          action.payload,
+          selectors.getFiltersState(state)
+        ),
       };
 
     case reportActions.ADD_REPORT_FIELD: {
-      switch (getActiveTab(state)) {
+      switch (selectors.getActiveTab(state)) {
         case 0:
           return {
             ...state,
             displayFields: displayFieldAdapter.addOne(
               {
                 ...action.payload,
-                position: state.displayFields.ids.length,
-                report: state.selectedReport.id,
+                position: selectors.getDisplayFieldsCount(state),
+                report: selectors.getSelectedReportId(state),
               },
-              state.displayFields
+              selectors.getDisplayFieldsState(state)
             ),
           };
         case 1:
@@ -309,11 +286,11 @@ export function reducer(
             filters: filterAdapter.addOne(
               {
                 ...action.payload,
-                position: state.filters.ids.length,
-                report: state.selectedReport.id,
+                position: selectors.getFiltersCount(state),
+                report: selectors.getSelectedReportId(state),
                 filter_type: 'exact',
               },
-              state.filters
+              selectors.getFiltersState(state)
             ),
           };
 
@@ -350,77 +327,3 @@ function populateChildren(parent: IRelatedField, children: IRelatedField[]) {
     return replacement;
   };
 }
-
-export const getReports = (state: State) => state.reports;
-export const getTitle = (state: State) => state.title;
-export const getSelectedReport = (state: State) => state.selectedReport;
-export const getSelectedReportId = (state: State) => {
-  const report = getSelectedReport(state);
-  if (report) {
-    return report.id;
-  }
-};
-export const getFields = (state: State) => state.fields;
-export const getRelatedFields = (state: State) => state.relatedFields;
-export const getDescriptionInput = (state: State) => state.descriptionInput;
-export const getIsDistinct = (state: State) => state.isDistinct;
-export const getPreview = (state: State) => state.reportPreview;
-export const getLastSaved = (state: State) => state.reportSaved;
-export const getNewReportInfo = (state: State) => {
-  const report = getSelectedReport(state);
-  if (report) {
-    const { name, description, root_model } = report;
-    return { name, description, root_model };
-  }
-};
-export const getLastGeneratedReport = createSelector(
-  getSelectedReport,
-  selectedReport => {
-    if (selectedReport) {
-      const { report_file, report_file_creation } = selectedReport;
-      return { report_file, report_file_creation };
-    }
-  }
-);
-export const getReportSearchTerm = (state: State) => state.reportSearchText;
-export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
-export const getRelationsSearchTerm = (state: State) =>
-  state.relationsSearchText;
-export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
-export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
-
-export const getDisplayFieldsState = (state: State) => state.displayFields;
-const {
-  selectAll: selectAllDisplayFields,
-  selectTotal: selectDisplayFieldsCount,
-} = displayFieldAdapter.getSelectors();
-export const getDisplayFields = createSelector(
-  getDisplayFieldsState,
-  selectAllDisplayFields
-);
-export const getDisplayFieldsCount = createSelector(
-  getDisplayFieldsState,
-  selectDisplayFieldsCount
-);
-export const getFiltersState = (state: State) => state.filters;
-const {
-  selectAll: selectAllFilters,
-  selectTotal: selectFiltersCount,
-} = filterAdapter.getSelectors();
-export const getFilters = createSelector(getFiltersState, selectAllFilters);
-export const getFiltersCount = createSelector(
-  getFiltersState,
-  selectFiltersCount
-);
-export function getActiveTab(state: State) {
-  return state.activeTab;
-}
-
-export const getEditedReport = (state: State) => ({
-  ...state.selectedReport,
-  description: getDescriptionInput(state),
-  distinct: getIsDistinct(state),
-  displayfield_set: getDisplayFields(state),
-  filterfield_set: getFilters(state),
-});
-export const getSelectedField = (state: State) => state.selectedField;
