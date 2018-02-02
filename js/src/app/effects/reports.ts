@@ -16,13 +16,13 @@ import { ApiService } from '../api.service';
 import * as fromReports from '../actions/reports';
 import * as fromDisplay from '../actions/display-field';
 import * as fromFilter from '../actions/filter';
-import { IGetRelatedFieldRequest } from '../api.interfaces';
+import { IGetRelatedFieldRequest } from '../models/api';
+import { State } from '../reducers';
 import {
-  State,
   getEditedReport,
   getSelectedReportId,
   getIsAsyncReport,
-} from '../reducers';
+} from '../selectors';
 
 @Injectable()
 export class ReportEffects {

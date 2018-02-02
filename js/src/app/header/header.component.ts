@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getSelectedReport } from '../reducers';
+import { State } from '../reducers';
+import { getSelectedReport } from '../selectors';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   @Input() title: string;
@@ -33,6 +34,4 @@ export class HeaderComponent implements OnInit {
   toggleRightNav() {
     this.onToggleRightNav.emit();
   }
-
-
 }

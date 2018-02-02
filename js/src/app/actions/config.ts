@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IConfig } from '../api.interfaces';
+import { IConfig } from '../models/api';
 
 export const GET_CONFIG = 'Get Config';
 export const GET_CONFIG_SUCCESS = 'Get Config Success';

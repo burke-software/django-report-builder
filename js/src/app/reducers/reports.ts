@@ -1,15 +1,12 @@
-import { INestedRelatedField, IRelatedField } from '../api.interfaces';
+import { INestedRelatedField, IRelatedField } from '../models/api';
+import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
   DisplayFieldActionTypes,
 } from '../actions/display-field';
 import { FilterActions, FilterActionTypes } from '../actions/filter';
-import * as selectors from './reports.selectors';
-import { State, displayFieldAdapter, filterAdapter } from './reports.init';
-
-export * from './reports.selectors';
-export * from './reports.init';
+import * as selectors from '../selectors/reports';
 
 export const initialState: State = {
   reports: [],

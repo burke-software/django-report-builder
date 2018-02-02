@@ -1,4 +1,4 @@
-import { State, displayFieldAdapter, filterAdapter } from './reports.init';
+import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
 import { createSelector } from '@ngrx/store';
 
 export const getReports = (state: State) => state.reports;

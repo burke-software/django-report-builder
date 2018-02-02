@@ -1,16 +1,16 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { State } from '../../../reducers';
 import {
-  State,
   getDescriptionInput,
   getIsDistinct,
   getSelectedReportId,
-  getLastGeneratedReport
-} from '../../../reducers';
+  getLastGeneratedReport,
+} from '../../../selectors';
 import {
   ChangeReportDescription,
   ToggleReportDistinct,
-  DeleteReport
+  DeleteReport,
 } from '../../../actions/reports';
 
 @Component({
@@ -33,7 +33,7 @@ import {
     <app-copy-report *ngIf="copyId$ | async" [id]="copyId$ | async"></app-copy-report>
     <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
   </form></div>
-  `
+  `,
 })
 export class OptionsTabComponent {
   descriptionInput$ = this.store.select(getDescriptionInput);

@@ -15,8 +15,8 @@ import {
   IConfig,
   INewReport,
   IAsyncTaskId,
-  ITaskStatus
-} from './api.interfaces';
+  ITaskStatus,
+} from './models/api';
 
 @Injectable()
 export class ApiService {
@@ -82,7 +82,7 @@ export class ApiService {
 
   checkStatus({
     reportId,
-    taskId
+    taskId,
   }: {
     reportId: number | string;
     taskId: string;
@@ -95,7 +95,7 @@ export class ApiService {
   copyReport(reportId: number) {
     return this.http
       .get(this.baseUrl + `report/${reportId}/create_copy/`, {
-        observe: 'response'
+        observe: 'response',
       })
       .toPromise();
   }

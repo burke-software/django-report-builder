@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IField, IRelatedField } from '../../api.interfaces';
+import { IField, IRelatedField } from '../../models/api';
 
 @Component({
   selector: 'app-right-sidebar',

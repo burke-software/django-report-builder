@@ -6,7 +6,7 @@ import {
   IReportPreview,
   IDisplayField,
   IFilter,
-} from '../api.interfaces';
+} from './api';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 export interface State {

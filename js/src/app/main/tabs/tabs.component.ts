@@ -3,15 +3,11 @@ import { Store } from '@ngrx/store';
 import { ChangeTab } from '../../actions/reports';
 import * as DisplayFieldActions from '../../actions/display-field';
 import * as FilterActions from '../../actions/filter';
-import {
-  State,
-  getActiveTab,
-  getDisplayFields,
-  getFilters,
-} from '../../reducers';
+import { State } from '../../reducers';
+import { getActiveTab, getDisplayFields, getFilters } from '../../selectors';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
-import { IDisplayField, IFilter } from '../../api.interfaces';
+import { IDisplayField, IFilter } from '../../models/api';
 
 @Component({
   selector: 'app-tabs',

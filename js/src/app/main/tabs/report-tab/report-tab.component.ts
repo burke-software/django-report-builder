@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getPreview, getLastSaved } from '../../../reducers';
+import { State } from '../../../reducers';
+import { getPreview, getLastSaved } from '../../../selectors';
 import {
   EditReport,
   GeneratePreview,
-  ExportReport
+  ExportReport,
 } from '../../../actions/reports';
 
 @Component({
@@ -22,7 +23,7 @@ import {
       <app-report-preview [previewData]="this.previewData$ | async" ></app-report-preview>
     </div>
   </div>
-  `
+  `,
 })
 export class ReportTabComponent {
   constructor(private store: Store<State>) {}
