@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { setSearch } from './utils/filterSearch';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEventPattern';
-import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 import {
   State,
@@ -18,7 +17,7 @@ import {
   getFieldSearchTerm,
   getRelationsSearchTerm,
   getSelectedReport,
-  getActiveTab,
+  getSelectedField,
 } from '../reducers';
 import { IRelatedField, IField } from '../api.interfaces';
 import {
@@ -32,6 +31,7 @@ import {
   ToggleLeftNav,
   ToggleRightNav,
   AddReportField,
+  SelectField,
 } from '../actions/reports';
 
 @Component({
@@ -60,12 +60,14 @@ import {
         [modelName]="(selectedReport$ | async)?.name"
         [relatedFields]="relatedFields$ | async"
         [fields]="fields$ | async"
+        [selectedField]="selectedField$ | async"
         (selectRelatedField)="selectRelatedField($event)"
         (searchFields)="searchFields($event)"
         (searchRelations)="searchRelations($event)"
         (onToggleRightNav)="onToggleRightNav()"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
         (addReportField)="addReportField($event)"
+        (selectField)="selectField($event)"
       ></app-right-sidebar>
     </mat-sidenav-container>
   `,
@@ -95,8 +97,7 @@ export class MainComponent implements OnInit {
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
-  currentTab$ = this.store.select(getActiveTab);
-  @ViewChild('rightMenu') rightMenu: RightSidebarComponent;
+  selectedField$ = this.store.select(getSelectedField);
 
   constructor(private store: Store<State>) {}
 
@@ -135,5 +136,9 @@ export class MainComponent implements OnInit {
 
   addReportField(field: IField) {
     this.store.dispatch(new AddReportField(field));
+  }
+
+  selectField(field: IField) {
+    this.store.dispatch(new SelectField(field));
   }
 }

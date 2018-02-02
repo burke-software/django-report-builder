@@ -35,6 +35,7 @@ export interface State {
   activeTab: number;
   displayFields: EntityState<IDisplayField>;
   filters: EntityState<IFilter>;
+  selectedField?: IField;
 }
 
 export const displayFieldAdapter: EntityAdapter<
@@ -90,10 +91,9 @@ export function reducer(
     case reportActions.GET_TITLE: {
       return {
         ...state,
-        title: action.payload
+        title: action.payload,
       };
     }
-
 
     case reportActions.TOGGLE_LEFT_NAV: {
       return {
@@ -322,6 +322,13 @@ export function reducer(
       }
     }
 
+    case reportActions.SELECT_FIELD: {
+      return {
+        ...state,
+        selectedField: action.payload,
+      };
+    }
+
     default:
       return state;
   }
@@ -416,3 +423,4 @@ export const getEditedReport = (state: State) => ({
   displayfield_set: getDisplayFields(state),
   filterfield_set: getFilters(state),
 });
+export const getSelectedField = (state: State) => state.selectedField;

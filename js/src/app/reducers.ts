@@ -109,3 +109,7 @@ export const getFilters = createSelector(
   getReportsState,
   fromReports.getFilters
 );
+export const getSelectedField = createSelector(
+  getReportsState,
+  fromReports.getSelectedField
+);
