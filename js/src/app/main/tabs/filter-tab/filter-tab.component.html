@@ -1,0 +1,11 @@
+<div class="mat-table">
+  <div class="mat-header-row">
+    <div class="mat-header-cell"></div>
+    <div class="mat-header-cell">Field</div>
+    <div class="mat-header-cell">Filter Type</div>
+    <div class="mat-header-cell">Values</div>
+    <div class="mat-header-cell"></div>
+    <div class="mat-header-cell">Exclude</div>
+  </div>
+  <app-filter-tab-row *ngFor="let row of filters" [filter]="row" (updateFilter)="updateFilter.emit($event)" (deleteFilter)="deleteFilter.emit($event)"></app-filter-tab-row>
+</div>

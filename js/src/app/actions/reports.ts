@@ -6,6 +6,7 @@ import {
   IField,
   IReportPreview,
   INewReport,
+  IBase,
 } from '../api.interfaces';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -195,7 +196,7 @@ export class ChangeTab implements Action {
 
 export class AddReportField implements Action {
   readonly type = ADD_REPORT_FIELD;
-  constructor(public payload: IField) {}
+  constructor(public payload: IBase) {}
 }
 
 export type Actions =

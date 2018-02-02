@@ -8,12 +8,14 @@ import {
   IDisplayField,
   IRelatedField,
   IReportPreview,
+  IFilter,
 } from '../api.interfaces';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
   DisplayFieldActionTypes,
 } from '../actions/display-field';
+import { FilterActions, FilterActionTypes } from '../actions/filter';
 
 export interface State {
   reports: IReport[];
@@ -32,11 +34,17 @@ export interface State {
   rightNavIsOpen: boolean;
   activeTab: number;
   displayFields: EntityState<IDisplayField>;
+  filters: EntityState<IFilter>;
 }
 
 export const displayFieldAdapter: EntityAdapter<
   IDisplayField
 > = createEntityAdapter<IDisplayField>({
+  sortComparer: (x, y) => x.position - y.position,
+  selectId: x => x.position,
+});
+
+export const filterAdapter: EntityAdapter<IFilter> = createEntityAdapter({
   sortComparer: (x, y) => x.position - y.position,
   selectId: x => x.position,
 });
@@ -56,11 +64,12 @@ export const initialState: State = {
   rightNavIsOpen: false,
   activeTab: 0,
   displayFields: displayFieldAdapter.getInitialState(),
+  filters: filterAdapter.getInitialState(),
 };
 
 export function reducer(
   state = initialState,
-  action: reportActions.Actions | DisplayFieldActions
+  action: reportActions.Actions | DisplayFieldActions | FilterActions
 ): State {
   switch (action.type) {
     case reportActions.SET_REPORT_LIST: {
@@ -256,6 +265,30 @@ export function reducer(
         ),
       };
 
+    case FilterActionTypes.LOAD_ALL:
+      return {
+        ...state,
+        filters: filterAdapter.addAll(action.payload, state.filters),
+      };
+
+    case FilterActionTypes.UPDATE_ONE:
+      return {
+        ...state,
+        filters: filterAdapter.updateOne(action.payload, state.filters),
+      };
+
+    case FilterActionTypes.UPDATE_MANY:
+      return {
+        ...state,
+        filters: filterAdapter.updateMany(action.payload, state.filters),
+      };
+
+    case FilterActionTypes.DELETE_ONE:
+      return {
+        ...state,
+        filters: filterAdapter.removeOne(action.payload, state.filters),
+      };
+
     case reportActions.ADD_REPORT_FIELD: {
       switch (getActiveTab(state)) {
         case 0:
@@ -268,6 +301,19 @@ export function reducer(
                 report: state.selectedReport.id,
               },
               state.displayFields
+            ),
+          };
+        case 1:
+          return {
+            ...state,
+            filters: filterAdapter.addOne(
+              {
+                ...action.payload,
+                position: state.filters.ids.length,
+                report: state.selectedReport.id,
+                filter_type: 'exact',
+              },
+              state.filters
             ),
           };
 
@@ -349,6 +395,16 @@ export const getDisplayFieldsCount = createSelector(
   getDisplayFieldsState,
   selectDisplayFieldsCount
 );
+export const getFiltersState = (state: State) => state.filters;
+const {
+  selectAll: selectAllFilters,
+  selectTotal: selectFiltersCount,
+} = filterAdapter.getSelectors();
+export const getFilters = createSelector(getFiltersState, selectAllFilters);
+export const getFiltersCount = createSelector(
+  getFiltersState,
+  selectFiltersCount
+);
 export function getActiveTab(state: State) {
   return state.activeTab;
 }
@@ -358,4 +414,5 @@ export const getEditedReport = (state: State) => ({
   description: getDescriptionInput(state),
   distinct: getIsDistinct(state),
   displayfield_set: getDisplayFields(state),
+  filterfield_set: getFilters(state),
 });

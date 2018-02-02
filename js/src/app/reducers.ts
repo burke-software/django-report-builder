@@ -105,3 +105,7 @@ export const getDisplayFields = createSelector(
   getReportsState,
   fromReports.getDisplayFields
 );
+export const getFilters = createSelector(
+  getReportsState,
+  fromReports.getFilters
+);
