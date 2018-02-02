@@ -27,8 +27,8 @@
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Field Name</mat-header-cell>
       <mat-cell *matCellDef="let field">
-        {{ field.name }}
-        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">add</mat-icon>
+        <span (click)="selectField.emit(field)">{{field.name}}</span>
+        <mat-icon (click)="addReportField.emit(field)">add</mat-icon>
       </mat-cell>
     </ng-container>
 
