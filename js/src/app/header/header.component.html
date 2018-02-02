@@ -2,5 +2,9 @@
     <button id="toggleLeft" type="button" (click)="toggleLeftNav()">
     </button>
     <div>{{ title }} {{ reportName }}</div>
-    <button id="toggleRight" type="button" (click)="toggleRightNav()"></button>
+    <div class="button">
+        <div [hidden]="activeTab === 2 || activeTab === 3">
+            <button (click)="toggleRightNav()" id="toggleRight" type="button"></button>
+        </div>
+    </div>
 </mat-toolbar>

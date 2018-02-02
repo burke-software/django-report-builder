@@ -13,8 +13,8 @@ import {
   getTitle,
   getRightNavIsOpen,
   getLeftNavIsOpen,
+  getActiveTab,
   getReportSearchTerm,
-  getFieldSearchTerm,
   getRelationsSearchTerm,
   getSelectedReport,
   getSelectedField,
@@ -50,9 +50,10 @@ import {
       <app-header
       (onToggleLeftNav)="onToggleLeftNav()"
       (onToggleRightNav)="onToggleRightNav()"
-      [title]="title$ | async">
+      [title]="title$ | async"
+      [activeTab]="activeTab$ | async">
       </app-header>
-      <div class="example-sidenav-content" style="padding-left: 100px;">
+      <div class="example-sidenav-content">
         <app-tabs>
         </app-tabs>
       </div>
@@ -74,6 +75,7 @@ import {
 })
 export class MainComponent implements OnInit {
   title$ = this.store.select(getTitle);
+  activeTab$ = this.store.select(getActiveTab);
 
   listReports$ = Observable.combineLatest(
     this.store.select(getReports),
@@ -81,11 +83,7 @@ export class MainComponent implements OnInit {
     setSearch
   );
 
-  fields$ = Observable.combineLatest(
-    this.store.select(getFields),
-    this.store.select(getFieldSearchTerm),
-    setSearch
-  );
+  fields$ = this.store.select(getFields);
 
   relatedFields$ = Observable.combineLatest(
     this.store.select(getRelatedFields),

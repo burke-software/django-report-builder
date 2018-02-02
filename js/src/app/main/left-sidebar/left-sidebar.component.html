@@ -1,9 +1,10 @@
+<mat-sidenav class="left-side-nav" #table (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'"
+  #sidenav mode="side" opened={{leftNavIsOpen}}>
+  <h3 class="header">Reports</h3>
 
-  <mat-sidenav class="left-side-nav" #table
-  (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'" #sidenav mode="side" opened={{leftNavIsOpen}}>
-   <h3 class="header">Reports</h3> 
-   
-    <a routerLink="/report/add"><div class="add-report">+ Add Report</div></a>
+  <a routerLink="/report/add">
+    <div class="add-report">+ Add Report</div>
+  </a>
 
   <div class="reports-container">
     <h3>My Reports</h3>
@@ -16,17 +17,17 @@
 
     <table matSort matSortDisableClear="true" (matSortChange)="sortData($event)">
       <tr class="sort-section">
-      <th mat-sort-header="name">NAME</th>
-      <th mat-sort-header="user_created.first_name">USER</th>
-      <th mat-sort-header="modified">DATE</th>
+        <th mat-sort-header="name">NAME</th>
+        <th mat-sort-header="user_created.first_name">USER</th>
+        <th mat-sort-header="modified">DATE</th>
       </tr>
       <tr class="reports" *ngFor="let report of sortedData">
-      <td (click)="clickReport(report.id)">{{ report.name }}</td>
-      <td>{{ report.user_created.first_name }}</td>
-      <td class="modified">{{report.modified}}</td>
+        <td (click)="clickReport(report.id)">{{ report.name }}</td>
+        <td>{{ report.user_created.first_name }}</td>
+        <td class="modified">{{report.modified}}</td>
       </tr>
-      </table>
+    </table>
 
   </div>
 
-  </mat-sidenav>
+</mat-sidenav>

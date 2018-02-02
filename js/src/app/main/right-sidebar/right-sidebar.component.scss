@@ -1,90 +1,88 @@
 mat-sidenav {
-    width: 300px;
-    position: fixed;
-    height: 100%;
-    border-left: 1px solid #ededed;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  width: 300px;
+  position: fixed;
+  height: 100%;
+  border-left: 1px solid #ededed;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 tree-root /deep/ {
+  height: 38%;
+  tree-viewport {
     height: 38%;
-    tree-viewport {
-        height: 38%;
-    }
+  }
 }
 
 .header {
-    width: 100%;
-    height: 65px;
-    background-color: #417690;
-    color: white;
-    margin-top: -21px;
-    padding-left: 10px;
+  width: 100%;
+  height: 65px;
+  background-color: #417690;
+  color: white;
+  margin-top: -21px;
+  padding-left: 10px;
 }
 
 h3 {
-    font-size: 20px;
-    letter-spacing: 0.005em;
-    box-sizing: border-box;
-    font-weight: 300;
-    padding-left: 10px;
-    padding-top: 20px;
+  font-size: 20px;
+  letter-spacing: 0.005em;
+  box-sizing: border-box;
+  font-weight: 300;
+  padding-left: 10px;
+  padding-top: 20px;
 }
 
 .fields {
-    padding: 10px;
+  padding: 10px;
 }
 
 .search {
-    position: relative;
-    width: 100%;
-    height: 2rem;
-    margin: 25px auto;
-    padding-bottom: 5px;
-    padding-top: -20px;
+  position: relative;
+  width: 100%;
+  height: 2rem;
+  margin: 25px auto;
+  padding-bottom: 5px;
+  padding-top: -20px;
 }
 
 .search-box {
-    font-style: italic;
-    margin-top: -20px;
-    width: 100%;
-    height: 3%;
+  font-style: italic;
+  margin-top: -20px;
+  width: 100%;
+  height: 3%;
 }
 
-.mat-header-row, .mat-row {
-    border-bottom: 0;
-  }
+.mat-header-row,
+.mat-row {
+  border-bottom: 0;
+}
 
-  .example-container {
-    display: flex;
-    flex-direction: column;
-    min-width: 300px;
-  }
-  
-  .example-header {
-    min-height: 64px;
-    padding: 8px 24px 0;
-  }
-  
-  .mat-form-field {
-    font-size: 14px;
-    width: 100%;
-  }
-  
-  .mat-table {
-    overflow: auto;
-    max-height: 500px;
-  }
-  
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.add-icon {
+  float: right;
+}
 
 @media screen and (max-width: 620px) {
-    .header {
-      height: 63px;
-    }
+  .header {
+    height: 63px;
   }
-  
-  
-
-
-
-  
+}

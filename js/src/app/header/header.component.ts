@@ -5,10 +5,11 @@ import { State, getSelectedReport } from '../reducers';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   @Input() title: string;
+  @Input() activeTab: number;
   @Output() onToggleLeftNav = new EventEmitter();
   @Output() onToggleRightNav = new EventEmitter();
 
@@ -33,6 +34,4 @@ export class HeaderComponent implements OnInit {
   toggleRightNav() {
     this.onToggleRightNav.emit();
   }
-
-
 }

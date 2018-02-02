@@ -1,11 +1,17 @@
-import { Component, Input, EventEmitter, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { IReport } from '../../api.interfaces';
 import { MatSort, MatTableDataSource, Sort } from '@angular/material';
 
 @Component({
   selector: 'app-left-sidebar',
   templateUrl: './left-sidebar.component.html',
-  styleUrls: ['./left-sidebar.component.scss']
+  styleUrls: ['./left-sidebar.component.scss'],
 })
 export class LeftSidebarComponent {
   @Input() searchTerm: string;
@@ -20,29 +26,23 @@ export class LeftSidebarComponent {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  @Input() 
+  @Input()
   set listReports(value: IReport[]) {
     this.sortedData = value;
     this.reports = value;
     this.dataSource = new MatTableDataSource(value);
-  };
-  
+  }
+
   sortedData;
   reports;
   dataSource: MatTableDataSource<IReport>;
 
-  title = "Reports";
+  title = 'Reports';
 
   displayedColumns = ['name', 'user', 'date'];
-  
 
   constructor() {}
 
-  AfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  
   clickReport(reportId: number) {
     this.onToggleLeftNav.emit();
     this.onClickReport.emit(reportId);
@@ -58,7 +58,7 @@ export class LeftSidebarComponent {
   }
 
   applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); 
+    filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
   }
@@ -73,16 +73,22 @@ export class LeftSidebarComponent {
     this.sortedData = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'User': return compare(+a.user_created.first_name, +b.user_created.first_name, isAsc);
-        case 'Date': return compare(+a.modified, +b.modified, isAsc);
+        case 'name':
+          return compare(a.name, b.name, isAsc);
+        case 'User':
+          return compare(
+            +a.user_created.first_name,
+            +b.user_created.first_name,
+            isAsc
+          );
+        case 'Date':
+          return compare(+a.modified, +b.modified, isAsc);
 
-        default: return 0;
+        default:
+          return 0;
       }
     });
-
   }
-
 }
 
 function compare(a, b, isAsc) {

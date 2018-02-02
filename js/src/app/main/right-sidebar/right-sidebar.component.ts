@@ -9,7 +9,6 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class RightSidebarComponent {
   @Input() modelName: string;
-  @Input() relatedFields: IRelatedField[] = [];
   @Input() selectedField: IField;
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
@@ -21,14 +20,22 @@ export class RightSidebarComponent {
   @Output() addReportField = new EventEmitter<IField>();
   @Output() selectField = new EventEmitter<IField>();
 
-  @Input() 
+  @Input()
   set fields(value: IField[]) {
     this.fieldDataSource = new MatTableDataSource(value);
-  };
+  }
 
-    fieldDataSource: MatTableDataSource<IField>;
-  
-    displayedColumnsField = ['name'];
+  @Input()
+  set relatedFields(value: IRelatedField[]) {
+    this.relatedFieldData = value;
+    this.relatedFieldDataSource = new MatTableDataSource(value);
+  }
+
+  relatedFieldData: IRelatedField[];
+  fieldDataSource: MatTableDataSource<IField>;
+  relatedFieldDataSource: MatTableDataSource<IRelatedField>;
+
+  displayedColumnsField = ['name'];
 
   constructor() {}
 
@@ -43,15 +50,14 @@ export class RightSidebarComponent {
   }
 
   applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); 
+    filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.fieldDataSource.filter = filterValue;
   }
 
-    getRelatedFields() {
-      return this.relatedFields.map(deepCopy);
-   }
-
+  getRelatedFields() {
+    return this.relatedFieldData.map(deepCopy);
+  }
 }
 
 function deepCopy(obj) {

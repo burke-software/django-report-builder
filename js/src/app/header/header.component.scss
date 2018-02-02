@@ -1,31 +1,25 @@
 mat-toolbar {
- color:white;
- background: #417690;
- font-size: 20px;
- letter-spacing: 0.005em;
- box-sizing: border-box;
- font-weight: 300;
+  color: white;
+  background: #417690;
+  font-size: 20px;
+  letter-spacing: 0.005em;
+  box-sizing: border-box;
+  font-weight: 300;
 }
 
 button {
-    background: url('../../images/list.svg') no-repeat top left;
-    cursor: pointer;
-    margin-top: 12px;
-    height:  60px;
-    width: 45px;
-    border: 0;
-    outline: none;
-    padding-right: 20px;
+  background: url('../../images/list.svg') no-repeat top left;
+  cursor: pointer;
+  margin-top: 12px;
+  height: 60px;
+  width: 45px;
+  border: 0;
+  outline: none;
+  padding-right: 20px;
 }
 
-#toggleRight {
-    display: block;
-    margin-left: auto;
-    margin-right: 0;
+.button {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
 }
-
-
-
-
-
-
