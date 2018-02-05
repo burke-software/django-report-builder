@@ -3,7 +3,7 @@ import { ApiService } from '../../../api.service';
 
 @Component({
   selector: 'app-copy-report',
-  template: `<mat-list-item (click)="this.copy($event)"><mat-icon matListIcon>content_copy</mat-icon><a matLine href="/report_builder/report/{{this.id}}/create_copy/">Copy this report</a></mat-list-item>`,
+  template: `<mat-list-item (click)="this.copy($event)" class="icon-link"><mat-icon matListIcon>content_copy</mat-icon><a matLine href="/report_builder/report/{{this.id}}/create_copy/">Copy this report</a></mat-list-item>`,
 })
 export class CopyReportComponent {
   constructor(private api: ApiService) {}

@@ -24,13 +24,32 @@
   display: flex;
 }
 
-.mat-icon {
+.icon-link {
   cursor: pointer;
 }
 
 .options-tab {
   padding-top: 50px;
   white-space: normal !important;
+}
+
+.mat-checkbox {
+  transform: scale(0.85) !important;
+}
+
+.display-checkbox {
+  height: 18px !important;
+  width: 18px !important;
+}
+
+.checkbox-label {
+  padding-top: 5px !important;
+}
+
+.last-report-icon {
+  float: left;
+  padding-right: 23px;
+  color: black !important;
 }
 
 a,
@@ -49,4 +68,8 @@ a:active {
 .tab-table-header {
   min-width: 600px;
   overflow: scroll;
+}
+
+.mat-row {
+  padding: 10px;
 }

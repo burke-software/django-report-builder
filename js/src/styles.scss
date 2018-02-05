@@ -31,3 +31,8 @@ body {
 .mat-selection-list .mat-list-item .mat-line {
   white-space: normal;
 }
+
+.mat-checkbox-inner-container {
+  height: 18px !important;
+  width: 18px !important;
+}

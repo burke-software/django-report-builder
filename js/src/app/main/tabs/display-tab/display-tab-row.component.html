@@ -14,7 +14,7 @@
     </mat-form-field>
   </div>
   <div class="mat-cell">
-    <mat-checkbox [checked]="field.sort_reverse" (change)="editField({sort_reverse: $event.checked })"></mat-checkbox>
+    <mat-checkbox class="display-checkbox" [checked]="field.sort_reverse" (change)="editField({sort_reverse: $event.checked })"></mat-checkbox>
   </div>
   <div class="mat-cell">
     <mat-form-field>
@@ -34,9 +34,9 @@
     </mat-form-field>
   </div>
   <div class="mat-cell">
-    <mat-checkbox [checked]="field.total" (change)="editField({total: $event.checked })"></mat-checkbox>
+    <mat-checkbox class="display-checkbox" [checked]="field.total" (change)="editField({total: $event.checked })"></mat-checkbox>
   </div>
   <div class="mat-cell">
-    <mat-checkbox [checked]="field.group" (change)="editField({group: $event.checked })"></mat-checkbox>
+    <mat-checkbox class="display-checkbox" [checked]="field.group" (change)="editField({group: $event.checked })"></mat-checkbox>
   </div>
 </div>
