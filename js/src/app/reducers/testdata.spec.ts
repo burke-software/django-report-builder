@@ -42,6 +42,7 @@ export const populatedReports: State = Object.assign({}, initialState, {
       parent_model_app_label: false,
       included_model: true,
       children: [],
+      id: 0,
     },
   ],
   fields: [

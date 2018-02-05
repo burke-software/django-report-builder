@@ -7,6 +7,7 @@ import {
   IReportPreview,
   INewReport,
   IBase,
+  INestedRelatedField,
 } from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -87,13 +88,16 @@ export class GetFieldsSuccess implements Action {
 
 export class GetRelatedFields implements Action {
   readonly type = GET_RELATED_FIELDS;
-  constructor(public payload: IRelatedField) {}
+  constructor(public payload: INestedRelatedField) {}
 }
 
 export class GetRelatedFieldsSuccess implements Action {
   readonly type = GET_RELATED_FIELDS_SUCCESS;
   constructor(
-    public payload: { parent: IRelatedField; relatedFields: IRelatedField[] }
+    public payload: {
+      parentId: number;
+      relatedFields: IRelatedField[];
+    }
   ) {}
 }
 

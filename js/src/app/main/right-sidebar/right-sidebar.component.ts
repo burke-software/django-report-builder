@@ -41,7 +41,6 @@ export class RightSidebarComponent {
 function deepCopy(obj) {
   const copy = { ...obj };
   copy.name = copy.verbose_name;
-  copy.id = copy.model_id;
   copy.children = copy.children.map(deepCopy);
   return copy;
 }

@@ -56,7 +56,7 @@ describe('ReportsReducer', () => {
     it('Should put the related fields into the correct part of the data structure', () => {
       const parent = testdata.populatedReports.relatedFields[0];
       const successAction = new ReportActions.GetRelatedFieldsSuccess({
-        parent,
+        parentId: parent.id,
         relatedFields: testdata.newRelatedFields,
       });
 
