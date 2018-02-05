@@ -15,7 +15,7 @@ import {
   getSelectedReport,
   getSelectedField,
 } from '../selectors';
-import { IRelatedField, IField } from '../models/api';
+import { INestedRelatedField, IField } from '../models/api';
 import {
   GetReportList,
   GetReport,
@@ -89,7 +89,7 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new GetReport(reportId));
   }
 
-  selectRelatedField(relatedField: IRelatedField) {
+  selectRelatedField(relatedField: INestedRelatedField) {
     this.store.dispatch(new GetFields(relatedField));
     this.store.dispatch(new GetRelatedFields(relatedField));
   }
