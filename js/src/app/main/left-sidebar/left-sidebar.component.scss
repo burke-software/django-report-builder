@@ -1,10 +1,12 @@
 .left-side-nav {
-  width: 300px;
+  width: 320px;
   border-right: 1px solid #ededed;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
   z-index: 3;
   height: 100%;
   position: fixed;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 .header {
@@ -21,65 +23,39 @@
   padding-top: 20px;
 }
 
-h3 {
-  padding-left: 15px;
-}
-
-th {
-  padding: 15px;
-}
-
-td {
-  padding: 15px;
-  color: #79aec8;  
-  cursor: pointer;
-}
-
-a, a:visited, a:hover, a:active {
+a,
+a:visited,
+a:hover,
+a:active {
   text-decoration: none;
-  color: rgb(255,171,64);
+  color: rgb(255, 171, 64);
   font-size: 14px;
 }
 
-.reports-container {
-    margin: auto;
+.my-reports-title {
+  padding-left: 25px;
+}
+
+.mat-header-cell {
+  padding-right: 80px;
 }
 
 .add-report {
   height: 5px;
   text-align: center;
-  padding: 20px 10px 20px 5px;
+  padding: 15px 10px 20px 5px;
 }
 
-.mat-header-row, .mat-row {
+.mat-header-row,
+.mat-row {
   border-bottom: 0;
 }
-
-
 
 .modified {
   color: #e0e0e0;
   font-size: 0.75em;
 }
 
-.search-box {
-  float: left;
-  width: 75%;
-  height: 100%;
-  border: 0;
-  outline: 0;
-  font-style: italic;
-  padding-left: 15px;
-}
-
-@media screen and (max-width: 608px) {
-  .header {
-    height: 58px;
-  }
-}
-
-
-/* Structure */
 .example-container {
   display: flex;
   flex-direction: column;
@@ -99,4 +75,24 @@ a, a:visited, a:hover, a:active {
 .mat-table {
   overflow: auto;
   max-height: 500px;
+}
+
+.example-no-results {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+@media screen and (max-width: 608px) {
+  .header {
+    height: 58px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .left-side-nav {
+    width: 100%;
+  }
 }

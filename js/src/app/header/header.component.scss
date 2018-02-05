@@ -1,4 +1,4 @@
-mat-toolbar {
+.mat-toolbar {
   color: white;
   background: #417690;
   font-size: 20px;
@@ -7,18 +7,48 @@ mat-toolbar {
   font-weight: 300;
 }
 
-button {
-  background: url('../../images/list.svg') no-repeat top left;
-  cursor: pointer;
-  margin-top: 12px;
-  height: 60px;
-  width: 45px;
+.button {
   border: 0;
   outline: none;
-  padding-right: 20px;
+  background-color: transparent;
 }
 
-.button {
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+}
+
+.material-icons.mat-icon {
+  @include md-icon-size(32px);
+}
+
+.mat-icon {
+  background-color: transparent;
+  color: white;
+  background: #417690;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.button,
+.mat-icon:focus {
+  outline: none;
+}
+
+.left-navbar-container {
+  margin-top: 8px;
+}
+
+span {
+  display: inline;
+  vertical-align: middle;
+}
+
+.right-navbar-container {
+  float: right;
+  margin-top: 8px;
   display: block;
   margin-left: auto;
   margin-right: 0;

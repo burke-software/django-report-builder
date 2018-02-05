@@ -27,9 +27,6 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
-  reportSearchText: string;
-  fieldSearchText: string;
-  relationsSearchText: string;
   leftNavIsOpen: boolean;
   rightNavIsOpen: boolean;
   activeTab: number;
@@ -58,9 +55,6 @@ export const initialState: State = {
   title: '',
   descriptionInput: '',
   isDistinct: false,
-  reportSearchText: '',
-  fieldSearchText: '',
-  relationsSearchText: '',
   leftNavIsOpen: false,
   rightNavIsOpen: false,
   activeTab: 0,
@@ -105,7 +99,10 @@ export function reducer(
     case reportActions.TOGGLE_RIGHT_NAV: {
       return {
         ...state,
-        rightNavIsOpen: !state.rightNavIsOpen,
+        rightNavIsOpen:
+          state.activeTab === 2 || state.activeTab === 3
+            ? false
+            : !state.rightNavIsOpen,
       };
     }
 
@@ -196,27 +193,6 @@ export function reducer(
           report_file: action.payload,
           report_file_creation: new Date().toISOString(),
         }),
-      };
-    }
-
-    case reportActions.SET_REPORT_SEARCH_TEXT: {
-      return {
-        ...state,
-        reportSearchText: action.payload,
-      };
-    }
-
-    case reportActions.SET_FIELD_SEARCH_TEXT: {
-      return {
-        ...state,
-        fieldSearchText: action.payload,
-      };
-    }
-
-    case reportActions.SET_RELATIONS_SEARCH_TEXT: {
-      return {
-        ...state,
-        relationsSearchText: action.payload,
       };
     }
 
@@ -380,10 +356,6 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
-export const getReportSearchTerm = (state: State) => state.reportSearchText;
-export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
-export const getRelationsSearchTerm = (state: State) =>
-  state.relationsSearchText;
 export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
 export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 

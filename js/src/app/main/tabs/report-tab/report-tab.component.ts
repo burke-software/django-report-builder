@@ -4,13 +4,13 @@ import { State, getPreview, getLastSaved } from '../../../reducers';
 import {
   EditReport,
   GeneratePreview,
-  ExportReport
+  ExportReport,
 } from '../../../actions/reports';
 
 @Component({
   selector: 'app-report-tab',
   template: `
-  <div>
+  <div class="app-report-tab">
     <div>
       <button mat-button (click)="this.onSave()">Save</button>
       <button mat-button (click)="this.makePreview()">Preview</button>
@@ -22,7 +22,7 @@ import {
       <app-report-preview [previewData]="this.previewData$ | async" ></app-report-preview>
     </div>
   </div>
-  `
+  `,
 })
 export class ReportTabComponent {
   constructor(private store: Store<State>) {}

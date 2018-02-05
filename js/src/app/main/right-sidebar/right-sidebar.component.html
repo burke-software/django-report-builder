@@ -6,11 +6,11 @@
 
   <div class="example-header">
     <mat-form-field>
-      <input matInput (keyup)="searchRelations.emit($event.target.value)" placeholder="Search Related Fields">
+      <input id="filter" #filter matInput (keyup)="tree.treeModel.filterNodes(filter.value)" placeholder="Search Related Fields">
     </mat-form-field>
   </div>
 
-  <tree-root #tree [nodes]="getRelatedFields()" (activate)="onActivate($event.node.data)"></tree-root>
+  <tree-root #tree [nodes]="nodes" (activate)="onActivate($event.node.data)"></tree-root>
 
   <div class="header">
     <h3>Fields</h3>
@@ -26,12 +26,18 @@
 
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Field Name</mat-header-cell>
-      <mat-cell *matCellDef="let field">
-        <span (click)="selectField.emit(field)">{{field.name}}
-        <mat-icon class="add-icon" (click)="addReportField.emit(field)">add</mat-icon>
-        </span>
-
+      <mat-cell *matCellDef="let field" (click)="selectField.emit(field)">{{field.name}}
       </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="button">
+      <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+      <mat-cell *matCellDef="let field">
+        <button class="add-button" (click)="addReportField.emit(field)">
+              <span class="add-button-content"><mat-icon class="add-icon" >add</mat-icon><span class="content">Add</span></span>
+        </button>
+
+      </mat-cell>å
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumnsField"></mat-header-row>
@@ -39,7 +45,7 @@
 
   </mat-table>
 
-  <div *ngIf="selectedField">
+  <div *ngIf="selectedField" class="selected-field">
     [{{selectedField.field_type}}] {{selectedField.help_text}}
   </div>
 

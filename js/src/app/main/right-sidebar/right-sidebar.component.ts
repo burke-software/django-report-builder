@@ -1,13 +1,20 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnChanges,
+  EventEmitter,
+} from '@angular/core';
 import { IField, IRelatedField } from '../../api.interfaces';
 import { MatTableDataSource } from '@angular/material';
+import { TreeNode } from 'angular-tree-component';
 
 @Component({
   selector: 'app-right-sidebar',
   templateUrl: './right-sidebar.component.html',
   styleUrls: ['./right-sidebar.component.scss'],
 })
-export class RightSidebarComponent {
+export class RightSidebarComponent implements OnChanges {
   @Input() modelName: string;
   @Input() selectedField: IField;
 
@@ -19,23 +26,20 @@ export class RightSidebarComponent {
   @Input() rightNavIsOpen: boolean;
   @Output() addReportField = new EventEmitter<IField>();
   @Output() selectField = new EventEmitter<IField>();
+  @Input() relatedFields: IRelatedField[];
 
   @Input()
   set fields(value: IField[]) {
     this.fieldDataSource = new MatTableDataSource(value);
   }
 
-  @Input()
-  set relatedFields(value: IRelatedField[]) {
-    this.relatedFieldData = value;
-    this.relatedFieldDataSource = new MatTableDataSource(value);
-  }
-
-  relatedFieldData: IRelatedField[];
   fieldDataSource: MatTableDataSource<IField>;
-  relatedFieldDataSource: MatTableDataSource<IRelatedField>;
+  displayedColumnsField = ['name', 'button'];
+  nodes: TreeNode[];
 
-  displayedColumnsField = ['name'];
+  ngOnChanges() {
+    this.nodes = this.getRelatedFields();
+  }
 
   constructor() {}
 
@@ -49,6 +53,12 @@ export class RightSidebarComponent {
     this.selectRelatedField.emit($event);
   }
 
+  filterTree(text, tree) {
+    tree.treeModel.filterNodes(node => {
+      return node.data.verbose_name.startsWith(text);
+    });
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
@@ -56,14 +66,13 @@ export class RightSidebarComponent {
   }
 
   getRelatedFields() {
-    return this.relatedFieldData.map(deepCopy);
+    return this.relatedFields.map(deepCopy);
   }
 }
 
 function deepCopy(obj) {
   const copy = { ...obj };
   copy.name = copy.verbose_name;
-  copy.id = copy.model_id;
   copy.children = copy.children.map(deepCopy);
   return copy;
 }

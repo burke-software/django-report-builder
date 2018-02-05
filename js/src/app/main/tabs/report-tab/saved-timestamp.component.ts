@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-saved-timestamp',
-  template: `<span>{{this.lastSaved ? 'Last saved: ' + this.lastSaved : this.notSaved}}</span>`
+  template: `<span class="saved-timestamp">{{this.lastSaved ? 'Last saved: ' + this.lastSaved : this.notSaved}}</span>`,
 })
 export class SavedTimestampComponent {
   constructor() {}

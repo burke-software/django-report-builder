@@ -6,12 +6,11 @@ $navheight: 65px;
 
 body {
   margin: 0;
-  background: #fafafa;
 }
 
-// .mat-drawer-content {
-//     position: initial !important;
-// }
+.mat-drawer-container {
+  background: #fff;
+}
 
 .node-content-wrapper-active,
 .node-content-wrapper-focused,
@@ -25,4 +24,10 @@ body {
 /* To make it fullscreen - use a fixed height for the nav and make something in the main component the full height - that fixed nav */
 .left-sidenav-container {
   height: calc(100vh - #{$navheight});
+}
+
+.mat-list .mat-list-item .mat-line,
+.mat-nav-list .mat-list-item .mat-line,
+.mat-selection-list .mat-list-item .mat-line {
+  white-space: normal;
 }

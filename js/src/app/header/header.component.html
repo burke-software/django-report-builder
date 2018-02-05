@@ -1,10 +1,15 @@
 <mat-toolbar>
-    <button id="toggleLeft" type="button" (click)="toggleLeftNav()">
-    </button>
-    <div>{{ title }} {{ reportName }}</div>
-    <div class="button">
+    <div class="left-navbar-container">
+        <button class="button" id="toggleLeft" type="button" (click)="toggleLeftNav()">
+                <mat-icon class="add-icon transparent">list</mat-icon>
+        </button>
+    </div>
+    <span>{{ title }} {{ reportName }}</span>
+    <div class="right-navbar-container">
         <div [hidden]="activeTab === 2 || activeTab === 3">
-            <button (click)="toggleRightNav()" id="toggleRight" type="button"></button>
+            <button class="button" (click)="toggleRightNav()" id="toggleRight" type="button">
+                    <mat-icon>more_vert</mat-icon>
+            </button>
         </div>
     </div>
 </mat-toolbar>

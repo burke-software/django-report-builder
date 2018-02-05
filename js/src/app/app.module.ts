@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'angular-tree-component';
-import { MatSortModule } from '@angular/material/sort';
 
 import {
   MatButtonModule,
@@ -14,9 +13,11 @@ import {
   MatDatepickerModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
+  MatSortModule,
   MatTabsModule,
   MatTableModule,
 } from '@angular/material';
@@ -70,10 +71,12 @@ export const MatModules = [
   MatDatepickerModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatMomentDateModule,
   MatToolbarModule,
   MatSelectModule,
   MatSidenavModule,
+  MatSortModule,
   MatTabsModule,
   MatTableModule,
 ];

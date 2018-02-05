@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { setSearch } from './utils/filterSearch';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEventPattern';
 
@@ -14,8 +13,6 @@ import {
   getRightNavIsOpen,
   getLeftNavIsOpen,
   getActiveTab,
-  getReportSearchTerm,
-  getRelationsSearchTerm,
   getSelectedReport,
   getSelectedField,
 } from '../reducers';
@@ -25,9 +22,6 @@ import {
   GetReport,
   GetFields,
   GetRelatedFields,
-  SetReportSearchText,
-  SetFieldSearchText,
-  SetRelationsSearchText,
   ToggleLeftNav,
   ToggleRightNav,
   AddReportField,
@@ -41,7 +35,6 @@ import {
       <app-left-sidebar
         [listReports]="listReports$ | async"
         (onClickReport)="onClickReport($event)"
-        (searchReports)="searchReports($event)"
         (onToggleLeftNav)="onToggleLeftNav()"
         (onToggleRightNav)="onToggleRightNav()"
         [leftNavIsOpen]="leftNavIsOpen$ | async"
@@ -63,8 +56,6 @@ import {
         [fields]="fields$ | async"
         [selectedField]="selectedField$ | async"
         (selectRelatedField)="selectRelatedField($event)"
-        (searchFields)="searchFields($event)"
-        (searchRelations)="searchRelations($event)"
         (onToggleRightNav)="onToggleRightNav()"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
         (addReportField)="addReportField($event)"
@@ -77,19 +68,11 @@ export class MainComponent implements OnInit {
   title$ = this.store.select(getTitle);
   activeTab$ = this.store.select(getActiveTab);
 
-  listReports$ = Observable.combineLatest(
-    this.store.select(getReports),
-    this.store.select(getReportSearchTerm),
-    setSearch
-  );
+  listReports$ = this.store.select(getReports);
 
   fields$ = this.store.select(getFields);
 
-  relatedFields$ = Observable.combineLatest(
-    this.store.select(getRelatedFields),
-    this.store.select(getRelationsSearchTerm),
-    setSearch
-  );
+  relatedFields$ = this.store.select(getRelatedFields);
 
   selectedReport$ = this.store.select(getSelectedReport);
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
@@ -110,18 +93,6 @@ export class MainComponent implements OnInit {
   selectRelatedField(relatedField: IRelatedField) {
     this.store.dispatch(new GetFields(relatedField));
     this.store.dispatch(new GetRelatedFields(relatedField));
-  }
-
-  searchReports(searchTerm: string) {
-    this.store.dispatch(new SetReportSearchText(searchTerm));
-  }
-
-  searchFields(searchTerm: string) {
-    this.store.dispatch(new SetFieldSearchText(searchTerm));
-  }
-
-  searchRelations(searchTerm: string) {
-    this.store.dispatch(new SetRelationsSearchText(searchTerm));
   }
 
   onToggleLeftNav() {
