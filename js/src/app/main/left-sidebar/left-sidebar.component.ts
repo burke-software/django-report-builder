@@ -43,7 +43,7 @@ export class LeftSidebarComponent implements OnInit, OnChanges {
   title = 'Reports';
 
   displayedColumns = ['name', 'user', 'date'];
-  dataSource: MyDataSource;
+  dataSource: TableDataSource;
   myData: IReport[];
 
   @Input() listReports: IReport[];
@@ -64,7 +64,7 @@ export class LeftSidebarComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.myData = this.listReports;
-    this.dataSource = new MyDataSource(this.myData, this.sort);
+    this.dataSource = new TableDataSource(this.myData, this.sort);
   }
 
   clickReport(reportId: number) {
@@ -82,7 +82,7 @@ export class LeftSidebarComponent implements OnInit, OnChanges {
   }
 }
 
-export class MyDataSource extends DataSource<any> {
+export class TableDataSource extends DataSource<IReport> {
   filteredData: IReport[] = [];
   renderedData: IReport[] = [];
 
@@ -107,13 +107,11 @@ export class MyDataSource extends DataSource<any> {
     ];
 
     return Observable.merge(...displayDataChanges).map(() => {
-      // Filter data
       this.filteredData = this.dataBase.slice().filter((item: IReport) => {
         const searchStr = (item.name + item.modified).toLowerCase();
         return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
       });
 
-      // Sort filtered data
       const sortedData = this.sortData(this.filteredData.slice());
 
       this.renderedData = sortedData.splice(0);
@@ -123,9 +121,7 @@ export class MyDataSource extends DataSource<any> {
 
   disconnect() {}
 
-  /** Returns a sorted copy of the database data. */
   sortData(data: IReport[]): IReport[] {
-    // const data = this.dataBase.slice();
     if (!this.sort.active || this.sort.direction === '') {
       return data;
     }
