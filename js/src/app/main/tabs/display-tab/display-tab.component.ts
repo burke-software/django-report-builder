@@ -1,15 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IDisplayField, IFormat } from '../../../models/api';
 import { Update } from '@ngrx/entity';
-import { ITreeOptions } from 'angular-tree-component';
-
-interface IDragEvent {
-  node: IDisplayField;
-  to: {
-    parent: IDisplayField;
-    index: number;
-  };
-}
+import { ITreeOptions, IActionMapping } from 'angular-tree-component';
 
 @Component({
   selector: 'app-display-tab',
@@ -49,9 +41,17 @@ export class DisplayTabComponent {
   treeOptions: ITreeOptions = {
     allowDrag: true,
     allowDrop: (node, to) => !to.parent.parent,
+    idField: 'position',
+    actionMapping: {
+      mouse: {
+        drop: (tree, node, event, { from: { data }, to: { index } }) => {
+          this.moveField.emit({ payload: data, newPosition: index - 1 });
+        },
+      },
+    } as IActionMapping,
   };
 
-  onMoveNode(e: IDragEvent) {
-    this.moveField.emit({ payload: e.node, newPosition: e.to.index });
+  getFields() {
+    return this.fields.map(x => ({ ...x }));
   }
 }

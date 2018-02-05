@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IFilter } from '../../../models/api';
 import { Update } from '@ngrx/entity';
+import { ITreeOptions, IActionMapping } from 'angular-tree-component';
 
 @Component({
   selector: 'app-filter-tab',
@@ -31,4 +32,25 @@ export class FilterTabComponent {
   @Input() filters: IFilter[];
   @Output() deleteFilter = new EventEmitter<number>();
   @Output() updateFilter = new EventEmitter<Update<IFilter>>();
+  @Output()
+  moveFilter = new EventEmitter<{
+    payload: IFilter;
+    newPosition: number;
+  }>();
+  treeOptions: ITreeOptions = {
+    allowDrag: true,
+    allowDrop: (node, to) => !to.parent.parent,
+    idField: 'position',
+    actionMapping: {
+      mouse: {
+        drop: (tree, node, event, { from: { data }, to: { index } }) => {
+          this.moveFilter.emit({ payload: data, newPosition: index - 1 });
+        },
+      },
+    } as IActionMapping,
+  };
+
+  getFilters() {
+    return this.filters.map(x => ({ ...x }));
+  }
 }

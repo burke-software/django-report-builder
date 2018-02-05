@@ -9,6 +9,7 @@ import {
   IBase,
   INestedRelatedField,
   IDisplayField,
+  IFilter,
 } from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -41,6 +42,7 @@ export const CHANGE_TAB = 'Change Tab';
 export const ADD_REPORT_FIELD = 'Add Report Field';
 export const SELECT_FIELD = 'Select Field';
 export const CHANGE_DISPLAY_FIELD_POSITION = 'Change Display Field Position';
+export const CHANGE_FILTER_POSITION = 'Change Filter Position';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -198,6 +200,11 @@ export class ChangeDisplayFieldPosition implements Action {
   constructor(public payload: IDisplayField, public newPosition: number) {}
 }
 
+export class ChangeFilterPosition implements Action {
+  readonly type = CHANGE_FILTER_POSITION;
+  constructor(public payload: IFilter, public newPosition: number) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -229,4 +236,5 @@ export type Actions =
   | ChangeTab
   | AddReportField
   | SelectField
-  | ChangeDisplayFieldPosition;
+  | ChangeDisplayFieldPosition
+  | ChangeFilterPosition;
