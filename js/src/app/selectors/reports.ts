@@ -32,10 +32,6 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
-export const getReportSearchTerm = (state: State) => state.reportSearchText;
-export const getFieldSearchTerm = (state: State) => state.fieldSearchText;
-export const getRelationsSearchTerm = (state: State) =>
-  state.relationsSearchText;
 export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
 export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 

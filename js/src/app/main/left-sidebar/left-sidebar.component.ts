@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   Component,
   Input,
@@ -10,7 +9,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import { DataSource } from '@angular/cdk/table';
-import { IReport } from '../../api.interfaces';
+import { IReport } from '../../models/api';
 import { MatSort } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
@@ -21,11 +20,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/filter';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-=======
-import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { IReport } from '../../models/api';
-import { Sort } from '@angular/material';
->>>>>>> ngx
 
 @Component({
   selector: 'app-left-sidebar',
@@ -160,10 +154,3 @@ export class TableDataSource extends DataSource<IReport> {
     });
   }
 }
-<<<<<<< HEAD
-=======
-
-function compare(a, b, isAsc) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}
->>>>>>> ngx

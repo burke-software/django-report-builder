@@ -30,18 +30,6 @@ export const getTitle = createSelector(
   getReportsState,
   reportSelectors.getTitle
 );
-export const getReportSearchTerm = createSelector(
-  getReportsState,
-  reportSelectors.getReportSearchTerm
-);
-export const getFieldSearchTerm = createSelector(
-  getReportsState,
-  reportSelectors.getFieldSearchTerm
-);
-export const getRelationsSearchTerm = createSelector(
-  getReportsState,
-  reportSelectors.getRelationsSearchTerm
-);
 export const getLeftNavIsOpen = createSelector(
   getReportsState,
   reportSelectors.getLeftNavIsOpen
