@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IFilter } from '../../../api.interfaces';
+import { IFilter } from '../../../models/api';
 import { Update } from '@ngrx/entity';
 
 @Component({

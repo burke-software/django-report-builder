@@ -1,12 +1,12 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { State } from '../../../reducers';
 import {
-  State,
   getDescriptionInput,
   getIsDistinct,
   getSelectedReportId,
   getLastGeneratedReport,
-} from '../../../reducers';
+} from '../../../selectors';
 import {
   ChangeReportDescription,
   ToggleReportDistinct,

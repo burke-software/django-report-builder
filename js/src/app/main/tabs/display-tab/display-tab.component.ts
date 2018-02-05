@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IDisplayField } from '../../../api.interfaces';
+import { IDisplayField } from '../../../models/api';
 import { Update } from '@ngrx/entity';
 
 @Component({

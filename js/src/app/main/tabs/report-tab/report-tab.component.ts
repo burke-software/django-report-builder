@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getPreview, getLastSaved } from '../../../reducers';
+import { State } from '../../../reducers';
+import { getPreview, getLastSaved } from '../../../selectors';
 import {
   EditReport,
   GeneratePreview,

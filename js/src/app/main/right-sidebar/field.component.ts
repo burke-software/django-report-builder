@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IField } from '../../api.interfaces';
+import { IField } from '../../models/api';
 
 @Component({
   selector: 'app-field-component',

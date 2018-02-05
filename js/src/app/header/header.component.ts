@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State, getSelectedReport } from '../reducers';
+import { State } from '../reducers';
+import { getSelectedReport } from '../selectors';
 
 @Component({
   selector: 'app-header',

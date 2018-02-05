@@ -1,4 +1,4 @@
-import { getEditedReport } from '../reducers';
+import { getEditedReport } from '../selectors';
 import { initialState as initialReportState } from '../reducers/reports';
 
 export const initialState = {

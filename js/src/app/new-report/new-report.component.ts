@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
-import { INewReport } from '../api.interfaces';
+import { INewReport } from '../models/api';
 import { Store } from '@ngrx/store';
 import { State } from '../reducers';
 import { CreateReport } from '../actions/reports';
@@ -8,7 +8,7 @@ import { CreateReport } from '../actions/reports';
 @Component({
   selector: 'app-new-report',
   templateUrl: './new-report.component.html',
-  styleUrls: ['./new-report.component.css']
+  styleUrls: ['./new-report.component.css'],
 })
 export class NewReportComponent implements OnInit {
   root_model_choices$ = this.api.getRootModels();
@@ -20,7 +20,7 @@ export class NewReportComponent implements OnInit {
     this.form = {
       name: '',
       description: '',
-      root_model: null
+      root_model: null,
     };
   }
 

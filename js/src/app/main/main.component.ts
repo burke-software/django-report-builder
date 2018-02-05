@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEventPattern';
 
+import { State } from '../reducers';
 import {
-  State,
   getReports,
   getRelatedFields,
   getFields,
@@ -15,8 +15,8 @@ import {
   getActiveTab,
   getSelectedReport,
   getSelectedField,
-} from '../reducers';
-import { IRelatedField, IField } from '../api.interfaces';
+} from '../selectors';
+import { IRelatedField, IField } from '../models/api';
 import {
   GetReportList,
   GetReport,

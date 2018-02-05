@@ -7,7 +7,7 @@ import {
   IReportPreview,
   INewReport,
   IBase,
-} from '../api.interfaces';
+} from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
 export const SET_REPORT_LIST = 'Set Report List';

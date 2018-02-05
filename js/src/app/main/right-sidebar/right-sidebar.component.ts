@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   Component,
   Input,
@@ -8,6 +9,10 @@ import {
 import { IField, IRelatedField } from '../../api.interfaces';
 import { MatTableDataSource } from '@angular/material';
 import { TreeNode } from 'angular-tree-component';
+=======
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { IField, IRelatedField } from '../../models/api';
+>>>>>>> ngx
 
 @Component({
   selector: 'app-right-sidebar',
