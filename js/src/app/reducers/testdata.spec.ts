@@ -1,4 +1,5 @@
-import { State, initialState } from './reports';
+import { initialState } from './reports';
+import { State } from '../models/reports';
 
 export const populatedReports: State = Object.assign({}, initialState, {
   reports: [
@@ -11,9 +12,9 @@ export const populatedReports: State = Object.assign({}, initialState, {
       user_created: {
         first_name: '',
         last_name: '',
-        id: 1
-      }
-    }
+        id: 1,
+      },
+    },
   ],
   selectedReport: {
     id: 1,
@@ -28,7 +29,7 @@ export const populatedReports: State = Object.assign({}, initialState, {
     user_modified: null,
     filterfield_set: [],
     report_file: null,
-    report_file_creation: null
+    report_file_creation: null,
   },
   relatedFields: [
     {
@@ -40,8 +41,8 @@ export const populatedReports: State = Object.assign({}, initialState, {
       parent_model_name: 'content_type',
       parent_model_app_label: false,
       included_model: true,
-      children: []
-    }
+      children: [],
+    },
   ],
   fields: [
     {
@@ -54,7 +55,7 @@ export const populatedReports: State = Object.assign({}, initialState, {
       can_filter: true,
       path: '',
       path_verbose: '',
-      help_text: ''
+      help_text: '',
     },
     {
       name: 'id',
@@ -66,9 +67,9 @@ export const populatedReports: State = Object.assign({}, initialState, {
       can_filter: true,
       path: '',
       path_verbose: '',
-      help_text: ''
-    }
-  ]
+      help_text: '',
+    },
+  ],
 });
 
 export const newRelatedFields = [
@@ -80,7 +81,7 @@ export const newRelatedFields = [
     model_id: 5,
     parent_model_name: 'comment',
     parent_model_app_label: false,
-    included_model: true
+    included_model: true,
   },
   {
     field_name: 'report',
@@ -90,7 +91,7 @@ export const newRelatedFields = [
     model_id: 5,
     parent_model_name: 'report',
     parent_model_app_label: false,
-    included_model: true
+    included_model: true,
   },
   {
     field_name: 'permission',
@@ -100,7 +101,7 @@ export const newRelatedFields = [
     model_id: 5,
     parent_model_name: 'permission',
     parent_model_app_label: false,
-    included_model: true
+    included_model: true,
   },
   {
     field_name: 'logentry',
@@ -110,6 +111,6 @@ export const newRelatedFields = [
     model_id: 5,
     parent_model_name: 'logentry',
     parent_model_app_label: false,
-    included_model: true
-  }
+    included_model: true,
+  },
 ];

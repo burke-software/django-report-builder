@@ -7,7 +7,6 @@ import { MatModules } from '../app.module';
 import { MainComponent } from './main.component';
 import { LeftSidebarComponent } from './left-sidebar';
 import { TabsComponent } from './tabs/tabs.component';
-import { RelatedFieldComponent } from './right-sidebar/related-field.component';
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 import { reducers } from '../reducers';
@@ -24,13 +23,12 @@ xdescribe('MainComponent', () => {
           LeftSidebarComponent,
           TabsComponent,
           RightSidebarComponent,
-          RelatedFieldComponent
         ],
         imports: [
           ...MatModules,
           StoreModule.forRoot(reducers),
-          NoopAnimationsModule
-        ]
+          NoopAnimationsModule,
+        ],
       }).compileComponents();
     })
   );

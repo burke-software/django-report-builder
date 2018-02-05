@@ -11,7 +11,7 @@ import {
   IField,
   INewReport,
   IReportDetailed,
-} from '../api.interfaces';
+} from '../models/api';
 import { ApiService } from '../api.service';
 
 import { StoreModule } from '@ngrx/store';

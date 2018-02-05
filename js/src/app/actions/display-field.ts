@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { IDisplayField } from '../api.interfaces';
+import { IDisplayField } from '../models/api';
 
 export enum DisplayFieldActionTypes {
   LOAD_ALL = '[Display Fields] Load All',

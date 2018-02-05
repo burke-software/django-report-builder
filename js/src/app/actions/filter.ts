@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { IFilter } from '../api.interfaces';
+import { IFilter } from '../models/api';
 
 export enum FilterActionTypes {
   LOAD_ALL = '[Filters] Load All',

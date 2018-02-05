@@ -1,6 +1,6 @@
 import {
   HttpClientTestingModule,
-  HttpTestingController
+  HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
@@ -9,8 +9,8 @@ import {
   ReportsResponse,
   IReportDetailed,
   ContentTypeResponse,
-  INewReport
-} from './api.interfaces';
+  INewReport,
+} from './models/api';
 
 const apiUrl = '/report_builder/api/';
 
@@ -21,7 +21,7 @@ describe('Api service should', function() {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ApiService]
+      providers: [ApiService],
     });
 
     service = TestBed.get(ApiService);
@@ -31,7 +31,7 @@ describe('Api service should', function() {
   it('be able to get content types', () => {
     const contentTypes: ContentTypeResponse = [
       { pk: 1, name: 'log entry' },
-      { pk: 2, name: 'permission' }
+      { pk: 2, name: 'permission' },
     ];
     service.getRootModels().subscribe(data => {
       expect(data).toEqual(contentTypes);
@@ -44,7 +44,7 @@ describe('Api service should', function() {
     const report: INewReport = {
       name: 'Test Report',
       description: '',
-      root_model: 1
+      root_model: 1,
     };
     const detailedReport: IReportDetailed = {
       id: 1,
@@ -59,7 +59,7 @@ describe('Api service should', function() {
       user_modified: 'def dunno',
       filterfield_set: [],
       report_file_creation: null,
-      report_file: null
+      report_file: null,
     };
     service.submitNewReport(report).subscribe(resp => {
       expect(resp).toBe(detailedReport);
@@ -67,7 +67,7 @@ describe('Api service should', function() {
     const req = httpMock.expectOne(apiUrl + 'report/');
     req.flush(detailedReport, {
       status: 201,
-      statusText: 'Created'
+      statusText: 'Created',
     });
   });
 
@@ -92,7 +92,7 @@ describe('Api service should', function() {
           path_verbose: '',
           help_text: '',
           report: 4,
-          position: 0
+          position: 0,
         },
         {
           name: 'id',
@@ -106,8 +106,8 @@ describe('Api service should', function() {
           path_verbose: '',
           help_text: '',
           report: 4,
-          position: 1
-        }
+          position: 1,
+        },
       ],
       distinct: false,
       user_created: 1,
@@ -115,7 +115,7 @@ describe('Api service should', function() {
       filterfield_set: [],
       report_file: null,
       report_file_creation: null,
-      lastSaved: '2018-01-18T16:00:05.527Z'
+      lastSaved: '2018-01-18T16:00:05.527Z',
     };
 
     const expected: IReportDetailed = {
@@ -142,7 +142,7 @@ describe('Api service should', function() {
           group: false,
           report: 4,
           display_format: null,
-          field_type: 'CharField'
+          field_type: 'CharField',
         },
         {
           id: 2,
@@ -160,15 +160,15 @@ describe('Api service should', function() {
           group: false,
           report: 4,
           display_format: null,
-          field_type: 'AutoField'
-        }
+          field_type: 'AutoField',
+        },
       ],
       distinct: false,
       user_created: 1,
       user_modified: null,
       filterfield_set: [],
       report_file: null,
-      report_file_creation: null
+      report_file_creation: null,
     };
 
     service.editReport(report).subscribe(response => {
@@ -190,9 +190,9 @@ describe('Api service should', function() {
         user_created: {
           first_name: 'Test',
           last_name: 'User',
-          id: 1
-        }
-      }
+          id: 1,
+        },
+      },
     ];
     service.getReports().subscribe(data => {
       expect(data).toEqual(reports);
@@ -227,15 +227,15 @@ describe('Api service should', function() {
           report: 1,
           display_format: null,
           field_type: 'AutoField',
-          field_choices: []
-        }
+          field_choices: [],
+        },
       ],
       distinct: false,
       user_created: 1,
       user_modified: null,
       filterfield_set: [],
       report_file: 'http://localhost:8000/media/report_files/a_0928_2204.xlsx',
-      report_file_creation: '2017-09-28T22:04:49.407527Z'
+      report_file_creation: '2017-09-28T22:04:49.407527Z',
     };
     service.getReport(report.id).subscribe(data => {
       expect(data).toEqual(report);
@@ -256,7 +256,7 @@ describe('Api service should', function() {
   it('be able to generate a preview of the report', () => {
     const expected = {
       data: [['place', 10], ['user', 4]],
-      meta: { titles: ['model', 'id'] }
+      meta: { titles: ['model', 'id'] },
     };
 
     service.generatePreview(1).subscribe(response => {

@@ -1,11 +1,11 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { IReport } from '../../api.interfaces';
-import {Sort} from '@angular/material';
+import { IReport } from '../../models/api';
+import { Sort } from '@angular/material';
 
 @Component({
   selector: 'app-left-sidebar',
   templateUrl: './left-sidebar.component.html',
-  styleUrls: ['./left-sidebar.component.scss']
+  styleUrls: ['./left-sidebar.component.scss'],
 })
 export class LeftSidebarComponent {
   @Input() searchTerm: string;
@@ -17,16 +17,16 @@ export class LeftSidebarComponent {
   @Output() sortReports = new EventEmitter<string>();
   @Output() onToggleLeftNav = new EventEmitter();
   @Output() onToggleRightNav = new EventEmitter();
-  
+
   sortedData;
   reports;
 
-  @Input() 
+  @Input()
   set listReports(value: IReport[]) {
     this.sortedData = value;
     this.reports = value;
-  };
-  
+  }
+
   constructor() {}
 
   clickReport(reportId: number) {
@@ -52,10 +52,18 @@ export class LeftSidebarComponent {
     this.sortedData = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'User': return compare(+a.user_created.first_name, +b.user_created.first_name, isAsc);
-        case 'Date': return compare(+a.modified, +b.modified, isAsc);
-        default: return 0;
+        case 'name':
+          return compare(a.name, b.name, isAsc);
+        case 'User':
+          return compare(
+            +a.user_created.first_name,
+            +b.user_created.first_name,
+            isAsc
+          );
+        case 'Date':
+          return compare(+a.modified, +b.modified, isAsc);
+        default:
+          return 0;
       }
     });
   }

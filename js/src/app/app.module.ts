@@ -49,7 +49,6 @@ import { DisplayTabRowComponent } from './main/tabs/display-tab/display-tab-row.
 import { FilterTabComponent } from './main/tabs/filter-tab/filter-tab.component';
 import { FilterTabRowComponent } from './main/tabs/filter-tab/filter-tab-row.component';
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
-import { RelatedFieldComponent } from './main/right-sidebar/related-field.component';
 import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 
@@ -97,7 +96,6 @@ export const MatModules = [
     FilterTabComponent,
     FilterTabRowComponent,
     RightSidebarComponent,
-    RelatedFieldComponent,
     FieldComponent,
   ],
   imports: [

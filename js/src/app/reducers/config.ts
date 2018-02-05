@@ -1,8 +1,5 @@
 import * as configActions from '../actions/config';
-
-export interface State {
-  async_report?: boolean;
-}
+import { State } from '../models/config';
 
 export function reducer(state = {}, action: configActions.Actions): State {
   switch (action.type) {
@@ -15,5 +12,3 @@ export function reducer(state = {}, action: configActions.Actions): State {
     }
   }
 }
-
-export const getIsAsyncReport = (state: State) => state.async_report;
