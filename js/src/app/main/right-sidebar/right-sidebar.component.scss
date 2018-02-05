@@ -1,45 +1,132 @@
-mat-sidenav {
-    width: 20%;
-    height: 100%;
-    border-left: 2px solid #ededed;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+.mat-sidenav {
+  width: 320px;
+  min-width: 320px;
+  position: fixed;
+  height: 100%;
+  border-left: 1px solid #ededed;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 tree-root /deep/ {
-    height: 35;
-    tree-viewport {
-        height: 35%;
-    }
+  height: 38%;
+  tree-viewport {
+    height: 38%;
+  }
 }
 
 .header {
-    width: 100%;
-    height: 8%;
-    background-color: #79aec8;
-    margin-top: -19px;
-    padding-left: 10px;
+  width: 100%;
+  height: 65px;
+  background-color: #417690;
+  color: white;
+  margin-top: -21px;
+  padding-left: 10px;
+}
+
+h3 {
+  font-size: 20px;
+  letter-spacing: 0.005em;
+  box-sizing: border-box;
+  font-weight: 300;
+  padding-left: 10px;
+  padding-top: 20px;
+}
+
+.close-icon {
+  float: right;
+  position: relative;
+  padding-top: 5px;
+  padding-right: 25px;
 }
 
 .fields {
-    padding: 10px;
+  padding: 10px;
 }
 
-.search {
-    position: relative;
+.mat-header-row,
+.mat-row {
+  border-bottom: 0;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-cell {
+  font-size: 16px;
+}
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.add-button {
+  float: right;
+  background: white;
+  border: none;
+  cursor: pointer;
+}
+
+.add-button:focus {
+  outline: none;
+}
+
+.content {
+  font-size: 14px;
+  color: #79aec8;
+  font-weight: bold;
+}
+
+.selected-field {
+  padding: 20px;
+}
+
+.add-icon {
+  float: left;
+  color: #79aec8;
+  padding-right: 5px;
+}
+
+.example-no-results {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+}
+
+.material-icons.mat-icon {
+  @include md-icon-size(18px);
+}
+
+@media screen and (max-width: 620px) {
+  .header {
+    height: 63px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .mat-sidenav {
     width: 100%;
-    height: 2rem;
-    margin: 25px auto;
-    padding-bottom: 5px;
-    padding-top: -20px;
+  }
 }
-
-.search-box {
-    font-style: italic;
-    margin-top: -20px;
-    width: 100%;
-    height: 3%;
-}
-
-
-
-  

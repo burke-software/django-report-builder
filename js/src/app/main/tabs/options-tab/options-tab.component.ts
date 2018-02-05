@@ -16,23 +16,32 @@ import {
 @Component({
   selector: 'app-options-tab',
   template: `
-  <div><form>
-    <div><mat-form-field>
-      <input matInput placeholder="Description" [value]="descriptionInput$ | async" (keyup)="onChange($event.currentTarget.value)" >
-    </mat-form-field></div>
+  <div class="options-tab">
+  <mat-list class="options-content"><form>
 
-    <div>
-      <mat-checkbox [checked]="isChecked$ | async" (change)="onClick($event.checked)">
-        Is Distinct (maybe help reduce duplicate rows) Read&nbsp;
-        <a
-          href="https://docs.djangoproject.com/en/2.0/ref/models/querysets/#django.db.models.query.QuerySet.distinct"
-        target="_blank">more</a>.
-      </mat-checkbox>
-    </div>
-    <div><a (click)="onDelete($event)" href="#" alt="Delete this report">Delete this report</a></div>
+    <mat-list-item>
+      <mat-form-field>
+        <input matInput placeholder="Description" [value]="descriptionInput$ | async" (keyup)="onChange($event.currentTarget.value)" >
+      </mat-form-field>
+    </mat-list-item>
+
+    <mat-list-item>
+    <mat-checkbox matListIcon [checked]="isChecked$ | async" (change)="onClick($event.checked)"></mat-checkbox>
+    <span matLine>Is Distinct (maybe help reduce duplicate rows). Read
+      <a
+        href="https://docs.djangoproject.com/en/2.0/ref/models/querysets/#django.db.models.query.QuerySet.distinct"
+      target="_blank">more
+      </a>.
+    </span>
+    </mat-list-item>
+
+    <mat-list-item><mat-icon matListIcon (click)="onDelete($event)">delete</mat-icon><a matLine href="#" alt="Delete this report" (click)="onDelete($event)">Delete this report</a></mat-list-item>
+    
     <app-copy-report *ngIf="copyId$ | async" [id]="copyId$ | async"></app-copy-report>
+
     <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
-  </form></div>
+  </form></mat-list>
+  </div>
   `,
 })
 export class OptionsTabComponent {

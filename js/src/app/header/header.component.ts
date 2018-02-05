@@ -10,6 +10,7 @@ import { getSelectedReport } from '../selectors';
 })
 export class HeaderComponent implements OnInit {
   @Input() title: string;
+  @Input() activeTab: number;
   @Output() onToggleLeftNav = new EventEmitter();
   @Output() onToggleRightNav = new EventEmitter();
 

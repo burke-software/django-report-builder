@@ -19,9 +19,6 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
-  reportSearchText: string;
-  fieldSearchText: string;
-  relationsSearchText: string;
   leftNavIsOpen: boolean;
   rightNavIsOpen: boolean;
   activeTab: number;

@@ -5,18 +5,29 @@
 $navheight: 65px;
 
 body {
-    margin: 0;
-    background: #fafafa;
+  margin: 0;
 }
 
-.node-content-wrapper-active, .node-content-wrapper-focused, .node-content-wrapper:hover {
-    background: white !important;
-    -webkit-box-shadow: inset 0 0 0 #fff !important;
-    box-shadow: inset 0 0 0 #fff !important;
-    border: 0 !important;
+.mat-drawer-container {
+  background: #fff;
+}
+
+.node-content-wrapper-active,
+.node-content-wrapper-focused,
+.node-content-wrapper:hover {
+  background: white !important;
+  -webkit-box-shadow: inset 0 0 0 #fff !important;
+  box-shadow: inset 0 0 0 #fff !important;
+  border: 0 !important;
 }
 
 /* To make it fullscreen - use a fixed height for the nav and make something in the main component the full height - that fixed nav */
 .left-sidenav-container {
-    height: calc(100vh - #{$navheight});
+  height: calc(100vh - #{$navheight});
+}
+
+.mat-list .mat-list-item .mat-line,
+.mat-nav-list .mat-list-item .mat-line,
+.mat-selection-list .mat-list-item .mat-line {
+  white-space: normal;
 }

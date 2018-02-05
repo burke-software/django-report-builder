@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { setSearch } from './utils/filterSearch';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/fromEventPattern';
 
@@ -13,9 +11,7 @@ import {
   getTitle,
   getRightNavIsOpen,
   getLeftNavIsOpen,
-  getReportSearchTerm,
-  getFieldSearchTerm,
-  getRelationsSearchTerm,
+  getActiveTab,
   getSelectedReport,
   getSelectedField,
 } from '../selectors';
@@ -25,9 +21,6 @@ import {
   GetReport,
   GetFields,
   GetRelatedFields,
-  SetReportSearchText,
-  SetFieldSearchText,
-  SetRelationsSearchText,
   ToggleLeftNav,
   ToggleRightNav,
   AddReportField,
@@ -37,22 +30,22 @@ import {
 @Component({
   selector: 'app-main',
   template: `
-  <app-header
-  (onToggleLeftNav)="onToggleLeftNav()"
-  (onToggleRightNav)="onToggleRightNav()"
-  [title]="title$ | async">
-  </app-header>
     <mat-sidenav-container class="left-sidenav-container">
       <app-left-sidebar
         [listReports]="listReports$ | async"
         (onClickReport)="onClickReport($event)"
-        (searchReports)="searchReports($event)"
         (onToggleLeftNav)="onToggleLeftNav()"
         (onToggleRightNav)="onToggleRightNav()"
         [leftNavIsOpen]="leftNavIsOpen$ | async"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
       ></app-left-sidebar>
-      <div class="example-sidenav-content" style="padding-left: 100px;">
+      <app-header
+      (onToggleLeftNav)="onToggleLeftNav()"
+      (onToggleRightNav)="onToggleRightNav()"
+      [title]="title$ | async"
+      [activeTab]="activeTab$ | async">
+      </app-header>
+      <div class="example-sidenav-content">
         <app-tabs>
         </app-tabs>
       </div>
@@ -62,8 +55,6 @@ import {
         [fields]="fields$ | async"
         [selectedField]="selectedField$ | async"
         (selectRelatedField)="selectRelatedField($event)"
-        (searchFields)="searchFields($event)"
-        (searchRelations)="searchRelations($event)"
         (onToggleRightNav)="onToggleRightNav()"
         [rightNavIsOpen]="rightNavIsOpen$ | async"
         (addReportField)="addReportField($event)"
@@ -74,24 +65,13 @@ import {
 })
 export class MainComponent implements OnInit {
   title$ = this.store.select(getTitle);
+  activeTab$ = this.store.select(getActiveTab);
 
-  listReports$ = Observable.combineLatest(
-    this.store.select(getReports),
-    this.store.select(getReportSearchTerm),
-    setSearch
-  );
+  listReports$ = this.store.select(getReports);
 
-  fields$ = Observable.combineLatest(
-    this.store.select(getFields),
-    this.store.select(getFieldSearchTerm),
-    setSearch
-  );
+  fields$ = this.store.select(getFields);
 
-  relatedFields$ = Observable.combineLatest(
-    this.store.select(getRelatedFields),
-    this.store.select(getRelationsSearchTerm),
-    setSearch
-  );
+  relatedFields$ = this.store.select(getRelatedFields);
 
   selectedReport$ = this.store.select(getSelectedReport);
   leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
@@ -112,18 +92,6 @@ export class MainComponent implements OnInit {
   selectRelatedField(relatedField: INestedRelatedField) {
     this.store.dispatch(new GetFields(relatedField));
     this.store.dispatch(new GetRelatedFields(relatedField));
-  }
-
-  searchReports(searchTerm: string) {
-    this.store.dispatch(new SetReportSearchText(searchTerm));
-  }
-
-  searchFields(searchTerm: string) {
-    this.store.dispatch(new SetFieldSearchText(searchTerm));
-  }
-
-  searchRelations(searchTerm: string) {
-    this.store.dispatch(new SetRelationsSearchText(searchTerm));
   }
 
   onToggleLeftNav() {

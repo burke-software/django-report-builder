@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'app-report-tab',
   template: `
-  <div>
+  <div class="app-report-tab">
     <div>
       <button mat-button (click)="this.onSave()">Save</button>
       <button mat-button (click)="this.makePreview()">Preview</button>
