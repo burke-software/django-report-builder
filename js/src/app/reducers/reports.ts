@@ -1,5 +1,5 @@
 import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
-import { INestedRelatedField } from '../models/api';
+import { INestedRelatedField, IDisplayField } from '../models/api';
 import * as reportActions from '../actions/reports';
 import {
   DisplayFieldActions,
@@ -7,6 +7,7 @@ import {
 } from '../actions/display-field';
 import { FilterActions, FilterActionTypes } from '../actions/filter';
 import * as selectors from '../selectors/reports';
+import { Update } from '@ngrx/entity';
 
 export const initialState: State = {
   reports: [],
@@ -288,6 +289,40 @@ export function reducer(
       };
     }
 
+    case reportActions.CHANGE_DISPLAY_FIELD_POSITION: {
+      const oldPosition = action.payload.position;
+      const { newPosition } = action;
+      const changedPositions = inclusiveRange(oldPosition, newPosition);
+      const isIncrease = oldPosition < newPosition;
+      const updates: Update<IDisplayField>[] = selectors
+        .getDisplayFields(state)
+        .reduce((col, field) => {
+          if (field.position in changedPositions) {
+            const update: Update<IDisplayField> = {
+              id: field.position,
+              changes: {},
+            };
+            if (field.position === oldPosition) {
+              update.changes.position = newPosition;
+            } else if (isIncrease) {
+              update.changes.position = field.position - 1;
+            } else {
+              update.changes.position = field.position + 1;
+            }
+            return [...col, update];
+          } else {
+            return col;
+          }
+        }, []);
+      return {
+        ...state,
+        displayFields: displayFieldAdapter.updateMany(
+          updates,
+          state.displayFields
+        ),
+      };
+    }
+
     default:
       return state;
   }
@@ -308,4 +343,12 @@ function populateChildren(parentId: number, children: INestedRelatedField[]) {
     }
     return replacement;
   };
+}
+
+function inclusiveRange(begin, end) {
+  const result = [];
+  for (let i = Math.min(begin, end); i <= Math.max(begin, end); i++) {
+    result.push(i);
+  }
+  return result;
 }

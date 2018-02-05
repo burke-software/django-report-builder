@@ -8,6 +8,7 @@ import {
   INewReport,
   IBase,
   INestedRelatedField,
+  IDisplayField,
 } from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -39,6 +40,7 @@ export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
 export const ADD_REPORT_FIELD = 'Add Report Field';
 export const SELECT_FIELD = 'Select Field';
+export const CHANGE_DISPLAY_FIELD_POSITION = 'Change Display Field Position';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
@@ -191,6 +193,11 @@ export class SelectField implements Action {
   constructor(public payload: IField) {}
 }
 
+export class ChangeDisplayFieldPosition implements Action {
+  readonly type = CHANGE_DISPLAY_FIELD_POSITION;
+  constructor(public payload: IDisplayField, public newPosition: number) {}
+}
+
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -221,4 +228,5 @@ export type Actions =
   | SortReports
   | ChangeTab
   | AddReportField
-  | SelectField;
+  | SelectField
+  | ChangeDisplayFieldPosition;

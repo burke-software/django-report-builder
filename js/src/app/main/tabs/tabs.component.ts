@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ChangeTab } from '../../actions/reports';
+import { ChangeTab, ChangeDisplayFieldPosition } from '../../actions/reports';
 import * as DisplayFieldActions from '../../actions/display-field';
 import * as FilterActions from '../../actions/filter';
 import { State } from '../../reducers';
@@ -50,5 +50,15 @@ export class TabsComponent implements OnInit {
 
   ngOnInit() {
     this.activeTab$.subscribe(number => (this.tabs.selectedIndex = number));
+  }
+
+  moveDisplayField({
+    payload,
+    newPosition,
+  }: {
+    payload: IDisplayField;
+    newPosition: number;
+  }) {
+    this.store.dispatch(new ChangeDisplayFieldPosition(payload, newPosition));
   }
 }

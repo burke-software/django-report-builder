@@ -9,6 +9,9 @@
     <div class="mat-header-cell">Total</div>
     <div class="mat-header-cell">Group</div>
   </div>
-  <app-display-tab-row *ngFor="let row of fields" [field]="row" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)"
-    (deleteField)="deleteField.emit($event)"></app-display-tab-row>
+  <tree-root [nodes]="fields" [options]="treeOptions" (moveNode)="onMoveNode($event)">
+    <ng-template #treeNodeTemplate let-node let-index="index">
+      <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"></app-display-tab-row>
+    </ng-template>
+  </tree-root>
 </div>

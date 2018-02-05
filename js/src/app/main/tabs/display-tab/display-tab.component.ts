@@ -1,6 +1,15 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IDisplayField, IFormat } from '../../../models/api';
 import { Update } from '@ngrx/entity';
+import { ITreeOptions } from 'angular-tree-component';
+
+interface IDragEvent {
+  node: IDisplayField;
+  to: {
+    parent: IDisplayField;
+    index: number;
+  };
+}
 
 @Component({
   selector: 'app-display-tab',
@@ -32,4 +41,17 @@ export class DisplayTabComponent {
   @Input() formatOptions: IFormat[];
   @Output() deleteField = new EventEmitter<number>();
   @Output() updateField = new EventEmitter<Update<IDisplayField>>();
+  @Output()
+  moveField = new EventEmitter<{
+    payload: IDisplayField;
+    newPosition: number;
+  }>();
+  treeOptions: ITreeOptions = {
+    allowDrag: true,
+    allowDrop: (node, to) => !to.parent.parent,
+  };
+
+  onMoveNode(e: IDragEvent) {
+    this.moveField.emit({ payload: e.node, newPosition: e.to.index });
+  }
 }
