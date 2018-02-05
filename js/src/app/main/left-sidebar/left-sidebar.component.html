@@ -1,6 +1,8 @@
 <mat-sidenav class="left-side-nav" #table (clickOutside)="toggleLeftNav()" [exclude]="'button, #toggleLeft, mat-sidenav'"
   #sidenav mode="side" opened={{leftNavIsOpen}}>
-  <h3 class="header">Reports</h3>
+  <h3 class="header">Reports
+    <mat-icon (click)="toggleLeftNav()" class="close-icon">close</mat-icon>
+  </h3>
 
   <a routerLink="/report/add">
     <div class="add-report">+ Add Report</div>
@@ -18,17 +20,17 @@
     <mat-table [dataSource]="dataSource" matSort matSort #table matSortDisableClear="true">
       <ng-container matColumnDef="name">
         <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>NAME</mat-header-cell>
-        <mat-cell *matCellDef="let report" (click)="clickReport(report.id)"> {{report.name}} </mat-cell>
+        <mat-cell class="reports-row" *matCellDef="let report" (click)="clickReport(report.id)"> {{report.name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="user">
         <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>USER</mat-header-cell>
-        <mat-cell *matCellDef="let report"> {{report.user_created.first_name}} </mat-cell>
+        <mat-cell class="reports-row" *matCellDef="let report"> {{report.user_created.first_name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="date">
         <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>DATE</mat-header-cell>
-        <mat-cell *matCellDef="let report" class="modified"> {{report.modified}} </mat-cell>
+        <mat-cell class="reports-row" *matCellDef="let report" class="modified"> {{report.modified}} </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

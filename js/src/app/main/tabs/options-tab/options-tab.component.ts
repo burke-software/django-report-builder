@@ -27,7 +27,7 @@ import {
 
     <mat-list-item>
     <mat-checkbox matListIcon [checked]="isChecked$ | async" (change)="onClick($event.checked)"></mat-checkbox>
-    <span matLine>Is Distinct (maybe help reduce duplicate rows) Read
+    <span matLine>Is Distinct (maybe help reduce duplicate rows). Read
       <a
         href="https://docs.djangoproject.com/en/2.0/ref/models/querysets/#django.db.models.query.QuerySet.distinct"
       target="_blank">more
@@ -35,7 +35,7 @@ import {
     </span>
     </mat-list-item>
 
-    <mat-list-item (click)="onDelete($event)"><mat-icon matListIcon>delete</mat-icon><a matLine href="#" alt="Delete this report">Delete this report</a></mat-list-item>
+    <mat-list-item><mat-icon matListIcon (click)="onDelete($event)">delete</mat-icon><a matLine href="#" alt="Delete this report" (click)="onDelete($event)">Delete this report</a></mat-list-item>
     
     <app-copy-report *ngIf="copyId$ | async" [id]="copyId$ | async"></app-copy-report>
 

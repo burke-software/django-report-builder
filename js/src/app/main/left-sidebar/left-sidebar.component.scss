@@ -1,5 +1,6 @@
 .left-side-nav {
   width: 320px;
+  min-width: 320px;
   border-right: 1px solid #ededed;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   z-index: 3;
@@ -21,6 +22,13 @@
   margin-top: -1px;
   padding-left: 20px;
   padding-top: 20px;
+}
+
+.close-icon {
+  float: right;
+  position: relative;
+  padding-top: 5px;
+  padding-right: 25px;
 }
 
 a,
@@ -49,6 +57,10 @@ a:active {
 .mat-header-row,
 .mat-row {
   border-bottom: 0;
+}
+
+.reports-row {
+  font-size: 16px;
 }
 
 .modified {
@@ -83,6 +95,16 @@ a:active {
   padding: 24px;
   font-size: 12px;
   font-style: italic;
+}
+
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+}
+
+.material-icons.mat-icon {
+  @include md-icon-size(16px);
 }
 
 @media screen and (max-width: 608px) {

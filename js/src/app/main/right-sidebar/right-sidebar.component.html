@@ -1,7 +1,9 @@
 <mat-sidenav (clickOutside)="toggleRightNav()" [exclude]="'button, #toggleRight, mat-sidenav'" #sidenav mode="side" position="end"
   opened="{{rightNavIsOpen}}">
   <div class="header">
-    <h3>{{ modelName }} relations</h3>
+    <h3>{{ modelName }} relations
+      <mat-icon (click)="toggleRightNav()" class="close-icon">close</mat-icon>
+    </h3>
   </div>
 
   <div class="example-header">

@@ -45,3 +45,8 @@ a:active {
 .app-report-tab {
   padding: 20px;
 }
+
+.tab-table-header {
+  min-width: 600px;
+  overflow: scroll;
+}

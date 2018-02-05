@@ -1,5 +1,6 @@
 .mat-sidenav {
   width: 320px;
+  min-width: 320px;
   position: fixed;
   height: 100%;
   border-left: 1px solid #ededed;
@@ -31,6 +32,13 @@ h3 {
   font-weight: 300;
   padding-left: 10px;
   padding-top: 20px;
+}
+
+.close-icon {
+  float: right;
+  position: relative;
+  padding-top: 5px;
+  padding-right: 25px;
 }
 
 .fields {
