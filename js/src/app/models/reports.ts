@@ -26,6 +26,7 @@ export interface State {
   filters: EntityState<IFilter>;
   selectedField?: IField;
   nextRelatedFieldId: number;
+  showWelcome: boolean;
 }
 
 export const displayFieldAdapter: EntityAdapter<

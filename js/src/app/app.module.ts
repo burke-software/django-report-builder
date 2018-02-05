@@ -54,7 +54,11 @@ import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
-  { path: '', component: MainComponent, data: { title: 'Reports' } },
+  {
+    path: '',
+    component: MainComponent,
+    data: { title: 'Welcome to Django Report Builder' },
+  },
   {
     path: 'report/add',
     component: NewReportComponent,

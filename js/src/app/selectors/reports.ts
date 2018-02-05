@@ -68,3 +68,4 @@ export const getEditedReport = (state: State) => ({
   filterfield_set: getFilters(state),
 });
 export const getSelectedField = (state: State) => state.selectedField;
+export const getShowWelcome = (state: State) => state.showWelcome;

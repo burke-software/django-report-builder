@@ -22,6 +22,7 @@ export const initialState: State = {
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
   nextRelatedFieldId: 0,
+  showWelcome: false,
 };
 
 export function reducer(
@@ -285,6 +286,13 @@ export function reducer(
       return {
         ...state,
         selectedField: action.payload,
+      };
+    }
+
+    case reportActions.TOGGLE_WELCOME: {
+      return {
+        ...state,
+        showWelcome: action.payload,
       };
     }
 

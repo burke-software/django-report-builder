@@ -90,3 +90,7 @@ export const getSelectedField = createSelector(
   getReportsState,
   reportSelectors.getSelectedField
 );
+export const getShowWelcome = createSelector(
+  getReportsState,
+  reportSelectors.getShowWelcome
+);

@@ -7,6 +7,7 @@ import {
   GetTitle,
   ToggleRightNav,
   ToggleLeftNav,
+  ToggleWelcome,
 } from './actions/reports';
 import { GetConfig } from './actions/config';
 import { IReportDetailed } from './models/api';
@@ -25,6 +26,11 @@ export class AppComponent implements OnInit {
       if (event instanceof RoutesRecognized) {
         const child = event.state.root.firstChild;
         if (child) {
+          if (child.url.length === 0) {
+            this.store.dispatch(new ToggleWelcome(true));
+          } else {
+            this.store.dispatch(new ToggleWelcome(false));
+          }
           if (child.data) {
             this.store.dispatch(new GetTitle(child.data['title']));
           }

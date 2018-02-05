@@ -14,6 +14,7 @@ import {
   getActiveTab,
   getSelectedReport,
   getSelectedField,
+  getShowWelcome,
 } from '../selectors';
 import { INestedRelatedField, IField } from '../models/api';
 import {
@@ -47,7 +48,12 @@ import {
       </app-header>
       <div class="example-sidenav-content">
         <app-tabs>
+      <div class="example-sidenav-content" style="padding-left: 100px;" [ngSwitch]="welcome$ | async">
+        <app-tabs *ngSwitchCase="false">
         </app-tabs>
+        <div *ngSwitchCase="true">
+          Welcome to Django Report Builder. For more information on how to setup and use DRB check out our <a href="https://django-report-builder.readthedocs.io/en/latest/">docs</a>.
+        </div>
       </div>
       <app-right-sidebar #rightMenu
         [modelName]="(selectedReport$ | async)?.name"
@@ -66,6 +72,7 @@ import {
 export class MainComponent implements OnInit {
   title$ = this.store.select(getTitle);
   activeTab$ = this.store.select(getActiveTab);
+  welcome$ = this.store.select(getShowWelcome);
 
   listReports$ = this.store.select(getReports);
 
