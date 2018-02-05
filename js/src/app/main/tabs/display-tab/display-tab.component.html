@@ -10,8 +10,10 @@
     <div class="mat-header-cell">Group</div>
   </div>
   <tree-root [nodes]="getFields()" [options]="treeOptions">
-    <ng-template #treeNodeTemplate let-node let-index="index">
-      <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"></app-display-tab-row>
+    <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+      <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"
+        (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
+        [treeDragEnabled]="node.allowDrag()">></app-display-tab-row>
     </ng-template>
   </tree-root>
 </div>
