@@ -44,7 +44,10 @@ export class FilterTabComponent {
     actionMapping: {
       mouse: {
         drop: (tree, node, event, { from: { data }, to: { index } }) => {
-          this.moveFilter.emit({ payload: data, newPosition: index - 1 });
+          this.updateFilter.emit({
+            id: data.position,
+            changes: { position: index - 1 },
+          });
         },
       },
     } as IActionMapping,

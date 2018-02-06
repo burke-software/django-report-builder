@@ -33,11 +33,6 @@ export class DisplayTabComponent {
   @Input() formatOptions: IFormat[];
   @Output() deleteField = new EventEmitter<number>();
   @Output() updateField = new EventEmitter<Update<IDisplayField>>();
-  @Output()
-  moveField = new EventEmitter<{
-    payload: IDisplayField;
-    newPosition: number;
-  }>();
   treeOptions: ITreeOptions = {
     allowDrag: true,
     allowDrop: (node, to) => !to.parent.parent,
@@ -45,7 +40,10 @@ export class DisplayTabComponent {
     actionMapping: {
       mouse: {
         drop: (tree, node, event, { from: { data }, to: { index } }) => {
-          this.moveField.emit({ payload: data, newPosition: index - 1 });
+          this.updateField.emit({
+            id: data.position,
+            changes: { position: index - 1 },
+          });
         },
       },
     } as IActionMapping,

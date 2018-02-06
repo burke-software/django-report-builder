@@ -195,16 +195,6 @@ export class SelectField implements Action {
   constructor(public payload: IField) {}
 }
 
-export class ChangeDisplayFieldPosition implements Action {
-  readonly type = CHANGE_DISPLAY_FIELD_POSITION;
-  constructor(public payload: IDisplayField, public newPosition: number) {}
-}
-
-export class ChangeFilterPosition implements Action {
-  readonly type = CHANGE_FILTER_POSITION;
-  constructor(public payload: IFilter, public newPosition: number) {}
-}
-
 export type Actions =
   | GetReportList
   | GetReportFieldsSuccess
@@ -235,6 +225,4 @@ export type Actions =
   | SortReports
   | ChangeTab
   | AddReportField
-  | SelectField
-  | ChangeDisplayFieldPosition
-  | ChangeFilterPosition;
+  | SelectField;
