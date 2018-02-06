@@ -1,17 +1,24 @@
 <div class="mat-row">
-  <div class="mat-cell">
+
+  <div class="mat-cell" [style.flex]="'0 0 90px'">
     <button mat-icon-button>
       <mat-icon>reorder</mat-icon>
     </button>
+  </div>
+
+  <div class="mat-cell" [style.flex]="'0 0 90px'">
     <button mat-icon-button (click)="deleteFilter.emit(filter.position)">
       <mat-icon>delete</mat-icon>
     </button>
   </div>
+
+
   <div class="mat-cell">
     <span *ngIf="filter.path_verbose">({{filter.path_verbose}})</span> {{filter.field_verbose}}
   </div>
+
   <div class="mat-cell">
-    <mat-form-field>
+    <mat-form-field class="filter-tab-form">
       <mat-select (selectionChange)="editFilter({filter_type: $event.value})" [value]="filter.filter_type">
         <mat-option value="exact">Equals</mat-option>
         <mat-option value="iexact">Equals (case-insensitive)</mat-option>
@@ -76,7 +83,7 @@
         <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })"></mat-checkbox>
       </div>
 
-      <mat-form-field *ngSwitchDefault>
+      <mat-form-field *ngSwitchDefault class="filter-tab-form">
         <input matInput value="{{filter.filter_value}}" (keyup)="editFilter({filter_value: $event.currentTarget.value})">
       </mat-form-field>
     </div>
@@ -89,12 +96,15 @@
         <mat-datepicker #picker2></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field *ngSwitchDefault>
-        <input matInput value="{{filter.filter_value2}}" (keyup)="editFilter({filter_value2: $event.currentTarget.value})">
-      </mat-form-field>
+
+      <div class="mat-cell">
+        <mat-form-field class="filter-tab-form" *ngSwitchDefault>
+          <input matInput value="{{filter.filter_value2}}" (keyup)="editFilter({filter_value2: $event.currentTarget.value})">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="mat-cell checkbox">
+      <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })" aria-label="Exclude?"></mat-checkbox>
     </div>
   </div>
-  <div class="mat-cell">
-    <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })" aria-label="Exclude?"></mat-checkbox>
-  </div>
-</div>

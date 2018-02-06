@@ -33,22 +33,23 @@
   white-space: normal !important;
 }
 
-.mat-checkbox {
-  transform: scale(0.85) !important;
-}
-
 .display-checkbox {
   height: 18px !important;
   width: 18px !important;
 }
 
 .checkbox-label {
-  padding-top: 5px !important;
+  padding-top: 10px !important;
+}
+
+.checkbox-icon {
+  padding-left: 6px !important;
 }
 
 .last-report-icon {
   float: left;
-  padding-right: 23px;
+  padding-left: 3px;
+  padding-right: 20px;
   color: black !important;
 }
 
@@ -61,6 +62,12 @@ a:active {
   padding-bottom: 10px;
 }
 
+.mat-checkbox-inner-container {
+  height: 18px !important;
+  width: 18px !important;
+}
+
+/* Report Tab */
 .app-report-tab {
   padding: 20px;
 }
@@ -70,6 +77,27 @@ a:active {
   overflow: scroll;
 }
 
-.mat-row {
-  padding: 10px;
+/* Display Tab */
+.display-form-field {
+  width: 140px;
+}
+
+@media screen and (max-width: 768px) {
+  .display-form-field {
+    width: 50px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .filter-tab-form {
+    width: 80px !important;
+  }
+}
+
+// Filter Tab
+.mat-cell,
+.mat-header-cell {
+  flex: 1;
+  overflow: hidden;
+  word-wrap: break-word;
 }

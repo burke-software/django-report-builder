@@ -12,6 +12,7 @@ body {
   background: #fff;
 }
 
+// Override angular tree component node styles
 .node-content-wrapper-active,
 .node-content-wrapper-focused,
 .node-content-wrapper:hover {
@@ -32,7 +33,12 @@ body {
   white-space: normal;
 }
 
-.mat-checkbox-inner-container {
-  height: 18px !important;
-  width: 18px !important;
+.example-form .mat-input-underline {
+  border-bottom: 1px solid white;
+}
+
+.example-form .mat-input-container label,
+.example-form .mat-input-element {
+  color: white;
+  font-weight: 300;
 }

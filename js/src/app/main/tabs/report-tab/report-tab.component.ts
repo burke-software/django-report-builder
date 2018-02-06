@@ -10,14 +10,15 @@ import {
 
 @Component({
   selector: 'app-report-tab',
+  styleUrls: ['./report.component.scss'],
   template: `
-  <div class="app-report-tab">
-    <div>
-      <button mat-button (click)="this.onSave()">Save</button>
-      <button mat-button (click)="this.makePreview()">Preview</button>
-      <button mat-button (click)="this.exportReport('xlsx')">XLSX</button>
-      <button mat-button (click)="this.exportReport('csv')">CSV</button>
-      <app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp>
+  <div class="mat-table tab-table-header">
+    <div class="mat-header-row">
+      <div><button mat-button (click)="this.onSave()">SAVE</button></div>
+      <div><button mat-button (click)="this.makePreview()">PREVIEW</button></div>
+      <div><button mat-button (click)="this.exportReport('xlsx')">XLSX</button></div>
+      <div><button mat-button (click)="this.exportReport('csv')">CSV</button></div>
+      <div><app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp></div>
     </div>
     <div *ngIf="this.previewData$ | async">
       <app-report-preview [previewData]="this.previewData$ | async" ></app-report-preview>

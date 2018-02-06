@@ -4,7 +4,10 @@ import { IReportPreview } from '../../../models/api';
 
 @Component({
   selector: 'app-report-preview',
-  template: `<table>
+  styleUrls: ['./report.component.scss'],
+  template: `
+  <div class="table">
+  <table>
     <thead><tr><td *ngFor="let header of previewData.meta.titles">{{header}}</td></tr></thead>
     <tbody><tr *ngFor="let row of previewData.data"><td *ngFor="let cell of row">{{cell}}</td></tr></tbody>
   </table>`,

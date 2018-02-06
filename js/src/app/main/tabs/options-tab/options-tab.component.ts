@@ -26,7 +26,7 @@ import {
     </mat-list-item>
 
     <mat-list-item>
-    <mat-checkbox matListIcon [checked]="isChecked$ | async" (change)="onClick($event.checked)"></mat-checkbox>
+    <mat-checkbox matListIcon class="checkbox-icon" [checked]="isChecked$ | async" (change)="onClick($event.checked)"></mat-checkbox>
     <span class="checkbox-label" matLine>Is Distinct (maybe help reduce duplicate rows). Read
       <a
         href="https://docs.djangoproject.com/en/2.0/ref/models/querysets/#django.db.models.query.QuerySet.distinct"

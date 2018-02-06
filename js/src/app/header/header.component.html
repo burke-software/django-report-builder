@@ -4,7 +4,11 @@
                 <mat-icon class="add-icon transparent">list</mat-icon>
         </button>
     </div>
-    <span>{{ title }} {{ reportName }}</span>
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+            <input matInput [placeholder]="reportName ? '' : 'Report Name'" [value]="reportName">
+        </mat-form-field>
+    </form>
     <div class="right-navbar-container">
         <div [hidden]="activeTab === 2 || activeTab === 3">
             <button class="button" (click)="toggleRightNav()" id="toggleRight" type="button">

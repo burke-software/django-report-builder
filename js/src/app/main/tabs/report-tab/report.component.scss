@@ -1,0 +1,54 @@
+.table {
+  padding: 30px;
+  overflow-x: auto;
+}
+
+table {
+  display: table;
+  border: 1px solid #f8f8f8;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th {
+  border: 1px solid transparent;
+  background: #dfdfdf;
+}
+
+thead {
+  font-weight: 500;
+}
+
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+td,
+th {
+  height: 25px;
+  padding: 5px;
+}
+
+td {
+  border: 1px solid #dddddd;
+}
+
+tr:nth-child(even) td,
+th {
+  background: #f9f9f9;
+}
+
+tr:nth-child(odd) td {
+  background: #fff;
+}
+
+.mat-header-row {
+  display: flex;
+  text-align: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 0 3%;
+  border: 1px solid transparent;
+}

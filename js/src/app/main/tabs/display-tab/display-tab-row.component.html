@@ -1,15 +1,17 @@
 <div class="mat-row">
-  <div class="mat-cell">
+  <div class="mat-cell" [style.flex]="'0 0 75px'">
     <button mat-icon-button>
       <mat-icon>reorder</mat-icon>
     </button>
+  </div>
+  <div class="mat-cell" [style.flex]="'0 0 75px'">
     <button mat-icon-button (click)="deleteField.emit(field.position)">
       <mat-icon>delete</mat-icon>
     </button>
   </div>
   <div class="mat-cell">{{field.field_verbose}} [{{field.field_type}}]</div>
   <div class="mat-cell">
-    <mat-form-field>
+    <mat-form-field class="display-form-field">
       <input matInput value="{{field.name}}" (keyup)="editField({name: $event.currentTarget.value})">
     </mat-form-field>
   </div>
@@ -17,7 +19,7 @@
     <mat-checkbox class="display-checkbox" [checked]="field.sort_reverse" (change)="editField({sort_reverse: $event.checked })"></mat-checkbox>
   </div>
   <div class="mat-cell">
-    <mat-form-field>
+    <mat-form-field class="display-form-field">
       <mat-select (selectionChange)="editField({aggregate: $event.value})" [value]="field.aggregate || ''">
         <mat-option value="">----------</mat-option>
         <mat-option value="Sum">Sum</mat-option>
@@ -29,7 +31,7 @@
     </mat-form-field>
   </div>
   <div class="mat-cell">
-    <mat-form-field>
+    <mat-form-field class="display-form-field">
       <mat-select></mat-select>
     </mat-form-field>
   </div>
