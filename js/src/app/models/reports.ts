@@ -37,9 +37,9 @@ interface IHasPosition {
   position: number;
 }
 
-function createPositionEntityAdapter<T extends IHasPosition>(): EntityAdapter<
-  T
-> {
+export function createPositionEntityAdapter<
+  T extends IHasPosition
+>(): EntityAdapter<T> {
   const adapter = createEntityAdapter<T>({
     sortComparer: (x, y) => x.position - y.position,
     selectId: x => x.position,
@@ -83,7 +83,7 @@ function createPositionEntityAdapter<T extends IHasPosition>(): EntityAdapter<
     const changedPositions = inclusiveRange(oldPosition, newPosition);
     const isIncrease = oldPosition < newPosition;
     return selectors.selectAll(state).reduce((col, entity) => {
-      if (entity.position in changedPositions) {
+      if (changedPositions.includes(entity.position)) {
         const update: Update<T> = {
           id: entity.position,
           changes: {},
