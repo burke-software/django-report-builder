@@ -15,11 +15,11 @@ import {
   <div>
   <div class="mat-table tab-table-header">
     <div class="mat-header-row">
-      <div class="mat-table-cell"><button mat-button (click)="this.onSave()">SAVE</button></div>
-      <div class="mat-table-cell"><button mat-button (click)="this.makePreview()">PREVIEW</button></div>
-      <div class="mat-table-cell"><button mat-button (click)="this.exportReport('xlsx')">XLSX</button></div>
-      <div class="mat-table-cell"><button mat-button (click)="this.exportReport('csv')">CSV</button></div>
-      <div class="mat-table-cell"><app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp></div>
+      <div class="mat-cell"><button mat-button (click)="this.onSave()">SAVE</button></div>
+      <div class="mat-cell"><button mat-button (click)="this.makePreview()">PREVIEW</button></div>
+      <div class="mat-cell"><button mat-button (click)="this.exportReport('xlsx')">XLSX</button></div>
+      <div class="mat-cell"><button mat-button (click)="this.exportReport('csv')">CSV</button></div>
+      <div class="mat-cell"><app-saved-timestamp class="mat-table-cell" [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp></div>
     </div>
   </div>
     <div *ngIf="this.previewData$ | async">
