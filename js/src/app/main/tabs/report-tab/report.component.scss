@@ -1,5 +1,5 @@
 .table {
-  padding: 30px;
+  padding: 20px;
   overflow-x: auto;
 }
 
@@ -27,21 +27,12 @@ tr {
 
 td,
 th {
-  height: 25px;
+  height: 20px;
   padding: 5px;
 }
 
 td {
   border: 1px solid #dddddd;
-}
-
-tr:nth-child(even) td,
-th {
-  background: #f9f9f9;
-}
-
-tr:nth-child(odd) td {
-  background: #fff;
 }
 
 .mat-header-row {
