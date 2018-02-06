@@ -8,8 +8,6 @@ import {
   INewReport,
   IBase,
   INestedRelatedField,
-  IDisplayField,
-  IFilter,
 } from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
