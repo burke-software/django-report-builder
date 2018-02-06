@@ -1,3 +1,4 @@
+/* report preview table */
 .table {
   padding: 20px;
   overflow-x: auto;
@@ -21,7 +22,6 @@ thead {
 
 tr {
   display: table-row;
-  vertical-align: inherit;
   border-color: inherit;
 }
 
@@ -35,7 +35,17 @@ td {
   border: 1px solid #dddddd;
 }
 
+/* report options header */
+.tab-table-header {
+  padding-top: 10px;
+  display: flex;
+  text-align: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
 .mat-header-row {
+  width: 90%;
   display: flex;
   text-align: center;
   justify-content: space-around;

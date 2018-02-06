@@ -12,8 +12,8 @@ import {
   selector: 'app-report-tab',
   styleUrls: ['./report.component.scss'],
   template: `
-  <div class="mat-table tab-table-header">
   <div>
+  <div class="mat-table tab-table-header">
     <div class="mat-header-row">
       <div class="mat-table-cell"><button mat-button (click)="this.onSave()">SAVE</button></div>
       <div class="mat-table-cell"><button mat-button (click)="this.makePreview()">PREVIEW</button></div>

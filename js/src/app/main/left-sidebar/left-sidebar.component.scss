@@ -89,14 +89,6 @@ a:active {
   max-height: 500px;
 }
 
-.example-no-results {
-  display: flex;
-  justify-content: center;
-  padding: 24px;
-  font-size: 12px;
-  font-style: italic;
-}
-
 @mixin md-icon-size($size: 24px) {
   font-size: $size;
   height: $size;
