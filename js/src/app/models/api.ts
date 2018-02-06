@@ -26,7 +26,7 @@ export interface IDisplayField extends IBase {
   sort?: any;
   sort_reverse?: boolean;
   width?: number;
-  aggregate?: string;
+  aggregate?: '' | 'Sum' | 'Count' | 'Avg' | 'Max' | 'Min';
   position: number;
   total?: boolean;
   group?: boolean;
@@ -40,7 +40,28 @@ export interface IDisplayField extends IBase {
 
 export interface IFilter extends IBase {
   exclude?: boolean;
-  filter_type: string;
+  filter_type:
+    | 'exact'
+    | 'iexact'
+    | 'contains'
+    | 'icontains'
+    | 'in'
+    | 'gt'
+    | 'gte'
+    | 'lt'
+    | 'lte'
+    | 'startswith'
+    | 'istartswith'
+    | 'endswith'
+    | 'iendswith'
+    | 'range'
+    | 'relative_range'
+    | 'week_day'
+    | 'isnull'
+    | 'regex'
+    | 'iregex'
+    | 'max'
+    | 'min';
   filter_value?: string;
   filter_value2?: string;
   id?: number;
