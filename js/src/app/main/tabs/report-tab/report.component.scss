@@ -1,10 +1,10 @@
 /* report preview table */
-.table {
+.table-container {
   padding: 20px;
   overflow-x: auto;
 }
 
-table {
+.report-table {
   display: table;
   border: 1px solid #f8f8f8;
   border-collapse: collapse;
@@ -50,6 +50,5 @@ td {
   text-align: center;
   justify-content: space-around;
   flex-wrap: wrap;
-  padding: 0 3%;
   border: 1px solid transparent;
 }

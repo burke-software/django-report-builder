@@ -6,8 +6,8 @@ import { IReportPreview } from '../../../models/api';
   selector: 'app-report-preview',
   styleUrls: ['./report.component.scss'],
   template: `
-  <div class="table">
-  <table>
+  <div class="table-container">
+  <table class="report-table">
     <thead><tr><td *ngFor="let header of previewData.meta.titles">{{header}}</td></tr></thead>
     <tbody><tr *ngFor="let row of previewData.data"><td *ngFor="let cell of row">{{cell}}</td></tr></tbody>
   </table>`,

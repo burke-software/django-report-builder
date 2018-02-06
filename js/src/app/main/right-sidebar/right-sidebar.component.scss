@@ -11,9 +11,15 @@
 
 tree-root /deep/ {
   height: 38%;
+
   tree-viewport {
     height: 38%;
+    padding: 20px;
   }
+}
+
+.related-field-name {
+  padding-left: 20px !important;
 }
 
 .header {

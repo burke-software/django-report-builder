@@ -37,10 +37,6 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
 
-    <div class="example-no-results" [style.display]="dataSource?.renderedData.length == 0 ? '' : 'none'">
-      No matches found.
-    </div>
-
   </div>
 
 </mat-sidenav>
