@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
   @Input() selectedReport: IReportDetailed;
 
   constructor(router: Router, private store: Store<State>) {
-    let firstLoad = true;
     router.events.subscribe(event => {
       if (event instanceof RoutesRecognized) {
         const child = event.state.root.firstChild;
@@ -28,11 +27,9 @@ export class AppComponent implements OnInit {
           if (child.data) {
             this.store.dispatch(new GetTitle(child.data['title']));
           }
-          // Load in report if user opened app from this url (instead of clicking)
-          if (child.params && child.params['id'] && firstLoad) {
+          if (child.params && child.params['id']) {
             this.store.dispatch(new GetReport(child.params['id']));
           }
-          firstLoad = false;
         }
       }
     });

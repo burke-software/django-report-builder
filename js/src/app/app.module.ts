@@ -29,6 +29,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { NewReportComponent } from './new-report/new-report.component';
+import { HomeComponent } from './home/home.component';
 import { MainComponent } from './main/main.component';
 import { LeftSidebarComponent } from './main/left-sidebar/';
 
@@ -54,7 +55,7 @@ import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
-  { path: '', component: MainComponent, data: { title: 'Reports' } },
+  { path: '', component: HomeComponent, data: { title: 'Reports' } },
   {
     path: 'report/add',
     component: NewReportComponent,
@@ -84,6 +85,7 @@ export const MatModules = [
   declarations: [
     AppComponent,
     NewReportComponent,
+    HomeComponent,
     MainComponent,
     LeftSidebarComponent,
     HeaderComponent,
