@@ -125,8 +125,7 @@ export class ReportEffects {
   @Effect()
   deleteReport$ = this.actions$
     .ofType(fromReports.DELETE_REPORT)
-    .withLatestFrom(this.store$)
-    .map(([_, storeState]) => getSelectedReportId(storeState))
+    .map((action: fromReports.DeleteReport) => action.payload)
     .mergeMap(reportId => {
       return this.api
         .deleteReport(reportId)

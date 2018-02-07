@@ -9,7 +9,7 @@ import { IReport } from '../models/api';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { State } from '../reducers';
-import { GetReport, GetReportList } from '../actions/reports';
+import { GetReport, GetReportList, DeleteReport } from '../actions/reports';
 import { getReports } from '../selectors';
 
 @Component({
@@ -33,6 +33,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
+
+  deleteReport(reportId: number) {
+    this.store.dispatch(new DeleteReport(reportId));
+  }
+
+  copyReport(reportId: number) {}
 
   clickReport(reportId: number) {
     this.store.dispatch(new GetReport(reportId));

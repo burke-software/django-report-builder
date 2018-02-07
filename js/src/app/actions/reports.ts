@@ -31,6 +31,7 @@ export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 export const EXPORT_REPORT = 'Export Report';
 export const CREATE_REPORT = 'Create Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
+export const COPY_REPORT = 'Copy Report';
 export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
 export const CHECK_EXPORT_STATUS = 'Check Export Status';
 export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
@@ -110,7 +111,7 @@ export class ToggleReportDistinct implements Action {
 
 export class DeleteReport implements Action {
   readonly type = DELETE_REPORT;
-  constructor() {}
+  constructor(public payload: number) {}
 }
 
 export class DeleteReportSuccess implements Action {
@@ -163,6 +164,11 @@ export class CreateReportSuccess implements Action {
   constructor(public payload: IReportDetailed) {}
 }
 
+export class CopyReport implements Action {
+  readonly type = COPY_REPORT;
+  constructor(public payload: number) {}
+}
+
 export class ToggleLeftNav implements Action {
   readonly type = TOGGLE_LEFT_NAV;
 }
@@ -213,6 +219,7 @@ export type Actions =
   | ExportReport
   | CreateReport
   | CreateReportSuccess
+  | CopyReport
   | DownloadExportedReport
   | CheckExportStatus
   | ToggleLeftNav
