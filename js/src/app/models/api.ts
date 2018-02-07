@@ -31,7 +31,7 @@ export interface IDisplayField extends IBase {
   total?: boolean;
   group?: boolean;
   report?: number;
-  display_format?: any;
+  display_format?: number;
   is_default?: boolean;
   can_filter?: boolean;
   field_choices?: any[];
@@ -112,8 +112,15 @@ export interface IReportPreview {
   };
 }
 
+export interface IFormat {
+  id: number | string;
+  name: string;
+  string: string;
+}
+
 export interface IConfig {
   async_report: boolean;
+  formats: IFormat[];
 }
 
 export interface IAsyncTaskId {

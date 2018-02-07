@@ -9,5 +9,6 @@
     <div class="mat-header-cell">Total</div>
     <div class="mat-header-cell">Group</div>
   </div>
-  <app-display-tab-row *ngFor="let row of fields" [field]="row" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"></app-display-tab-row>
+  <app-display-tab-row *ngFor="let row of fields" [field]="row" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)"
+    (deleteField)="deleteField.emit($event)"></app-display-tab-row>
 </div>

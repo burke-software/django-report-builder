@@ -1,7 +1,7 @@
 <mat-tab-group #tabs class="tab-group" (selectedTabChange)="tabChange($event.index)">
   <mat-tab label="Display">
-    <app-display-tab *ngIf="displayFields$ | async" [fields]="displayFields$ | async" (updateField)="updateDisplayField($event)"
-      (deleteField)="deleteDisplayField($event)"></app-display-tab>
+    <app-display-tab *ngIf="displayFields$ | async" [fields]="displayFields$ | async" [formatOptions]="formatOptions$ | async"
+      (updateField)="updateDisplayField($event)" (deleteField)="deleteDisplayField($event)"></app-display-tab>
   </mat-tab>
   <mat-tab label="Filter">
     <app-filter-tab *ngIf="filters$ | async" [filters]="filters$ | async" (updateFilter)="updateFilter($event)" (deleteFilter)="deleteFilter($event)"></app-filter-tab>

@@ -13,6 +13,7 @@ from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer, ContentTypeSerializer)
 from ..mixins import GetFieldsMixin, DataExportMixin
+from django.core import serializers
 
 
 def find_exact_position(fields_list, item):
@@ -32,7 +33,10 @@ class ReportBuilderViewMixin:
 
 class ConfigView(APIView):
     def get(self, request):
-        data = { 'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False )}
+        data = {
+            'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False ),
+            'formats': FormatSerializer(Format.objects.all(), many=True).data
+        }
         return JsonResponse(data)
 
 
