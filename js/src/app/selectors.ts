@@ -8,6 +8,10 @@ export const getIsAsyncReport = createSelector(
   getConfigState,
   configSelectors.getIsAsyncReport
 );
+export const getFormatOptions = createSelector(
+  getConfigState,
+  configSelectors.getFormatOptions
+);
 
 const getReportsState = (state: State) => state.reports;
 export const getReports = createSelector(

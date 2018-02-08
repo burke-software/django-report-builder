@@ -4,7 +4,12 @@ import { ChangeTab } from '../../actions/reports';
 import * as DisplayFieldActions from '../../actions/display-field';
 import * as FilterActions from '../../actions/filter';
 import { State } from '../../reducers';
-import { getActiveTab, getDisplayFields, getFilters } from '../../selectors';
+import {
+  getActiveTab,
+  getDisplayFields,
+  getFilters,
+  getFormatOptions,
+} from '../../selectors';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
 import { IDisplayField, IFilter } from '../../models/api';
@@ -20,6 +25,7 @@ export class TabsComponent implements OnInit {
   displayFields$ = this.store.select(getDisplayFields);
   filters$ = this.store.select(getFilters);
   activeTab$ = this.store.select(getActiveTab);
+  formatOptions$ = this.store.select(getFormatOptions);
   @ViewChild('tabs') tabs: MatTabGroup;
 
   tabChange(index: number) {

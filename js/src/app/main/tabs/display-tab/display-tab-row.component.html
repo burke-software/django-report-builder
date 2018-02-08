@@ -30,7 +30,10 @@
   </div>
   <div class="mat-cell">
     <mat-form-field>
-      <mat-select></mat-select>
+      <mat-select (selectionChange)="editField({display_format: $event.value})" [value]="field.display_format ? field.display_format.toString() : ''">
+        <mat-option value="">----------</mat-option>
+        <mat-option *ngFor="let format of formatOptions" value="{{format.id}}">{{format.name}}</mat-option>
+      </mat-select>
     </mat-form-field>
   </div>
   <div class="mat-cell">

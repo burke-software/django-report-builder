@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IDisplayField } from '../../../models/api';
+import { IDisplayField, IFormat } from '../../../models/api';
 import { Update } from '@ngrx/entity';
 
 @Component({
@@ -26,6 +26,7 @@ import { Update } from '@ngrx/entity';
 export class DisplayTabRowComponent {
   constructor() {}
   @Input() field: IDisplayField;
+  @Input() formatOptions: IFormat[];
   @Output() deleteField = new EventEmitter<number>();
   @Output() updateField = new EventEmitter<Update<IDisplayField>>();
 
