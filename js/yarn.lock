@@ -193,6 +193,10 @@
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-5.0.1.tgz#1c19ff966a0cd599d6942666bd32696fcb1f149c"
 
+"@ngrx/router-store@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/router-store/-/router-store-5.0.1.tgz#db872327bb958a2ebf296734c97de68672ec628a"
+
 "@ngrx/store-devtools@^5.0.0":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-5.0.1.tgz#f1bf5c54d4b2a512afd970e8114057b44e0d3c16"

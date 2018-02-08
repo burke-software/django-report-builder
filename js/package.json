@@ -29,6 +29,7 @@
     "@angular/router": "^5.0.1",
     "@ngrx/effects": "^5.0.0",
     "@ngrx/entity": "^5.0.0",
+    "@ngrx/router-store": "^5.0.1",
     "@ngrx/store": "^5.0.0",
     "@ngrx/store-devtools": "^5.0.0",
     "angular-tree-component": "^7.0.1",
