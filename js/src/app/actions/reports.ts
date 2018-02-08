@@ -169,10 +169,6 @@ export class CopyReport implements Action {
   constructor(public payload: number) {}
 }
 
-export class ToggleLeftNav implements Action {
-  readonly type = TOGGLE_LEFT_NAV;
-}
-
 export class ToggleRightNav implements Action {
   readonly type = TOGGLE_RIGHT_NAV;
 }
@@ -222,7 +218,6 @@ export type Actions =
   | CopyReport
   | DownloadExportedReport
   | CheckExportStatus
-  | ToggleLeftNav
   | SortReports
   | ToggleRightNav
   | SortReports

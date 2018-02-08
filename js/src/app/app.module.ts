@@ -31,7 +31,6 @@ import { AppComponent } from './app.component';
 import { NewReportComponent } from './new-report/new-report.component';
 import { HomeComponent } from './home/home.component';
 import { MainComponent } from './main/main.component';
-import { LeftSidebarComponent } from './main/left-sidebar/';
 
 import { ApiService } from './api.service';
 
@@ -86,7 +85,6 @@ export const MatModules = [
     NewReportComponent,
     HomeComponent,
     MainComponent,
-    LeftSidebarComponent,
     HeaderComponent,
     TabsComponent,
     OptionsTabComponent,

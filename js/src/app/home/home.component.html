@@ -17,7 +17,7 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef></mat-header-cell>
       <mat-cell class="reports-row" *matCellDef="let report">
-        <button mat-icon-button (click)="copyReport(report.id)"><mat-icon aria-label="Copy report">content_copy</mat-icon></button>
+        <a mat-icon-button (click)="copyReport(report.id)"><mat-icon aria-label="Copy report">content_copy</mat-icon></a>
         <button mat-icon-button (click)="deleteReport(report.id)"><mat-icon aria-label="Delete report">delete_forever</mat-icon></button>
       </mat-cell>
     </ng-container>

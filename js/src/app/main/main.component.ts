@@ -10,7 +10,6 @@ import {
   getFields,
   getTitle,
   getRightNavIsOpen,
-  getLeftNavIsOpen,
   getActiveTab,
   getSelectedReport,
   getSelectedField,
@@ -21,7 +20,6 @@ import {
   GetReport,
   GetFields,
   GetRelatedFields,
-  ToggleLeftNav,
   ToggleRightNav,
   AddReportField,
   SelectField,
@@ -31,16 +29,7 @@ import {
   selector: 'app-main',
   template: `
     <mat-sidenav-container class="left-sidenav-container">
-      <app-left-sidebar
-        [listReports]="listReports$ | async"
-        (onClickReport)="onClickReport($event)"
-        (onToggleLeftNav)="onToggleLeftNav()"
-        (onToggleRightNav)="onToggleRightNav()"
-        [leftNavIsOpen]="leftNavIsOpen$ | async"
-        [rightNavIsOpen]="rightNavIsOpen$ | async"
-      ></app-left-sidebar>
       <app-header
-      (onToggleLeftNav)="onToggleLeftNav()"
       (onToggleRightNav)="onToggleRightNav()"
       [title]="title$ | async"
       [activeTab]="activeTab$ | async">
@@ -74,7 +63,6 @@ export class MainComponent implements OnInit {
   relatedFields$ = this.store.select(getRelatedFields);
 
   selectedReport$ = this.store.select(getSelectedReport);
-  leftNavIsOpen$ = this.store.select(getLeftNavIsOpen);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
   selectedField$ = this.store.select(getSelectedField);
@@ -92,10 +80,6 @@ export class MainComponent implements OnInit {
   selectRelatedField(relatedField: INestedRelatedField) {
     this.store.dispatch(new GetFields(relatedField));
     this.store.dispatch(new GetRelatedFields(relatedField));
-  }
-
-  onToggleLeftNav() {
-    this.store.dispatch(new ToggleLeftNav());
   }
 
   onToggleRightNav() {
