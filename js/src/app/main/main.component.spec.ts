@@ -5,7 +5,6 @@ import { StoreModule } from '@ngrx/store';
 
 import { MatModules } from '../app.module';
 import { MainComponent } from './main.component';
-import { LeftSidebarComponent } from './left-sidebar';
 import { TabsComponent } from './tabs/tabs.component';
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
@@ -18,12 +17,7 @@ xdescribe('MainComponent', () => {
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
-        declarations: [
-          MainComponent,
-          LeftSidebarComponent,
-          TabsComponent,
-          RightSidebarComponent,
-        ],
+        declarations: [MainComponent, TabsComponent, RightSidebarComponent],
         imports: [
           ...MatModules,
           StoreModule.forRoot(reducers),
