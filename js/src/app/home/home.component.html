@@ -13,7 +13,7 @@
     </mat-form-field>
   </div>
 
-  <mat-table [dataSource]="dataSource" matSort matSort #table matSortDisableClear="true">
+  <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
     <ng-container matColumnDef="actions">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef></mat-header-cell>
       <mat-cell class="reports-row" *matCellDef="let report">
