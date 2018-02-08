@@ -11,6 +11,7 @@ import {
   ChangeReportDescription,
   ToggleReportDistinct,
   DeleteReport,
+  CopyReport,
 } from '../../../actions/reports';
 
 @Component({
@@ -37,7 +38,7 @@ import {
 
     <mat-list-item><mat-icon matListIcon (click)="onDelete($event)">delete</mat-icon><a matLine href="#" alt="Delete this report" (click)="onDelete($event)">Delete this report</a></mat-list-item>
 
-    <app-copy-report *ngIf="copyId$ | async" [id]="copyId$ | async"></app-copy-report>
+    <mat-list-item *ngIf="reportId" (click)="this.copyReport($event)"><mat-icon matListIcon>content_copy</mat-icon><a matLine href="/report_builder/report/{{reportId}}/create_copy/">Copy this report</a></mat-list-item>
 
     <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
   </form></mat-list>
@@ -47,13 +48,14 @@ import {
 export class OptionsTabComponent implements OnInit {
   descriptionInput$ = this.store.select(getDescriptionInput);
   isChecked$ = this.store.select(getIsDistinct);
-  copyId$ = this.store.select(getSelectedReportId);
   reportId: number;
   lastGeneratedReport$ = this.store.select(getLastGeneratedReport);
   @Output() changeDescription = new EventEmitter<string>();
 
   ngOnInit() {
-    this.copyId$.subscribe(id => (this.reportId = id));
+    this.store
+      .select(getSelectedReportId)
+      .subscribe(id => (this.reportId = id));
   }
 
   onChange(value: string) {
@@ -67,6 +69,11 @@ export class OptionsTabComponent implements OnInit {
   onDelete(e: MouseEvent) {
     e.preventDefault();
     this.store.dispatch(new DeleteReport(this.reportId));
+  }
+
+  copyReport(e: MouseEvent) {
+    e.preventDefault();
+    this.store.dispatch(new CopyReport(this.reportId));
   }
 
   constructor(private store: Store<State>) {}

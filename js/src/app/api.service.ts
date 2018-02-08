@@ -73,8 +73,7 @@ export class ApiService {
     );
   }
 
-  // type should only be 'xlsx' or 'csv'
-  exportReport({ reportId, type }: { reportId: number; type: string }) {
+  exportReport({ reportId, type }: { reportId: number; type: 'xlsx' | 'csv' }) {
     return this.http.get<IAsyncTaskId>(
       this.baseUrl + `report/${reportId}/download_file/${type}/`
     );
@@ -93,10 +92,9 @@ export class ApiService {
   }
 
   copyReport(reportId: number) {
-    return this.http
-      .get(this.baseUrl + `report/${reportId}/create_copy/`, {
-        observe: 'response',
-      })
-      .toPromise();
+    return this.http.post<IReportDetailed>(
+      this.apiUrl + `report/${reportId}/copy_report/`,
+      null
+    );
   }
 }
