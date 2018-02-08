@@ -13,6 +13,7 @@ export const getSelectedReportId = (state: State) => {
 export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;
+export const getTitleInput = (state: State) => state.titleInput;
 export const getIsDistinct = (state: State) => state.isDistinct;
 export const getPreview = (state: State) => state.reportPreview;
 export const getLastSaved = (state: State) => state.reportSaved;
@@ -65,5 +66,6 @@ export const getEditedReport = (state: State) => ({
   distinct: getIsDistinct(state),
   displayfield_set: getDisplayFields(state),
   filterfield_set: getFilters(state),
+  name: getTitleInput(state),
 });
 export const getSelectedField = (state: State) => state.selectedField;

@@ -1,7 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { State } from '../reducers';
-import { getSelectedReport } from '../selectors';
 
 @Component({
   selector: 'app-header',
@@ -10,20 +7,10 @@ import { getSelectedReport } from '../selectors';
 })
 export class HeaderComponent {
   @Input() title: string;
+  @Input() reportName: string;
   @Input() showRightNavButton: boolean;
   @Output() onToggleRightNav = new EventEmitter();
-
-  reportName: string;
-
-  constructor(private store: Store<State>) {
-    this.store.select(getSelectedReport).subscribe(report => {
-      if (report) {
-        this.reportName = report.name;
-      } else {
-        this.reportName = null;
-      }
-    });
-  }
+  @Output() changeTitleInput = new EventEmitter();
 
   toggleRightNav() {
     this.onToggleRightNav.emit();

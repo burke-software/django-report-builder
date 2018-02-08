@@ -20,6 +20,7 @@ export interface State {
   relatedFields: INestedRelatedField[];
   fields: IField[];
   title: string;
+  titleInput: string;
   descriptionInput: string;
   isDistinct: boolean;
   reportPreview?: IReportPreview;

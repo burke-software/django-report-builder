@@ -14,6 +14,7 @@ export const initialState: State = {
   relatedFields: [],
   fields: [],
   title: '',
+  titleInput: '',
   descriptionInput: '',
   isDistinct: false,
   rightNavIsOpen: false,
@@ -67,6 +68,7 @@ export function reducer(
         relatedFields: selectors.getRelatedFields(initialState),
         fields: selectors.getFields(initialState),
         descriptionInput: action.payload.description,
+        titleInput: action.payload.name,
         isDistinct: action.payload.distinct,
       };
     }
@@ -114,6 +116,13 @@ export function reducer(
       return {
         ...state,
         descriptionInput: action.payload,
+      };
+    }
+
+    case reportActions.CHANGE_REPORT_TITLE: {
+      return {
+        ...state,
+        titleInput: action.payload,
       };
     }
 
