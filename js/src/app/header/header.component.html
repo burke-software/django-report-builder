@@ -6,7 +6,7 @@
   </div>
   <span>{{ title }} {{ reportName }}</span>
   <div class="right-navbar-container">
-    <div [hidden]="showRightNavButton">
+    <div [hidden]="!showRightNavButton">
       <button class="button" (click)="toggleRightNav()" id="toggleRight" type="button">
         <mat-icon>menu</mat-icon>
       </button>
