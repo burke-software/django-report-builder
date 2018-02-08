@@ -10,7 +10,7 @@ import { getSelectedReport } from '../selectors';
 })
 export class HeaderComponent {
   @Input() title: string;
-  @Input() activeTab: number;
+  @Input() showRightNavButton: boolean;
   @Output() onToggleRightNav = new EventEmitter();
 
   reportName: string;

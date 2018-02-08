@@ -32,7 +32,7 @@ import {
       <app-header
       (onToggleRightNav)="onToggleRightNav()"
       [title]="title$ | async"
-      [activeTab]="activeTab$ | async">
+      [showRightNavButton]="(activeTab$ | async) > 1">
       </app-header>
       <div class="example-sidenav-content">
         <app-tabs>
