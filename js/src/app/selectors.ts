@@ -34,10 +34,6 @@ export const getTitle = createSelector(
   getReportsState,
   reportSelectors.getTitle
 );
-export const getLeftNavIsOpen = createSelector(
-  getReportsState,
-  reportSelectors.getLeftNavIsOpen
-);
 export const getRightNavIsOpen = createSelector(
   getReportsState,
   reportSelectors.getRightNavIsOpen

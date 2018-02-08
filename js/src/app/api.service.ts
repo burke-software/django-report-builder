@@ -16,6 +16,7 @@ import {
   INewReport,
   IAsyncTaskId,
   ITaskStatus,
+  IExportType,
 } from './models/api';
 
 @Injectable()
@@ -73,7 +74,7 @@ export class ApiService {
     );
   }
 
-  exportReport({ reportId, type }: { reportId: number; type: 'xlsx' | 'csv' }) {
+  exportReport({ reportId, type }: { reportId: number; type: IExportType }) {
     return this.http.get<IAsyncTaskId>(
       this.baseUrl + `report/${reportId}/download_file/${type}/`
     );

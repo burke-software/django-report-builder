@@ -2,12 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
-import {
-  GetReport,
-  GetTitle,
-  ToggleRightNav,
-  ToggleLeftNav,
-} from './actions/reports';
+import { GetReport, GetTitle, ToggleRightNav } from './actions/reports';
 import { GetConfig } from './actions/config';
 import { IReportDetailed } from './models/api';
 
@@ -37,10 +32,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new GetConfig());
-  }
-
-  onToggleLeftNav() {
-    this.store.dispatch(new ToggleLeftNav());
   }
 
   onToggleRightNav() {

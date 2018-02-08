@@ -8,6 +8,7 @@ import {
   INewReport,
   IBase,
   INestedRelatedField,
+  IExportType,
 } from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -141,7 +142,7 @@ export class GeneratePreviewSuccess implements Action {
 
 export class ExportReport implements Action {
   readonly type = EXPORT_REPORT;
-  constructor(public payload: string) {}
+  constructor(public payload: IExportType) {}
 }
 
 export class DownloadExportedReport implements Action {

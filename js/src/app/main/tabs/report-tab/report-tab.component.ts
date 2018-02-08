@@ -7,6 +7,7 @@ import {
   GeneratePreview,
   ExportReport,
 } from '../../../actions/reports';
+import { IExportType } from '../../../models/api';
 
 @Component({
   selector: 'app-report-tab',
@@ -38,7 +39,7 @@ export class ReportTabComponent {
     this.store.dispatch(new GeneratePreview());
   }
 
-  exportReport(type: string) {
+  exportReport(type: IExportType) {
     this.store.dispatch(new ExportReport(type));
   }
 }
