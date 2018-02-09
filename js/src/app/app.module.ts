@@ -44,7 +44,7 @@ import { ApiService } from './api.service';
 import { reducers, metaReducers, CustomSerializer } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { ConfigEffects } from './effects/config';
-
+import { RouterEffects } from './effects/router';
 import { HeaderComponent } from './header/header.component';
 import { ConfirmModalComponent } from './confirm/confirm-modal.component';
 import { TabsComponent } from './main/tabs/tabs.component';
@@ -122,7 +122,7 @@ export const MatModules = [
       stateKey: 'router',
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
-    EffectsModule.forRoot([ReportEffects, ConfigEffects]),
+    EffectsModule.forRoot([ReportEffects, ConfigEffects, RouterEffects]),
     HttpClientModule,
     TreeModule,
     MatSortModule,
