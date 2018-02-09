@@ -33,6 +33,7 @@ export class DisplayTabComponent {
   @Input() formatOptions: IFormat[];
   @Output() deleteField = new EventEmitter<number>();
   @Output() updateField = new EventEmitter<Update<IDisplayField>>();
+  @Output() saveReport = new EventEmitter();
   treeOptions: ITreeOptions = {
     allowDrag: true,
     allowDrop: (node, to) => !to.parent.parent,

@@ -32,6 +32,7 @@ export class FilterTabComponent {
   @Input() filters: IFilter[];
   @Output() deleteFilter = new EventEmitter<number>();
   @Output() updateFilter = new EventEmitter<Update<IFilter>>();
+  @Output() saveReport = new EventEmitter();
   @Output()
   moveFilter = new EventEmitter<{
     payload: IFilter;

@@ -17,7 +17,7 @@ export const initialState: State = {
   descriptionInput: '',
   isDistinct: false,
   rightNavIsOpen: false,
-  activeTab: 2,
+  activeTab: 0,
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
   nextRelatedFieldId: 0,
