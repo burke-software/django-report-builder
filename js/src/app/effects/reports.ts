@@ -72,7 +72,6 @@ export class ReportEffects {
   getReportSuccess$ = this.actions$
     .ofType(fromReports.GET_REPORT_SUCCESS)
     .map((action: fromReports.GetReportSuccess) => action.payload)
-    .do(report => this.router.navigate(['/report', report.id]))
     .mergeMap(report => {
       const request: IGetRelatedFieldRequest = {
         model: report.root_model,
