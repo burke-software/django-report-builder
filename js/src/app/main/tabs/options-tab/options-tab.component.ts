@@ -1,10 +1,9 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../reducers';
 import {
   getDescriptionInput,
   getIsDistinct,
-  getSelectedReportId,
   getLastGeneratedReport,
 } from '../../../selectors';
 import {
@@ -13,50 +12,24 @@ import {
   DeleteReport,
   CopyReport,
 } from '../../../actions/reports';
+import { MatDialog } from '@angular/material';
+import { IReportDetailed } from '../../../models/api';
+import {
+  ConfirmModalComponent,
+  IConfirmModalData,
+} from '../../../confirm/confirm-modal.component';
 
 @Component({
   selector: 'app-options-tab',
-  template: `
-  <div class="options-tab">
-  <mat-list class="options-content"><form>
-
-    <mat-list-item>
-      <mat-form-field>
-        <input matInput placeholder="Description" [value]="descriptionInput$ | async" (keyup)="onChange($event.currentTarget.value)" >
-      </mat-form-field>
-    </mat-list-item>
-
-    <mat-list-item>
-    <mat-checkbox matListIcon [checked]="isChecked$ | async" (change)="onClick($event.checked)"></mat-checkbox>
-    <span matLine>Is Distinct (maybe help reduce duplicate rows). Read
-      <a
-        href="https://docs.djangoproject.com/en/2.0/ref/models/querysets/#django.db.models.query.QuerySet.distinct"
-      target="_blank">more
-      </a>.
-    </span>
-    </mat-list-item>
-
-    <mat-list-item><mat-icon matListIcon (click)="onDelete($event)">delete</mat-icon><a matLine href="#" alt="Delete this report" (click)="onDelete($event)">Delete this report</a></mat-list-item>
-
-    <mat-list-item *ngIf="reportId" (click)="this.copyReport($event)"><mat-icon matListIcon>content_copy</mat-icon><a matLine href="/report_builder/report/{{reportId}}/create_copy/">Copy this report</a></mat-list-item>
-
-    <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
-  </form></mat-list>
-  </div>
-  `,
+  templateUrl: './options-tab.component.html',
 })
-export class OptionsTabComponent implements OnInit {
+export class OptionsTabComponent {
+  constructor(private store: Store<State>, public dialog: MatDialog) {}
+
   descriptionInput$ = this.store.select(getDescriptionInput);
   isChecked$ = this.store.select(getIsDistinct);
-  reportId: number;
+  @Input() report: IReportDetailed;
   lastGeneratedReport$ = this.store.select(getLastGeneratedReport);
-  @Output() changeDescription = new EventEmitter<string>();
-
-  ngOnInit() {
-    this.store
-      .select(getSelectedReportId)
-      .subscribe(id => (this.reportId = id));
-  }
 
   onChange(value: string) {
     this.store.dispatch(new ChangeReportDescription(value));
@@ -68,13 +41,22 @@ export class OptionsTabComponent implements OnInit {
 
   onDelete(e: MouseEvent) {
     e.preventDefault();
-    this.store.dispatch(new DeleteReport(this.reportId));
+
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      data: {
+        reportName: this.report.name,
+      } as IConfirmModalData,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.dispatch(new DeleteReport(this.report.id));
+      }
+    });
   }
 
   copyReport(e: MouseEvent) {
     e.preventDefault();
-    this.store.dispatch(new CopyReport(this.reportId));
+    this.store.dispatch(new CopyReport(this.report.id));
   }
-
-  constructor(private store: Store<State>) {}
 }
