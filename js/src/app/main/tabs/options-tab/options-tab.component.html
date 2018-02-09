@@ -25,8 +25,6 @@
         <mat-icon matListIcon>content_copy</mat-icon>
         <a matLine href="/report_builder/report/{{report.id}}/create_copy/">Copy this report</a>
       </mat-list-item>
-
-      <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
     </form>
   </mat-list>
 </div>

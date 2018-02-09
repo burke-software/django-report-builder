@@ -1,11 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../reducers';
-import {
-  getDescriptionInput,
-  getIsDistinct,
-  getLastGeneratedReport,
-} from '../../../selectors';
+import { getDescriptionInput, getIsDistinct } from '../../../selectors';
 import {
   ChangeReportDescription,
   ToggleReportDistinct,
@@ -29,7 +25,6 @@ export class OptionsTabComponent {
   descriptionInput$ = this.store.select(getDescriptionInput);
   isChecked$ = this.store.select(getIsDistinct);
   @Input() report: IReportDetailed;
-  lastGeneratedReport$ = this.store.select(getLastGeneratedReport);
 
   onChange(value: string) {
     this.store.dispatch(new ChangeReportDescription(value));
