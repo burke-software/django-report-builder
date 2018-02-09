@@ -11,6 +11,7 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -37,7 +38,9 @@ import { ApiService } from './api.service';
 import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { ConfigEffects } from './effects/config';
+
 import { HeaderComponent } from './header/header.component';
+import { ConfirmModalComponent } from './confirm/confirm-modal.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
 import { LastReportComponent } from './main/tabs/options-tab/last-report.component';
@@ -67,6 +70,7 @@ export const MatModules = [
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -86,6 +90,7 @@ export const MatModules = [
     HomeComponent,
     MainComponent,
     HeaderComponent,
+    ConfirmModalComponent,
     TabsComponent,
     OptionsTabComponent,
     LastReportComponent,
@@ -119,5 +124,6 @@ export const MatModules = [
   ],
   providers: [ApiService],
   bootstrap: [AppComponent],
+  entryComponents: [ConfirmModalComponent],
 })
 export class AppModule {}
