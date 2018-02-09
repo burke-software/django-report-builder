@@ -30,6 +30,7 @@ import { ITreeOptions, IActionMapping } from 'angular-tree-component';
 export class FilterTabComponent {
   constructor() {}
   @Input() filters: IFilter[];
+  @Input() hasChanged: boolean;
   @Output() deleteFilter = new EventEmitter<number>();
   @Output() updateFilter = new EventEmitter<Update<IFilter>>();
   @Output() saveReport = new EventEmitter();

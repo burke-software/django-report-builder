@@ -31,6 +31,7 @@ export interface State {
   selectedField?: IField;
   nextRelatedFieldId: number;
   generatingReport: boolean;
+  editedSinceLastSave: boolean;
 }
 
 interface IHasPosition {

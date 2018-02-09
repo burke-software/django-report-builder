@@ -1,7 +1,7 @@
 <div class="mat-table tab-table-header">
   <div class="mat-header-row">
     <div class="mat-header-cell">
-      <button mat-icon-button (click)="saveReport.emit()">
+      <button [disabled]="!hasChanged" mat-icon-button (click)="saveReport.emit()">
         <mat-icon>save</mat-icon>
       </button>
     </div>

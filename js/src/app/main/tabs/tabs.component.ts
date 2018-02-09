@@ -10,6 +10,7 @@ import {
   getFilters,
   getFormatOptions,
   getSelectedReport,
+  hasEditedSinceLastSave,
 } from '../../selectors';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
@@ -28,6 +29,7 @@ export class TabsComponent implements OnInit {
   activeTab$ = this.store.select(getActiveTab);
   formatOptions$ = this.store.select(getFormatOptions);
   report$ = this.store.select(getSelectedReport);
+  hasChanged$ = this.store.select(hasEditedSinceLastSave);
   @ViewChild('tabs') tabs: MatTabGroup;
 
   ngOnInit() {

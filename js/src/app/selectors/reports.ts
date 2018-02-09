@@ -68,3 +68,5 @@ export const getEditedReport = (state: State) => ({
 });
 export const getSelectedField = (state: State) => state.selectedField;
 export const isGeneratingReport = (state: State) => state.generatingReport;
+export const hasEditedSinceLastSave = (state: State) =>
+  state.editedSinceLastSave;
