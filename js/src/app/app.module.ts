@@ -22,6 +22,7 @@ import {
   MatTabsModule,
   MatTableModule,
   MatTooltipModule,
+  MatProgressBarModule,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
@@ -76,6 +77,7 @@ export const MatModules = [
   MatInputModule,
   MatListModule,
   MatMomentDateModule,
+  MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
   MatSortModule,

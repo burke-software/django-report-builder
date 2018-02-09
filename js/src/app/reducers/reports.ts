@@ -21,6 +21,7 @@ export const initialState: State = {
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
   nextRelatedFieldId: 0,
+  generatingReport: false,
 };
 
 export function reducer(
@@ -135,10 +136,26 @@ export function reducer(
       };
     }
 
+    case reportActions.EXPORT_REPORT: {
+      return {
+        ...state,
+        generatingReport: true,
+      };
+    }
+
+    case reportActions.DOWNLOAD_EXPORTED_REPORT: {
+      return { ...state, generatingReport: false };
+    }
+
+    case reportActions.GENERATE_PREVIEW: {
+      return { ...state, generatingReport: true };
+    }
+
     case reportActions.GENERATE_PREVIEW_SUCCESS: {
       return {
         ...state,
         reportPreview: action.payload,
+        generatingReport: false,
       };
     }
 
