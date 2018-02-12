@@ -22,6 +22,7 @@ export const GET_FIELDS_SUCCESS = 'Get Fields Success';
 export const GET_RELATED_FIELDS = 'Get Related Fields';
 export const GET_RELATED_FIELDS_SUCCESS = 'Get Related Fields Success';
 export const CHANGE_REPORT_DESCRIPTION = 'Change Report Description';
+export const CHANGE_REPORT_TITLE = 'Change Report Title';
 export const TOGGLE_REPORT_DISTINCT = 'Toggle Report Distinct';
 export const DELETE_REPORT = 'Delete Report';
 export const DELETE_REPORT_SUCCESS = 'Delete Report Success';
@@ -104,6 +105,11 @@ export class GetRelatedFieldsSuccess implements Action {
 
 export class ChangeReportDescription implements Action {
   readonly type = CHANGE_REPORT_DESCRIPTION;
+  constructor(public payload: string) {}
+}
+
+export class ChangeReportTitle implements Action {
+  readonly type = CHANGE_REPORT_TITLE;
   constructor(public payload: string) {}
 }
 
@@ -208,6 +214,7 @@ export type Actions =
   | GetRelatedFields
   | GetRelatedFieldsSuccess
   | ChangeReportDescription
+  | ChangeReportTitle
   | ToggleReportDistinct
   | DeleteReport
   | DeleteReportSuccess

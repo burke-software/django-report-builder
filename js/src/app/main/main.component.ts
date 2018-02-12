@@ -23,6 +23,7 @@ import {
   ToggleRightNav,
   AddReportField,
   SelectField,
+  ChangeReportTitle,
 } from '../actions/reports';
 
 @Component({
@@ -30,9 +31,11 @@ import {
   template: `
     <mat-sidenav-container class="left-sidenav-container">
       <app-header
-      (onToggleRightNav)="onToggleRightNav()"
-      [title]="title$ | async"
-      [showRightNavButton]="(activeTab$ | async) <= 1">
+        (onToggleRightNav)="onToggleRightNav()"
+        (changeTitleInput)="editTitle($event)"
+        [title]="title$ | async"
+        [showRightNavButton]="(activeTab$ | async) <= 1"
+        [reportName]="reportName">
       </app-header>
       <div class="example-sidenav-content">
         <app-tabs>
@@ -63,6 +66,7 @@ export class MainComponent implements OnInit {
   relatedFields$ = this.store.select(getRelatedFields);
 
   selectedReport$ = this.store.select(getSelectedReport);
+  reportName?: string;
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
   selectedField$ = this.store.select(getSelectedField);
@@ -71,6 +75,9 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());
+    this.selectedReport$.subscribe(
+      report => (this.reportName = report ? report.name : undefined)
+    );
   }
 
   onClickReport(reportId: number) {
@@ -92,5 +99,9 @@ export class MainComponent implements OnInit {
 
   selectField(field: IField) {
     this.store.dispatch(new SelectField(field));
+  }
+
+  editTitle(title: string) {
+    this.store.dispatch(new ChangeReportTitle(title));
   }
 }
