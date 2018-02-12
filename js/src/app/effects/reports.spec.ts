@@ -12,6 +12,7 @@ import {
   INewReport,
   IReportDetailed,
   INestedRelatedField,
+  IAggregate,
 } from '../models/api';
 import { ApiService } from '../api.service';
 
@@ -161,7 +162,7 @@ describe('Report Effects', () => {
       actions = hot('a-', { a: new Actions.EditReport() });
 
       // prettier-ignore
-      const savedReport = {"id":4,"name":"afasdf","description":"adgsasfg","modified":"2018-01-18","root_model":5,"root_model_name":"content type","displayfield_set":[{"id":1,"path":"","path_verbose":"","field":"model","field_verbose":"python model class name","name":"model","sort":null,"sort_reverse":false,"width":15,"aggregate":"","position":0,"total":false,"group":false,"report":4,"display_format":null,"field_type":"CharField"},{"id":2,"path":"","path_verbose":"","field":"id","field_verbose":"ID","name":"id","sort":null,"sort_reverse":false,"width":15,"aggregate":"","position":1,"total":false,"group":false,"report":4,"display_format":null,"field_type":"AutoField"}],"distinct":false,"user_created":1,"user_modified":null,"filterfield_set":[],"report_file":null,"report_file_creation":null}
+      const savedReport = {"id":4,"name":"afasdf","description":"adgsasfg","modified":"2018-01-18","root_model":5,"root_model_name":"content type","displayfield_set":[{"id":1,"path":"","path_verbose":"","field":"model","field_verbose":"python model class name","name":"model","sort":null,"sort_reverse":false,"width":15,"aggregate":"" as IAggregate,"position":0,"total":false,"group":false,"report":4,"display_format":null,"field_type":"CharField"},{"id":2,"path":"","path_verbose":"","field":"id","field_verbose":"ID","name":"id","sort":null,"sort_reverse":false,"width":15,"aggregate":"" as IAggregate,"position":1,"total":false,"group":false,"report":4,"display_format":null,"field_type":"AutoField"}],"distinct":false,"user_created":1,"user_modified":null,"filterfield_set":[],"report_file":null,"report_file_creation":null}
 
       const response = cold('-b', { b: savedReport });
       service.editReport.and.returnValue(response);
