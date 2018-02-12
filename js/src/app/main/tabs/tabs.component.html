@@ -10,6 +10,6 @@
     <app-report-tab></app-report-tab>
   </mat-tab>
   <mat-tab label="Options">
-    <app-options-tab></app-options-tab>
+    <app-options-tab [report]="report$ | async"></app-options-tab>
   </mat-tab>
 </mat-tab-group>

@@ -138,3 +138,5 @@ export interface ITaskStatus {
   link?: string;
   email?: boolean;
 }
+
+export type IExportType = 'xlsx' | 'csv';

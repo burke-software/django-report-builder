@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../reducers';
 import { getSelectedReport } from '../selectors';
@@ -8,10 +8,9 @@ import { getSelectedReport } from '../selectors';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   @Input() title: string;
-  @Input() activeTab: number;
-  @Output() onToggleLeftNav = new EventEmitter();
+  @Input() showRightNavButton: boolean;
   @Output() onToggleRightNav = new EventEmitter();
 
   reportName: string;
@@ -24,12 +23,6 @@ export class HeaderComponent implements OnInit {
         this.reportName = null;
       }
     });
-  }
-
-  ngOnInit() {}
-
-  toggleLeftNav() {
-    this.onToggleLeftNav.emit();
   }
 
   toggleRightNav() {

@@ -19,7 +19,6 @@ export interface State {
   isDistinct: boolean;
   reportPreview?: IReportPreview;
   reportSaved?: Date;
-  leftNavIsOpen: boolean;
   rightNavIsOpen: boolean;
   activeTab: number;
   displayFields: EntityState<IDisplayField>;

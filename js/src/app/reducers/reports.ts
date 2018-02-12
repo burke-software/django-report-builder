@@ -16,7 +16,6 @@ export const initialState: State = {
   title: '',
   descriptionInput: '',
   isDistinct: false,
-  leftNavIsOpen: false,
   rightNavIsOpen: false,
   activeTab: 0,
   displayFields: displayFieldAdapter.getInitialState(),
@@ -48,13 +47,6 @@ export function reducer(
       return {
         ...state,
         title: action.payload,
-      };
-    }
-
-    case reportActions.TOGGLE_LEFT_NAV: {
-      return {
-        ...state,
-        leftNavIsOpen: !state.leftNavIsOpen,
       };
     }
 

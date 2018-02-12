@@ -32,7 +32,6 @@ export const getLastGeneratedReport = createSelector(
     }
   }
 );
-export const getLeftNavIsOpen = (state: State) => state.leftNavIsOpen;
 export const getRightNavIsOpen = (state: State) => state.rightNavIsOpen;
 
 export const getDisplayFieldsState = (state: State) => state.displayFields;

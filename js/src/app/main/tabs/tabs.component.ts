@@ -9,6 +9,7 @@ import {
   getDisplayFields,
   getFilters,
   getFormatOptions,
+  getSelectedReport,
 } from '../../selectors';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
@@ -26,7 +27,12 @@ export class TabsComponent implements OnInit {
   filters$ = this.store.select(getFilters);
   activeTab$ = this.store.select(getActiveTab);
   formatOptions$ = this.store.select(getFormatOptions);
+  report$ = this.store.select(getSelectedReport);
   @ViewChild('tabs') tabs: MatTabGroup;
+
+  ngOnInit() {
+    this.activeTab$.subscribe(number => (this.tabs.selectedIndex = number));
+  }
 
   tabChange(index: number) {
     this.store.dispatch(new ChangeTab(index));
@@ -46,9 +52,5 @@ export class TabsComponent implements OnInit {
 
   deleteFilter(id: number) {
     this.store.dispatch(new FilterActions.DeleteOne(id));
-  }
-
-  ngOnInit() {
-    this.activeTab$.subscribe(number => (this.tabs.selectedIndex = number));
   }
 }

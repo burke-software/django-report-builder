@@ -4,8 +4,10 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.utils.functional import cached_property
 from django.conf import settings
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from ..models import Report, Format, FilterField
@@ -14,6 +16,7 @@ from .serializers import (
     FilterFieldSerializer, ContentTypeSerializer)
 from ..mixins import GetFieldsMixin, DataExportMixin
 from django.core import serializers
+from ..utils import duplicate
 
 
 def find_exact_position(fields_list, item):
@@ -73,6 +76,32 @@ class ReportNestedViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(user_modified=self.request.user)
+
+    @detail_route(methods=['post'])
+    def copy_report(self, request, pk=None):
+        report = self.get_object()
+        new_report = duplicate(report, changes=(
+            ('name', '{0} (copy)'.format(report.name)),
+            ('user_created', request.user),
+            ('user_modified', request.user),
+        ))
+
+        # duplicate does not get related
+        for display in report.displayfield_set.all():
+            new_display = copy.copy(display)
+            new_display.pk = None
+            new_display.report = new_report
+            new_display.save()
+        for report_filter in report.filterfield_set.all():
+            new_filter = copy.copy(report_filter)
+            new_filter.pk = None
+            new_filter.report = new_report
+            new_filter.save()
+
+        serializer = ReportNestedSerializer(new_report)
+        return JsonResponse(serializer.data)
+
+        
 
 
 class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):

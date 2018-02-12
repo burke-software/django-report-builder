@@ -2,12 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
-import {
-  GetReport,
-  GetTitle,
-  ToggleRightNav,
-  ToggleLeftNav,
-} from './actions/reports';
+import { GetReport, GetTitle, ToggleRightNav } from './actions/reports';
 import { GetConfig } from './actions/config';
 import { IReportDetailed } from './models/api';
 
@@ -20,7 +15,6 @@ export class AppComponent implements OnInit {
   @Input() selectedReport: IReportDetailed;
 
   constructor(router: Router, private store: Store<State>) {
-    let firstLoad = true;
     router.events.subscribe(event => {
       if (event instanceof RoutesRecognized) {
         const child = event.state.root.firstChild;
@@ -28,11 +22,9 @@ export class AppComponent implements OnInit {
           if (child.data) {
             this.store.dispatch(new GetTitle(child.data['title']));
           }
-          // Load in report if user opened app from this url (instead of clicking)
-          if (child.params && child.params['id'] && firstLoad) {
+          if (child.params && child.params['id']) {
             this.store.dispatch(new GetReport(child.params['id']));
           }
-          firstLoad = false;
         }
       }
     });
@@ -40,10 +32,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new GetConfig());
-  }
-
-  onToggleLeftNav() {
-    this.store.dispatch(new ToggleLeftNav());
   }
 
   onToggleRightNav() {

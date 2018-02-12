@@ -8,6 +8,7 @@ import {
   INewReport,
   IBase,
   INestedRelatedField,
+  IExportType,
 } from '../models/api';
 
 export const GET_REPORT_LIST = 'Get Report List';
@@ -31,6 +32,7 @@ export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
 export const EXPORT_REPORT = 'Export Report';
 export const CREATE_REPORT = 'Create Report';
 export const CREATE_REPORT_SUCCESS = 'Create Report Success';
+export const COPY_REPORT = 'Copy Report';
 export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
 export const CHECK_EXPORT_STATUS = 'Check Export Status';
 export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
@@ -110,7 +112,7 @@ export class ToggleReportDistinct implements Action {
 
 export class DeleteReport implements Action {
   readonly type = DELETE_REPORT;
-  constructor() {}
+  constructor(public payload: number) {}
 }
 
 export class DeleteReportSuccess implements Action {
@@ -140,7 +142,7 @@ export class GeneratePreviewSuccess implements Action {
 
 export class ExportReport implements Action {
   readonly type = EXPORT_REPORT;
-  constructor(public payload: string) {}
+  constructor(public payload: IExportType) {}
 }
 
 export class DownloadExportedReport implements Action {
@@ -163,8 +165,9 @@ export class CreateReportSuccess implements Action {
   constructor(public payload: IReportDetailed) {}
 }
 
-export class ToggleLeftNav implements Action {
-  readonly type = TOGGLE_LEFT_NAV;
+export class CopyReport implements Action {
+  readonly type = COPY_REPORT;
+  constructor(public payload: number) {}
 }
 
 export class ToggleRightNav implements Action {
@@ -213,9 +216,9 @@ export type Actions =
   | ExportReport
   | CreateReport
   | CreateReportSuccess
+  | CopyReport
   | DownloadExportedReport
   | CheckExportStatus
-  | ToggleLeftNav
   | SortReports
   | ToggleRightNav
   | SortReports

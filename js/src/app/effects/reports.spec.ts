@@ -130,7 +130,7 @@ describe('Report Effects', () => {
     });
 
     it('DeleteReport should delete the current report', () => {
-      actions = hot('a-', { a: new Actions.DeleteReport() });
+      actions = hot('a-', { a: new Actions.DeleteReport(4) });
 
       const response = cold('-b', { b: { id: 4 } });
 

@@ -11,6 +11,7 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -29,18 +30,19 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { NewReportComponent } from './new-report/new-report.component';
+import { HomeComponent } from './home/home.component';
 import { MainComponent } from './main/main.component';
-import { LeftSidebarComponent } from './main/left-sidebar/';
 
 import { ApiService } from './api.service';
 
 import { reducers, metaReducers } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { ConfigEffects } from './effects/config';
+
 import { HeaderComponent } from './header/header.component';
+import { ConfirmModalComponent } from './confirm/confirm-modal.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
-import { CopyReportComponent } from './main/tabs/options-tab/copy-report.component';
 import { LastReportComponent } from './main/tabs/options-tab/last-report.component';
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
@@ -54,7 +56,7 @@ import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 
 const appRoutes: Routes = [
-  { path: '', component: MainComponent, data: { title: 'Reports' } },
+  { path: '', component: HomeComponent, data: { title: 'Reports' } },
   {
     path: 'report/add',
     component: NewReportComponent,
@@ -68,6 +70,7 @@ export const MatModules = [
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -84,12 +87,12 @@ export const MatModules = [
   declarations: [
     AppComponent,
     NewReportComponent,
+    HomeComponent,
     MainComponent,
-    LeftSidebarComponent,
     HeaderComponent,
+    ConfirmModalComponent,
     TabsComponent,
     OptionsTabComponent,
-    CopyReportComponent,
     LastReportComponent,
     ReportTabComponent,
     ReportPreviewComponent,
@@ -121,5 +124,6 @@ export const MatModules = [
   ],
   providers: [ApiService],
   bootstrap: [AppComponent],
+  entryComponents: [ConfirmModalComponent],
 })
 export class AppModule {}
