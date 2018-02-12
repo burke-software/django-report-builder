@@ -127,6 +127,7 @@ export function reducer(
       return {
         ...state,
         titleInput: action.payload,
+        editedSinceLastSave: true,
       };
     }
 
