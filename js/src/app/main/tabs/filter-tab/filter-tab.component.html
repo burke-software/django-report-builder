@@ -7,5 +7,11 @@
     <div class="mat-header-cell"></div>
     <div class="mat-header-cell">Exclude</div>
   </div>
-  <app-filter-tab-row *ngFor="let row of filters" [filter]="row" (updateFilter)="updateFilter.emit($event)" (deleteFilter)="deleteFilter.emit($event)"></app-filter-tab-row>
+  <tree-root [nodes]="this.getFilters()" [options]="treeOptions">
+    <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+      <app-filter-tab-row [filter]="node.data" (updateFilter)="updateFilter.emit($event)" (deleteFilter)="deleteFilter.emit($event)"
+        (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
+        [treeDragEnabled]="node.allowDrag()"></app-filter-tab-row>
+    </ng-template>
+  </tree-root>
 </div>

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IDisplayField, IFormat } from '../../../models/api';
 import { Update } from '@ngrx/entity';
+import { ITreeOptions, IActionMapping } from 'angular-tree-component';
 
 @Component({
   selector: 'app-display-tab',
@@ -32,4 +33,23 @@ export class DisplayTabComponent {
   @Input() formatOptions: IFormat[];
   @Output() deleteField = new EventEmitter<number>();
   @Output() updateField = new EventEmitter<Update<IDisplayField>>();
+  treeOptions: ITreeOptions = {
+    allowDrag: true,
+    allowDrop: (node, to) => !to.parent.parent,
+    idField: 'position',
+    actionMapping: {
+      mouse: {
+        drop: (tree, node, event, { from: { data }, to: { index } }) => {
+          this.updateField.emit({
+            id: data.position,
+            changes: { position: index - 1 },
+          });
+        },
+      },
+    } as IActionMapping,
+  };
+
+  getFields() {
+    return this.fields.map(x => ({ ...x }));
+  }
 }

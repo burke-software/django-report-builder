@@ -41,6 +41,8 @@ export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
 export const CHANGE_TAB = 'Change Tab';
 export const ADD_REPORT_FIELD = 'Add Report Field';
 export const SELECT_FIELD = 'Select Field';
+export const CHANGE_DISPLAY_FIELD_POSITION = 'Change Display Field Position';
+export const CHANGE_FILTER_POSITION = 'Change Filter Position';
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
