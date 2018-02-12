@@ -21,6 +21,8 @@ export const initialState: State = {
   displayFields: displayFieldAdapter.getInitialState(),
   filters: filterAdapter.getInitialState(),
   nextRelatedFieldId: 0,
+  generatingReport: false,
+  editedSinceLastSave: false,
 };
 
 export function reducer(
@@ -68,6 +70,7 @@ export function reducer(
         fields: selectors.getFields(initialState),
         descriptionInput: action.payload.description,
         isDistinct: action.payload.distinct,
+        editedSinceLastSave: false,
       };
     }
 
@@ -114,6 +117,7 @@ export function reducer(
       return {
         ...state,
         descriptionInput: action.payload,
+        editedSinceLastSave: true,
       };
     }
 
@@ -132,13 +136,30 @@ export function reducer(
         descriptionInput: action.payload.description,
         isDistinct: action.payload.distinct,
         reportSaved: new Date(),
+        editedSinceLastSave: false,
       };
+    }
+
+    case reportActions.EXPORT_REPORT: {
+      return {
+        ...state,
+        generatingReport: true,
+      };
+    }
+
+    case reportActions.DOWNLOAD_EXPORTED_REPORT: {
+      return { ...state, generatingReport: false };
+    }
+
+    case reportActions.GENERATE_PREVIEW: {
+      return { ...state, generatingReport: true };
     }
 
     case reportActions.GENERATE_PREVIEW_SUCCESS: {
       return {
         ...state,
         reportPreview: action.payload,
+        generatingReport: false,
       };
     }
 
@@ -147,6 +168,7 @@ export function reducer(
         ...state,
         reports: state.reports.filter(r => r.id !== action.reportId),
         selectedReport: selectors.getSelectedReport(initialState),
+        editedSinceLastSave: false,
       };
     }
 
@@ -184,6 +206,7 @@ export function reducer(
           action.payload,
           selectors.getDisplayFieldsState(state)
         ),
+        editedSinceLastSave: true,
       };
 
     case DisplayFieldActionTypes.UPDATE_MANY:
@@ -193,6 +216,7 @@ export function reducer(
           action.payload,
           selectors.getDisplayFieldsState(state)
         ),
+        editedSinceLastSave: true,
       };
 
     case DisplayFieldActionTypes.DELETE_ONE:
@@ -202,6 +226,7 @@ export function reducer(
           action.payload,
           selectors.getDisplayFieldsState(state)
         ),
+        editedSinceLastSave: true,
       };
 
     case FilterActionTypes.LOAD_ALL:
@@ -220,6 +245,7 @@ export function reducer(
           action.payload,
           selectors.getFiltersState(state)
         ),
+        editedSinceLastSave: true,
       };
 
     case FilterActionTypes.UPDATE_MANY:
@@ -229,6 +255,7 @@ export function reducer(
           action.payload,
           selectors.getFiltersState(state)
         ),
+        editedSinceLastSave: true,
       };
 
     case FilterActionTypes.DELETE_ONE:
@@ -238,6 +265,7 @@ export function reducer(
           action.payload,
           selectors.getFiltersState(state)
         ),
+        editedSinceLastSave: true,
       };
 
     case reportActions.ADD_REPORT_FIELD: {
@@ -253,6 +281,7 @@ export function reducer(
               },
               selectors.getDisplayFieldsState(state)
             ),
+            editedSinceLastSave: true,
           };
         case 1:
           return {
@@ -266,6 +295,7 @@ export function reducer(
               },
               selectors.getFiltersState(state)
             ),
+            editedSinceLastSave: true,
           };
 
         default:

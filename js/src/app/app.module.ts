@@ -21,6 +21,8 @@ import {
   MatSortModule,
   MatTabsModule,
   MatTableModule,
+  MatTooltipModule,
+  MatProgressBarModule,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
@@ -43,10 +45,10 @@ import { HeaderComponent } from './header/header.component';
 import { ConfirmModalComponent } from './confirm/confirm-modal.component';
 import { TabsComponent } from './main/tabs/tabs.component';
 import { OptionsTabComponent } from './main/tabs/options-tab/options-tab.component';
-import { LastReportComponent } from './main/tabs/options-tab/last-report.component';
 import { ReportTabComponent } from './main/tabs/report-tab/report-tab.component';
 import { ReportPreviewComponent } from './main/tabs/report-tab/report-preview.component';
 import { SavedTimestampComponent } from './main/tabs/report-tab/saved-timestamp.component';
+import { LastReportComponent } from './main/tabs/report-tab/last-report.component';
 import { DisplayTabComponent } from './main/tabs/display-tab/display-tab.component';
 import { DisplayTabRowComponent } from './main/tabs/display-tab/display-tab-row.component';
 import { FilterTabComponent } from './main/tabs/filter-tab/filter-tab.component';
@@ -75,10 +77,12 @@ export const MatModules = [
   MatInputModule,
   MatListModule,
   MatMomentDateModule,
-  MatToolbarModule,
+  MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
   MatSortModule,
+  MatToolbarModule,
+  MatTooltipModule,
   MatTabsModule,
   MatTableModule,
 ];

@@ -90,3 +90,11 @@ export const getSelectedField = createSelector(
   getReportsState,
   reportSelectors.getSelectedField
 );
+export const isGeneratingReport = createSelector(
+  getReportsState,
+  reportSelectors.isGeneratingReport
+);
+export const hasEditedSinceLastSave = createSelector(
+  getReportsState,
+  reportSelectors.hasEditedSinceLastSave
+);

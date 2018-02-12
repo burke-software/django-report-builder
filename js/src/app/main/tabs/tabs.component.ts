@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ChangeTab } from '../../actions/reports';
+import { ChangeTab, EditReport } from '../../actions/reports';
 import * as DisplayFieldActions from '../../actions/display-field';
 import * as FilterActions from '../../actions/filter';
 import { State } from '../../reducers';
@@ -10,6 +10,7 @@ import {
   getFilters,
   getFormatOptions,
   getSelectedReport,
+  hasEditedSinceLastSave,
 } from '../../selectors';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
@@ -28,6 +29,7 @@ export class TabsComponent implements OnInit {
   activeTab$ = this.store.select(getActiveTab);
   formatOptions$ = this.store.select(getFormatOptions);
   report$ = this.store.select(getSelectedReport);
+  hasChanged$ = this.store.select(hasEditedSinceLastSave);
   @ViewChild('tabs') tabs: MatTabGroup;
 
   ngOnInit() {
@@ -52,5 +54,9 @@ export class TabsComponent implements OnInit {
 
   deleteFilter(id: number) {
     this.store.dispatch(new FilterActions.DeleteOne(id));
+  }
+
+  saveReport() {
+    this.store.dispatch(new EditReport());
   }
 }

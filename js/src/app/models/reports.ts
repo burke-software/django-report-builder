@@ -30,6 +30,8 @@ export interface State {
   filters: EntityState<IFilter>;
   selectedField?: IField;
   nextRelatedFieldId: number;
+  generatingReport: boolean;
+  editedSinceLastSave: boolean;
 }
 
 interface IHasPosition {

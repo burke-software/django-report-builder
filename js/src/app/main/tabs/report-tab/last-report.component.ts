@@ -8,9 +8,9 @@ interface ReportInput {
 @Component({
   selector: 'app-last-report',
   template: `
-  <mat-list-item>
-  <mat-icon matListIcon>file_download</mat-icon><span matLine><a href="{{ report.report_file }}">Download existing report generated</a> at {{ report.report_file_creation }}</span>
-  </mat-list-item>`,
+  <a mat-button href="{{ report.report_file }}" matTooltip="Download report generated at {{ report.report_file_creation }}">
+    <mat-icon>file_download</mat-icon>Download
+  </a>`,
 })
 export class LastReportComponent {
   @Input() report: ReportInput;
