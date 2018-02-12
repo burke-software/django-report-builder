@@ -1,16 +1,56 @@
 <app-header [title]="'Welcome to Django Report Builder'"></app-header>
+<mat-card>
+  <div class="add-report"><a routerLink="/report/add" mat-raised-button>
+    <mat-icon>add</mat-icon>Add Report
+  </a></div>
 
-<a routerLink="/report/add">
-  <div class="add-report">+ Add Report</div>
-</a>
+  <div class="reports-container">
+    <h3 class="my-reports-title">My Reports</h3>
 
-<div class="reports-container">
-  <h3 class="my-reports-title">My Reports</h3>
+    <div class="example-header">
+      <mat-form-field>
+        <input matInput placeholder="Search Reports" (keyup)="applyFilter($event.currentTarget.value)">
+      </mat-form-field>
+    </div>
 
-  <div class="example-header">
-    <mat-form-field>
-      <input matInput placeholder="Search Reports" (keyup)="applyFilter($event.currentTarget.value)">
-    </mat-form-field>
+    <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
+      <ng-container matColumnDef="actions">
+        <mat-header-cell class="mat-header-cell" *matHeaderCellDef></mat-header-cell>
+        <mat-cell class="reports-row" *matCellDef="let report">
+          <a mat-icon-button (click)="copyReport(report.id)">
+            <mat-icon aria-label="Copy report">content_copy</mat-icon>
+          </a>
+          <button mat-icon-button (click)="deleteReport(report.id)">
+            <mat-icon aria-label="Delete report">delete_forever</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>NAME</mat-header-cell>
+        <mat-cell class="reports-row" *matCellDef="let report">
+          <a routerLink="/report/{{report.id}}"> {{report.name}} </a>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+        <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>USER</mat-header-cell>
+        <mat-cell class="reports-row" *matCellDef="let report"> {{report.user_created.first_name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>DATE</mat-header-cell>
+        <mat-cell class="reports-row" *matCellDef="let report"> {{report.modified}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <div class="example-no-results" [style.display]="dataSource?.filteredData.length == 0 ? '' : 'none'">
+      No matches found.
+    </div>
+
   </div>
 
   <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
@@ -52,3 +92,4 @@
   </div>
 
 </div>
+</mat-card>
