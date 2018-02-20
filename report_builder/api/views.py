@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.utils.functional import cached_property
 from django.conf import settings
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
@@ -35,6 +35,8 @@ class ReportBuilderViewMixin:
     pagination_class = None
 
 class ConfigView(APIView):
+    permission_classes = (permissions.IsAdminUser,)
+    
     def get(self, request):
         data = {
             'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False ),
