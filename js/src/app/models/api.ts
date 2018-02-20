@@ -21,12 +21,14 @@ export interface IField extends IBase {
   help_text: string;
 }
 
+export type IAggregate = '' | 'Sum' | 'Count' | 'Avg' | 'Max' | 'Min';
+
 export interface IDisplayField extends IBase {
   id?: number;
   sort?: any;
   sort_reverse?: boolean;
   width?: number;
-  aggregate?: '' | 'Sum' | 'Count' | 'Avg' | 'Max' | 'Min';
+  aggregate?: IAggregate;
   position: number;
   total?: boolean;
   group?: boolean;

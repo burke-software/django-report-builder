@@ -1,7 +1,8 @@
 import { initialState } from './reports';
 import { State } from '../models/reports';
 
-export const populatedReports: State = Object.assign({}, initialState, {
+export const populatedReports: State = {
+  ...initialState,
   reports: [
     {
       id: 1,
@@ -71,7 +72,7 @@ export const populatedReports: State = Object.assign({}, initialState, {
       help_text: '',
     },
   ],
-});
+};
 
 export const newRelatedFields = [
   {
