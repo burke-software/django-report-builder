@@ -2,6 +2,12 @@ import * as ReportActions from '../actions/reports';
 import * as ReportReducer from './reports';
 
 import * as testdata from './testdata.spec';
+import {
+  getDisplayFieldsCount,
+  getDisplayFields,
+  getFiltersCount,
+  getFilters,
+} from '../selectors/reports';
 
 describe('ReportsReducer', () => {
   describe('GET_REPORT', () => {
@@ -71,6 +77,58 @@ describe('ReportsReducer', () => {
 
       expect(expectedParent.children.map(f => f.field_name)).toEqual(
         testdata.newRelatedFields.map(f => f.field_name)
+      );
+    });
+  });
+
+  describe('ADD_REPORT_FIELD', () => {
+    it('Should add a display field if on that tab', () => {
+      const initialState = { ...testdata.populatedReports, activeTab: 0 };
+      const beforeCount = getDisplayFieldsCount(initialState);
+
+      const sample = {
+        field: 'test',
+        field_verbose: 'test',
+        field_type: 'test',
+        path: 'test',
+        path_verbose: 'test',
+        name: 'test',
+      };
+      const result = ReportReducer.reducer(
+        initialState,
+        new ReportActions.AddReportField(sample)
+      );
+
+      const afterCount = getDisplayFieldsCount(result);
+
+      expect(afterCount).toBe(beforeCount + 1);
+      expect(getDisplayFields(result).slice(-1)).toContain(
+        jasmine.objectContaining(sample)
+      );
+    });
+
+    it('Should add a filter field if on that tab', () => {
+      const initialState = { ...testdata.populatedReports, activeTab: 1 };
+      const beforeCount = getFiltersCount(initialState);
+
+      const sample = {
+        field: 'test',
+        field_verbose: 'test',
+        field_type: 'test',
+        path: 'test',
+        path_verbose: 'test',
+        name: 'test',
+      };
+      const result = ReportReducer.reducer(
+        initialState,
+        new ReportActions.AddReportField(sample)
+      );
+
+      const afterCount = getFiltersCount(result);
+
+      expect(afterCount).toBe(beforeCount + 1);
+      expect(getFilters(result).slice(-1)).toContain(
+        jasmine.objectContaining(sample)
       );
     });
   });
