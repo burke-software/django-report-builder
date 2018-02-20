@@ -6,19 +6,6 @@
     <title>Django Report Builder</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <base href="{% url 'report_builder' %}">
-
-    <script>
-      var STATIC_URL = '{{ STATIC_URL|escapejs }}';
-      var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
-      var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
-      var BASE_URL = "{% url 'report_builder' %}";
-    </script>
-
-    {% if user %}
-    <script>
-      var CURRENT_USER = '{{ user.id }}';
-    </script>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -28,7 +15,7 @@
     <app-root></app-root>
     <script type="text/javascript" src="{% static 'report_builder/inline.bundle.js' %}"></script>
     <script type="text/javascript" src="{% static 'report_builder/polyfills.bundle.js' %}"></script>
-    <script type="text/javascript" src="{% static 'report_builder/styles.bundle.js' %}"></script>
-    <script type="text/javascript" src="{% static 'report_builder/vendor.bundle.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'report_builder/styles.bundle.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="{% static 'report_builder/main.bundle.js' %}"></script>
 {% endblock %}
