@@ -35,6 +35,8 @@ class ReportBuilderViewMixin:
     pagination_class = None
 
 class ConfigView(APIView):
+    permission_classes = (IsAdminUser,)
+    
     def get(self, request):
         data = {
             'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False ),
