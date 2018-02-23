@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  OnInit,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IReport } from '../models/api';
 import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { Store } from '@ngrx/store';
@@ -27,7 +21,6 @@ import {
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('filter') filter: ElementRef;
 
   displayedColumns = ['actions', 'name', 'user', 'date'];
   dataSource = new MatTableDataSource<IReport>();

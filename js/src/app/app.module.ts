@@ -29,6 +29,10 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import {
+  StoreRouterConnectingModule,
+  RouterStateSerializer,
+} from '@ngrx/router-store';
 
 import { AppComponent } from './app.component';
 import { NewReportComponent } from './new-report/new-report.component';
@@ -37,10 +41,10 @@ import { MainComponent } from './main/main.component';
 
 import { ApiService } from './api.service';
 
-import { reducers, metaReducers } from './reducers';
+import { reducers, metaReducers, CustomSerializer } from './reducers';
 import { ReportEffects } from './effects/reports';
 import { ConfigEffects } from './effects/config';
-
+import { RouterEffects } from './effects/router';
 import { HeaderComponent } from './header/header.component';
 import { ConfirmModalComponent } from './confirm/confirm-modal.component';
 import { TabsComponent } from './main/tabs/tabs.component';
@@ -112,10 +116,13 @@ export const MatModules = [
     BrowserAnimationsModule,
     BrowserModule,
     ClickOutsideModule,
-    RouterModule.forRoot(appRoutes),
     StoreModule.forRoot(reducers, { metaReducers }),
+    RouterModule.forRoot(appRoutes),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router',
+    }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
-    EffectsModule.forRoot([ReportEffects, ConfigEffects]),
+    EffectsModule.forRoot([ReportEffects, ConfigEffects, RouterEffects]),
     HttpClientModule,
     TreeModule,
     MatSortModule,
@@ -126,7 +133,10 @@ export const MatModules = [
     FormsModule,
     ...MatModules,
   ],
-  providers: [ApiService],
+  providers: [
+    ApiService,
+    { provide: RouterStateSerializer, useClass: CustomSerializer },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmModalComponent],
 })
