@@ -10,7 +10,9 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef>
         <a routerLink="/report/add" mat-button [ngStyle]="{'text-transform': 'uppercase'}">
-          <a mat-mini-fab><mat-icon>add</mat-icon></a>
+          <a mat-mini-fab>
+            <mat-icon>add</mat-icon>
+          </a>
           Add Report</a>
       </mat-header-cell>
       <mat-cell class="reports-row" *matCellDef="let report">
