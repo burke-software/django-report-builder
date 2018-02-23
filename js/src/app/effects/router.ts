@@ -43,6 +43,7 @@ export class RouterEffects {
     .ofType(ROUTER_NAVIGATION)
     .map((action: RouterNavigationAction<RouterStateUrl>) => {
       const route = action.payload.routerState;
+      console.log(action.payload);
       if (route.url === '/') {
         return new fromReports.GetReportList();
       }
