@@ -23,12 +23,13 @@ import {
   getSelectedReportId,
   getIsAsyncReport,
 } from '../selectors';
+const { ReportActionTypes } = fromReports;
 
 @Injectable()
 export class ReportEffects {
   @Effect()
   getReports$: Observable<Action> = this.actions$
-    .ofType(fromReports.GET_REPORT_LIST)
+    .ofType(ReportActionTypes.GET_REPORT_LIST)
     .mergeMap(() =>
       this.api
         .getReports()
@@ -44,7 +45,7 @@ export class ReportEffects {
 
   @Effect()
   getReport$: Observable<Action> = this.actions$
-    .ofType(fromReports.GET_REPORT)
+    .ofType(ReportActionTypes.GET_REPORT)
     .map((action: fromReports.GetReport) => action.payload)
     .mergeMap(reportId =>
       this.api
@@ -54,7 +55,10 @@ export class ReportEffects {
 
   @Effect()
   loadDisplayFields$ = this.actions$
-    .ofType(fromReports.GET_REPORT_SUCCESS, fromReports.EDIT_REPORT_SUCCESS)
+    .ofType(
+      ReportActionTypes.GET_REPORT_SUCCESS,
+      ReportActionTypes.EDIT_REPORT_SUCCESS
+    )
     .map(
       (action: fromReports.GetReportSuccess | fromReports.EditReportSuccess) =>
         new fromDisplay.LoadAll(action.payload.displayfield_set)
@@ -62,7 +66,10 @@ export class ReportEffects {
 
   @Effect()
   loadFilterFields$ = this.actions$
-    .ofType(fromReports.GET_REPORT_SUCCESS, fromReports.EDIT_REPORT_SUCCESS)
+    .ofType(
+      ReportActionTypes.GET_REPORT_SUCCESS,
+      ReportActionTypes.EDIT_REPORT_SUCCESS
+    )
     .map(
       (action: fromReports.GetReportSuccess | fromReports.EditReportSuccess) =>
         new fromFilter.LoadAll(action.payload.filterfield_set)
@@ -70,7 +77,7 @@ export class ReportEffects {
 
   @Effect()
   getReportSuccess$ = this.actions$
-    .ofType(fromReports.GET_REPORT_SUCCESS)
+    .ofType(ReportActionTypes.GET_REPORT_SUCCESS)
     .map((action: fromReports.GetReportSuccess) => action.payload)
     .mergeMap(report => {
       const request: IGetRelatedFieldRequest = {
@@ -89,7 +96,7 @@ export class ReportEffects {
 
   @Effect()
   getFields$ = this.actions$
-    .ofType(fromReports.GET_FIELDS)
+    .ofType(ReportActionTypes.GET_FIELDS)
     .map((action: fromReports.GetFields) => action.payload)
     .mergeMap(relatedField => {
       const fieldReq: IGetRelatedFieldRequest = {
@@ -104,7 +111,7 @@ export class ReportEffects {
 
   @Effect()
   getRelatedFields$ = this.actions$
-    .ofType(fromReports.GET_RELATED_FIELDS)
+    .ofType(ReportActionTypes.GET_RELATED_FIELDS)
     .map((action: fromReports.GetRelatedFields) => action.payload)
     .mergeMap(relatedField => {
       const fieldReq: IGetRelatedFieldRequest = {
@@ -123,7 +130,7 @@ export class ReportEffects {
 
   @Effect()
   deleteReport$ = this.actions$
-    .ofType(fromReports.DELETE_REPORT)
+    .ofType(ReportActionTypes.DELETE_REPORT)
     .map((action: fromReports.DeleteReport) => action.payload)
     .mergeMap(reportId => {
       return this.api
@@ -133,12 +140,12 @@ export class ReportEffects {
 
   @Effect({ dispatch: false })
   deleteReportSuccess$ = this.actions$
-    .ofType(fromReports.DELETE_REPORT_SUCCESS)
+    .ofType(ReportActionTypes.DELETE_REPORT_SUCCESS)
     .do(_ => this.router.navigate(['']));
 
   @Effect()
   editReport$ = this.actions$
-    .ofType(fromReports.EDIT_REPORT)
+    .ofType(ReportActionTypes.EDIT_REPORT)
     .withLatestFrom(this.store$)
     .mergeMap(([_, storeState]) => {
       const editedReport = getEditedReport(storeState);
@@ -149,7 +156,7 @@ export class ReportEffects {
 
   @Effect()
   generatePreview$ = this.actions$
-    .ofType(fromReports.GENERATE_PREVIEW)
+    .ofType(ReportActionTypes.GENERATE_PREVIEW)
     .withLatestFrom(this.store$)
     .mergeMap(([_, storeState]) => {
       const reportId = getSelectedReportId(storeState);
@@ -160,7 +167,7 @@ export class ReportEffects {
 
   @Effect()
   exportReport$ = this.actions$
-    .ofType(fromReports.EXPORT_REPORT)
+    .ofType(ReportActionTypes.EXPORT_REPORT)
     .withLatestFrom(this.store$)
     .mergeMap(([action, storeState]: [fromReports.ExportReport, State]) => {
       const reportId = getSelectedReportId(storeState);
@@ -188,7 +195,7 @@ export class ReportEffects {
 
   @Effect({ dispatch: false })
   downloadExportedReport$ = this.actions$
-    .ofType(fromReports.DOWNLOAD_EXPORTED_REPORT)
+    .ofType(ReportActionTypes.DOWNLOAD_EXPORTED_REPORT)
     .mergeMap(
       (action: fromReports.DownloadExportedReport) =>
         (window.location.pathname = action.payload)
@@ -196,7 +203,7 @@ export class ReportEffects {
 
   @Effect()
   checkExportStatus$ = this.actions$
-    .ofType(fromReports.CHECK_EXPORT_STATUS)
+    .ofType(ReportActionTypes.CHECK_EXPORT_STATUS)
     .delay(500)
     .mergeMap(
       ({ payload: { reportId, taskId } }: fromReports.CheckExportStatus) =>
@@ -211,21 +218,21 @@ export class ReportEffects {
 
   @Effect()
   createReport$ = this.actions$
-    .ofType(fromReports.CREATE_REPORT)
+    .ofType(ReportActionTypes.CREATE_REPORT)
     .map((action: fromReports.CreateReport) => action.payload)
     .mergeMap(newReport => this.api.submitNewReport(newReport))
     .map(createdReport => new fromReports.CreateReportSuccess(createdReport));
 
   @Effect()
   createReportSuccess$ = this.actions$
-    .ofType(fromReports.CREATE_REPORT_SUCCESS)
+    .ofType(ReportActionTypes.CREATE_REPORT_SUCCESS)
     .map((action: fromReports.CreateReportSuccess) => action.payload.id)
     .do(reportId => this.router.navigate([`/report/${reportId}/`]))
     .map(() => new fromReports.ChangeTab(0));
 
   @Effect()
   copyReport$ = this.actions$
-    .ofType(fromReports.COPY_REPORT)
+    .ofType(ReportActionTypes.COPY_REPORT)
     .map((action: fromReports.CopyReport) => action.payload)
     .mergeMap(reportId => this.api.copyReport(reportId))
     .map(createdReport => new fromReports.CreateReportSuccess(createdReport));
