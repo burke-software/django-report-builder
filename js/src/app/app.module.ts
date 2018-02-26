@@ -25,6 +25,7 @@ import {
   MatProgressBarModule,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -95,6 +96,7 @@ export const MatModules = [
   MatTooltipModule,
   MatTabsModule,
   MatTableModule,
+  LayoutModule,
 ];
 
 @NgModule({

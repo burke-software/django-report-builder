@@ -20,6 +20,7 @@ export class RightSidebarComponent implements OnChanges {
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
   @Output() close = new EventEmitter();
+  @Input() lockOpen: boolean;
   @Output() searchFields = new EventEmitter<string>();
   @Output() searchRelations = new EventEmitter<string>();
 

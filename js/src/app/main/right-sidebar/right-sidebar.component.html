@@ -1,6 +1,6 @@
 <div class="header">
   <h3>{{ modelName }} relations
-    <mat-icon (click)="close.emit()" class="close-icon">close</mat-icon>
+    <mat-icon *ngIf="!lockOpen" (click)="close.emit()" class="close-icon">close</mat-icon>
   </h3>
 </div>
 
