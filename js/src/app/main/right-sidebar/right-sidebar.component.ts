@@ -19,11 +19,10 @@ export class RightSidebarComponent implements OnChanges {
   @Input() selectedField: IField;
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
-  @Output() onToggleRightNav = new EventEmitter();
+  @Output() close = new EventEmitter();
   @Output() searchFields = new EventEmitter<string>();
   @Output() searchRelations = new EventEmitter<string>();
 
-  @Input() rightNavIsOpen: boolean;
   @Output() addReportField = new EventEmitter<IField>();
   @Output() selectField = new EventEmitter<IField>();
   @Input() relatedFields: IRelatedField[];
@@ -42,12 +41,6 @@ export class RightSidebarComponent implements OnChanges {
   }
 
   constructor() {}
-
-  toggleRightNav() {
-    if (this.rightNavIsOpen === true) {
-      this.onToggleRightNav.emit();
-    }
-  }
 
   onActivate($event) {
     this.selectRelatedField.emit($event);

@@ -33,33 +33,8 @@ import {
 
 @Component({
   selector: 'app-main',
-  template: `
-    <mat-sidenav-container class="left-sidenav-container">
-      <app-header
-        (onToggleRightNav)="onToggleRightNav()"
-        (changeTitleInput)="editTitle($event)"
-        [title]="title$ | async"
-        [showRightNavButton]="(activeTab$ | async) <= 1"
-        [reportName]="(selectedReportName$ | async)"
-        (goHome)="goHome()">
-      </app-header>
-      <div class="example-sidenav-content">
-        <app-tabs>
-        </app-tabs>
-      </div>
-      <app-right-sidebar #rightMenu
-        [modelName]="(selectedReport$ | async)?.name"
-        [relatedFields]="relatedFields$ | async"
-        [fields]="fields$ | async"
-        [selectedField]="selectedField$ | async"
-        (selectRelatedField)="selectRelatedField($event)"
-        (onToggleRightNav)="onToggleRightNav()"
-        [rightNavIsOpen]="rightNavIsOpen$ | async"
-        (addReportField)="addReportField($event)"
-        (selectField)="selectField($event)"
-      ></app-right-sidebar>
-    </mat-sidenav-container>
-  `,
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements ComponentCanDeactivate {
   title$ = this.store.select(getTitle);
@@ -113,8 +88,8 @@ export class MainComponent implements ComponentCanDeactivate {
     this.store.dispatch(new GetRelatedFields(relatedField));
   }
 
-  onToggleRightNav() {
-    this.store.dispatch(new ToggleRightNav());
+  toggleRightNav(open: boolean) {
+    this.store.dispatch(new ToggleRightNav(open));
   }
 
   addReportField(field: IField) {

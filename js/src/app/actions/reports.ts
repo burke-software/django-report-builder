@@ -180,6 +180,7 @@ export class CopyReport implements Action {
 
 export class ToggleRightNav implements Action {
   readonly type = TOGGLE_RIGHT_NAV;
+  constructor(public payload?: boolean) {}
 }
 
 export class SortReports implements Action {

@@ -54,12 +54,15 @@ export function reducer(
     }
 
     case reportActions.TOGGLE_RIGHT_NAV: {
+      let navOpen = !state.rightNavIsOpen;
+      if (state.activeTab === 2 || state.activeTab === 3) {
+        navOpen = false;
+      } else if (action.payload !== undefined) {
+        navOpen = action.payload;
+      }
       return {
         ...state,
-        rightNavIsOpen:
-          state.activeTab === 2 || state.activeTab === 3
-            ? false
-            : !state.rightNavIsOpen,
+        rightNavIsOpen: navOpen,
       };
     }
 
