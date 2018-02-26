@@ -74,7 +74,6 @@ export class MainComponent implements ComponentCanDeactivate {
       });
 
     breakpointObserver.observe(['(min-width: 2000px)']).subscribe(result => {
-      console.log(result);
       this.lockOpen = result.matches;
     });
   }
