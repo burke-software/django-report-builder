@@ -4,12 +4,14 @@ import { createSelector } from '@ngrx/store';
 export const getReports = (state: State) => state.reports;
 export const getTitle = (state: State) => state.title;
 export const getSelectedReport = (state: State) => state.selectedReport;
-export const getSelectedReportId = (state: State) => {
-  const report = getSelectedReport(state);
-  if (report) {
-    return report.id;
-  }
-};
+export const getSelectedReportId = createSelector(
+  getSelectedReport,
+  report => report && report.id
+);
+export const getSelectedReportName = createSelector(
+  getSelectedReport,
+  report => report && report.name
+);
 export const getFields = (state: State) => state.fields;
 export const getRelatedFields = (state: State) => state.relatedFields;
 export const getDescriptionInput = (state: State) => state.descriptionInput;

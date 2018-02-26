@@ -11,8 +11,10 @@ export class HeaderComponent {
   @Input() showRightNavButton: boolean;
   @Output() onToggleRightNav = new EventEmitter();
   @Output() changeTitleInput = new EventEmitter();
+  @Output() goHome = new EventEmitter();
 
-  toggleRightNav() {
-    this.onToggleRightNav.emit();
+  clickGoHome(event: MouseEvent) {
+    event.preventDefault();
+    this.goHome.emit();
   }
 }

@@ -39,7 +39,9 @@ export class OptionsTabComponent {
 
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
-        reportName: this.report.name,
+        title: `Are you sure you want to delete ${this.report.name}`,
+        subtitle: 'You will not be able to undo this action.',
+        confirmText: 'Delete',
       } as IConfirmModalData,
     });
 

@@ -1,6 +1,6 @@
 <mat-toolbar>
   <div class="left-navbar-container">
-    <a mat-icon-button routerLink="/">
+    <a mat-icon-button (click)="clickGoHome($event)" href="/">
       <mat-icon>home</mat-icon>
     </a>
   </div>
@@ -11,7 +11,7 @@
   </span>
   <div class="right-navbar-container">
     <div [hidden]="!showRightNavButton">
-      <button class="button" (click)="toggleRightNav()" id="toggleRight" type="button">
+      <button class="button" (click)="this.onToggleRightNav.emit();" id="toggleRight" type="button">
         <mat-icon>menu</mat-icon>
       </button>
     </div>

@@ -9,10 +9,8 @@
   <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
     <ng-container matColumnDef="actions">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef>
-        <a routerLink="/report/add" mat-button [ngStyle]="{'text-transform': 'uppercase'}">
-          <a mat-mini-fab>
-            <mat-icon>add</mat-icon>
-          </a>
+        <a href="/report/add" (click)="newReport($event)" mat-raised-button color="primary" [ngStyle]="{'text-transform': 'uppercase'}">
+          <mat-icon>add</mat-icon>
           Add Report</a>
       </mat-header-cell>
       <mat-cell class="reports-row" *matCellDef="let report">
@@ -28,7 +26,7 @@
     <ng-container matColumnDef="name">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>NAME</mat-header-cell>
       <mat-cell class="reports-row" *matCellDef="let report">
-        <a routerLink="/report/{{report.id}}"> {{report.name}} </a>
+        <a href="/report/{{report.id}}" (click)="openReport($event, report.id)"> {{report.name}} </a>
       </mat-cell>
     </ng-container>
 
