@@ -14,6 +14,7 @@ import {
   ConfirmModalComponent,
   IConfirmModalData,
 } from '../confirm/confirm-modal.component';
+import { Go } from '../actions/router';
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   deleteReport(report: IReport) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
-        reportName: report.name,
+        title: `Are you sure you want to delete ${report.name}`,
+        subtitle: 'You will not be able to undo this action.',
+        confirmText: 'Delete',
       } as IConfirmModalData,
     });
 
@@ -60,5 +63,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  newReport(event: MouseEvent) {
+    event.preventDefault();
+    this.store.dispatch(new Go({ path: ['/report/add'] }));
+  }
+
+  openReport(event: MouseEvent, reportId: number) {
+    event.preventDefault();
+    this.store.dispatch(new Go({ path: ['/report/', reportId] }));
   }
 }

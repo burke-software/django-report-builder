@@ -1,8 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/fromEventPattern';
-
 import { State } from '../reducers';
 import {
   getReports,
@@ -13,10 +10,11 @@ import {
   getActiveTab,
   getSelectedReport,
   getSelectedField,
+  hasEditedSinceLastSave,
+  getSelectedReportName,
 } from '../selectors';
 import { INestedRelatedField, IField } from '../models/api';
 import {
-  GetReportList,
   GetReport,
   GetFields,
   GetRelatedFields,
@@ -25,6 +23,13 @@ import {
   SelectField,
   ChangeReportTitle,
 } from '../actions/reports';
+import { Go } from '../actions/router';
+import { ComponentCanDeactivate } from '../generic.guard';
+import { MatDialog } from '@angular/material';
+import {
+  ConfirmModalComponent,
+  IConfirmModalData,
+} from '../confirm/confirm-modal.component';
 
 @Component({
   selector: 'app-main',
@@ -35,7 +40,8 @@ import {
         (changeTitleInput)="editTitle($event)"
         [title]="title$ | async"
         [showRightNavButton]="(activeTab$ | async) <= 1"
-        [reportName]="reportName">
+        [reportName]="(selectedReportName$ | async)"
+        (goHome)="goHome()">
       </app-header>
       <div class="example-sidenav-content">
         <app-tabs>
@@ -55,7 +61,7 @@ import {
     </mat-sidenav-container>
   `,
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements ComponentCanDeactivate {
   title$ = this.store.select(getTitle);
   activeTab$ = this.store.select(getActiveTab);
 
@@ -66,18 +72,36 @@ export class MainComponent implements OnInit {
   relatedFields$ = this.store.select(getRelatedFields);
 
   selectedReport$ = this.store.select(getSelectedReport);
-  reportName?: string;
+  selectedReportName$ = this.store.select(getSelectedReportName);
   rightNavIsOpen$ = this.store.select(getRightNavIsOpen);
   getFields$ = this.store.select(getFields);
   selectedField$ = this.store.select(getSelectedField);
+  edited = false;
 
-  constructor(private store: Store<State>) {}
+  constructor(private store: Store<State>, public dialog: MatDialog) {
+    store
+      .select(hasEditedSinceLastSave)
+      .subscribe(edited => (this.edited = edited));
+  }
 
-  ngOnInit() {
-    this.store.dispatch(new GetReportList());
-    this.selectedReport$.subscribe(
-      report => (this.reportName = report ? report.name : undefined)
-    );
+  canDeactivate() {
+    if (this.edited) {
+      const dialogRef = this.dialog.open(ConfirmModalComponent, {
+        data: {
+          title: 'Are you sure you want to navigate away from this report?',
+          subtitle: 'All of your changes will be lost.',
+        } as IConfirmModalData,
+      });
+      return dialogRef.afterClosed();
+    }
+    return true;
+  }
+
+  @HostListener('window:beforeunload')
+  beforeUnload() {
+    if (this.edited) {
+      return confirm();
+    }
   }
 
   onClickReport(reportId: number) {
@@ -103,5 +127,9 @@ export class MainComponent implements OnInit {
 
   editTitle(title: string) {
     this.store.dispatch(new ChangeReportTitle(title));
+  }
+
+  goHome() {
+    this.store.dispatch(new Go({ path: ['/'] }));
   }
 }

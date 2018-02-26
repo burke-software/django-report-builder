@@ -1,8 +1,8 @@
-<h1 mat-dialog-title>Are you sure you want to delete {{data.reportName}}</h1>
+<h1 mat-dialog-title>{{data.title}}</h1>
 <div mat-dialog-content>
-  <p>You will not be able to undo this action.</p>
+  <p>{{data.subtitle}}</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="dialogRef.close()">Cancel</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Delete</button>
+  <button mat-button (click)="dialogRef.close()">{{data.cancelText || 'Cancel'}}</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{data.confirmText || 'Confirm'}}</button>
 </div>

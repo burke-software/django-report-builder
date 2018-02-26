@@ -60,6 +60,7 @@ import { FilterTabRowComponent } from './main/tabs/filter-tab/filter-tab-row.com
 import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.component';
 import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
+import { PendingChangesGuard } from './generic.guard';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Reports' } },
@@ -68,7 +69,12 @@ const appRoutes: Routes = [
     component: NewReportComponent,
     data: { title: 'Add New Report' },
   },
-  { path: 'report/:id', component: MainComponent, data: { title: 'Report' } },
+  {
+    path: 'report/:id',
+    component: MainComponent,
+    data: { title: 'Report' },
+    canDeactivate: [PendingChangesGuard],
+  },
 ];
 
 export const MatModules = [
@@ -136,6 +142,7 @@ export const MatModules = [
   providers: [
     ApiService,
     { provide: RouterStateSerializer, useClass: CustomSerializer },
+    PendingChangesGuard,
   ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmModalComponent],

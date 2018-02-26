@@ -26,6 +26,10 @@ export const getSelectedReportId = createSelector(
   getReportsState,
   reportSelectors.getSelectedReportId
 );
+export const getSelectedReportName = createSelector(
+  getReportsState,
+  reportSelectors.getSelectedReportName
+);
 export const getFields = createSelector(
   getReportsState,
   reportSelectors.getFields
@@ -50,10 +54,6 @@ export const getIsDistinct = createSelector(
   getReportsState,
   reportSelectors.getIsDistinct
 );
-// export const getEditedReport = (state: State) =>
-//   Object.assign({}, reportSelectors.getEditedReport(getReportsState(state)), {
-//     displayfield_set: getDisplayFields(state),
-//   });
 export const getEditedReport = createSelector(
   getReportsState,
   reportSelectors.getEditedReport

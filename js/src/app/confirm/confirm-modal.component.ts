@@ -2,7 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 export interface IConfirmModalData {
-  reportName: string;
+  title: string;
+  subtitle: string;
+  confirmText?: string;
+  cancelText?: string;
 }
 
 @Component({

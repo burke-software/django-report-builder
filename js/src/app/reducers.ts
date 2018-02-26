@@ -15,16 +15,16 @@ import { reducer as configReducer } from './reducers/config';
 import { State as ReportsState } from './models/reports';
 import { State as ConfigState } from './models/config';
 
-export interface State {
-  reports: ReportsState;
-  config: ConfigState;
-  router: RouterReducerState;
-}
-
 export interface RouterStateUrl {
   url: string;
   params: Params;
   queryParams: Params;
+}
+
+export interface State {
+  reports: ReportsState;
+  config: ConfigState;
+  router: RouterReducerState<RouterStateUrl>;
 }
 
 // https://github.com/ngrx/platform/blob/master/docs/router-store/api.md#custom-router-state-serializer
