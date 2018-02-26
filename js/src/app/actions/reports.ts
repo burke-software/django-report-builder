@@ -205,7 +205,7 @@ export class SelectField implements Action {
   constructor(public payload: IField) {}
 }
 
-export type Actions =
+export type ReportActions =
   | GetReportList
   | GetReportFieldsSuccess
   | SetReportList

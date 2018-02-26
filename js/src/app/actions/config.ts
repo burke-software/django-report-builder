@@ -15,4 +15,4 @@ export class GetConfigSuccess implements Action {
   readonly type = ConfigActionTypes.GET_CONFIG_SUCCESS;
   constructor(public payload: IConfig) {}
 }
-export type Actions = GetConfig | GetConfigSuccess;
+export type ConfigActions = GetConfig | GetConfigSuccess;

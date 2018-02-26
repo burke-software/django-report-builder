@@ -27,4 +27,4 @@ export class Forward implements Action {
   readonly type = RouterActionTypes.FORWARD;
 }
 
-export type Actions = Go | Back | Forward;
+export type RouterActions = Go | Back | Forward;

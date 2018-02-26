@@ -1,9 +1,6 @@
 import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
 import { INestedRelatedField } from '../models/api';
-import {
-  ReportActionTypes,
-  Actions as ReportActions,
-} from '../actions/reports';
+import { ReportActionTypes, ReportActions } from '../actions/reports';
 import {
   DisplayFieldActions,
   DisplayFieldActionTypes,
