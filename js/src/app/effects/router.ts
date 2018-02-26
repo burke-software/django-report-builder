@@ -8,52 +8,25 @@ import { Effect, Actions } from '@ngrx/effects';
 import { RouterNavigationAction, ROUTER_NAVIGATION } from '@ngrx/router-store';
 import * as fromReports from '../actions/reports';
 import * as fromRouter from '../actions/router';
-import { RouterStateUrl, State } from '../reducers';
+import { RouterStateUrl } from '../reducers';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Store } from '@ngrx/store';
-import { hasEditedSinceLastSave } from '../selectors';
-import { MatDialog } from '@angular/material';
-import {
-  ConfirmModalComponent,
-  IConfirmModalData,
-} from '../confirm/confirm-modal.component';
 
 @Injectable()
 export class RouterEffects {
   constructor(
     private actions$: Actions,
-    private store$: Store<State>,
     private router: Router,
-    private location: Location,
-    public dialog: MatDialog
+    private location: Location
   ) {}
 
   @Effect({ dispatch: false })
   navigate$ = this.actions$
     .ofType(fromRouter.GO)
     .map((action: fromRouter.Go) => action.payload)
-    .withLatestFrom(this.store$)
-    .do(([{ path, query: queryParams, extras }, state]) => {
-      const doNav = () =>
-        this.router.navigate(path, { queryParams, ...extras });
-
-      if (hasEditedSinceLastSave(state)) {
-        const dialogRef = this.dialog.open(ConfirmModalComponent, {
-          data: {
-            title: 'Are you sure you want to navigate away from this report?',
-            subtitle: 'All of your changes will be lost.',
-          } as IConfirmModalData,
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            doNav();
-          }
-        });
-        return;
-      }
-      doNav();
-    });
+    .do(({ path, query: queryParams, extras }) =>
+      this.router.navigate(path, { queryParams, ...extras })
+    );
 
   @Effect({ dispatch: false })
   navigateBack$ = this.actions$
@@ -70,7 +43,6 @@ export class RouterEffects {
     .ofType(ROUTER_NAVIGATION)
     .map((action: RouterNavigationAction<RouterStateUrl>) => {
       const route = action.payload.routerState;
-      console.log(action.payload);
       if (route.url === '/') {
         return new fromReports.GetReportList();
       }
