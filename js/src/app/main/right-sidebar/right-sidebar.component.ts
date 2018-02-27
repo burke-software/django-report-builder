@@ -17,10 +17,10 @@ import { TreeNode } from 'angular-tree-component';
 export class RightSidebarComponent implements OnChanges {
   @Input() modelName: string;
   @Input() selectedField: IField;
+  @Input() lockOpen: boolean;
+  @Output() close = new EventEmitter();
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
-  @Output() close = new EventEmitter();
-  @Input() lockOpen: boolean;
   @Output() searchFields = new EventEmitter<string>();
   @Output() searchRelations = new EventEmitter<string>();
 
@@ -68,5 +68,6 @@ function deepCopy(obj) {
   const copy = { ...obj };
   copy.name = copy.verbose_name;
   copy.children = copy.children.map(deepCopy);
+  copy.hasChildren = true;
   return copy;
 }

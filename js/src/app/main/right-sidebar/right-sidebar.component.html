@@ -10,7 +10,7 @@
   </mat-form-field>
 </div>
 
-<tree-root #tree [nodes]="nodes" (activate)="onActivate($event.node.data)"></tree-root>
+<tree-root #tree [nodes]="nodes" (toggleExpanded)="onActivate($event.node.data)"></tree-root>
 
 <div class="header">
   <h3>Fields</h3>
