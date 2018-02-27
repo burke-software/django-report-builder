@@ -112,6 +112,7 @@ export function reducer(
       );
       return {
         ...state,
+        nextRelatedFieldId,
         relatedFields: selectors
           .getRelatedFields(state)
           .map(populateChildren(action.payload.parentId, relatedFields)),
