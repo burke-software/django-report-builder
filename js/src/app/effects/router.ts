@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { RouterNavigationAction, ROUTER_NAVIGATION } from '@ngrx/router-store';
 import * as fromReports from '../actions/reports';
-import * as fromRouter from '../actions/router';
+import { RouterActionTypes, Go } from '../actions/router';
 import { RouterStateUrl } from '../reducers';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -22,20 +22,20 @@ export class RouterEffects {
 
   @Effect({ dispatch: false })
   navigate$ = this.actions$
-    .ofType(fromRouter.GO)
-    .map((action: fromRouter.Go) => action.payload)
+    .ofType(RouterActionTypes.GO)
+    .map((action: Go) => action.payload)
     .do(({ path, query: queryParams, extras }) =>
       this.router.navigate(path, { queryParams, ...extras })
     );
 
   @Effect({ dispatch: false })
   navigateBack$ = this.actions$
-    .ofType(fromRouter.BACK)
+    .ofType(RouterActionTypes.BACK)
     .do(() => this.location.back());
 
   @Effect({ dispatch: false })
   navigateForward$ = this.actions$
-    .ofType(fromRouter.FORWARD)
+    .ofType(RouterActionTypes.FORWARD)
     .do(() => this.location.forward());
 
   @Effect()

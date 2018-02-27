@@ -1,6 +1,6 @@
 import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
 import { INestedRelatedField } from '../models/api';
-import * as reportActions from '../actions/reports';
+import { ReportActionTypes, ReportActions } from '../actions/reports';
 import {
   DisplayFieldActions,
   DisplayFieldActionTypes,
@@ -28,17 +28,17 @@ export const initialState: State = {
 
 export function reducer(
   state = initialState,
-  action: reportActions.Actions | DisplayFieldActions | FilterActions
+  action: ReportActions | DisplayFieldActions | FilterActions
 ): State {
   switch (action.type) {
-    case reportActions.SET_REPORT_LIST: {
+    case ReportActionTypes.SET_REPORT_LIST: {
       return {
         ...state,
         reports: action.payload,
       };
     }
 
-    case reportActions.GET_REPORT: {
+    case ReportActionTypes.GET_REPORT: {
       return {
         ...state,
         selectedReport: null,
@@ -46,24 +46,27 @@ export function reducer(
       };
     }
 
-    case reportActions.GET_TITLE: {
+    case ReportActionTypes.GET_TITLE: {
       return {
         ...state,
         title: action.payload,
       };
     }
 
-    case reportActions.TOGGLE_RIGHT_NAV: {
+    case ReportActionTypes.TOGGLE_RIGHT_NAV: {
+      let navOpen = !state.rightNavIsOpen;
+      if (state.activeTab === 2 || state.activeTab === 3) {
+        navOpen = false;
+      } else if (action.payload !== undefined) {
+        navOpen = action.payload;
+      }
       return {
         ...state,
-        rightNavIsOpen:
-          state.activeTab === 2 || state.activeTab === 3
-            ? false
-            : !state.rightNavIsOpen,
+        rightNavIsOpen: navOpen,
       };
     }
 
-    case reportActions.GET_REPORT_SUCCESS: {
+    case ReportActionTypes.GET_REPORT_SUCCESS: {
       return {
         ...state,
         selectedReport: action.payload,
@@ -76,7 +79,7 @@ export function reducer(
       };
     }
 
-    case reportActions.GET_REPORT_FIELDS_SUCCESS: {
+    case ReportActionTypes.GET_REPORT_FIELDS_SUCCESS: {
       let { nextRelatedFieldId } = state;
       const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map(
         relatedField => {
@@ -92,14 +95,14 @@ export function reducer(
       };
     }
 
-    case reportActions.GET_FIELDS_SUCCESS: {
+    case ReportActionTypes.GET_FIELDS_SUCCESS: {
       return {
         ...state,
         fields: action.payload,
       };
     }
 
-    case reportActions.GET_RELATED_FIELDS_SUCCESS: {
+    case ReportActionTypes.GET_RELATED_FIELDS_SUCCESS: {
       let { nextRelatedFieldId } = state;
       const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map(
         relatedField => {
@@ -115,7 +118,7 @@ export function reducer(
       };
     }
 
-    case reportActions.CHANGE_REPORT_DESCRIPTION: {
+    case ReportActionTypes.CHANGE_REPORT_DESCRIPTION: {
       return {
         ...state,
         descriptionInput: action.payload,
@@ -123,7 +126,7 @@ export function reducer(
       };
     }
 
-    case reportActions.CHANGE_REPORT_TITLE: {
+    case ReportActionTypes.CHANGE_REPORT_TITLE: {
       return {
         ...state,
         titleInput: action.payload,
@@ -131,7 +134,7 @@ export function reducer(
       };
     }
 
-    case reportActions.TOGGLE_REPORT_DISTINCT: {
+    case ReportActionTypes.TOGGLE_REPORT_DISTINCT: {
       return {
         ...state,
         isDistinct:
@@ -139,7 +142,7 @@ export function reducer(
       };
     }
 
-    case reportActions.EDIT_REPORT_SUCCESS: {
+    case ReportActionTypes.EDIT_REPORT_SUCCESS: {
       return {
         ...state,
         selectedReport: action.payload,
@@ -150,22 +153,22 @@ export function reducer(
       };
     }
 
-    case reportActions.EXPORT_REPORT: {
+    case ReportActionTypes.EXPORT_REPORT: {
       return {
         ...state,
         generatingReport: true,
       };
     }
 
-    case reportActions.DOWNLOAD_EXPORTED_REPORT: {
+    case ReportActionTypes.DOWNLOAD_EXPORTED_REPORT: {
       return { ...state, generatingReport: false };
     }
 
-    case reportActions.GENERATE_PREVIEW: {
+    case ReportActionTypes.GENERATE_PREVIEW: {
       return { ...state, generatingReport: true };
     }
 
-    case reportActions.GENERATE_PREVIEW_SUCCESS: {
+    case ReportActionTypes.GENERATE_PREVIEW_SUCCESS: {
       return {
         ...state,
         reportPreview: action.payload,
@@ -173,7 +176,7 @@ export function reducer(
       };
     }
 
-    case reportActions.DELETE_REPORT_SUCCESS: {
+    case ReportActionTypes.DELETE_REPORT_SUCCESS: {
       return {
         ...state,
         reports: state.reports.filter(r => r.id !== action.reportId),
@@ -182,7 +185,7 @@ export function reducer(
       };
     }
 
-    case reportActions.DOWNLOAD_EXPORTED_REPORT: {
+    case ReportActionTypes.DOWNLOAD_EXPORTED_REPORT: {
       return {
         ...state,
         selectedReport: {
@@ -193,7 +196,7 @@ export function reducer(
       };
     }
 
-    case reportActions.CHANGE_TAB: {
+    case ReportActionTypes.CHANGE_TAB: {
       return {
         ...state,
         activeTab: action.payload,
@@ -278,7 +281,7 @@ export function reducer(
         editedSinceLastSave: true,
       };
 
-    case reportActions.ADD_REPORT_FIELD: {
+    case ReportActionTypes.ADD_REPORT_FIELD: {
       switch (selectors.getActiveTab(state)) {
         case 0:
           return {
@@ -313,7 +316,7 @@ export function reducer(
       }
     }
 
-    case reportActions.SELECT_FIELD: {
+    case ReportActionTypes.SELECT_FIELD: {
       return {
         ...state,
         selectedField: action.payload,

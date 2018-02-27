@@ -11,90 +11,92 @@ import {
   IExportType,
 } from '../models/api';
 
-export const GET_REPORT_LIST = 'Get Report List';
-export const SET_REPORT_LIST = 'Set Report List';
-export const GET_REPORT = 'Get Report';
-export const GET_TITLE = 'Get Title';
-export const GET_REPORT_SUCCESS = 'Get Report Success';
-export const GET_REPORT_FIELDS_SUCCESS = 'Get Report Fields Success';
-export const GET_FIELDS = 'Get Fields';
-export const GET_FIELDS_SUCCESS = 'Get Fields Success';
-export const GET_RELATED_FIELDS = 'Get Related Fields';
-export const GET_RELATED_FIELDS_SUCCESS = 'Get Related Fields Success';
-export const CHANGE_REPORT_DESCRIPTION = 'Change Report Description';
-export const CHANGE_REPORT_TITLE = 'Change Report Title';
-export const TOGGLE_REPORT_DISTINCT = 'Toggle Report Distinct';
-export const DELETE_REPORT = 'Delete Report';
-export const DELETE_REPORT_SUCCESS = 'Delete Report Success';
-export const EDIT_REPORT = 'Edit Report';
-export const EDIT_REPORT_SUCCESS = 'Edit Report Success';
-export const GENERATE_PREVIEW = 'Generate Preview';
-export const GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success';
-export const EXPORT_REPORT = 'Export Report';
-export const CREATE_REPORT = 'Create Report';
-export const CREATE_REPORT_SUCCESS = 'Create Report Success';
-export const COPY_REPORT = 'Copy Report';
-export const DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report';
-export const CHECK_EXPORT_STATUS = 'Check Export Status';
-export const TOGGLE_LEFT_NAV = 'Toggle Left Nav';
-export const SORT_REPORTS = 'Sort Reports';
-export const TOGGLE_RIGHT_NAV = 'Toggle Right Nav';
-export const CHANGE_TAB = 'Change Tab';
-export const ADD_REPORT_FIELD = 'Add Report Field';
-export const SELECT_FIELD = 'Select Field';
-export const CHANGE_DISPLAY_FIELD_POSITION = 'Change Display Field Position';
-export const CHANGE_FILTER_POSITION = 'Change Filter Position';
+export enum ReportActionTypes {
+  GET_REPORT_LIST = 'Get Report List',
+  SET_REPORT_LIST = 'Set Report List',
+  GET_REPORT = 'Get Report',
+  GET_TITLE = 'Get Title',
+  GET_REPORT_SUCCESS = 'Get Report Success',
+  GET_REPORT_FIELDS_SUCCESS = 'Get Report Fields Success',
+  GET_FIELDS = 'Get Fields',
+  GET_FIELDS_SUCCESS = 'Get Fields Success',
+  GET_RELATED_FIELDS = 'Get Related Fields',
+  GET_RELATED_FIELDS_SUCCESS = 'Get Related Fields Success',
+  CHANGE_REPORT_DESCRIPTION = 'Change Report Description',
+  CHANGE_REPORT_TITLE = 'Change Report Title',
+  TOGGLE_REPORT_DISTINCT = 'Toggle Report Distinct',
+  DELETE_REPORT = 'Delete Report',
+  DELETE_REPORT_SUCCESS = 'Delete Report Success',
+  EDIT_REPORT = 'Edit Report',
+  EDIT_REPORT_SUCCESS = 'Edit Report Success',
+  GENERATE_PREVIEW = 'Generate Preview',
+  GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success',
+  EXPORT_REPORT = 'Export Report',
+  CREATE_REPORT = 'Create Report',
+  CREATE_REPORT_SUCCESS = 'Create Report Success',
+  COPY_REPORT = 'Copy Report',
+  DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report',
+  CHECK_EXPORT_STATUS = 'Check Export Status',
+  TOGGLE_LEFT_NAV = 'Toggle Left Nav',
+  SORT_REPORTS = 'Sort Reports',
+  TOGGLE_RIGHT_NAV = 'Toggle Right Nav',
+  CHANGE_TAB = 'Change Tab',
+  ADD_REPORT_FIELD = 'Add Report Field',
+  SELECT_FIELD = 'Select Field',
+  CHANGE_DISPLAY_FIELD_POSITION = 'Change Display Field Position',
+  CHANGE_FILTER_POSITION = 'Change Filter Position',
+}
 
 /** Request an updated list of all reports from the api */
 export class GetReportList implements Action {
-  readonly type = GET_REPORT_LIST;
+  readonly type = ReportActionTypes.GET_REPORT_LIST;
 }
 
 export class SetReportList implements Action {
-  readonly type = SET_REPORT_LIST;
+  readonly type = ReportActionTypes.SET_REPORT_LIST;
   constructor(public payload: IReport[]) {}
 }
 
 /** Get the report details for one report for active editing */
 export class GetReport implements Action {
-  readonly type = GET_REPORT;
+  readonly type = ReportActionTypes.GET_REPORT;
   constructor(public payload: number) {}
 }
 
 export class GetTitle implements Action {
-  readonly type = GET_TITLE;
+  readonly type = ReportActionTypes.GET_TITLE;
   constructor(public payload: string) {}
 }
 
 export class GetReportSuccess implements Action {
-  readonly type = GET_REPORT_SUCCESS;
+  readonly type = ReportActionTypes.GET_REPORT_SUCCESS;
   constructor(public payload: IReportDetailed) {}
 }
 
 export class GetReportFieldsSuccess implements Action {
-  readonly type = GET_REPORT_FIELDS_SUCCESS;
+  readonly type = ReportActionTypes.GET_REPORT_FIELDS_SUCCESS;
   constructor(
     public payload: { relatedFields: IRelatedField[]; fields: IField[] }
   ) {}
 }
 
 export class GetFields implements Action {
-  readonly type = GET_FIELDS;
+  readonly type = ReportActionTypes.GET_FIELDS;
   constructor(public payload: IRelatedField) {}
 }
 
 export class GetFieldsSuccess implements Action {
-  readonly type = GET_FIELDS_SUCCESS;
+  readonly type = ReportActionTypes.GET_FIELDS_SUCCESS;
   constructor(public payload: IField[]) {}
 }
 
 export class GetRelatedFields implements Action {
-  readonly type = GET_RELATED_FIELDS;
+  readonly type = ReportActionTypes.GET_RELATED_FIELDS;
   constructor(public payload: INestedRelatedField) {}
 }
 
 export class GetRelatedFieldsSuccess implements Action {
-  readonly type = GET_RELATED_FIELDS_SUCCESS;
+  readonly type = ReportActionTypes.GET_RELATED_FIELDS_SUCCESS;
   constructor(
     public payload: {
       parentId: number;
@@ -104,105 +106,106 @@ export class GetRelatedFieldsSuccess implements Action {
 }
 
 export class ChangeReportDescription implements Action {
-  readonly type = CHANGE_REPORT_DESCRIPTION;
+  readonly type = ReportActionTypes.CHANGE_REPORT_DESCRIPTION;
   constructor(public payload: string) {}
 }
 
 export class ChangeReportTitle implements Action {
-  readonly type = CHANGE_REPORT_TITLE;
+  readonly type = ReportActionTypes.CHANGE_REPORT_TITLE;
   constructor(public payload: string) {}
 }
 
 export class ToggleReportDistinct implements Action {
-  readonly type = TOGGLE_REPORT_DISTINCT;
+  readonly type = ReportActionTypes.TOGGLE_REPORT_DISTINCT;
   constructor(public payload?: boolean) {}
 }
 
 export class DeleteReport implements Action {
-  readonly type = DELETE_REPORT;
+  readonly type = ReportActionTypes.DELETE_REPORT;
   constructor(public payload: number) {}
 }
 
 export class DeleteReportSuccess implements Action {
-  readonly type = DELETE_REPORT_SUCCESS;
+  readonly type = ReportActionTypes.DELETE_REPORT_SUCCESS;
   constructor(public reportId: number) {}
 }
 
 export class EditReport implements Action {
-  readonly type = EDIT_REPORT;
+  readonly type = ReportActionTypes.EDIT_REPORT;
   constructor() {}
 }
 
 export class EditReportSuccess implements Action {
-  readonly type = EDIT_REPORT_SUCCESS;
+  readonly type = ReportActionTypes.EDIT_REPORT_SUCCESS;
   constructor(public payload: IReportDetailed) {}
 }
 
 export class GeneratePreview implements Action {
-  readonly type = GENERATE_PREVIEW;
+  readonly type = ReportActionTypes.GENERATE_PREVIEW;
   constructor() {}
 }
 
 export class GeneratePreviewSuccess implements Action {
-  readonly type = GENERATE_PREVIEW_SUCCESS;
+  readonly type = ReportActionTypes.GENERATE_PREVIEW_SUCCESS;
   constructor(public payload: IReportPreview) {}
 }
 
 export class ExportReport implements Action {
-  readonly type = EXPORT_REPORT;
+  readonly type = ReportActionTypes.EXPORT_REPORT;
   constructor(public payload: IExportType) {}
 }
 
 export class DownloadExportedReport implements Action {
-  readonly type = DOWNLOAD_EXPORTED_REPORT;
+  readonly type = ReportActionTypes.DOWNLOAD_EXPORTED_REPORT;
   constructor(public payload: string) {}
 }
 
 export class CheckExportStatus implements Action {
-  readonly type = CHECK_EXPORT_STATUS;
+  readonly type = ReportActionTypes.CHECK_EXPORT_STATUS;
   constructor(public payload: { reportId: string | number; taskId: string }) {}
 }
 
 export class CreateReport implements Action {
-  readonly type = CREATE_REPORT;
+  readonly type = ReportActionTypes.CREATE_REPORT;
   constructor(public payload: INewReport) {}
 }
 
 export class CreateReportSuccess implements Action {
-  readonly type = CREATE_REPORT_SUCCESS;
+  readonly type = ReportActionTypes.CREATE_REPORT_SUCCESS;
   constructor(public payload: IReportDetailed) {}
 }
 
 export class CopyReport implements Action {
-  readonly type = COPY_REPORT;
+  readonly type = ReportActionTypes.COPY_REPORT;
   constructor(public payload: number) {}
 }
 
 export class ToggleRightNav implements Action {
-  readonly type = TOGGLE_RIGHT_NAV;
+  readonly type = ReportActionTypes.TOGGLE_RIGHT_NAV;
+  constructor(public payload?: boolean) {}
 }
 
 export class SortReports implements Action {
-  readonly type = SORT_REPORTS;
+  readonly type = ReportActionTypes.SORT_REPORTS;
   constructor(public payload: string) {}
 }
 
 export class ChangeTab implements Action {
-  readonly type = CHANGE_TAB;
+  readonly type = ReportActionTypes.CHANGE_TAB;
   constructor(public payload: number) {}
 }
 
 export class AddReportField implements Action {
-  readonly type = ADD_REPORT_FIELD;
+  readonly type = ReportActionTypes.ADD_REPORT_FIELD;
   constructor(public payload: IBase) {}
 }
 
 export class SelectField implements Action {
-  readonly type = SELECT_FIELD;
+  readonly type = ReportActionTypes.SELECT_FIELD;
   constructor(public payload: IField) {}
 }
 
-export type Actions =
+export type ReportActions =
   | GetReportList
   | GetReportFieldsSuccess
   | SetReportList

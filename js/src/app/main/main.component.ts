@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../reducers';
 import {
@@ -25,43 +25,20 @@ import {
 } from '../actions/reports';
 import { Go } from '../actions/router';
 import { ComponentCanDeactivate } from '../generic.guard';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSidenav } from '@angular/material';
 import {
   ConfirmModalComponent,
   IConfirmModalData,
 } from '../confirm/confirm-modal.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-main',
-  template: `
-    <mat-sidenav-container class="left-sidenav-container">
-      <app-header
-        (onToggleRightNav)="onToggleRightNav()"
-        (changeTitleInput)="editTitle($event)"
-        [title]="title$ | async"
-        [showRightNavButton]="(activeTab$ | async) <= 1"
-        [reportName]="(selectedReportName$ | async)"
-        (goHome)="goHome()">
-      </app-header>
-      <div class="example-sidenav-content">
-        <app-tabs>
-        </app-tabs>
-      </div>
-      <app-right-sidebar #rightMenu
-        [modelName]="(selectedReport$ | async)?.name"
-        [relatedFields]="relatedFields$ | async"
-        [fields]="fields$ | async"
-        [selectedField]="selectedField$ | async"
-        (selectRelatedField)="selectRelatedField($event)"
-        (onToggleRightNav)="onToggleRightNav()"
-        [rightNavIsOpen]="rightNavIsOpen$ | async"
-        (addReportField)="addReportField($event)"
-        (selectField)="selectField($event)"
-      ></app-right-sidebar>
-    </mat-sidenav-container>
-  `,
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements ComponentCanDeactivate {
+  @ViewChild(MatSidenav) sidenav: MatSidenav;
   title$ = this.store.select(getTitle);
   activeTab$ = this.store.select(getActiveTab);
 
@@ -78,10 +55,27 @@ export class MainComponent implements ComponentCanDeactivate {
   selectedField$ = this.store.select(getSelectedField);
   edited = false;
 
-  constructor(private store: Store<State>, public dialog: MatDialog) {
+  mode: 'over' | 'side' = 'over';
+  lockOpen = false;
+
+  constructor(
+    private store: Store<State>,
+    public dialog: MatDialog,
+    breakpointObserver: BreakpointObserver
+  ) {
     store
       .select(hasEditedSinceLastSave)
       .subscribe(edited => (this.edited = edited));
+
+    breakpointObserver
+      .observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
+      .subscribe(result => {
+        this.mode = result.matches ? 'over' : 'side';
+      });
+
+    breakpointObserver.observe(['(min-width: 2000px)']).subscribe(result => {
+      this.lockOpen = result.matches;
+    });
   }
 
   canDeactivate() {
@@ -104,6 +98,18 @@ export class MainComponent implements ComponentCanDeactivate {
     }
   }
 
+  openNav(bool?: boolean) {
+    if (!this.lockOpen) {
+      if (bool === undefined) {
+        this.sidenav.toggle();
+      } else if (bool) {
+        this.sidenav.open();
+      } else {
+        this.sidenav.close();
+      }
+    }
+  }
+
   onClickReport(reportId: number) {
     this.store.dispatch(new GetReport(reportId));
   }
@@ -113,8 +119,8 @@ export class MainComponent implements ComponentCanDeactivate {
     this.store.dispatch(new GetRelatedFields(relatedField));
   }
 
-  onToggleRightNav() {
-    this.store.dispatch(new ToggleRightNav());
+  toggleRightNav(open: boolean) {
+    this.store.dispatch(new ToggleRightNav(open));
   }
 
   addReportField(field: IField) {

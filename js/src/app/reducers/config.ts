@@ -1,9 +1,9 @@
-import * as configActions from '../actions/config';
+import { ConfigActions, ConfigActionTypes } from '../actions/config';
 import { State } from '../models/config';
 
-export function reducer(state = {}, action: configActions.Actions): State {
+export function reducer(state = {}, action: ConfigActions): State {
   switch (action.type) {
-    case configActions.GET_CONFIG_SUCCESS: {
+    case ConfigActionTypes.GET_CONFIG_SUCCESS: {
       return action.payload;
     }
 
