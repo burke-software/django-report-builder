@@ -8,6 +8,7 @@ import {
 import { IField, IRelatedField } from '../../models/api';
 import { MatTableDataSource } from '@angular/material';
 import { TreeNode } from 'angular-tree-component';
+import { ITreeNode } from 'angular-tree-component/dist/defs/api';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -21,6 +22,7 @@ export class RightSidebarComponent implements OnChanges {
   @Output() close = new EventEmitter();
 
   @Output() selectRelatedField = new EventEmitter<IRelatedField>();
+  @Output() expandRelatedField = new EventEmitter<IRelatedField>();
   @Output() searchFields = new EventEmitter<string>();
   @Output() searchRelations = new EventEmitter<string>();
 
@@ -43,8 +45,14 @@ export class RightSidebarComponent implements OnChanges {
 
   constructor() {}
 
-  onActivate($event) {
-    this.selectRelatedField.emit($event);
+  onExpand({ node, isExpanded }: { node: ITreeNode; isExpanded: boolean }) {
+    if (isExpanded) {
+      this.expandRelatedField.emit(node.data);
+    }
+  }
+
+  onActivate({ node }: { node: ITreeNode }) {
+    this.selectRelatedField.emit(node.data);
   }
 
   filterTree(text, tree) {

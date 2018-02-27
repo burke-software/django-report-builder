@@ -116,6 +116,9 @@ export class MainComponent implements ComponentCanDeactivate {
 
   selectRelatedField(relatedField: INestedRelatedField) {
     this.store.dispatch(new GetFields(relatedField));
+  }
+
+  expandRelatedField(relatedField: INestedRelatedField) {
     this.store.dispatch(new GetRelatedFields(relatedField));
   }
 

@@ -9,6 +9,6 @@
   <mat-sidenav #sidenav [mode]="(mode)" [opened]="lockOpen" [disableClose]="lockOpen" position="end" (openedChange)="toggleRightNav($event)">
     <app-right-sidebar #rightMenu [modelName]="(selectedReportName$ | async)" [relatedFields]="relatedFields$ | async" [fields]="fields$ | async"
       [selectedField]="selectedField$ | async" (selectRelatedField)="selectRelatedField($event)" (close)="openNav(false)" (addReportField)="addReportField($event)"
-      (selectField)="selectField($event)" [lockOpen]="lockOpen"></app-right-sidebar>
+      (expandRelatedField)="expandRelatedField($event)" (selectField)="selectField($event)" [lockOpen]="lockOpen"></app-right-sidebar>
   </mat-sidenav>
 </mat-sidenav-container>
