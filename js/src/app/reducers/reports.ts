@@ -81,15 +81,27 @@ export function reducer(
 
     case ReportActionTypes.GET_REPORT_FIELDS_SUCCESS: {
       let { nextRelatedFieldId } = state;
-      const relatedFields: INestedRelatedField[] = action.payload.relatedFields.map(
-        relatedField => {
+      const selectedReport = selectors.getSelectedReport(state);
+
+      const rootRelatedField: INestedRelatedField = {
+        id: nextRelatedFieldId++,
+        children: action.payload.relatedFields.map(relatedField => {
           const id = nextRelatedFieldId++;
           return { ...relatedField, children: [], id };
-        }
-      );
+        }),
+        field_name: '',
+        verbose_name: selectedReport.root_model_name,
+        path: '',
+        help_text:
+          'The root model for this report: ' + selectedReport.root_model_name,
+        model_id: selectedReport.root_model,
+        parent_model_name: '',
+        parent_model_app_label: false,
+        included_model: true,
+      };
       return {
         ...state,
-        relatedFields: relatedFields,
+        relatedFields: [rootRelatedField],
         fields: action.payload.fields,
         nextRelatedFieldId,
       };
