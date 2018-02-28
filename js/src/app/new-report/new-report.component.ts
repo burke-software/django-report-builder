@@ -11,7 +11,11 @@ import { CreateReport } from '../actions/reports';
   styleUrls: ['./new-report.component.css'],
 })
 export class NewReportComponent implements OnInit {
-  root_model_choices$ = this.api.getRootModels();
+  root_model_choices$ = this.api
+    .getRootModels()
+    .map(models =>
+      models.sort((x, y) => (x.name === y.name ? 0 : x.name > y.name ? 1 : -1))
+    );
   form: INewReport;
 
   constructor(private store: Store<State>, private api: ApiService) {}
