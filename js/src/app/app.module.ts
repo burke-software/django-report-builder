@@ -2,7 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HttpClientXsrfModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'angular-tree-component';
 
@@ -64,6 +68,7 @@ import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 import { PendingChangesGuard } from './generic.guard';
 import { ErrorComponent } from './error/error.component';
+import { NetworkErrorInterceptor } from './api.interceptor';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Reports' } },
@@ -148,6 +153,11 @@ export const MatModules = [
   providers: [
     ApiService,
     { provide: RouterStateSerializer, useClass: CustomSerializer },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: NetworkErrorInterceptor,
+      multi: true,
+    },
     PendingChangesGuard,
   ],
   bootstrap: [AppComponent],
