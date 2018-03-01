@@ -163,6 +163,7 @@ export function reducer(
         isDistinct: action.payload.distinct,
         reportSaved: new Date(),
         editedSinceLastSave: false,
+        errors: undefined,
       };
     }
 
@@ -192,7 +193,11 @@ export function reducer(
     }
 
     case ReportActionTypes.DOWNLOAD_EXPORTED_REPORT: {
-      return { ...state, generatingReport: false };
+      return {
+        ...state,
+        generatingReport: false,
+        errors: undefined,
+      };
     }
 
     case ReportActionTypes.GENERATE_PREVIEW: {
@@ -204,6 +209,7 @@ export function reducer(
         ...state,
         reportPreview: action.payload,
         generatingReport: false,
+        errors: undefined,
       };
     }
 
