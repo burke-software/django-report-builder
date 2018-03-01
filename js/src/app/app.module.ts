@@ -23,6 +23,7 @@ import {
   MatTableModule,
   MatTooltipModule,
   MatProgressBarModule,
+  MatSnackBarModule,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -91,6 +92,7 @@ export const MatModules = [
   MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
+  MatSnackBarModule,
   MatSortModule,
   MatToolbarModule,
   MatTooltipModule,

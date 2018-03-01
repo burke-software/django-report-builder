@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/catch';
 
 import {
   ReportsResponse,
@@ -19,12 +20,47 @@ import {
   IExportType,
 } from './models/api';
 
+interface ITest {
+  [key: string]: string[];
+}
+
+interface ISaveError {
+  [key: string]: ITest[];
+}
+
+const flatten = (arr: any[]) => [].concat(...arr);
+
 @Injectable()
 export class ApiService {
   baseUrl = '/report_builder/';
   apiUrl = this.baseUrl + 'api/';
 
   constructor(private http: HttpClient) {}
+
+  private handleSaveError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // Error happens before hitting the server (JS error or network error)
+      console.error('network error');
+    } else {
+      const message = flatten(
+        Object.entries(error.error as ISaveError).map(([tab, items]) =>
+          items.map((item, i) =>
+            Object.entries(item).map(([itemName, errors]) =>
+              errors.map(
+                e =>
+                  `In ${tab}, your ${i} field's ${itemName} has the error: ${e}`
+              )
+            )
+          )
+        )
+      ).join('\n');
+
+      return new ErrorObservable(
+        'Saving encountered the following errors: \n' + message
+      );
+    }
+    return new ErrorObservable("We're sorry, something went wrong!");
+  }
 
   getConfig() {
     return this.http.get<IConfig>(this.apiUrl + 'config/');
@@ -62,10 +98,9 @@ export class ApiService {
   }
 
   editReport(form: IReportDetailed) {
-    return this.http.put<IReportDetailed>(
-      this.apiUrl + `report/${form.id}/`,
-      form
-    );
+    return this.http
+      .put<IReportDetailed>(this.apiUrl + `report/${form.id}/`, form)
+      .catch(this.handleSaveError);
   }
 
   generatePreview(reportId: number) {

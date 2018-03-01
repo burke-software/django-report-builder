@@ -3,6 +3,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/observable/forkJoin';
 
@@ -23,6 +24,7 @@ import {
   getSelectedReportId,
   getIsAsyncReport,
 } from '../selectors';
+import { MatSnackBar } from '@angular/material';
 const { ReportActionTypes } = fromReports;
 
 @Injectable()
@@ -40,7 +42,8 @@ export class ReportEffects {
     private actions$: Actions,
     private store$: Store<State>,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    public snackBar: MatSnackBar
   ) {}
 
   @Effect()
@@ -151,8 +154,22 @@ export class ReportEffects {
       const editedReport = getEditedReport(storeState);
       return this.api
         .editReport(editedReport)
-        .map(response => new fromReports.EditReportSuccess(response));
+        .map(response => new fromReports.EditReportSuccess(response))
+        .catch(error =>
+          Observable.of(new fromReports.EditReportFailure(error))
+        );
     });
+
+  @Effect({ dispatch: false })
+  editReportFailure$ = this.actions$
+    .ofType(ReportActionTypes.EDIT_REPORT_FAILURE)
+    .map((action: fromReports.EditReportFailure) => action.payload)
+    .map(error =>
+      this.snackBar.open(error, 'Error', {
+        duration: 10000,
+        verticalPosition: 'top',
+      })
+    );
 
   @Effect()
   generatePreview$ = this.actions$

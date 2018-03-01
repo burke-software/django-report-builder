@@ -29,6 +29,7 @@ export enum ReportActionTypes {
   DELETE_REPORT_SUCCESS = 'Delete Report Success',
   EDIT_REPORT = 'Edit Report',
   EDIT_REPORT_SUCCESS = 'Edit Report Success',
+  EDIT_REPORT_FAILURE = 'Edit Report Failure',
   GENERATE_PREVIEW = 'Generate Preview',
   GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success',
   EXPORT_REPORT = 'Export Report',
@@ -140,6 +141,11 @@ export class EditReportSuccess implements Action {
   constructor(public payload: IReportDetailed) {}
 }
 
+export class EditReportFailure implements Action {
+  readonly type = ReportActionTypes.EDIT_REPORT_FAILURE;
+  constructor(public payload: any) {}
+}
+
 export class GeneratePreview implements Action {
   readonly type = ReportActionTypes.GENERATE_PREVIEW;
   constructor() {}
@@ -223,6 +229,7 @@ export type ReportActions =
   | DeleteReportSuccess
   | EditReport
   | EditReportSuccess
+  | EditReportFailure
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
