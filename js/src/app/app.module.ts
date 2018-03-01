@@ -63,6 +63,7 @@ import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.compon
 import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 import { PendingChangesGuard } from './generic.guard';
+import { ErrorComponent } from './error/error.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Reports' } },
@@ -121,6 +122,7 @@ export const MatModules = [
     FilterTabRowComponent,
     RightSidebarComponent,
     FieldComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserAnimationsModule,

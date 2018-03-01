@@ -9,6 +9,7 @@ import {
   IBase,
   INestedRelatedField,
   IExportType,
+  IReportErrors,
 } from '../models/api';
 
 export enum ReportActionTypes {
@@ -143,7 +144,7 @@ export class EditReportSuccess implements Action {
 
 export class EditReportFailure implements Action {
   readonly type = ReportActionTypes.EDIT_REPORT_FAILURE;
-  constructor(public payload: any) {}
+  constructor(public payload: IReportErrors) {}
 }
 
 export class GeneratePreview implements Action {

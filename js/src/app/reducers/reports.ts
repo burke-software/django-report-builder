@@ -166,6 +166,24 @@ export function reducer(
       };
     }
 
+    case ReportActionTypes.EDIT_REPORT_FAILURE: {
+      return {
+        ...state,
+        errors: flatten(
+          Object.entries(action.payload).map(([tab, items]) =>
+            items.map((item, i) =>
+              Object.entries(item).map(([itemName, errors]) =>
+                errors.map(
+                  e =>
+                    `In ${tab}, your ${i} field's ${itemName} has the error: ${e}`
+                )
+              )
+            )
+          )
+        ),
+      };
+    }
+
     case ReportActionTypes.EXPORT_REPORT: {
       return {
         ...state,
@@ -356,4 +374,18 @@ function populateChildren(parentId: number, children: INestedRelatedField[]) {
     }
     return replacement;
   };
+}
+
+function flatten(items) {
+  const flat = [];
+
+  items.forEach(item => {
+    if (Array.isArray(item)) {
+      flat.push(...flatten(item));
+    } else {
+      flat.push(item);
+    }
+  });
+
+  return flat;
 }

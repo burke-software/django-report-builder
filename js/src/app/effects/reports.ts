@@ -25,6 +25,7 @@ import {
   getIsAsyncReport,
 } from '../selectors';
 import { MatSnackBar } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
 const { ReportActionTypes } = fromReports;
 
 @Injectable()
@@ -155,21 +156,13 @@ export class ReportEffects {
       return this.api
         .editReport(editedReport)
         .map(response => new fromReports.EditReportSuccess(response))
-        .catch(error =>
-          Observable.of(new fromReports.EditReportFailure(error))
-        );
+        .catch((error: HttpErrorResponse) => {
+          if (error.error instanceof ErrorEvent) {
+            // handle network error
+          }
+          return Observable.of(new fromReports.EditReportFailure(error.error));
+        });
     });
-
-  @Effect({ dispatch: false })
-  editReportFailure$ = this.actions$
-    .ofType(ReportActionTypes.EDIT_REPORT_FAILURE)
-    .map((action: fromReports.EditReportFailure) => action.payload)
-    .map(error =>
-      this.snackBar.open(error, 'Error', {
-        duration: 10000,
-        verticalPosition: 'top',
-      })
-    );
 
   @Effect()
   generatePreview$ = this.actions$
