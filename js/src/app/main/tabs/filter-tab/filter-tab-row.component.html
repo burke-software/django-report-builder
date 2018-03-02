@@ -37,50 +37,7 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="mat-cell" [ngSwitch]="filter.filter_type">
-    <mat-form-field *ngSwitchCase="'week_day'">
-      <mat-select (selectionChange)="editFilter({filter_value: $event.value})" [value]="filter.filter_value">
-        <mat-option value="1">Sunday</mat-option>
-        <mat-option value="2">Monday</mat-option>
-        <mat-option value="3">Tuesday</mat-option>
-        <mat-option value="4">Wednesday</mat-option>
-        <mat-option value="5">Thursday</mat-option>
-        <mat-option value="6">Friday</mat-option>
-        <mat-option value="7">Saturday</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div *ngSwitchCase="'isnull'">
-      <mat-checkbox [checked]="filter.filter_value === 'True'" (change)="editFilter({filter_value: $event.checked ? 'True' : 'False' })"
-        arial-label="Is Null"></mat-checkbox>
-    </div>
-
-    <div *ngSwitchCase="'max'">
-      <mat-checkbox [checked]="filter.filter_value === 'True'" (change)="editFilter({filter_value: $event.checked ? 'True' : 'False' })"
-        arial-label="Max (annotation-filter)"></mat-checkbox>
-    </div>
-
-    <div *ngSwitchCase="'min'">
-      <mat-checkbox [checked]="filter.filter_value === 'True'" (change)="editFilter({filter_value: $event.checked ? 'True' : 'False' })"
-        arial-label="Min (annotation-filter)"></mat-checkbox>
-    </div>
-
-    <div *ngSwitchDefault [ngSwitch]="filter.field_type">
-      <mat-form-field *ngSwitchCase="'DateField'">
-        <input matInput [matDatepicker]="picker" [value]="filter.filter_value" (dateChange)="editFilter({filter_value: $event.value})">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-
-      <div *ngSwitchCase="'BooleanField'">
-        <mat-checkbox [checked]="filter.filter_value" (change)="editFilter({filter_value: $event.checked })"></mat-checkbox>
-      </div>
-
-      <mat-form-field *ngSwitchDefault>
-        <input matInput value="{{filter.filter_value}}" (keyup)="editFilter({filter_value: $event.currentTarget.value})">
-      </mat-form-field>
-    </div>
-  </div>
+  <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (change)="editFilter({filter_value: $event})"></app-filter-input>
   <div class="mat-cell">
     <div *ngIf="filter.filter_type==='range'" [ngSwitch]="filter.field_type">
       <mat-form-field *ngSwitchCase="'DateField'">

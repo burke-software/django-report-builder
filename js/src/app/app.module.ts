@@ -69,6 +69,7 @@ import { ClickOutsideModule } from 'ng4-click-outside';
 import { PendingChangesGuard } from './generic.guard';
 import { ErrorComponent } from './error/error.component';
 import { NetworkErrorInterceptor } from './api.interceptor';
+import { FilterInputComponent } from './main/tabs/filter-tab/filter-input.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Reports' } },
@@ -125,6 +126,7 @@ export const MatModules = [
     DisplayTabRowComponent,
     FilterTabComponent,
     FilterTabRowComponent,
+    FilterInputComponent,
     RightSidebarComponent,
     FieldComponent,
     ErrorComponent,
