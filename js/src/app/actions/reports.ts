@@ -36,6 +36,7 @@ export enum ReportActionTypes {
   EXPORT_REPORT = 'Export Report',
   CREATE_REPORT = 'Create Report',
   CREATE_REPORT_SUCCESS = 'Create Report Success',
+  CANCEL_GENERATE_REPORT = 'Cancel Generate Report',
   COPY_REPORT = 'Copy Report',
   DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report',
   CHECK_EXPORT_STATUS = 'Check Export Status',
@@ -172,6 +173,10 @@ export class CheckExportStatus implements Action {
   constructor(public payload: { reportId: string | number; taskId: string }) {}
 }
 
+export class CancelGenerateReport implements Action {
+  readonly type = ReportActionTypes.CANCEL_GENERATE_REPORT;
+}
+
 export class CreateReport implements Action {
   readonly type = ReportActionTypes.CREATE_REPORT;
   constructor(public payload: INewReport) {}
@@ -234,6 +239,7 @@ export type ReportActions =
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
+  | CancelGenerateReport
   | CreateReport
   | CreateReportSuccess
   | CopyReport

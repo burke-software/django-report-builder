@@ -213,6 +213,14 @@ export function reducer(
       };
     }
 
+    case ReportActionTypes.CANCEL_GENERATE_REPORT: {
+      return {
+        ...state,
+        reportPreview: undefined,
+        generatingReport: false,
+      };
+    }
+
     case ReportActionTypes.DELETE_REPORT_SUCCESS: {
       return {
         ...state,
