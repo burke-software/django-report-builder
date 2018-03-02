@@ -17,7 +17,7 @@ import 'rxjs/add/operator/retry';
 import { MatSnackBar } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { State } from './reducers';
-import { CancelGenerateReport } from './actions/reports';
+import { CancelGeneratePreview } from './actions/reports';
 
 @Injectable()
 export class NetworkErrorInterceptor implements HttpInterceptor {
@@ -33,7 +33,7 @@ export class NetworkErrorInterceptor implements HttpInterceptor {
         // 1. Network error
         // 2. Client side JS error
         // 3. Server side 500 error
-        this.store.dispatch(new CancelGenerateReport());
+        this.store.dispatch(new CancelGeneratePreview());
         this.snackBar.open('Sorry, something went wrong!');
         return Observable.empty<HttpEvent<any>>();
       }

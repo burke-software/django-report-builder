@@ -192,6 +192,13 @@ export function reducer(
       };
     }
 
+    case ReportActionTypes.CANCEL_EXPORT_REPORT: {
+      return {
+        ...state,
+        generatingReport: false,
+      };
+    }
+
     case ReportActionTypes.DOWNLOAD_EXPORTED_REPORT: {
       return {
         ...state,
@@ -213,7 +220,7 @@ export function reducer(
       };
     }
 
-    case ReportActionTypes.CANCEL_GENERATE_REPORT: {
+    case ReportActionTypes.CANCEL_GENERATE_PREVIEW: {
       return {
         ...state,
         reportPreview: undefined,

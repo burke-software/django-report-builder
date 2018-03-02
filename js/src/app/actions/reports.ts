@@ -36,10 +36,11 @@ export enum ReportActionTypes {
   EXPORT_REPORT = 'Export Report',
   CREATE_REPORT = 'Create Report',
   CREATE_REPORT_SUCCESS = 'Create Report Success',
-  CANCEL_GENERATE_REPORT = 'Cancel Generate Report',
+  CANCEL_GENERATE_PREVIEW = 'Cancel Generate Preview',
   COPY_REPORT = 'Copy Report',
   DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report',
   CHECK_EXPORT_STATUS = 'Check Export Status',
+  CANCEL_EXPORT_REPORT = 'Cancel Export Report',
   TOGGLE_LEFT_NAV = 'Toggle Left Nav',
   SORT_REPORTS = 'Sort Reports',
   TOGGLE_RIGHT_NAV = 'Toggle Right Nav',
@@ -158,6 +159,10 @@ export class GeneratePreviewSuccess implements Action {
   constructor(public payload: IReportPreview) {}
 }
 
+export class CancelGeneratePreview implements Action {
+  readonly type = ReportActionTypes.CANCEL_GENERATE_PREVIEW;
+}
+
 export class ExportReport implements Action {
   readonly type = ReportActionTypes.EXPORT_REPORT;
   constructor(public payload: IExportType) {}
@@ -173,8 +178,8 @@ export class CheckExportStatus implements Action {
   constructor(public payload: { reportId: string | number; taskId: string }) {}
 }
 
-export class CancelGenerateReport implements Action {
-  readonly type = ReportActionTypes.CANCEL_GENERATE_REPORT;
+export class CancelExportReport implements Action {
+  readonly type = ReportActionTypes.CANCEL_EXPORT_REPORT;
 }
 
 export class CreateReport implements Action {
@@ -239,7 +244,8 @@ export type ReportActions =
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
-  | CancelGenerateReport
+  | CancelExportReport
+  | CancelGeneratePreview
   | CreateReport
   | CreateReportSuccess
   | CopyReport
