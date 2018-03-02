@@ -25,7 +25,7 @@ export class NetworkErrorInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).catch((err: HttpErrorResponse) => {
-      if (err.error instanceof ErrorEvent) {
+      if (err.status === 0) {
         // Client-side or network error happened
         this.snackBar.open('Sorry, something went wrong!');
         return Observable.empty<HttpEvent<any>>();
