@@ -11,6 +11,7 @@ import {
   getFormatOptions,
   getSelectedReport,
   hasEditedSinceLastSave,
+  getErrors,
 } from '../../selectors';
 import { MatTabGroup } from '@angular/material';
 import { Update } from '@ngrx/entity';
@@ -30,6 +31,7 @@ export class TabsComponent implements OnInit {
   formatOptions$ = this.store.select(getFormatOptions);
   report$ = this.store.select(getSelectedReport);
   hasChanged$ = this.store.select(hasEditedSinceLastSave);
+  errors$ = this.store.select(getErrors);
   @ViewChild('tabs') tabs: MatTabGroup;
 
   ngOnInit() {
