@@ -1,5 +1,5 @@
 import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
-import { INestedRelatedField } from '../models/api';
+import { INestedRelatedField, IReportErrors } from '../models/api';
 import { ReportActionTypes, ReportActions } from '../actions/reports';
 import {
   DisplayFieldActions,
@@ -171,16 +171,22 @@ export function reducer(
       return {
         ...state,
         errors: flatten(
-          Object.entries(action.payload).map(([tab, items]) =>
-            items.map((item, i) =>
-              Object.entries(item).map(([itemName, errors]) =>
-                errors.map(
-                  e =>
-                    `In ${tab}, your ${i} field's ${itemName} has the error: ${e}`
+          Object.entries(action.payload).map(([tab, items]) => {
+            if (typeof items[0] === 'string') {
+              return (items as string[]).map(
+                e => `Your ${tab} field has the error: ${e}`
+              );
+            } else {
+              return (items as IReportErrors[]).map((item, i) =>
+                Object.entries(item).map(([itemName, errors]) =>
+                  (errors as string[]).map(
+                    e =>
+                      `In ${tab}, your ${i} field's ${itemName} has the error: ${e}`
+                  )
                 )
-              )
-            )
-          )
+              );
+            }
+          })
         ),
       };
     }
