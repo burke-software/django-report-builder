@@ -37,7 +37,9 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (change)="editFilter({filter_value: $event})"></app-filter-input>
+  <div class="mat-cell">
+    <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (change)="editFilter({filter_value: $event})"></app-filter-input>
+  </div>
   <div class="mat-cell">
     <div *ngIf="filter.filter_type==='range'" [ngSwitch]="filter.field_type">
       <mat-form-field *ngSwitchCase="'DateField'">
