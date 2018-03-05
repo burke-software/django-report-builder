@@ -4,6 +4,9 @@
       <button [disabled]="!hasChanged" mat-icon-button (click)="saveReport.emit()">
         <mat-icon>save</mat-icon>
       </button>
+      <button *ngIf="errors" mat-icon-button [disabled]="true" [matTooltipPosition]="'right'" matTooltip="There were errors with your report! Check the report tab for more info">
+        <mat-icon [color]="'warn'">error</mat-icon>
+      </button>
     </div>
     <div class="mat-header-cell">Field</div>
     <div class="mat-header-cell">Name</div>

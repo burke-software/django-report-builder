@@ -98,3 +98,7 @@ export const hasEditedSinceLastSave = createSelector(
   getReportsState,
   reportSelectors.hasEditedSinceLastSave
 );
+export const getErrors = createSelector(
+  getReportsState,
+  reportSelectors.getErrors
+);

@@ -6,6 +6,7 @@ import {
   getLastSaved,
   getLastGeneratedReport,
   isGeneratingReport,
+  getErrors,
 } from '../../../selectors';
 import {
   EditReport,
@@ -26,6 +27,7 @@ import { IExportType } from '../../../models/api';
       <app-last-report *ngIf="lastGeneratedReport$ | async" [report]="lastGeneratedReport$ | async"></app-last-report>
       <app-saved-timestamp [lastSaved]="this.lastSaved$ | async" ></app-saved-timestamp>
     </div>
+    <app-error [errors]="errors$ | async"></app-error>
     <mat-progress-bar mode="indeterminate" *ngIf="isGeneratingReport$ | async"></mat-progress-bar>
     <div *ngIf="this.previewData$ | async">
       <app-report-preview [previewData]="this.previewData$ | async" ></app-report-preview>
@@ -39,6 +41,7 @@ export class ReportTabComponent {
   lastSaved$ = this.store.select(getLastSaved);
   lastGeneratedReport$ = this.store.select(getLastGeneratedReport);
   isGeneratingReport$ = this.store.select(isGeneratingReport);
+  errors$ = this.store.select(getErrors);
 
   onSave() {
     this.store.dispatch(new EditReport());

@@ -31,6 +31,7 @@ export class FilterTabComponent {
   constructor() {}
   @Input() filters: IFilter[];
   @Input() hasChanged: boolean;
+  @Input() errors?: string[];
   @Output() deleteFilter = new EventEmitter<number>();
   @Output() updateFilter = new EventEmitter<Update<IFilter>>();
   @Output() saveReport = new EventEmitter();

@@ -3,6 +3,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/observable/forkJoin';
 
@@ -23,6 +24,7 @@ import {
   getSelectedReportId,
   getIsAsyncReport,
 } from '../selectors';
+import { MatSnackBar } from '@angular/material';
 const { ReportActionTypes } = fromReports;
 
 @Injectable()
@@ -40,7 +42,8 @@ export class ReportEffects {
     private actions$: Actions,
     private store$: Store<State>,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    public snackBar: MatSnackBar
   ) {}
 
   @Effect()
@@ -151,7 +154,10 @@ export class ReportEffects {
       const editedReport = getEditedReport(storeState);
       return this.api
         .editReport(editedReport)
-        .map(response => new fromReports.EditReportSuccess(response));
+        .map(response => new fromReports.EditReportSuccess(response))
+        .catch(error =>
+          Observable.of(new fromReports.EditReportFailure(error))
+        );
     });
 
   @Effect()
@@ -210,11 +216,18 @@ export class ReportEffects {
         this.api.checkStatus({ reportId, taskId }).map(({ state, link }) => {
           if (state === 'SUCCESS') {
             return new fromReports.DownloadExportedReport(link);
+          } else if (state === 'FAILURE') {
+            return new fromReports.CancelExportReport();
           } else {
             return new fromReports.CheckExportStatus({ reportId, taskId });
           }
         })
     );
+
+  @Effect({ dispatch: false })
+  cancelExportReport$ = this.actions$
+    .ofType(ReportActionTypes.CANCEL_EXPORT_REPORT)
+    .do(() => this.snackBar.open('Sorry, something went wrong!'));
 
   @Effect()
   createReport$ = this.actions$

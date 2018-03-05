@@ -1,5 +1,5 @@
 import { State, displayFieldAdapter, filterAdapter } from '../models/reports';
-import { INestedRelatedField } from '../models/api';
+import { INestedRelatedField, IReportErrors } from '../models/api';
 import { ReportActionTypes, ReportActions } from '../actions/reports';
 import {
   DisplayFieldActions,
@@ -163,6 +163,31 @@ export function reducer(
         isDistinct: action.payload.distinct,
         reportSaved: new Date(),
         editedSinceLastSave: false,
+        errors: undefined,
+      };
+    }
+
+    case ReportActionTypes.EDIT_REPORT_FAILURE: {
+      return {
+        ...state,
+        errors: flatten(
+          Object.entries(action.payload).map(([tab, items]) => {
+            if (typeof items[0] === 'string') {
+              return (items as string[]).map(
+                e => `Your ${tab} field has the error: ${e}`
+              );
+            } else {
+              return (items as IReportErrors[]).map((item, i) =>
+                Object.entries(item).map(([itemName, errors]) =>
+                  (errors as string[]).map(
+                    e =>
+                      `In ${tab}, your ${i} field's ${itemName} has the error: ${e}`
+                  )
+                )
+              );
+            }
+          })
+        ),
       };
     }
 
@@ -173,8 +198,19 @@ export function reducer(
       };
     }
 
+    case ReportActionTypes.CANCEL_EXPORT_REPORT: {
+      return {
+        ...state,
+        generatingReport: false,
+      };
+    }
+
     case ReportActionTypes.DOWNLOAD_EXPORTED_REPORT: {
-      return { ...state, generatingReport: false };
+      return {
+        ...state,
+        generatingReport: false,
+        errors: undefined,
+      };
     }
 
     case ReportActionTypes.GENERATE_PREVIEW: {
@@ -185,6 +221,15 @@ export function reducer(
       return {
         ...state,
         reportPreview: action.payload,
+        generatingReport: false,
+        errors: undefined,
+      };
+    }
+
+    case ReportActionTypes.CANCEL_GENERATE_PREVIEW: {
+      return {
+        ...state,
+        reportPreview: undefined,
         generatingReport: false,
       };
     }
@@ -356,4 +401,18 @@ function populateChildren(parentId: number, children: INestedRelatedField[]) {
     }
     return replacement;
   };
+}
+
+function flatten(items) {
+  const flat = [];
+
+  items.forEach(item => {
+    if (Array.isArray(item)) {
+      flat.push(...flatten(item));
+    } else {
+      flat.push(item);
+    }
+  });
+
+  return flat;
 }

@@ -163,3 +163,7 @@ export interface ITaskStatus {
 }
 
 export type IExportType = 'xlsx' | 'csv';
+
+export interface IReportErrors {
+  [key: string]: string[] | IReportErrors[];
+}

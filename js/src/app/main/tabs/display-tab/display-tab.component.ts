@@ -32,6 +32,7 @@ export class DisplayTabComponent {
   @Input() fields: IDisplayField[];
   @Input() formatOptions: IFormat[];
   @Input() hasChanged: boolean;
+  @Input() errors?: string[];
   @Output() deleteField = new EventEmitter<number>();
   @Output() updateField = new EventEmitter<Update<IDisplayField>>();
   @Output() saveReport = new EventEmitter();

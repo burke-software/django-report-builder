@@ -9,6 +9,7 @@ import {
   IBase,
   INestedRelatedField,
   IExportType,
+  IReportErrors,
 } from '../models/api';
 
 export enum ReportActionTypes {
@@ -29,14 +30,17 @@ export enum ReportActionTypes {
   DELETE_REPORT_SUCCESS = 'Delete Report Success',
   EDIT_REPORT = 'Edit Report',
   EDIT_REPORT_SUCCESS = 'Edit Report Success',
+  EDIT_REPORT_FAILURE = 'Edit Report Failure',
   GENERATE_PREVIEW = 'Generate Preview',
   GENERATE_PREVIEW_SUCCESS = 'Generate Preview Success',
   EXPORT_REPORT = 'Export Report',
   CREATE_REPORT = 'Create Report',
   CREATE_REPORT_SUCCESS = 'Create Report Success',
+  CANCEL_GENERATE_PREVIEW = 'Cancel Generate Preview',
   COPY_REPORT = 'Copy Report',
   DOWNLOAD_EXPORTED_REPORT = 'Download Exported Report',
   CHECK_EXPORT_STATUS = 'Check Export Status',
+  CANCEL_EXPORT_REPORT = 'Cancel Export Report',
   TOGGLE_LEFT_NAV = 'Toggle Left Nav',
   SORT_REPORTS = 'Sort Reports',
   TOGGLE_RIGHT_NAV = 'Toggle Right Nav',
@@ -140,6 +144,11 @@ export class EditReportSuccess implements Action {
   constructor(public payload: IReportDetailed) {}
 }
 
+export class EditReportFailure implements Action {
+  readonly type = ReportActionTypes.EDIT_REPORT_FAILURE;
+  constructor(public payload: IReportErrors) {}
+}
+
 export class GeneratePreview implements Action {
   readonly type = ReportActionTypes.GENERATE_PREVIEW;
   constructor() {}
@@ -148,6 +157,10 @@ export class GeneratePreview implements Action {
 export class GeneratePreviewSuccess implements Action {
   readonly type = ReportActionTypes.GENERATE_PREVIEW_SUCCESS;
   constructor(public payload: IReportPreview) {}
+}
+
+export class CancelGeneratePreview implements Action {
+  readonly type = ReportActionTypes.CANCEL_GENERATE_PREVIEW;
 }
 
 export class ExportReport implements Action {
@@ -163,6 +176,10 @@ export class DownloadExportedReport implements Action {
 export class CheckExportStatus implements Action {
   readonly type = ReportActionTypes.CHECK_EXPORT_STATUS;
   constructor(public payload: { reportId: string | number; taskId: string }) {}
+}
+
+export class CancelExportReport implements Action {
+  readonly type = ReportActionTypes.CANCEL_EXPORT_REPORT;
 }
 
 export class CreateReport implements Action {
@@ -223,9 +240,12 @@ export type ReportActions =
   | DeleteReportSuccess
   | EditReport
   | EditReportSuccess
+  | EditReportFailure
   | GeneratePreview
   | GeneratePreviewSuccess
   | ExportReport
+  | CancelExportReport
+  | CancelGeneratePreview
   | CreateReport
   | CreateReportSuccess
   | CopyReport

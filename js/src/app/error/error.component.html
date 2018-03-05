@@ -1,0 +1,6 @@
+<mat-card *ngIf="errors">
+  <mat-card-title>Error</mat-card-title>
+  <mat-card-content>
+    <p *ngFor="let error of errors">{{error}}</p>
+  </mat-card-content>
+</mat-card>

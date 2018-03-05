@@ -33,6 +33,7 @@ export interface State {
   nextRelatedFieldId: number;
   generatingReport: boolean;
   editedSinceLastSave: boolean;
+  errors?: string[];
 }
 
 interface IHasPosition {

@@ -21,6 +21,7 @@ import { reducers, metaReducers } from '../reducers';
 import { initialState } from './mockStoreInit';
 
 import { getTestScheduler } from 'jasmine-marbles';
+import { MatSnackBarModule } from '@angular/material';
 
 describe('Report Effects', () => {
   let effects: ReportEffects;
@@ -31,6 +32,7 @@ describe('Report Effects', () => {
     imports: [
       RouterTestingModule.withRoutes([]),
       StoreModule.forRoot(reducers, { metaReducers, initialState: state }),
+      MatSnackBarModule,
     ],
     providers: [
       ReportEffects,

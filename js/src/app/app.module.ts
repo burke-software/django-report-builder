@@ -2,7 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HttpClientXsrfModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'angular-tree-component';
 
@@ -23,6 +27,7 @@ import {
   MatTableModule,
   MatTooltipModule,
   MatProgressBarModule,
+  MatSnackBarModule,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -62,6 +67,9 @@ import { RightSidebarComponent } from './main/right-sidebar/right-sidebar.compon
 import { FieldComponent } from './main/right-sidebar/field.component';
 import { ClickOutsideModule } from 'ng4-click-outside';
 import { PendingChangesGuard } from './generic.guard';
+import { ErrorComponent } from './error/error.component';
+import { NetworkErrorInterceptor } from './api.interceptor';
+import { FilterInputComponent } from './main/tabs/filter-tab/filter-input.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Reports' } },
@@ -91,6 +99,7 @@ export const MatModules = [
   MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
+  MatSnackBarModule,
   MatSortModule,
   MatToolbarModule,
   MatTooltipModule,
@@ -117,8 +126,10 @@ export const MatModules = [
     DisplayTabRowComponent,
     FilterTabComponent,
     FilterTabRowComponent,
+    FilterInputComponent,
     RightSidebarComponent,
     FieldComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -144,6 +155,11 @@ export const MatModules = [
   providers: [
     ApiService,
     { provide: RouterStateSerializer, useClass: CustomSerializer },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: NetworkErrorInterceptor,
+      multi: true,
+    },
     PendingChangesGuard,
   ],
   bootstrap: [AppComponent],
