@@ -41,17 +41,9 @@
     <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (change)="editFilter({filter_value: $event})"></app-filter-input>
   </div>
   <div class="mat-cell">
-    <div *ngIf="filter.filter_type==='range'" [ngSwitch]="filter.field_type">
-      <mat-form-field *ngSwitchCase="'DateField'">
-        <input matInput [matDatepicker]="picker2" [value]="filter.filter_value2" (dateChange)="editFilter({filter_value2: $event.value})">
-        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field *ngSwitchDefault>
-        <input matInput value="{{filter.filter_value2}}" (keyup)="editFilter({filter_value2: $event.currentTarget.value})">
-      </mat-form-field>
-    </div>
+    <app-filter-input *ngIf="filter.filter_type==='range'" [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type"
+      (change)="editFilter({filter_value: $event})">
+    </app-filter-input>
   </div>
   <div class="mat-cell">
     <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })" aria-label="Exclude?"></mat-checkbox>
