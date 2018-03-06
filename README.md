@@ -1,5 +1,4 @@
-django-report-builder
-=====================
+# django-report-builder
 
 A GUI for Django ORM. Build custom queries and display results.
 Targets sys admins and capable end users who might not be able to program or gain direct interactive shell access.
@@ -9,31 +8,38 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 5.0
+
+* Complete rewrite of the frontend in Angular CLI
+  * Removed the left sidebar, added a 'home' page
+  * Other minor improvements and fixes
+  * For anyone who has written a custom frontend: we made a few changes to the django template that you might need to look at. The API has remained the same - one additional route was added that returns information as JSON that was previously serialized in the django template.
+
 ## 4.0
 
-- Removed python 2.7 support, please use 3.6 for python 2.
-- Added scheduled reports
+* Removed python 2.7 support, please use 3.6 for python 2.
+* Added scheduled reports
 
 ## 3.6
 
-- Fix bug affecting Django 1.10 and 1.11
-- Moved to tox for testing
+* Fix bug affecting Django 1.10 and 1.11
+* Moved to tox for testing
 
 # What is Django Report Builder?
 
-![](docs/screenshots/reportbuilderscreen.png)
+![](docs/screenshots/reportbuilderscreen.jpg)
 
 ## Features
 
-- Add filters
-- Add display fields
-- Preview and create xlsx reports
-- Very simple security, user must have change or "view" permission to view
-reports. Unprivileged users can still build reports and see database schema.
-- Model properties (thanks yekibud)
-- Export to Report global admin action
-- Scheduled reports can generate and send to users on cron like schedule
-- Optional asynchronous report generation
+* Add filters
+* Add display fields
+* Preview and create xlsx reports
+* Very simple security, user must have change or "view" permission to view
+  reports. Unprivileged users can still build reports and see database schema.
+* Model properties (thanks yekibud)
+* Export to Report global admin action
+* Scheduled reports can generate and send to users on cron like schedule
+* Optional asynchronous report generation
 
 # Documentation
 
