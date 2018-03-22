@@ -78,6 +78,17 @@ class ReportBuilderTests(TestCase):
         self.assertTrue(callable(get_limit_choices_to_callable))
         self.assertTrue(isinstance(lookup_dict['pk__in'], QuerySet))
         self.assertQuerysetEqual(lookup_dict['pk__in'], map(repr, models), ordered=False)
+    
+    def test_report_builder_reports(self):
+        url = '/report_builder/api/reports/'
+        new_client = APIClient()
+
+        # A non authenticated client cannot view
+        response = new_client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     def test_report_builder_fields(self):
         ct = ContentType.objects.get(model="foo", app_label="demo_models")
