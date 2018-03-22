@@ -41,8 +41,8 @@
     <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (change)="editFilter({filter_value: $event})"></app-filter-input>
   </div>
   <div class="mat-cell">
-    <app-filter-input *ngIf="filter.filter_type==='range'" [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type"
-      (change)="editFilter({filter_value: $event})">
+    <app-filter-input *ngIf="filter.filter_type==='range'" [value]="filter.filter_value2" [fieldType]="filter.field_type" [filterType]="filter.filter_type"
+      (change)="editFilter({filter_value2: $event})">
     </app-filter-input>
   </div>
   <div class="mat-cell">
