@@ -32,11 +32,9 @@ def find_exact_position(fields_list, item):
 class ReportBuilderViewMixin:
     """ Set up explicit settings so that project defaults
     don't interfer with report builder's api. """
-    pagination_class = None
-
-class ConfigView(APIView):
     permission_classes = (IsAdminUser,)
-    
+
+class ConfigView(ReportBuilderViewMixin, APIView):
     def get(self, request):
         data = {
             'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False ),
@@ -61,7 +59,6 @@ class ContentTypeViewSet(ReportBuilderViewMixin, viewsets.ReadOnlyModelViewSet):
     """
     queryset = ContentType.objects.all()
     serializer_class = ContentTypeSerializer
-    permission_classes = (IsAdminUser,)
 
 
 class ReportViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
@@ -107,11 +104,7 @@ class ReportNestedViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
 
 
 class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):
-
-    """ Get related fields from an ORM model
-    """
-    permission_classes = (IsAdminUser,)
-
+    """ Get related fields from an ORM model """
     def get_data_from_request(self, request):
         self.model = request.data['model']
         self.path = request.data['path']
@@ -167,11 +160,8 @@ class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):
 
 
 class FieldsView(RelatedFieldsView):
-
     """ Get direct fields and properties on an ORM model
     """
-    permission_classes = (IsAdminUser,)
-
     def post(self, request):
         self.get_data_from_request(request)
         field_data = self.get_fields(
@@ -288,8 +278,6 @@ class FieldsView(RelatedFieldsView):
 
 
 class GenerateReport(ReportBuilderViewMixin, DataExportMixin, APIView):
-    permission_classes = (IsAdminUser,)
-
     def get(self, request, report_id=None):
         return self.post(request, report_id=report_id)
 
