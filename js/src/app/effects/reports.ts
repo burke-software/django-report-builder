@@ -204,7 +204,7 @@ export class ReportEffects {
     .ofType(ReportActionTypes.DOWNLOAD_EXPORTED_REPORT)
     .mergeMap(
       (action: fromReports.DownloadExportedReport) =>
-        (window.location.pathname = action.payload)
+        (window.location.href = action.payload)
     );
 
   @Effect()

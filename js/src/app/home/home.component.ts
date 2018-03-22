@@ -16,6 +16,14 @@ import {
 } from '../confirm/confirm-modal.component';
 import { Go } from '../actions/router';
 
+interface IReportSortable extends IReport {
+  modified: any
+}
+
+function modifiedStringToDate(report: IReport): IReportSortable {
+  return {...report, modified: Date.parse(report.modified)}
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -24,13 +32,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns = ['actions', 'name', 'user', 'date'];
-  dataSource = new MatTableDataSource<IReport>();
+  dataSource = new MatTableDataSource<IReportSortable>();
   listReports$ = this.store.select(getReports);
   constructor(private store: Store<State>, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.store.dispatch(new GetReportList());
-    this.listReports$.subscribe(reports => (this.dataSource.data = reports));
+    this.listReports$.subscribe(reports => (this.dataSource.data = reports.map(modifiedStringToDate)));
   }
 
   ngAfterViewInit() {

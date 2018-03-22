@@ -7,6 +7,7 @@ import {
   getLastGeneratedReport,
   isGeneratingReport,
   getErrors,
+  hasEditedSinceLastSave
 } from '../../../selectors';
 import {
   EditReport,
@@ -20,7 +21,7 @@ import { IExportType } from '../../../models/api';
   template: `
   <div class="app-report-tab">
     <div>
-      <button mat-button (click)="this.onSave()">Save</button>
+      <button mat-button [disabled]="!(dirty$ | async)" (click)="this.onSave()">Save</button>
       <button mat-button (click)="this.makePreview()">Preview</button>
       <button mat-button (click)="this.exportReport('xlsx')">XLSX</button>
       <button mat-button (click)="this.exportReport('csv')">CSV</button>
@@ -42,6 +43,7 @@ export class ReportTabComponent {
   lastGeneratedReport$ = this.store.select(getLastGeneratedReport);
   isGeneratingReport$ = this.store.select(isGeneratingReport);
   errors$ = this.store.select(getErrors);
+  dirty$ = this.store.select(hasEditedSinceLastSave);
 
   onSave() {
     this.store.dispatch(new EditReport());
