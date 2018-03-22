@@ -81,10 +81,10 @@ class ReportBuilderTests(TestCase):
     
     def test_report_builder_reports(self):
         url = '/report_builder/api/reports/'
-        new_client = APIClient()
+        no_auth_client = APIClient()
 
         # A non authenticated client cannot view
-        response = new_client.get(url)
+        response = no_auth_client.get(url)
         self.assertEqual(response.status_code, 403)
 
         response = self.client.get(url)
