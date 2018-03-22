@@ -29,6 +29,8 @@ export class NewReportComponent implements OnInit {
   }
 
   submit() {
-    this.store.dispatch(new CreateReport(this.form));
+    if (this.form.name && this.form.root_model) {
+      this.store.dispatch(new CreateReport(this.form));
+    }
   }
 }
