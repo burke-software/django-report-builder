@@ -4,8 +4,6 @@ import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { State } from '../reducers';
 import {
-  GetReport,
-  GetReportList,
   DeleteReport,
   CopyReport,
 } from '../actions/reports';
@@ -17,11 +15,16 @@ import {
 import { Go } from '../actions/router';
 
 interface IReportSortable extends IReport {
-  modified: any
+  modifiedDate: Date;
+  sortName: string;
 }
 
 function modifiedStringToDate(report: IReport): IReportSortable {
-  return {...report, modified: Date.parse(report.modified)}
+  return {
+    ...report,
+    modifiedDate: new Date(report.modified),
+    sortName: report.name.toLowerCase(),
+  };
 }
 
 @Component({
@@ -37,12 +40,23 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(private store: Store<State>, public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.store.dispatch(new GetReportList());
-    this.listReports$.subscribe(reports => (this.dataSource.data = reports.map(modifiedStringToDate)));
+    this.listReports$.subscribe(
+      reports => (this.dataSource.data = reports.map(modifiedStringToDate))
+    );
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId.toLowerCase()) {
+        case 'name':
+          return data.sortName;
+        case 'date':
+          return data.modified;
+        default:
+          return data[sortHeaderId];
+      }
+    };
   }
 
   deleteReport(report: IReport) {
@@ -63,10 +77,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   copyReport(reportId: number) {
     this.store.dispatch(new CopyReport(reportId));
-  }
-
-  clickReport(reportId: number) {
-    this.store.dispatch(new GetReport(reportId));
   }
 
   applyFilter(filterValue: string) {
