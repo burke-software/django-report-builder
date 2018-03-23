@@ -6,7 +6,7 @@
     <input matInput placeholder="Search Reports" (keyup)="applyFilter($event.currentTarget.value)">
   </mat-form-field>
 
-  <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
+  <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc">
     <ng-container matColumnDef="actions">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef>
         <a href="/report/add" (click)="newReport($event)" mat-raised-button color="primary" [ngStyle]="{'text-transform': 'uppercase'}">
