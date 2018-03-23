@@ -10,11 +10,12 @@
     </div>
     <div class="mat-header-cell">Field</div>
     <div class="mat-header-cell">Name</div>
-    <div class="mat-header-cell">Sort Desc?</div>
+    <div class="mat-header-cell narrow">Sort</div>
+    <div class="mat-header-cell narrow">Desc?</div>
     <div class="mat-header-cell">Aggregate</div>
     <div class="mat-header-cell">Format</div>
-    <div class="mat-header-cell">Total</div>
-    <div class="mat-header-cell">Group</div>
+    <div class="mat-header-cell narrow">Total</div>
+    <div class="mat-header-cell narrow">Group</div>
   </div>
   <tree-root [nodes]="getFields()" [options]="treeOptions">
     <ng-template #treeNodeWrapperTemplate let-node let-index="index">
