@@ -33,6 +33,7 @@ class ReportBuilderViewMixin:
     """ Set up explicit settings so that project defaults
     don't interfer with report builder's api. """
     permission_classes = (IsAdminUser,)
+    pagination_class = None
 
 class ConfigView(ReportBuilderViewMixin, APIView):
     def get(self, request):
