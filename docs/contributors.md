@@ -10,7 +10,7 @@ This will get you a quick way to run report builder in a demo project - ideal fo
 2. Install [Docker Compose](https://docs.docker.com/compose/) and Docker
 3. Run `docker-compose build`
 4. Populate the database with `docker-compose run --rm web python manage.py migrate`.
-5. Run `docker-compose run web --rm ./manage.py createsuperuser` - use any credentials you like
+5. Run `docker-compose run --rm web ./manage.py createsuperuser` - use any credentials you like
 6. Run `docker-compose up` - the django-admin for the sample back end should now be available at localhost:8000/admin.
 7. log in at to `localhost:8000/admin` - necessary to use the report builder frontend!
 8. Run `cd js; yarn install`
