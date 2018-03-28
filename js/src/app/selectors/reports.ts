@@ -29,7 +29,7 @@ export const getNewReportInfo = (state: State) => {
 export const getLastGeneratedReport = createSelector(
   getSelectedReport,
   selectedReport => {
-    if (selectedReport) {
+    if (selectedReport && selectedReport.report_file) {
       const { report_file, report_file_creation } = selectedReport;
       return { report_file, report_file_creation };
     }
