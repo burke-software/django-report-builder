@@ -233,8 +233,14 @@ export class ReportEffects {
   createReport$ = this.actions$
     .ofType(ReportActionTypes.CREATE_REPORT)
     .map((action: fromReports.CreateReport) => action.payload)
-    .mergeMap(newReport => this.api.submitNewReport(newReport))
-    .map(createdReport => new fromReports.CreateReportSuccess(createdReport));
+    .mergeMap(newReport =>
+      this.api
+        .submitNewReport(newReport)
+        .map(
+          createdReport => new fromReports.CreateReportSuccess(createdReport)
+        )
+        .catch(error => Observable.of(new fromReports.CreateReportError(error)))
+    );
 
   @Effect()
   createReportSuccess$ = this.actions$
@@ -242,6 +248,11 @@ export class ReportEffects {
     .map((action: fromReports.CreateReportSuccess) => action.payload.id)
     .do(reportId => this.router.navigate([`/report/${reportId}/`]))
     .map(() => new fromReports.ChangeTab(0));
+
+  @Effect({ dispatch: false })
+  createReportError$ = this.actions$
+    .ofType(ReportActionTypes.CREATE_REPORT_ERROR)
+    .do(error => this.snackBar.open('Invalid report: please reload the page'));
 
   @Effect()
   copyReport$ = this.actions$
