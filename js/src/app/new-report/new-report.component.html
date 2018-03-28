@@ -20,7 +20,7 @@
         </mat-select>
       </mat-form-field>
       <br><br>
-      <button mat-raised-button color="primary" [disabled]="form.name.length === 0 || !form.root_model">Create Report</button>
+      <button mat-raised-button color="primary" [disabled]="!form.name.trim() || !form.root_model">Create Report</button>
     </form>
   </mat-card>
 </div>

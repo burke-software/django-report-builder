@@ -29,7 +29,7 @@ export class NewReportComponent implements OnInit {
   }
 
   submit() {
-    if (this.form.name && this.form.root_model) {
+    if (this.form.name.trim() && this.form.root_model) {
       this.store.dispatch(new CreateReport(this.form));
     }
   }
