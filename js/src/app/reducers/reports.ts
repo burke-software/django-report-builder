@@ -39,10 +39,13 @@ export function reducer(
     }
 
     case ReportActionTypes.GET_REPORT: {
+      const {selectedReport, activeTab, descriptionInput, reportPreview} = initialState
       return {
         ...state,
-        selectedReport: null,
-        descriptionInput: selectors.getDescriptionInput(initialState),
+        selectedReport,
+        activeTab,
+        descriptionInput,
+        reportPreview
       };
     }
 
