@@ -39,6 +39,8 @@ export function reducer(
     }
 
     case ReportActionTypes.GET_REPORT: {
+      // Reset report state when we start making a new request
+      // so the user never sees stale data
       const {selectedReport, activeTab, descriptionInput, reportPreview} = initialState
       return {
         ...state,
