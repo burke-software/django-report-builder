@@ -1,6 +1,6 @@
 <div [ngSwitch]="filterType">
   <mat-form-field *ngSwitchCase="'week_day'">
-    <mat-select (selectionChange)="change.emit($event.value)" [value]="value">
+    <mat-select (selectionChange)="valueChange.emit($event.value)" [value]="value">
       <mat-option value="1">Sunday</mat-option>
       <mat-option value="2">Monday</mat-option>
       <mat-option value="3">Tuesday</mat-option>
@@ -50,7 +50,7 @@
     </div>
 
     <mat-form-field *ngSwitchDefault>
-      <input matInput value="{{value}}" (keyup)="change.emit($event.currentTarget.value)">
+      <input matInput value="{{value}}" (keyup)="valueChange.emit($event.currentTarget.value)">
     </mat-form-field>
   </div>
 </div>
