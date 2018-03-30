@@ -24,13 +24,13 @@
   </div>
 
   <div *ngSwitchDefault [ngSwitch]="fieldType">
-    <mat-form-field *ngSwitchCase="'DateField'">
+    <mat-form-field *ngSwitchCase="'DateField'" (change)="$event.stopPropagation()">
       <input matInput [matDatepicker]="picker" [value]="date" (dateChange)="onDateChange($event.value.format('YYYY-MM-DD'))">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <div *ngSwitchCase="'DateTimeField'">
+    <div *ngSwitchCase="'DateTimeField'" (change)="$event.stopPropagation()">
       <mat-form-field>
         <input matInput [matDatepicker]="picker" [value]="date" (dateChange)="onDateChange($event.value.format('YYYY-MM-DD'))">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
