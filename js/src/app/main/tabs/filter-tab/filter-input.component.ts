@@ -37,7 +37,7 @@ export class FilterInputComponent implements OnChanges {
   @Input() value: string;
   @Input() filterType: string;
   @Input() fieldType: string;
-  @Output() change = new EventEmitter<any>();
+  @Output() valueChange = new EventEmitter<any>();
   date?: string;
   time?: string;
   timeOpts = timeOpts;
@@ -55,7 +55,7 @@ export class FilterInputComponent implements OnChanges {
   }
 
   emitBoolean(value: boolean) {
-    this.change.emit(value ? 'True' : 'False');
+    this.valueChange.emit(value ? 'True' : 'False');
   }
 
   onDateChange(date: string) {
@@ -73,6 +73,6 @@ export class FilterInputComponent implements OnChanges {
     if (this.fieldType === 'DateTimeField') {
       result += ' ' + (this.time || '00:00');
     }
-    this.change.emit(result);
+    this.valueChange.emit(result);
   }
 }
