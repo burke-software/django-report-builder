@@ -49,6 +49,7 @@ export class FilterInputComponent implements OnChanges {
       this.date = date;
       this.time = time;
     }
+    // This hack made sure the filter_value is never null for boolean filter types
     if (changes.filterType && /^(?:isnull|max|min)$/.test(changes.filterType.currentValue) && this.value.length === 0 ) {
       setTimeout(() => this.emitBoolean(false), 0)
     }
