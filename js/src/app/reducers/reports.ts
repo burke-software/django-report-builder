@@ -368,6 +368,7 @@ export function reducer(
                 position: selectors.getFiltersCount(state),
                 report: selectors.getSelectedReportId(state),
                 filter_type: 'exact',
+                filter_value: ''
               },
               selectors.getFiltersState(state)
             ),

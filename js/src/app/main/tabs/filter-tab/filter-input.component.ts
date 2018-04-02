@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 
 // Delete when you switch to a real datetime picker
@@ -42,11 +43,14 @@ export class FilterInputComponent implements OnChanges {
   time?: string;
   timeOpts = timeOpts;
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (/Date/.test(this.fieldType)) {
       const [date, time] = this.value.split(' ');
       this.date = date;
       this.time = time;
+    }
+    if (changes.filterType && /^(?:isnull|max|min)$/.test(changes.filterType.currentValue) && this.value.length === 0 ) {
+      setTimeout(() => this.emitBoolean(false), 0)
     }
   }
 
