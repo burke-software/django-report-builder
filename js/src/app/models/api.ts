@@ -64,7 +64,7 @@ export interface IFilter extends IBase {
     | 'iregex'
     | 'max'
     | 'min';
-  filter_value?: string;
+  filter_value: string;
   filter_value2?: string;
   id?: number;
   position: number;
