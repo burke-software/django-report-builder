@@ -354,12 +354,12 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
 angular-tree-component@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-7.0.1.tgz#fc8d0e72d8c34b87131a3ba2bd32ad20945689ac"
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-7.1.0.tgz#53674ea944f7147647c7e48931f5fad66237a632"
   dependencies:
-    lodash "4.17.4"
-    mobx ">=3"
-    mobx-angular ">=1"
+    lodash "^4.17.5"
+    mobx "^3.6.2"
+    mobx-angular "2.1.1"
 
 ansi-html@0.0.7:
   version "0.0.7"
@@ -3778,13 +3778,13 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4.17.4, lodash@^4.0.0, lodash@^4.5.0, lodash@~4.17.4:
-  version "4.17.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
-
 lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
+
+lodash@^4.0.0, lodash@^4.5.0, lodash@~4.17.4:
+  version "4.17.4"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
 lodash@^4.11.1, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.5"
@@ -4057,13 +4057,13 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
-mobx-angular@>=1:
+mobx-angular@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-2.1.1.tgz#d5e36539acb200186dd5a1170806b4776b9a8b88"
 
-mobx@>=3:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
+mobx@^3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.6.2.tgz#fb9f5ff5090539a1ad54e75dc4c098b602693320"
 
 moment@^2.20.1:
   version "2.20.1"
