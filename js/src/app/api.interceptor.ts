@@ -27,7 +27,11 @@ export class NetworkErrorInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    return next.handle(request).catch((err: HttpErrorResponse) => {
+    // Respect base URL tag
+    const baseUrl = document.getElementsByTagName('base')[0].href;
+    const apiReq = request.clone({ url: `${baseUrl}${request.url}` });
+
+    return next.handle(apiReq).catch((err: HttpErrorResponse) => {
       if (err.status === 0 || err.status === 500) {
         // An error we can't help with happened, one of:
         // 1. Network error

@@ -21,8 +21,7 @@ import {
 
 @Injectable()
 export class ApiService {
-  baseUrl = '/report_builder/';
-  apiUrl = this.baseUrl + 'api/';
+  apiUrl = 'api/';
 
   constructor(private http: HttpClient) {}
 
@@ -76,7 +75,7 @@ export class ApiService {
 
   exportReport({ reportId, type }: { reportId: number; type: IExportType }) {
     return this.http.get<IAsyncTaskId>(
-      this.baseUrl + `report/${reportId}/download_file/${type}/`
+      `report/${reportId}/download_file/${type}/`
     );
   }
 
@@ -88,7 +87,7 @@ export class ApiService {
     taskId: string;
   }) {
     return this.http.get<ITaskStatus>(
-      this.baseUrl + `report/${reportId}/check_status/${taskId}/`
+      `report/${reportId}/check_status/${taskId}/`
     );
   }
 
