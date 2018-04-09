@@ -49,7 +49,7 @@ export class FilterTabComponent {
         drop: (tree, node, event, { from: { data }, to: { index } }) => {
           this.updateFilter.emit({
             id: data.position,
-            changes: { position: index - 1 },
+            changes: { position: index },
           });
         },
       },

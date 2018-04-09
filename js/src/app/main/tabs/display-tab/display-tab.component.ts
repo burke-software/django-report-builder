@@ -52,7 +52,7 @@ export class DisplayTabComponent {
         drop: (tree, node, event, { from: { data }, to: { index } }) => {
           this.updateField.emit({
             id: data.position,
-            changes: { position: index - 1 },
+            changes: { position: index },
           });
         },
       },
