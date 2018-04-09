@@ -18,7 +18,7 @@
 
 <div class="example-header">
   <mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Fields">
+    <input #searchFields matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Fields">
   </mat-form-field>
 </div>
 

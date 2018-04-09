@@ -4,6 +4,7 @@ import {
   Output,
   OnChanges,
   EventEmitter,
+  ViewChild,
 } from '@angular/core';
 import { IField, IRelatedField } from '../../models/api';
 import { MatTableDataSource } from '@angular/material';
@@ -35,6 +36,8 @@ export class RightSidebarComponent implements OnChanges {
     this.fieldDataSource = new MatTableDataSource(value);
   }
 
+  @ViewChild('searchFields') searchInput
+
   fieldDataSource: MatTableDataSource<IField>;
   displayedColumnsField = ['name', 'button'];
   nodes: TreeNode[];
@@ -53,6 +56,7 @@ export class RightSidebarComponent implements OnChanges {
 
   onActivate({ node }: { node: ITreeNode }) {
     this.selectRelatedField.emit(node.data);
+    this.searchInput.nativeElement.value = ''
   }
 
   filterTree(text, tree) {
