@@ -50,9 +50,10 @@ export class DisplayTabComponent {
     actionMapping: {
       mouse: {
         drop: (tree, node, event, { from: { data }, to: { index } }) => {
+          const newPos = data.position > index ? index : index - 1
           this.updateField.emit({
             id: data.position,
-            changes: { position: index },
+            changes: { position: newPos },
           });
         },
       },
