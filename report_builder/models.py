@@ -20,7 +20,6 @@ from functools import reduce
 import time
 import datetime
 import re
-import freezegun
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
