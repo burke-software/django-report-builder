@@ -38,7 +38,7 @@ export class NetworkErrorInterceptor implements HttpInterceptor {
         // 2. Client side JS error
         // 3. Server side 500 error
         this.store.dispatch(new CancelGeneratePreview());
-        this.snackBar.open('Sorry, something went wrong!');
+        this.snackBar.open('Sorry, something went wrong!', '', {duration: 5000});
         return Observable.empty<HttpEvent<any>>();
       }
       return _throw(err.error);
