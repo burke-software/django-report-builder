@@ -227,7 +227,7 @@ export class ReportEffects {
   @Effect({ dispatch: false })
   cancelExportReport$ = this.actions$
     .ofType(ReportActionTypes.CANCEL_EXPORT_REPORT)
-    .do(() => this.snackBar.open('Sorry, something went wrong!'));
+    .do(() => this.snackBar.open('Sorry, something went wrong!', '', {duration: 5000}));
 
   @Effect()
   createReport$ = this.actions$
@@ -252,7 +252,7 @@ export class ReportEffects {
   @Effect({ dispatch: false })
   createReportError$ = this.actions$
     .ofType(ReportActionTypes.CREATE_REPORT_ERROR)
-    .do(error => this.snackBar.open('Invalid report: please reload the page'));
+    .do(error => this.snackBar.open('Invalid report: please reload the page', '', {duration: 5000}));
 
   @Effect()
   copyReport$ = this.actions$
