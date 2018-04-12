@@ -24,7 +24,7 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
     
     def to_internal_value(self, data):
-        if data['sort'] is '':
+        if data.get('sort') is '':
             data['sort'] = None
         return super().to_internal_value(data)
 
