@@ -8,11 +8,13 @@ from ..models import (
     get_limit_choices_to_callable)
 from report_builder_demo.demo_models.models import (
     Bar, Place, Restaurant, Waiter, Person, Child)
+from report_builder.api.serializers import ReportNestedSerializer
 from django.conf import settings
 from rest_framework.test import APIClient
 import time
 import csv
 import unittest
+import json
 from io import StringIO
 from freezegun import freeze_time
 from datetime import date, datetime, timedelta, time as dtime
@@ -179,6 +181,29 @@ class ReportBuilderTests(TestCase):
             {"model": ct.id, "path": "", "path_verbose": "", "field": ""})
         for field in response.data:
             self.assertEqual(field['can_filter'], True)
+
+    def test_report_builder_understands_empty_string(self):
+        ct = ContentType.objects.get_for_model(Report)
+        report = Report.objects.create(
+            name="foo report",
+            root_model=ct)
+        
+        display_field = DisplayField.objects.create(
+            name='foo',
+            report=report,
+            field="X",
+            field_verbose="stuff",
+            sort=None,
+            position=1)
+        data = ReportNestedSerializer(report).data
+        data['displayfield_set'][0]['sort'] = ''
+        response = self.client.put(f'/report_builder/api/report/{report.id}/',
+                                    data=json.dumps(data),
+                                    content_type='application/json',
+                                    HTTP_X_REQUESTED_WWITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIsNone(report.displayfield_set.all()[0].sort)
 
 class ReportTests(TestCase):
 
