@@ -196,7 +196,7 @@ class ReportBuilderTests(TestCase):
             sort=None,
             position=1)
         data = ReportNestedSerializer(report).data
-        data.get('displayfield_set')[0]['sort'] = ''
+        data['displayfield_set'][0]['sort'] = ''
         response = self.client.put(f'/report_builder/api/report/{report.id}/',
                                     data=json.dumps(data),
                                     content_type='application/json',
