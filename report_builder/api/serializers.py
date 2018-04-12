@@ -22,6 +22,11 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
                   'position', 'total', 'group', 'report', 'display_format',
                   'field_type')
         read_only_fields = ('id',)
+    
+    def to_internal_value(self, data):
+        if data.get('sort') is '':
+            data['sort'] = None
+        return super().to_internal_value(data)
 
 
 class NonStrictCharField(serializers.CharField):
