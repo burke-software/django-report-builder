@@ -12,7 +12,9 @@ class ScheduledReport(models.Model):
     """ A scheduled report that runs and emails itself to various users on
     a recurring basis. Requires celery. """
     is_active = models.BooleanField(default=True)
-    report = models.ForeignKey('report_builder.Report')
+    report = models.ForeignKey(
+        'report_builder.Report', on_delete=models.CASCADE
+    )
     users = models.ManyToManyField(
             AUTH_USER_MODEL,
             limit_choices_to={'is_staff': True},

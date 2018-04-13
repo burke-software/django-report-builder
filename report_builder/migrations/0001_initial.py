@@ -77,10 +77,10 @@ class Migration(migrations.Migration):
                 ('distinct', models.BooleanField(default=False)),
                 ('report_file', models.FileField(upload_to=b'report_files', blank=True)),
                 ('report_file_creation', models.DateTimeField(null=True, blank=True)),
-                ('root_model', models.ForeignKey(to='contenttypes.ContentType')),
+                ('root_model', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
                 ('starred', models.ManyToManyField(help_text=b'These users have starred this report for easy reference.', related_name='report_starred_set', to=settings.AUTH_USER_MODEL, blank=True)),
-                ('user_created', models.ForeignKey(blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('user_modified', models.ForeignKey(related_name='report_modified_set', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_created', models.ForeignKey(blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)),
+                ('user_modified', models.ForeignKey(related_name='report_modified_set', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)),
             ],
             options={
             },
@@ -89,19 +89,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='filterfield',
             name='report',
-            field=models.ForeignKey(to='report_builder.Report'),
+            field=models.ForeignKey(to='report_builder.Report', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='displayfield',
             name='display_format',
-            field=models.ForeignKey(blank=True, to='report_builder.Format', null=True),
+            field=models.ForeignKey(blank=True, to='report_builder.Format', null=True, on_delete=models.SET_NULL),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='displayfield',
             name='report',
-            field=models.ForeignKey(to='report_builder.Report'),
+            field=models.ForeignKey(to='report_builder.Report', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

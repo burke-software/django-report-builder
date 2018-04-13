@@ -1,10 +1,14 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from .tasks import report_builder_run_scheduled_report
 from .models import ScheduledReport
+
+try:
+    from django.core.urlresolvers import reverse
+except ModuleNotFoundError:
+    from django.urls import reverse
 
 @staff_member_required
 def run_scheduled_report(request, pk):
