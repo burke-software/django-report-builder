@@ -151,7 +151,7 @@ class FieldsView(RelatedFieldsView):
         filters = None
         extra = None
         defaults = None
-        meta = getattr(self.model_class, 'ReportBuilder', None)
+        meta = getattr(field_data['model'], 'ReportBuilder', None)
         if meta is not None:
             fields = getattr(meta, 'fields', None)
             filters = getattr(meta, 'filters', None)
@@ -207,7 +207,7 @@ class FieldsView(RelatedFieldsView):
             else:
                 extra_fields = extra
             for field in extra_fields:
-                field_attr = getattr(self.model_class, field, None)
+                field_attr = getattr(field_data['model'], field, None)
                 if isinstance(field_attr, (property, cached_property)):
                     result += [{
                         'name': field,
