@@ -32,11 +32,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bar',
             name='check_mate_status',
-            field=models.CharField(default=b'CH', max_length=2, choices=[(b'CH', b'CHECK'), (b'MA', b'CHECKMATE')]),
+            field=models.CharField(default='CH', max_length=2, choices=[('CH', 'CHECK'), ('MA', 'CHECKMATE')]),
         ),
         migrations.AddField(
             model_name='child',
             name='parent',
-            field=models.ForeignKey(related_name='children', to='demo_models.Person'),
+            field=models.ForeignKey(related_name='children', to='demo_models.Person', on_delete=models.CASCADE),
         ),
     ]

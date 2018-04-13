@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.safestring import mark_safe
@@ -20,6 +19,11 @@ from functools import reduce
 import time
 import datetime
 import re
+
+try:
+    from django.core.urlresolvers import reverse
+except ModuleNotFoundError:
+    from django.urls import reverse
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -73,14 +77,16 @@ class Report(models.Model):
     slug = models.SlugField(verbose_name="Short Name")
     description = models.TextField(blank=True)
     root_model = models.ForeignKey(
-        ContentType, limit_choices_to=get_limit_choices_to_callable)
+        ContentType, limit_choices_to=get_limit_choices_to_callable,
+        on_delete=models.CASCADE)
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     user_created = models.ForeignKey(
-        AUTH_USER_MODEL, editable=False, blank=True, null=True)
+        AUTH_USER_MODEL, editable=False, blank=True, null=True,
+        on_delete=models.SET_NULL)
     user_modified = models.ForeignKey(
         AUTH_USER_MODEL, editable=False, blank=True, null=True,
-        related_name="report_modified_set")
+        related_name="report_modified_set", on_delete=models.SET_NULL)
     distinct = models.BooleanField(default=False)
     report_file = models.FileField(upload_to="report_files", blank=True)
     report_file_creation = models.DateTimeField(blank=True, null=True)
@@ -497,7 +503,7 @@ class Format(models.Model):
 
 
 class AbstractField(models.Model):
-    report = models.ForeignKey(Report)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
     path = models.CharField(max_length=2000, blank=True)
     path_verbose = models.CharField(max_length=2000, blank=True)
     field = models.CharField(max_length=2000)
@@ -545,7 +551,8 @@ class DisplayField(AbstractField):
     )
     total = models.BooleanField(default=False)
     group = models.BooleanField(default=False)
-    display_format = models.ForeignKey(Format, blank=True, null=True)
+    display_format = models.ForeignKey(Format, blank=True, null=True,
+        on_delete=models.SET_NULL)
 
     def get_choices(self, model, field_name):
         try:

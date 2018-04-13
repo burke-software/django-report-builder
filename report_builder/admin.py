@@ -1,10 +1,15 @@
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from report_builder.models import Report, Format
 from django.conf import settings
+
+try:
+    from django.core.urlresolvers import reverse
+except ModuleNotFoundError:
+    from django.urls import reverse
+
 
 static_url = getattr(settings, 'STATIC_URL', '/static/')
 

@@ -69,7 +69,7 @@ class Place(models.Model):
 
 
 class Restaurant(models.Model):
-    place = models.OneToOneField(Place, primary_key=True)
+    place = models.OneToOneField(Place, primary_key=True, on_delete=models.CASCADE)
     serves_hot_dogs = models.BooleanField(default=False)
     serves_pizza = models.BooleanField(default=False)
 
@@ -78,7 +78,7 @@ class Restaurant(models.Model):
 
 
 class Waiter(models.Model):
-    restaurant = models.ForeignKey(Restaurant)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     days_worked = models.IntegerField(blank=True, null=True, default=None)
 
@@ -104,7 +104,7 @@ class Person(models.Model):
 
 
 class Child(models.Model):
-    parent = models.ForeignKey(Person, related_name='children')
+    parent = models.ForeignKey(Person, related_name='children', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     age = models.IntegerField(null=True, blank=True, default=None)
@@ -117,7 +117,7 @@ class Child(models.Model):
 
 class Comment(models.Model):
     """ django-contrib-comments like model """
-    content_type = models.ForeignKey('contenttypes.ContentType')
+    content_type = models.ForeignKey('contenttypes.ContentType', on_delete=models.CASCADE)
     object_pk = models.TextField()
     content_object = GenericForeignKey(
         ct_field="content_type", fk_field="object_pk")
