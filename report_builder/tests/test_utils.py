@@ -18,7 +18,7 @@ class RelationUtilityFunctionTests(TestCase):
         correct
         """
         field_name = (
-            Waiter.restaurant.field.rel.name
+            Waiter.restaurant.field.rel.field_name
             if hasattr(Waiter.restaurant.field, 'rel')
             else Waiter.restaurant.field.target_field.name
         )
@@ -37,7 +37,7 @@ class RelationUtilityFunctionTests(TestCase):
         """
         get_relation_fields_from_model(Restaurant)
         field_name = (
-            Waiter.restaurant.field.rel.name
+            Waiter.restaurant.field.rel.field_name
             if hasattr(Waiter.restaurant.field, 'rel')
             else Waiter.restaurant.field.target_field.name
         )
