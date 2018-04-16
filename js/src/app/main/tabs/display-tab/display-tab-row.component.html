@@ -1,0 +1,50 @@
+<div class="mat-row">
+  <div class="mat-cell">
+    <a mat-icon-button disableRipple>
+      <mat-icon>drag_handle</mat-icon>
+    </a>
+    <button mat-icon-button (click)="deleteField.emit(field.position)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  <div class="mat-cell">{{field.field_verbose}} [{{field.field_type}}]</div>
+  <div class="mat-cell">
+    <mat-form-field>
+      <input matInput value="{{field.name}}" (keyup)="editField({name: $event.currentTarget.value})">
+    </mat-form-field>
+  </div>
+  <div class="mat-cell narrow">
+    <mat-form-field>
+      <input matInput value="{{field.sort}}" (keyup)="editField({sort: $event.currentTarget.value})">
+    </mat-form-field>
+  </div>
+  <div class="mat-cell narrow">
+    <mat-checkbox [checked]="field.sort_reverse" (change)="editField({sort_reverse: $event.checked })"></mat-checkbox>
+  </div>
+  <div class="mat-cell">
+    <mat-form-field>
+      <mat-select (selectionChange)="editField({aggregate: $event.value})" [value]="field.aggregate || ''">
+        <mat-option value="">----------</mat-option>
+        <mat-option value="Sum">Sum</mat-option>
+        <mat-option value="Count">Count</mat-option>
+        <mat-option value="Avg">Avg</mat-option>
+        <mat-option value="Max">Max</mat-option>
+        <mat-option value="Min">Min</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="mat-cell">
+    <mat-form-field>
+      <mat-select (selectionChange)="editField({display_format: $event.value})" [value]="field.display_format ? field.display_format.toString() : ''">
+        <mat-option value="">----------</mat-option>
+        <mat-option *ngFor="let format of formatOptions" value="{{format.id}}">{{format.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="mat-cell narrow">
+    <mat-checkbox [checked]="field.total" (change)="editField({total: $event.checked })"></mat-checkbox>
+  </div>
+  <div class="mat-cell narrow">
+    <mat-checkbox [checked]="field.group" (change)="editField({group: $event.checked })"></mat-checkbox>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<mat-tab-group #tabs class="tab-group" (selectedTabChange)="tabChange($event.index)">
+  <mat-tab label="Display">
+    <app-display-tab *ngIf="displayFields$ | async" [fields]="displayFields$ | async" [formatOptions]="formatOptions$ | async"
+      (updateField)="updateDisplayField($event)" (deleteField)="deleteDisplayField($event)" (saveReport)="saveReport()" [hasChanged]="hasChanged$ | async"
+      [errors]="errors$ | async"></app-display-tab>
+  </mat-tab>
+  <mat-tab label="Filter">
+    <app-filter-tab *ngIf="filters$ | async" [filters]="filters$ | async" (updateFilter)="updateFilter($event)" (deleteFilter)="deleteFilter($event)"
+      (saveReport)="saveReport()" [hasChanged]="hasChanged$ | async" [errors]="errors$ | async"></app-filter-tab>
+  </mat-tab>
+  <mat-tab label="Report">
+    <app-report-tab></app-report-tab>
+  </mat-tab>
+  <mat-tab label="Options">
+    <app-options-tab [report]="report$ | async"></app-options-tab>
+  </mat-tab>
+</mat-tab-group>

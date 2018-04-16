@@ -1,0 +1,51 @@
+<div class="mat-row">
+  <div class="mat-cell">
+    <a mat-icon-button>
+      <mat-icon>reorder</mat-icon>
+    </a>
+    <button mat-icon-button (click)="deleteFilter.emit(filter.position)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  <div class="mat-cell">
+    <span *ngIf="filter.path_verbose">({{filter.path_verbose}})</span> {{filter.field_verbose}}
+  </div>
+  <div class="mat-cell">
+    <mat-form-field>
+      <mat-select (selectionChange)="editFilter({filter_type: $event.value})" [value]="filter.filter_type">
+        <mat-option value="exact">Equals</mat-option>
+        <mat-option value="iexact">Equals (case-insensitive)</mat-option>
+        <mat-option value="contains">Contains</mat-option>
+        <mat-option value="icontains">Contains (case-insensitive)</mat-option>
+        <mat-option value="in">in (comma seperated 1,2,3)</mat-option>
+        <mat-option value="gt">Greater than</mat-option>
+        <mat-option value="gte">Greater than equals</mat-option>
+        <mat-option value="lt">Less than</mat-option>
+        <mat-option value="lte">Less than equals</mat-option>
+        <mat-option value="startswith">Starts with</mat-option>
+        <mat-option value="istartswith">Starts with (case-insensitive)</mat-option>
+        <mat-option value="endswith">Ends with</mat-option>
+        <mat-option value="iendswith">Ends with (case-insensitive)</mat-option>
+        <mat-option value="range">range</mat-option>
+        <mat-option value="relative_range">relative_range</mat-option>
+        <mat-option value="week_day">Week day</mat-option>
+        <mat-option value="isnull">Is null</mat-option>
+        <mat-option value="regex">Regular Expression</mat-option>
+        <mat-option value="iregex">Reg. Exp. (case-insensitive)</mat-option>
+        <mat-option value="max">Max (annotation-filter)</mat-option>
+        <mat-option value="min">Min (annotation-filter)</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="mat-cell">
+    <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (valueChange)="editFilter({filter_value: $event})"></app-filter-input>
+  </div>
+  <div class="mat-cell">
+    <app-filter-input *ngIf="filter.filter_type==='range'" [value]="filter.filter_value2" [fieldType]="filter.field_type" [filterType]="filter.filter_type"
+      (valueChange)="editFilter({filter_value2: $event})">
+    </app-filter-input>
+  </div>
+  <div class="mat-cell">
+    <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })" aria-label="Exclude?"></mat-checkbox>
+  </div>
+</div>

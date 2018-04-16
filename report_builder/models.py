@@ -151,7 +151,7 @@ class Report(models.Model):
         return display_fields.exclude(id__in=[o.id for o in bad_display_fields])
 
     def report_to_list(self, queryset=None, user=None, preview=False):
-        """ Convert report into list. """
+        """Convert report into list."""
         property_filters = []
         if queryset is None:
             queryset = self.get_query()
@@ -327,7 +327,9 @@ class Report(models.Model):
             filter_string = str(filter_field.path + filter_field.field)
 
             if filter_field.filter_type:
-                filter_string += '__' + filter_field.filter_type
+                ft = filter_field.filter_type
+                fs = ft if ft != 'relative_range' else 'range'
+                filter_string += '__' + fs
 
             # Check for special types such as isnull
             if (filter_field.filter_type == "isnull" and
@@ -336,9 +338,12 @@ class Report(models.Model):
             elif filter_field.filter_type == "in":
                 filter_ = {filter_string: filter_field.filter_value.split(',')}
             else:
+                # Check for range and relative_range types
                 filter_value = filter_field.filter_value
                 if filter_field.filter_type == 'range':
-                    filter_value = [filter_value, filter_field.filter_value2]
+                    filter_value = sorted([filter_value, filter_field.filter_value2])
+                elif filter_field.filter_type == 'relative_range':
+                    filter_value = filter_field.get_relative_range()
                 filter_ = {filter_string: filter_value}
 
             if not filter_field.exclude:
@@ -430,12 +435,12 @@ class Report(models.Model):
         data_export = DataExportMixin()
         if file_type == 'csv':
             csv_file = data_export.list_to_csv_file(objects_list, title,
-                                             header, widths)
+                                                    header, widths)
             title = generate_filename(title, '.csv')
             self.report_file.save(title, ContentFile(csv_file.getvalue()))
         else:
             xlsx_file = data_export.list_to_xlsx_file(objects_list, title,
-                                               header, widths)
+                                                      header, widths)
             title = generate_filename(title, '.xlsx')
             self.report_file.save(title, ContentFile(xlsx_file.getvalue()))
         self.report_file_creation = datetime.datetime.today()
@@ -564,8 +569,11 @@ class DisplayField(AbstractField):
 
 
 class FilterField(AbstractField):
-    """ A display field to show in a report. Always belongs to a Report
     """
+    A filter model used to filter DisplayFields using Django ORM
+    filter arguments or custom filter values.
+    """
+
     filter_type = models.CharField(
         max_length=20,
         choices=(
@@ -583,6 +591,7 @@ class FilterField(AbstractField):
             ('endswith', 'Ends with'),
             ('iendswith', 'Ends with  (case-insensitive)'),
             ('range', 'range'),
+            ('relative_range', 'relative_range'),
             ('week_day', 'Week day'),
             ('isnull', 'Is null'),
             ('regex', 'Regular Expression'),
@@ -593,24 +602,52 @@ class FilterField(AbstractField):
         blank=True,
         default='icontains',
     )
+    filter_delta = models.BigIntegerField(null=True, blank=True)
     filter_value = models.CharField(max_length=2000)
     filter_value2 = models.CharField(max_length=2000, blank=True)
     exclude = models.BooleanField(default=False)
 
     def clean(self):
+        dt_types = ['DateField', 'DateTimeField', 'TimeField']
+
         if self.filter_type == 'range' and self.filter_value2 in [None, '']:
             raise ValidationError('Range filters must have two values')
+
+        # Raise error if 'relative_range' filter is applied to a non-supported
+        # field type
+        if self.filter_type == 'relative_range' and self.field_type not in dt_types:
+            raise ValidationError(
+                'Relative Range filtering is only currently supported for'
+                ' the following field types: {}.'.format(dt_types))
+
+        # Check for required relative range filter_delta
+        if self.filter_type == 'relative_range' and self.filter_delta is null:
+            raise ValidationError(
+                'Relative Range filters must have value and delta inputs.')
 
         if self.filter_type in ('max', 'min'):
             # These filter types ignore their value.
             pass
+
+        # clean DateTimeField inputs
         elif self.field_type == 'DateField' and self.filter_type != 'isnull':
-            date_form = forms.DateField()
-            date_value = parser.parse(self.filter_value).date()
-            date_form.clean(date_value)
-            self.filter_value = str(date_value)
+            self.filter_value = str(self.parse_datetime_fields(self.filter_value))
 
         return super(FilterField, self).clean()
+
+    def parse_datetime_fields(self, dt_type):
+        """Clean and parse datetime filter_value inputs."""
+        date_value = parser.parse(dt_type)
+        date_form = forms.DateTimeField()
+
+        if self.field_type == 'DateField':
+            date_value = date_value.date()
+            date_form = forms.DateField()
+        if self.field_type == 'TimeField':
+            date_value = date_value.time()
+            date_form = forms.TimeField()
+
+        return date_form.clean(date_value)
 
     def get_choices(self, model, field_name):
         try:
@@ -683,6 +720,48 @@ class FilterField(AbstractField):
         if filter_field.exclude:
             return not filtered
         return filtered
+
+    def get_relative_range(self):
+        """
+        Generate a 'filterable' range from the current date and filter delta.
+        Ex.
+            With:
+                self.filter_type = 'relative_range'
+                self.filter_delta = -60 * 60 * 24 * 2 (i.e. -2 days)
+            Return:
+                # a 'negative' two day range from filter_value
+                ["2017-01-01", "2017-01-03"]
+        """
+        day = 60 * 60 * 24
+
+        if self.field_type == 'DateField':
+            if abs(self.filter_delta) < day:
+                raise ValidationError(
+                    'DateField delta must be at least 1 day.')
+            first = datetime.date.today()
+            second = first + datetime.timedelta(seconds=self.filter_delta)
+            output_range = sorted([first, second])
+            output = [date.strftime("%Y-%m-%d") for date in output_range]
+
+        elif self.field_type == 'DateTimeField':
+            if abs(self.filter_delta) < day:
+                raise ValidationError(
+                    'DateTimeField delta must be at least 1 day.')
+            first = datetime.datetime.today()
+            second = first + datetime.timedelta(seconds=self.filter_delta)
+            output_range = sorted([first, second])
+            output = [date.strftime("%Y-%m-%d %H:%M:%S") for date in output_range]
+
+        elif self.field_type == 'TimeField':
+            day_const = datetime.datetime(1, 1, 1)
+            first = datetime.datetime.now().time()
+            delta = datetime.timedelta(seconds=self.filter_delta)
+            diff = datetime.datetime.combine(day_const, first) + delta
+            second = diff.time()
+            output_range = sorted([first, second])
+            output = [date.strftime("%H:%M") for date in output_range]
+
+        return output
 
     @property
     def field_type(self):

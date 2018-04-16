@@ -1,0 +1,14 @@
+<app-header (onToggleRightNav)="openNav()" (changeTitleInput)="editTitle($event)" [title]="title$ | async" [showRightNavButton]="(activeTab$ | async) <= 1"
+  [reportName]="(selectedReportName$ | async)" (goHome)="goHome()">
+</app-header>
+<mat-sidenav-container class="left-sidenav-container">
+  <mat-sidenav-content>
+    <app-tabs>
+    </app-tabs>
+  </mat-sidenav-content>
+  <mat-sidenav #sidenav [mode]="(mode)" [opened]="lockOpen" [disableClose]="lockOpen" position="end" (openedChange)="toggleRightNav($event)">
+    <app-right-sidebar #rightMenu [modelName]="(selectedReportName$ | async)" [relatedFields]="relatedFields$ | async" [fields]="fields$ | async"
+      [selectedField]="selectedField$ | async" (selectRelatedField)="selectRelatedField($event)" (close)="openNav(false)" (addReportField)="addReportField($event)"
+      (expandRelatedField)="expandRelatedField($event)" (selectField)="selectField($event)" [lockOpen]="lockOpen"></app-right-sidebar>
+  </mat-sidenav>
+</mat-sidenav-container>

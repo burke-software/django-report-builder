@@ -1,0 +1,52 @@
+.mat-side-nav-content {
+  padding: 20px;
+}
+
+.mat-tab-label {
+  padding: 10px;
+  width: 100%;
+}
+
+.options-content {
+  padding-left: 20px;
+}
+
+.mat-header-row {
+  background: none;
+}
+
+.mat-list-item {
+  position: relative;
+  padding: 0px 16px;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.mat-icon {
+  cursor: pointer;
+}
+
+.options-tab {
+  padding-top: 50px;
+  white-space: normal !important;
+}
+
+a,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: #79aec8;
+  padding-bottom: 10px;
+}
+
+.app-report-tab {
+  padding: 20px;
+}
+
+.tab-table-header {
+  min-width: 600px;
+  overflow: scroll;
+}
