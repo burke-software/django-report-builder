@@ -20,7 +20,7 @@ class FooExclude(Foo):
 
 class Bar(models.Model):
     char_field = models.CharField(max_length=50, blank=True)
-    foos = models.ManyToManyField(Foo, blank=True)
+    foos = models.ManyToManyField(Foo, blank=True, related_name='bar_set')
 
     CHECK = 'CH'
     MATE = 'MA'

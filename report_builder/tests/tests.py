@@ -98,6 +98,30 @@ class ReportBuilderTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'pizza')
 
+    def test_report_builder_fields_from_related_with_hidden_field(self):
+        ct = ContentType.objects.get(model="bar", app_label="demo_models")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id,
+             "path": "",
+             "path_verbose": "",
+             "field": "foos"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'char_field')
+        self.assertNotContains(response, 'char_field2')
+
+    def test_report_builder_fields_from_related_with_properties(self):
+        ct = ContentType.objects.get(model="foo", app_label="demo_models")
+        response = self.client.post(
+            '/report_builder/api/fields/',
+            {"model": ct.id,
+             "path": "",
+             "path_verbose": "",
+             "field": "bar_set"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'i_want_char_field')
+        self.assertContains(response, 'i_need_char_field')
+
     def test_report_builder_fields_from_related_fields(self):
         ct = ContentType.objects.get(model="place", app_label="demo_models")
         response = self.client.post(
@@ -182,7 +206,7 @@ class ReportTests(TestCase):
         self.report = Report.objects.create(root_model=ct, name="A")
         self.bar = Bar.objects.create(char_field="wooo")
         self.generate_url = reverse('generate_report', args=[self.report.id])
-    
+
     def test_property_position(self):
         bar = self.bar
 
