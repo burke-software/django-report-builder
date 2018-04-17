@@ -1,3 +1,8 @@
+## 6.0
+
+- Added django 2.0 support. Droped support for Django 1.8 and 1.10 as Django no longer supports them
+- Bug fixes
+
 ## 5.0
 
 - Potentially breaking change - Rebuilt frontend in Angular 5. Should only affect those who customize the frontend.

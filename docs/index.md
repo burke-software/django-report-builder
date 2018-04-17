@@ -9,7 +9,7 @@ See [installation instructions.](quickstart.md)
 Code
 ----
 
-https://github.com/burke-software/django-report-builder
+https://gitlab.com/burke-software/django-report-builder/
 
 Discussion
 --------
