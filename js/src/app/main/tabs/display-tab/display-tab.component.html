@@ -19,7 +19,7 @@
   </div>
   <tree-root [nodes]="fields" [options]="treeOptions">
     <ng-template #treeNodeWrapperTemplate let-node let-index="index">
-      <div class="node-wrapper">
+      <div class="node-wrapper report-builder-display-grid">
         <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"
           (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
           [treeDragEnabled]="node.allowDrag()">
