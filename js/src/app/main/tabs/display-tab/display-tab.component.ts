@@ -47,20 +47,16 @@ export class DisplayTabComponent {
     allowDrag: true,
     allowDrop: (node, to) => !to.parent.parent,
     idField: 'position',
-    actionMapping: {
-      mouse: {
-        drop: (tree, node, event, { from: { data }, to: { index } }) => {
-          const newPos = data.position > index ? index : index - 1
-          this.updateField.emit({
-            id: data.position,
-            changes: { position: newPos },
-          });
-        },
-      },
-    } as IActionMapping,
+    // actionMapping: {
+    //   mouse: {
+    //     drop: (tree, node, event, { from: { data }, to: { index } }) => {
+    //       const newPos = data.position > index ? index : index - 1
+    //       this.updateField.emit({
+    //         id: data.position,
+    //         changes: { position: newPos },
+    //       });
+    //     },
+    //   },
+    // } as IActionMapping,
   };
-
-  getFields() {
-    return this.fields.map(x => ({ ...x }));
-  }
 }
