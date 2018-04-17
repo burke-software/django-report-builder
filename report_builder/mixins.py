@@ -536,6 +536,7 @@ class GetFieldsMixin(object):
         properties = get_properties_from_model(model_class)
         custom_fields = get_custom_fields_from_model(model_class)
         app_label = model_class._meta.app_label
+        model = model_class
 
         if field_name != '':
             field = model_class._meta.get_field(field_name)
@@ -563,6 +564,7 @@ class GetFieldsMixin(object):
             custom_fields = get_custom_fields_from_model(new_model)
             properties = get_properties_from_model(new_model)
             app_label = new_model._meta.app_label
+            model = new_model
 
         return {
             'fields': fields,
@@ -571,6 +573,7 @@ class GetFieldsMixin(object):
             'path': path,
             'path_verbose': path_verbose,
             'app_label': app_label,
+            'model': model,
         }
 
     def get_related_fields(self, model_class, field_name, path="", path_verbose=""):
