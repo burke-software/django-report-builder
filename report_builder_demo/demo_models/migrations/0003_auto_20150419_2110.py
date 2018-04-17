@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Restaurant',
             fields=[
-                ('place', models.OneToOneField(primary_key=True, to='demo_models.Place', serialize=False)),
+                ('place', models.OneToOneField(primary_key=True, to='demo_models.Place', serialize=False, on_delete=models.CASCADE)),
                 ('serves_hot_dogs', models.BooleanField(default=False)),
                 ('serves_pizza', models.BooleanField(default=False)),
             ],
@@ -37,6 +37,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='waiter',
             name='restaurant',
-            field=models.ForeignKey(to='demo_models.Restaurant'),
+            field=models.ForeignKey(to='demo_models.Restaurant', on_delete=models.CASCADE),
         ),
     ]

@@ -2,12 +2,16 @@ import django
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from .models import ScheduledReport
 from report_builder.models import Report
 from .tasks import report_builder_run_scheduled_report
 from unittest import skipIf
+
+try:
+    from django.core.urlresolvers import reverse
+except ModuleNotFoundError:
+    from django.urls import reverse
 
 User = get_user_model()
 

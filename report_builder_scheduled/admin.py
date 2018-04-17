@@ -1,7 +1,10 @@
 from django.contrib import admin
-from django.core.urlresolvers import reverse
 from .models import ScheduledReport
 
+try:
+    from django.core.urlresolvers import reverse
+except ModuleNotFoundError:
+    from django.urls import reverse
 
 @admin.register(ScheduledReport)
 class ScheduledReportAdmin(admin.ModelAdmin):

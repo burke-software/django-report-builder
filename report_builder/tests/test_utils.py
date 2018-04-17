@@ -17,7 +17,12 @@ class RelationUtilityFunctionTests(TestCase):
         Test that the initial assumption about the ManyToOneRel field_name is
         correct
         """
-        self.assertEquals(Waiter.restaurant.field.rel.field_name, "place")
+        field_name = (
+            Waiter.restaurant.field.rel.field_name
+            if hasattr(Waiter.restaurant.field, 'rel')
+            else Waiter.restaurant.field.target_field.name
+        )
+        self.assertEquals(field_name, "place")
 
     def test_get_relation_fields_from_model_does_not_change_field_name(self):
         """
@@ -31,8 +36,13 @@ class RelationUtilityFunctionTests(TestCase):
         ManyToManyRel objects are not affected.
         """
         get_relation_fields_from_model(Restaurant)
-        self.assertEquals(Waiter.restaurant.field.rel.field_name, "place")
-        Waiter.restaurant.field.rel.get_related_field()
+        field_name = (
+            Waiter.restaurant.field.rel.field_name
+            if hasattr(Waiter.restaurant.field, 'rel')
+            else Waiter.restaurant.field.target_field.name
+        )
+        self.assertEquals(field_name, "place")
+        # Waiter.restaurant.field.rel.get_related_field()
 
 
 class UtilityFunctionTests(TestCase):
