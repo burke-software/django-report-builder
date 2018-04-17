@@ -1,5 +1,5 @@
 {
-    "/report_builder": {
+    "/report_builder/api": {
         "target": "http://localhost:8000",
         "secure": false
     },
