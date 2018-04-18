@@ -59,8 +59,4 @@ export class DisplayTabComponent {
       },
     } as IActionMapping,
   };
-
-  getFields() {
-    return this.fields.map(x => ({ ...x }));
-  }
 }
