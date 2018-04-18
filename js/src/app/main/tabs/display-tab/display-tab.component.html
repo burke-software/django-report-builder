@@ -17,11 +17,14 @@
     <div class="mat-header-cell narrow">Total</div>
     <div class="mat-header-cell narrow">Group</div>
   </div>
-  <tree-root [nodes]="getFields()" [options]="treeOptions">
+  <tree-root [nodes]="fields" [options]="treeOptions">
     <ng-template #treeNodeWrapperTemplate let-node let-index="index">
-      <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"
-        (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
-        [treeDragEnabled]="node.allowDrag()">></app-display-tab-row>
+      <div class="node-wrapper report-builder-display-grid">
+        <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"
+          (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
+          [treeDragEnabled]="node.allowDrag()">
+        </app-display-tab-row>
+      </div>
     </ng-template>
   </tree-root>
 </div>
