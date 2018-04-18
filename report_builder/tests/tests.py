@@ -22,7 +22,7 @@ from django.contrib.auth import get_user_model
 
 try:
     from django.core.urlresolvers import reverse
-except ModuleNotFoundError:
+except ImportError:
     from django.urls import reverse
 
 User = get_user_model()
