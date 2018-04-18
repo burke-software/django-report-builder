@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IDisplayField, IFormat } from '../../../models/api';
 import { Update } from '@ngrx/entity';
-import { ITreeOptions, IActionMapping } from 'angular-tree-component';
+import { ITreeOptions } from 'angular-tree-component';
 
 @Component({
   selector: 'app-display-tab',
