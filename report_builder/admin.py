@@ -7,7 +7,7 @@ from django.conf import settings
 
 try:
     from django.core.urlresolvers import reverse
-except ModuleNotFoundError:
+except ImportError:
     from django.urls import reverse
 
 
