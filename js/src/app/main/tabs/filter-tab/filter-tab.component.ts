@@ -55,8 +55,4 @@ export class FilterTabComponent {
       },
     } as IActionMapping,
   };
-
-  getFilters() {
-    return this.filters.map(x => ({ ...x }));
-  }
 }
