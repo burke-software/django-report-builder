@@ -184,7 +184,7 @@ export class ReportEffects {
         return Observable.create(observer => {
           observer.next(
             new fromReports.DownloadExportedReport(
-              `/report_builder/report/${reportId}/download_file/${type}/`
+              `api/report/${reportId}/download_file/${type}/`
             )
           );
           observer.complete();

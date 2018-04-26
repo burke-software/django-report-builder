@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^api/related_fields', staff_member_required(api_views.RelatedFieldsView.as_view()), name="related_fields"),
     url(r'^api/fields', staff_member_required(api_views.FieldsView.as_view()), name="fields"),
     url(r'^api/report/(?P<report_id>\w+)/generate/', staff_member_required(api_views.GenerateReport.as_view()), name="generate_report"),
+    url(r'^api/report/(?P<pk>\d+)/download_file/(?P<filetype>.+)/$', views.DownloadFileView.as_view(), name="report_download_file"),
+    url(r'^api/report/(?P<pk>\d+)/check_status/(?P<task_id>.+)/$', views.check_status, name="report_check_status"),
     url('^report/(?P<pk>\d+)/$', views.ReportSPAView.as_view(), name="report_update_view"),
 ]
 
