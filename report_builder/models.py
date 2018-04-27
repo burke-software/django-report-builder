@@ -443,7 +443,8 @@ class Report(models.Model):
             csv_file = data_export.list_to_csv_file(objects_list, title,
                                                     header, widths)
             title = generate_filename(title, '.csv')
-            self.report_file.save(title, ContentFile(csv_file.getvalue()))
+
+            self.report_file.save(title, ContentFile(csv_file.getvalue().encode()))
         else:
             xlsx_file = data_export.list_to_xlsx_file(objects_list, title,
                                                       header, widths)
