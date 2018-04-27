@@ -75,7 +75,7 @@ export class ApiService {
 
   exportReport({ reportId, type }: { reportId: number; type: IExportType }) {
     return this.http.get<IAsyncTaskId>(
-      `report/${reportId}/download_file/${type}/`
+      `api/report/${reportId}/download_file/${type}/`
     );
   }
 
@@ -87,7 +87,7 @@ export class ApiService {
     taskId: string;
   }) {
     return this.http.get<ITaskStatus>(
-      `report/${reportId}/check_status/${taskId}/`
+      `api/report/${reportId}/check_status/${taskId}/`
     );
   }
 
