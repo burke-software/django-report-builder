@@ -1,7 +1,7 @@
 {
   "name": "django-report-builder",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "BSD",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --base-href '/report_builder/' --proxy-config proxy.conf.json --host 0.0.0.0",
