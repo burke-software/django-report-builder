@@ -10,7 +10,7 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 ## 6.0
 
-- Added django 2.0 support. Droped support for Django 1.8 and 1.10 as Django no longer supports them
+- Added django 2.0 support. Dropped support for Django 1.8 and 1.10 as Django no longer supports them
 - Bug fixes
 
 ## 5.0
