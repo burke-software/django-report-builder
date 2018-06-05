@@ -12,7 +12,7 @@ import {
   INewReport,
 } from './models/api';
 
-const apiUrl = '/report_builder/api/';
+const apiUrl = 'api/';
 
 describe('Api service should', function() {
   let service: ApiService;

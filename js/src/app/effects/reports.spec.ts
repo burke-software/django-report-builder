@@ -215,7 +215,7 @@ describe('Report Effects', () => {
 
       const expected = hot('c', {
         c: new Actions.DownloadExportedReport(
-          `/report_builder/report/${reportId}/download_file/${type}/`
+          `api/report/${reportId}/download_file/${type}/`
         ),
       });
       expect(effects.exportReport$).toBeObservable(expected);

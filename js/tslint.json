@@ -13,8 +13,7 @@
     "curly": true,
     "forin": true,
     "import-blacklist": [
-      true,
-      "rxjs"
+      true
     ],
     "interface-over-type-literal": true,
     "label-position": true,
@@ -67,7 +66,6 @@
       true,
       "allow-null-check"
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
     "variable-name": false,
     "directive-selector": [
@@ -90,10 +88,7 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true,
-    "no-access-missing-member": true,
-    "templates-use-public": true,
-    "invoke-injectable": true
+    "directive-class-suffix": true
   },
   "extends": ["tslint-config-prettier"]
 }
