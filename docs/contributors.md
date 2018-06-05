@@ -39,15 +39,18 @@ To run the angular tests simply cd into the js directory and run `yarn test`.
 
 Python code should follow pep8 standards. JS code uses [prettier](https://prettier.io/) for code formatting - we suggest installing [a plugin](https://prettier.io/docs/en/editors.html) to integrate it with your favorite editor.
 
-## Making pull requests
+## Opening issues
 
-After you have a pull request that passes on Travis, and you have added
-any needed test cases, please [squash your commits](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html).
-If it makes more sense to break it up into smaller commits, you can do that
-as well. Just try to think what would be most helpful, when someone looks
-back in the git history to see why this file was changed.
+Please only open issues on Gitlab. Note this project is mostly in maintenance mode. It's fine to open wish list requests but the [Google Group](https://groups.google.com/forum/#!forum/django-report-builder) may be a better place.
 
-Thanks :)
+If you want to make a major change and can put the time in to see it through, please open an issue to discuss first. If you are adding features that expand the scope of the project you should be prepared to help maintain them. There are many features I would LOVE to have but cannot commit the time to maintain myself.
+
+## Making merge requests
+
+1. Please make merge requests on https://gitlab.com/burke-software/django-report-builder. Do not use the github mirror.
+2. Ensure tox passes first (See running tests section above).
+3. Add a good description of what problem you are trying to solve and how you are trying to solve it.
+4. Include unit tests whenever possible that would fail before your change and pass with your change.
 
 # Frontend
 

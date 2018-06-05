@@ -42,4 +42,4 @@ http://django-report-builder.readthedocs.org/
 
 [Google group](https://groups.google.com/forum/#!forum/django-report-builder/).
 
-[Hacking](http://django-report-builder.readthedocs.org/en/latest/hacking/)
+[Contributing](http://django-report-builder.readthedocs.org/en/latest/contributors/)
