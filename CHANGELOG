@@ -1,6 +1,7 @@
 ## 6.1 (Work in progress)
 
 - Upgrade frontend to Angular 6
+- Fixed django admin report edit page missing assets
 
 ## 6.0
 
