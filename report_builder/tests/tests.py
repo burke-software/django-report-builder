@@ -16,6 +16,7 @@ import unittest
 import json
 from io import StringIO
 from freezegun import freeze_time
+from model_mommy import mommy
 from datetime import date, datetime, timedelta, time as dtime
 
 from django.contrib.auth import get_user_model
@@ -233,6 +234,17 @@ class ReportBuilderTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertIsNone(report.displayfield_set.all()[0].sort)
+    
+    def test_filter_field_allows_blank(self):
+        """ It's valid for a filter value to be blank. For example filter all reports where a charfield is "" """
+        report = mommy.make('Report')
+        display_field = mommy.make('FilterField', report=report, filter_value='')
+        data = ReportNestedSerializer(report).data
+        response = self.client.put(f'/report_builder/api/report/{report.id}/',
+                                    data=json.dumps(data),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
 
 class ReportTests(TestCase):
 
