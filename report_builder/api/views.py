@@ -7,7 +7,7 @@ from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from ..models import Report, Format, FilterField
@@ -77,7 +77,7 @@ class ReportNestedViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):
         serializer.save(user_modified=self.request.user)
 
-    @detail_route(methods=['post'])
+    @action(methods=['post'], detail=True)
     def copy_report(self, request, pk=None):
         report = self.get_object()
         new_report = duplicate(report, changes=(
