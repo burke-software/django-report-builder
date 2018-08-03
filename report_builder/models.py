@@ -385,9 +385,8 @@ class Report(models.Model):
 
         return objects
 
-    @models.permalink
     def get_absolute_url(self):
-        return ("report_update_view", [str(self.id)])
+        return reverse("report_update_view", args=(self.id,))
 
     def edit(self):
         return mark_safe(
