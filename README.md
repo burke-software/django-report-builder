@@ -8,17 +8,14 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 6.1
+
+- Added Django 2.1 support. 2.0 and 1.11 are still supported.
+
 ## 6.0
 
 - Added django 2.0 support. Dropped support for Django 1.8 and 1.10 as Django no longer supports them
 - Bug fixes
-
-## 5.0
-
-* Complete rewrite of the frontend in Angular CLI
-  * Removed the left sidebar, added a 'home' page
-  * Other minor improvements and fixes
-  * For anyone who has written a custom frontend: we made a few changes to the django template that you might need to look at. The API has remained the same - one additional route was added that returns information as JSON that was previously serialized in the django template.
 
 # What is Django Report Builder?
 
