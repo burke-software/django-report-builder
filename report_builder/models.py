@@ -457,7 +457,7 @@ class Report(models.Model):
             if user.email:
                 self.email_report(user=user)
 
-    def run_report(self, file_type, user=None, queryset=None, async=False, scheduled=False, email_to:str = None):
+    def run_report(self, file_type, user=None, queryset=None, asynchronous=False, scheduled=False, email_to:str = None):
         """Generate this report file"""
         if not queryset:
             queryset = self.get_query()
@@ -475,7 +475,7 @@ class Report(models.Model):
             widths.append(field.width)
         if scheduled:
             self.async_report_save(objects_list, title, header, widths, file_type, email_to=email_to)
-        elif async:
+        elif asynchronous:
             if user is None:
                 raise Exception('Cannot run async report without a user')
             self.async_report_save(objects_list, title, header, widths, user, file_type)
