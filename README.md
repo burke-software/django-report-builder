@@ -8,6 +8,10 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 6.2 (work in progress)
+
+- Added Python 3.7 support.
+
 ## 6.1
 
 - Added Django 2.1 support. 2.0 and 1.11 are still supported.
