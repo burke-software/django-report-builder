@@ -13,9 +13,9 @@
         <p>Please add 'django.core.context_processors.static' to context_processors in settings.py</p>
     {% endif %}
     <app-root></app-root>
-    <script type="text/javascript" src="{% static 'report_builder/inline.bundle.js' %}"></script>
-    <script type="text/javascript" src="{% static 'report_builder/polyfills.bundle.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'report_builder/styles.bundle.css' %}">
+    <script type="text/javascript" src="{% static 'report_builder/polyfills.js' %}"></script>
+    <script type="text/javascript" src="{% static 'report_builder/runtime.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'report_builder/styles.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script type="text/javascript" src="{% static 'report_builder/main.bundle.js' %}"></script>
+    <script type="text/javascript" src="{% static 'report_builder/main.js' %}"></script>
 {% endblock %}
