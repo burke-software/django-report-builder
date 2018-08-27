@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
+from django.utils.safestring import mark_safe
 from report_builder.models import Report, Format
 from django.conf import settings
 
@@ -66,9 +67,9 @@ class ReportAdmin(admin.ModelAdmin):
             img = static_url + 'report_builder/img/star.png'
         else:
             img = static_url + 'report_builder/img/unstar.png'
-        return '<a href="javascript:void(0)" onclick="ajax_add_star(this, \'{0}\')"><img style="width: 26px; margin: -6px;" src="{1}"/></a>'.format(
+        return mark_safe('<a href="javascript:void(0)" onclick="ajax_add_star(this, \'{0}\')"><img style="width: 26px; margin: -6px;" src="{1}"/></a>'.format(
             reverse('ajax_add_star', args=[obj.id]),
-            img)
+            img))
     ajax_starred.allow_tags = True
     ajax_starred.short_description = "Starred"
 

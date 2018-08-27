@@ -416,10 +416,10 @@ class Report(models.Model):
     download_xlsx.allow_tags = True
 
     def copy_report(self):
-        return '<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/copy.svg"/></a>'.format(
+        return mark_safe('<a href="{0}"><img style="width: 26px; margin: -6px" src="{1}report_builder/img/copy.svg"/></a>'.format(
             reverse('report_builder_create_copy', args=[self.id]),
             getattr(settings, 'STATIC_URL', '/static/'),
-        )
+        ))
     copy_report.short_description = "Copy"
     copy_report.allow_tags = True
 
