@@ -1,0 +1,30 @@
+<div class="mat-table tab-table-header">
+  <div class="mat-header-row">
+    <div class="mat-header-cell">
+      <button [disabled]="!hasChanged" mat-icon-button (click)="saveReport.emit()">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button *ngIf="errors" mat-icon-button [disabled]="true" [matTooltipPosition]="'right'" matTooltip="There were errors with your report! Check the report tab for more info">
+        <mat-icon [color]="'warn'">error</mat-icon>
+      </button>
+    </div>
+    <div class="mat-header-cell">Field</div>
+    <div class="mat-header-cell">Name</div>
+    <div class="mat-header-cell narrow">Sort</div>
+    <div class="mat-header-cell narrow">Desc?</div>
+    <div class="mat-header-cell">Aggregate</div>
+    <div class="mat-header-cell">Format</div>
+    <div class="mat-header-cell narrow">Total</div>
+    <div class="mat-header-cell narrow">Group</div>
+  </div>
+  <tree-root [nodes]="fields" [options]="treeOptions">
+    <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+      <div class="node-wrapper report-builder-display-grid">
+        <app-display-tab-row [field]="node.data" [formatOptions]="formatOptions" (updateField)="updateField.emit($event)" (deleteField)="deleteField.emit($event)"
+          (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
+          [treeDragEnabled]="node.allowDrag()">
+        </app-display-tab-row>
+      </div>
+    </ng-template>
+  </tree-root>
+</div>

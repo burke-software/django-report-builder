@@ -1,0 +1,19 @@
+<mat-toolbar>
+  <div class="left-navbar-container">
+    <a mat-icon-button (click)="clickGoHome($event)" href="/">
+      <mat-icon>home</mat-icon>
+    </a>
+  </div>
+  <span>{{ title }}&nbsp;
+    <mat-form-field *ngIf="reportName">
+      <input matInput id="title-input" value="{{reportName}}" (keyup)="changeTitleInput.emit($event.currentTarget.value)">
+    </mat-form-field>
+  </span>
+  <div class="right-navbar-container">
+    <div [hidden]="!showRightNavButton">
+      <button class="button" (click)="this.onToggleRightNav.emit();" id="toggleRight" type="button">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>

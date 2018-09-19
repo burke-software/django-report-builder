@@ -1,0 +1,26 @@
+<div class="form-container">
+  <mat-card class="report-form">
+
+    <mat-card-title class="report-title">Add New Report</mat-card-title>
+
+    <form (ngSubmit)="submit()" #reportForm="ngForm" class="container">
+      <mat-form-field>
+        <input matInput placeholder="Report Name" [(ngModel)]="form.name" name="name" required/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Description" [(ngModel)]="form.description" name="description" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Root Model" [(ngModel)]="form.root_model" name="root_model" required>
+          <mat-option *ngFor="let model of root_model_choices$ | async" [value]="model.pk">
+            {{ model.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br><br>
+      <button mat-raised-button color="primary" [disabled]="!form.name.trim() || !form.root_model">Create Report</button>
+    </form>
+  </mat-card>
+</div>

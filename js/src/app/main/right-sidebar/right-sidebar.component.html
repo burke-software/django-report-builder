@@ -1,0 +1,53 @@
+<div class="header">
+  <h3>{{ modelName }} relations
+    <mat-icon *ngIf="!lockOpen" (click)="close.emit()" class="close-icon">close</mat-icon>
+  </h3>
+</div>
+
+<div class="example-header">
+  <mat-form-field>
+    <input id="filter" #filter matInput (keyup)="tree.treeModel.filterNodes(filter.value)" placeholder="Search Related Fields">
+  </mat-form-field>
+</div>
+
+<tree-root #tree [nodes]="nodes" (toggleExpanded)="onExpand($event)" (activate)="onActivate($event)"></tree-root>
+
+<div class="header">
+  <h3>Fields</h3>
+</div>
+
+<div class="example-header">
+  <mat-form-field>
+    <input #searchFields matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Fields">
+  </mat-form-field>
+</div>
+
+<mat-table [dataSource]="fieldDataSource" matSort #table matSortDisableClear="true">
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Field Name</mat-header-cell>
+    <mat-cell *matCellDef="let field" (click)="selectField.emit(field)">{{field.name}}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="button">
+    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+    <mat-cell *matCellDef="let field">
+      <button class="add-button" (click)="addReportField.emit(field)">
+        <span class="add-button-content">
+          <mat-icon class="add-icon">add</mat-icon>
+          <span class="content">Add</span>
+        </span>
+      </button>
+
+    </mat-cell>å
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumnsField"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumnsField;"></mat-row>
+
+</mat-table>
+
+<div *ngIf="selectedField" class="selected-field">
+  [{{selectedField.field_type}}] {{selectedField.help_text}}
+</div>

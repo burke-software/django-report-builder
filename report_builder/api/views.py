@@ -1,10 +1,13 @@
 import copy
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from django.utils.functional import cached_property
 from django.conf import settings
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from ..models import Report, Format, FilterField
@@ -12,6 +15,8 @@ from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer, ContentTypeSerializer)
 from ..mixins import GetFieldsMixin, DataExportMixin
+from django.core import serializers
+from ..utils import duplicate
 
 
 def find_exact_position(fields_list, item):
@@ -27,7 +32,16 @@ def find_exact_position(fields_list, item):
 class ReportBuilderViewMixin:
     """ Set up explicit settings so that project defaults
     don't interfer with report builder's api. """
+    permission_classes = (IsAdminUser,)
     pagination_class = None
+
+class ConfigView(ReportBuilderViewMixin, APIView):
+    def get(self, request):
+        data = {
+            'async_report': getattr( settings, 'REPORT_BUILDER_ASYNC_REPORT', False ),
+            'formats': FormatSerializer(Format.objects.all(), many=True).data
+        }
+        return JsonResponse(data)
 
 
 class FormatViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
@@ -46,7 +60,6 @@ class ContentTypeViewSet(ReportBuilderViewMixin, viewsets.ReadOnlyModelViewSet):
     """
     queryset = ContentType.objects.all()
     serializer_class = ContentTypeSerializer
-    permission_classes = (IsAdminUser,)
 
 
 class ReportViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
@@ -64,13 +77,35 @@ class ReportNestedViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):
         serializer.save(user_modified=self.request.user)
 
+    @action(methods=['post'], detail=True)
+    def copy_report(self, request, pk=None):
+        report = self.get_object()
+        new_report = duplicate(report, changes=(
+            ('name', '{0} (copy)'.format(report.name)),
+            ('user_created', request.user),
+            ('user_modified', request.user),
+        ))
+
+        # duplicate does not get related
+        for display in report.displayfield_set.all():
+            new_display = copy.copy(display)
+            new_display.pk = None
+            new_display.report = new_report
+            new_display.save()
+        for report_filter in report.filterfield_set.all():
+            new_filter = copy.copy(report_filter)
+            new_filter.pk = None
+            new_filter.report = new_report
+            new_filter.save()
+
+        serializer = ReportNestedSerializer(new_report)
+        return JsonResponse(serializer.data)
+
+        
+
 
 class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):
-
-    """ Get related fields from an ORM model
-    """
-    permission_classes = (IsAdminUser,)
-
+    """ Get related fields from an ORM model """
     def get_data_from_request(self, request):
         self.model = request.data['model']
         self.path = request.data['path']
@@ -126,11 +161,8 @@ class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):
 
 
 class FieldsView(RelatedFieldsView):
-
     """ Get direct fields and properties on an ORM model
     """
-    permission_classes = (IsAdminUser,)
-
     def post(self, request):
         self.get_data_from_request(request)
         field_data = self.get_fields(
@@ -151,7 +183,7 @@ class FieldsView(RelatedFieldsView):
         filters = None
         extra = None
         defaults = None
-        meta = getattr(self.model_class, 'ReportBuilder', None)
+        meta = getattr(field_data['model'], 'ReportBuilder', None)
         if meta is not None:
             fields = getattr(meta, 'fields', None)
             filters = getattr(meta, 'filters', None)
@@ -207,7 +239,7 @@ class FieldsView(RelatedFieldsView):
             else:
                 extra_fields = extra
             for field in extra_fields:
-                field_attr = getattr(self.model_class, field, None)
+                field_attr = getattr(field_data['model'], field, None)
                 if isinstance(field_attr, (property, cached_property)):
                     result += [{
                         'name': field,
@@ -247,8 +279,6 @@ class FieldsView(RelatedFieldsView):
 
 
 class GenerateReport(ReportBuilderViewMixin, DataExportMixin, APIView):
-    permission_classes = (IsAdminUser,)
-
     def get(self, request, report_id=None):
         return self.post(request, report_id=report_id)
 

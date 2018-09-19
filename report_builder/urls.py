@@ -20,10 +20,13 @@ urlpatterns = [
     url(r'^report/(?P<pk>\d+)/create_copy/$', views.create_copy, name="report_builder_create_copy"),
     url(r'^export_to_report/$', views.ExportToReport.as_view(), name="export_to_report"),
     url(r'^api/', include(router.urls)),
+    url(r'^api/config/', api_views.ConfigView.as_view()),
     url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/related_fields', staff_member_required(api_views.RelatedFieldsView.as_view()), name="related_fields"),
     url(r'^api/fields', staff_member_required(api_views.FieldsView.as_view()), name="fields"),
     url(r'^api/report/(?P<report_id>\w+)/generate/', staff_member_required(api_views.GenerateReport.as_view()), name="generate_report"),
+    url(r'^api/report/(?P<pk>\d+)/download_file/(?P<filetype>.+)/$', views.DownloadFileView.as_view(), name="report_download_file"),
+    url(r'^api/report/(?P<pk>\d+)/check_status/(?P<task_id>.+)/$', views.check_status, name="report_check_status"),
     url('^report/(?P<pk>\d+)/$', views.ReportSPAView.as_view(), name="report_update_view"),
 ]
 

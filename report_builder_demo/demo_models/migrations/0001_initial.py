@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FooExclude',
             fields=[
-                ('foo_ptr', models.OneToOneField(auto_created=True, serialize=False, parent_link=True, primary_key=True, to='demo_models.Foo')),
+                ('foo_ptr', models.OneToOneField(auto_created=True, serialize=False, parent_link=True, primary_key=True, to='demo_models.Foo', on_delete=models.CASCADE)),
             ],
             options={
             },

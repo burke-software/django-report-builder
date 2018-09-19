@@ -23,7 +23,7 @@ SECRET_KEY = '@rri594lixl!a0g14v__srplb!&+6wv5gbp6+ii=)py4a*87md'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,17 +39,20 @@ INSTALLED_APPS = (
     'report_builder_demo.demo_models',
     'report_builder_demo.demo_second_app',
     'report_builder',
+    'report_builder_scheduled',
+    'django_celery_beat',
     'django_extensions',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 ROOT_URLCONF = 'report_builder_demo.urls'
 
@@ -101,6 +104,7 @@ TEMPLATES = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
@@ -108,7 +112,7 @@ TEMPLATES = [
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-REDIS_ADDR = os.environ.get('REDIS_1_PORT_6379_TCP_ADDR', 'localhost')
+REDIS_ADDR = os.environ.get('REDIS_1_PORT_6379_TCP_ADDR', 'redis')
 REDIS_PORT = os.environ.get('REDIS_1_PORT_6379_TCP_PORT', '6379')
 BROKER_URL = 'redis://{}:{}/0'.format(REDIS_ADDR, REDIS_PORT)
 CELERY_RESULT_BACKEND = BROKER_URL
@@ -122,5 +126,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-if 'test' in sys.argv:
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+if TESTING:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+    CELERY_ALWAYS_EAGER = True

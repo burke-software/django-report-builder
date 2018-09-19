@@ -1,5 +1,4 @@
-django-report-builder
-=====================
+# django-report-builder
 
 A GUI for Django ORM. Build custom queries and display results.
 Targets sys admins and capable end users who might not be able to program or gain direct interactive shell access.
@@ -9,32 +8,34 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
-## 3.6
+## 6.2 (work in progress)
 
-- Fix bug affecting Django 1.10 and 1.11
-- Moved to tox for testing
+- Added Python 3.7 support.
 
-## 3.5
+## 6.1
 
-- Compatible with Django 1.11
-- Manifest containers only needed static assets, greatly reducing file size.
-- No longer testing in Django 1.9, but probably still works.
-- Remains in maintence mode - no features
+- Added Django 2.1 support. 2.0 and 1.11 are still supported.
+
+## 6.0
+
+- Added django 2.0 support. Dropped support for Django 1.8 and 1.10 as Django no longer supports them
+- Bug fixes
 
 # What is Django Report Builder?
 
-![](docs/screenshots/reportbuilderscreen.png)
+![](docs/screenshots/reportbuilderscreen.jpg)
 
 ## Features
 
-- Add filters
-- Add display fields
-- Preview and create xlsx reports
-- Very simple security, user must have change or "view" permission to view
-reports. Unprivileged users can still build reports and see database schema.
-- Model properties (thanks yekibud)
-- Export to Report global admin action
-- Optional asynchronous report generation
+* Add filters
+* Add display fields
+* Preview and create xlsx reports
+* Very simple security, user must have change or "view" permission to view
+  reports. Unprivileged users can still build reports and see database schema.
+* Model properties (thanks yekibud)
+* Export to Report global admin action
+* Scheduled reports can generate and send to users on cron like schedule
+* Optional asynchronous report generation
 
 # Documentation
 
@@ -42,4 +43,4 @@ http://django-report-builder.readthedocs.org/
 
 [Google group](https://groups.google.com/forum/#!forum/django-report-builder/).
 
-[Hacking](http://django-report-builder.readthedocs.org/en/latest/hacking/)
+[Contributing](http://django-report-builder.readthedocs.org/en/latest/contributors/)

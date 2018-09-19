@@ -1,2 +1,1 @@
-# Need this to avoid conflict with Travis CI
-Django==1.11.1
+Django==2.1

@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-report-builder",
-    version="3.6.0",
+    version="6.2.2",
     author="David Burke",
     author_email="david@burkesoftware.com",
     description=("Query and Report builder for Django ORM"),
     license="BSD",
     keywords="django report",
-    url="https://github.com/burke-software/django-report-builder",
+    url="https://gitlab.com/burke-software/django-report-builder",
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
@@ -21,6 +21,7 @@ setup(
         'Intended Audience :: System Administrators',
         "License :: OSI Approved :: BSD License",
     ],
+    python_requires='>=3.3',
     install_requires=[
         'openpyxl >= 2.2.1',
         'python-dateutil',

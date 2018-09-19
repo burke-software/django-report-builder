@@ -2,56 +2,20 @@
 {% load staticfiles %}
 
 {% block report_header %}
+    <meta charset="utf-8">
+    <title>Django Report Builder</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <base href="{% url 'report_builder' %}">
-
-    <script src="{% static 'report_builder/bower_components/angular/angular.min.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/angular-route/angular-route.min.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/lodash/dist/lodash.min.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/restangular/dist/restangular.min.js' %}"></script>
-
-    <script>
-      var STATIC_URL = '{{ STATIC_URL|escapejs }}';
-      var MEDIA_URL  = '{{ MEDIA_URL|escapejs }}';
-      var ASYNC_REPORT = '{{ ASYNC_REPORT }}';
-      var BASE_URL = "{% url 'report_builder' %}";
-    </script>
-
-    {% if user %}
-    <script>
-      var CURRENT_USER = '{{ user.id }}';
-    </script>
-    {% endif %}
-
-    <script src="{% static 'report_builder/app.js' %}"></script>
-    <script src="{% static 'report_builder/controllers.js' %}"></script>
-
-    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-material/angular-material.css' %}">
-    <script src="{% static 'report_builder/bower_components/angular-aria/angular-aria.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/angular-animate/angular-animate.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/hammerjs/hammer.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/angular-material/angular-material.js' %}"></script>
-
-    <link rel="stylesheet" media="screen" href="{% static 'report_builder/bower_components/handsontable/dist/handsontable.full.css' %}">
-    <script src="{% static 'report_builder/bower_components/handsontable/dist/handsontable.full.min.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/nghandsontable/dist/ngHandsontable.min.js' %}"></script>
-
-    <script src="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'report_builder/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css' %}">
-    <link rel="stylesheet" href="{% static 'report_builder/css/angular_report.css' %}">
-
-    <script src="{% static 'report_builder/bower_components/moment/moment.js' %}"></script>
-    <script src="{% static 'report_builder/bower_components/pikaday/pikaday.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'report_builder/bower_components/pikaday/css/pikaday.css' %}"></link>
-    <script src="{% static 'report_builder/bower_components/pikaday-angular/pikaday-angular.js' %}"></script>
-
-
 {% endblock %}
 
 {% block content %}
     {% if not STATIC_URL %}
         <p>Please add 'django.core.context_processors.static' to context_processors in settings.py</p>
     {% endif %}
-    <div class="fullheight" ng-app="reportBuilderApp" ng-view>
-    </div>
+    <app-root></app-root>
+    <script type="text/javascript" src="{% static 'report_builder/polyfills.js' %}"></script>
+    <script type="text/javascript" src="{% static 'report_builder/runtime.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'report_builder/styles.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'report_builder/main.js' %}"></script>
 {% endblock %}

@@ -180,11 +180,11 @@ class DataExportMixin(object):
 
         return queryset
 
-    def report_to_list(self, queryset, display_fields, user, property_filters=[], preview=False):
+    def report_to_list(self, queryset, display_fields, user=None, property_filters=[], preview=False):
         """ Create list from a report with all data filtering.
         queryset: initial queryset to generate results
         display_fields: list of field references or DisplayField models
-        user: requesting user
+        user: requesting user. If left as None - there will be no permission check
         property_filters: ???
         preview: return only first 50 rows
         Returns list, message in case of issues.
@@ -193,8 +193,9 @@ class DataExportMixin(object):
 
         def can_change_or_view(model):
             """ Return True iff `user` has either change or view permission
-            for `model`.
-            """
+            for `model`. """
+            if user is None:
+                return True
             model_name = model._meta.model_name
             app_label = model._meta.app_label
             can_change = user.has_perm(app_label + '.change_' + model_name)
@@ -535,6 +536,7 @@ class GetFieldsMixin(object):
         properties = get_properties_from_model(model_class)
         custom_fields = get_custom_fields_from_model(model_class)
         app_label = model_class._meta.app_label
+        model = model_class
 
         if field_name != '':
             field = model_class._meta.get_field(field_name)
@@ -562,6 +564,7 @@ class GetFieldsMixin(object):
             custom_fields = get_custom_fields_from_model(new_model)
             properties = get_properties_from_model(new_model)
             app_label = new_model._meta.app_label
+            model = new_model
 
         return {
             'fields': fields,
@@ -570,6 +573,7 @@ class GetFieldsMixin(object):
             'path': path,
             'path_verbose': path_verbose,
             'app_label': app_label,
+            'model': model,
         }
 
     def get_related_fields(self, model_class, field_name, path="", path_verbose=""):

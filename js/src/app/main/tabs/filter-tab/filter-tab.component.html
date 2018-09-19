@@ -1,0 +1,26 @@
+<div class="mat-table tab-table-header ">
+  <div class="mat-header-row">
+    <div class="mat-header-cell">
+      <button mat-icon-button [disabled]="!hasChanged" (click)="saveReport.emit()">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button *ngIf="errors" mat-icon-button [disabled]="true" [matTooltipPosition]="'right'" matTooltip="There were errors with your report! Check the report tab for more info">
+        <mat-icon [color]="'warn'">error</mat-icon>
+      </button>
+    </div>
+    <div class="mat-header-cell">Field</div>
+    <div class="mat-header-cell">Filter Type</div>
+    <div class="mat-header-cell">Values</div>
+    <div class="mat-header-cell"></div>
+    <div class="mat-header-cell">Exclude</div>
+  </div>
+  <tree-root [nodes]="filters" [options]="treeOptions">
+    <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+      <div class="node-wrapper report-builder-display-grid">
+        <app-filter-tab-row [filter]="node.data" (updateFilter)="updateFilter.emit($event)" (deleteFilter)="deleteFilter.emit($event)"
+          (click)="node.mouseAction('click', $event)" (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"
+          [treeDragEnabled]="node.allowDrag()"></app-filter-tab-row>
+      </div>
+    </ng-template>
+  </tree-root>
+</div>

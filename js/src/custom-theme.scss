@@ -1,0 +1,79 @@
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$custom-grey-blue: (
+    50: #417690,
+    100: #417690,
+    200: #417690,
+    300: #417690,
+    400: #417690,
+    500: #417690,
+    600: #417690,
+    700: #417690,
+    800: #417690,
+    900: #417690,
+    A100: #417690,
+    A200: #417690,
+    A400: #417690,
+    A700: #417690,
+    contrast: (
+      50: white,
+      100: white,
+      200: white,
+      300: white,
+      400: white,
+      500: white,
+      600: white,
+      700: white,
+      800: white,
+      900: white,
+      A100: white,
+      A200: white,
+      A400: white,
+      A700: white,
+    )
+  );
+
+  $custom-light-blue: (
+    50: #79aec8,
+    100: #79aec8,
+    200: #79aec8,
+    300: #79aec8,
+    400: #79aec8,
+    500: #79aec8,
+    600: #79aec8,
+    700: #79aec8,
+    800: #79aec8,
+    900: #79aec8,
+    A100: #79aec8,
+    A200: #79aec8,
+    A400: #79aec8,
+    A700: #79aec8,
+    contrast: (
+      50: white,
+      100: white,
+      200: white,
+      300: white,
+      400: white,
+      500: white,
+      600: white,
+      700: white,
+      800: white,
+      900: white,
+      A100: white,
+      A200: white,
+      A400: white,
+      A700: white,
+    )
+  );
+
+// Define the default theme.
+$custom-theme-primary:  mat-palette($custom-light-blue);
+$custom-theme-accent: mat-palette($custom-grey-blue);
+$custom-theme-warn: mat-palette($mat-red, 500);
+$custom-theme-theme:   mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+
+// Include the default theme styles.
+@include angular-material-theme($custom-theme-theme);

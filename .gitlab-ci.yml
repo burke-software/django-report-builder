@@ -7,8 +7,13 @@ cache:
 before_script:
   - pip install tox
 
-test:
+test_py36:
   script: tox
+
+test_py37:
+  image: python:3.7
+  script: tox -c tox.py37.ini
+  allow_failure: true
 
 test_coverage:
   script:

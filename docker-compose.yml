@@ -1,24 +1,26 @@
-db:
-  image: postgres
-redis:
-  image: redis
-web:
-  build: .
-  command: python manage.py runserver_plus 0.0.0.0:8000
-  volumes:
-    - .:/code
-  ports:
-    - "8000:8000"
-  links:
-    - db
-    - redis
-celery:
-  build: .
-  command: celery -A report_builder_demo worker -l info
-  links:
-    - db
-    - redis
-  environment:
-    C_FORCE_ROOT: "true"
-  volumes:
-    - .:/code
+version: '2'
+services:
+  db:
+    image: postgres:9.6
+  redis:
+    image: redis:3
+  web:
+    build: .
+    command: python manage.py runserver_plus 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    links:
+      - db
+      - redis
+  celery:
+    build: .
+    command: celery -A report_builder_demo worker -l info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    links:
+      - db
+      - redis
+    environment:
+      C_FORCE_ROOT: "true"
+    volumes:
+      - .:/code

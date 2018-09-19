@@ -1,5 +1,30 @@
-## 3.6 (WIP)
+## 6.2
 
+- Added Python 3.7 support
+
+## 6.1
+
+- Added Django 2.1 support. 2.0 and 1.11 are still supported.
+- Upgrade frontend to Angular 6
+- Fixed django admin report edit page missing assets
+
+## 6.0
+
+- Added django 2.0 support. Droped support for Django 1.8 and 1.10 as Django no longer supports them
+- Bug fixes
+
+## 5.0
+
+- Potentially breaking change - Rebuilt frontend in Angular 5. Should only affect those who customize the frontend.
+
+## 4.0
+
+- Breaking Change - drop support for python 2.7
+- Added scheduled reports to email reports on recurring basis (with celery)
+
+## 3.6
+
+- Last version to support python 2.7
 - Fix bug affecting Django 1.10 and 1.11
 - Moved to tox for testing
 

@@ -22,6 +22,21 @@ class DisplayFieldSerializer(serializers.ModelSerializer):
                   'position', 'total', 'group', 'report', 'display_format',
                   'field_type')
         read_only_fields = ('id',)
+    
+    def to_internal_value(self, data):
+        if data.get('sort') is '':
+            data['sort'] = None
+        return super().to_internal_value(data)
+
+
+class NonStrictCharField(serializers.CharField):
+    """ Allow booleans to be turned into strings instead of erroring """
+    def to_internal_value(self, value):
+        if value is True:
+            return "True"
+        elif value is False:
+            return "False"
+        return super().to_internal_value(value)
 
 
 class FilterFieldSerializer(serializers.ModelSerializer):
@@ -29,8 +44,10 @@ class FilterFieldSerializer(serializers.ModelSerializer):
         model = FilterField
         fields = ('id', 'path', 'path_verbose', 'field', 'field_verbose',
                   'field_type', 'filter_type', 'filter_value', 'filter_value2',
-                  'exclude', 'position', 'report')
+                  'exclude', 'position', 'report', 'filter_delta')
         read_only_fields = ('id', 'field_type')
+
+    filter_value = NonStrictCharField()
 
 
 class UserSerializer(serializers.ModelSerializer):
