@@ -8,9 +8,9 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
-## 6.2 (work in progress)
+## 6.2
 
-- Added Python 3.7 support.
+- Added partial Python 3.7 support. We can't fully support Python 3.7 until Celery does.
 
 ## 6.1
 
