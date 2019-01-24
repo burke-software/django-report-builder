@@ -30,7 +30,7 @@ class ApiTestCase(TestCase):
         self.assertEqual(related_fields[0]['field_name'], 'parent')
         self.assertTrue(related_fields[0]['included_model'])
 
-    @override_settings(REPORT_BUILDER_EXCLUDE=['demo_models.parent'])
+    @override_settings(REPORT_BUILDER_EXCLUDE=['demo_models.person'])
     def test_related_fields_exclude(self):
         response = self.get_child_related_fields()
         related_fields = json.loads(response.content)

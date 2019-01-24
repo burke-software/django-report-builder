@@ -4,18 +4,16 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.utils.functional import cached_property
 from django.conf import settings
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from ..models import Report, Format, FilterField
 from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer, ContentTypeSerializer)
 from ..mixins import GetFieldsMixin, DataExportMixin
-from django.core import serializers
 from ..utils import duplicate
 
 
@@ -34,6 +32,7 @@ class ReportBuilderViewMixin:
     don't interfer with report builder's api. """
     permission_classes = (IsAdminUser,)
     pagination_class = None
+
 
 class ConfigView(ReportBuilderViewMixin, APIView):
     def get(self, request):
@@ -101,8 +100,6 @@ class ReportNestedViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
         serializer = ReportNestedSerializer(new_report)
         return JsonResponse(serializer.data)
 
-        
-
 
 class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):
     """ Get related fields from an ORM model """
@@ -123,26 +120,18 @@ class RelatedFieldsView(ReportBuilderViewMixin, GetFieldsMixin, APIView):
         result = []
         for new_field in new_fields:
             included_model = True
-            split_name = new_field.name.split(':')
-            if len(split_name) == 1:
-                split_name.append('')
-                split_name[1] = split_name[0]
-                split_name[0] = False
-                model_information = split_name[1]
-            else:
-                model_information = split_name[0] + "." + split_name[1]
-            app_label = split_name[0]
-            model_name = split_name[1]
+            related_model = new_field.related_model
+            label = related_model._meta.label_lower
+            app_label, model_name = label.split('.')
             if getattr(settings, 'REPORT_BUILDER_INCLUDE', False):
                 includes = getattr(settings, 'REPORT_BUILDER_INCLUDE')
                 # If it is not included as 'foo' and not as 'demo_models.foo'
-                if (model_name not in includes and
-                        model_information not in includes):
+                if (model_name not in includes and label not in includes):
                     included_model = False
             if getattr(settings, 'REPORT_BUILDER_EXCLUDE', False):
                 excludes = getattr(settings, 'REPORT_BUILDER_EXCLUDE')
                 # If it is excluded as 'foo' and as 'demo_models.foo'
-                if (model_name in excludes or model_information in excludes):
+                if (model_name in excludes or label in excludes):
                     included_model = False
             verbose_name = getattr(new_field, 'verbose_name', None)
             if verbose_name is None:
