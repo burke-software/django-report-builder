@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
-from ..models import Report, Format, FilterField
+from ..models import Report, Format, FilterField, get_allowed_models
 from .serializers import (
     ReportNestedSerializer, ReportSerializer, FormatSerializer,
     FilterFieldSerializer, ContentTypeSerializer)
@@ -57,8 +57,10 @@ class ContentTypeViewSet(ReportBuilderViewMixin, viewsets.ReadOnlyModelViewSet):
     """ Read only view of content types.
     Used to populate choices for new report root model.
     """
-    queryset = ContentType.objects.all()
     serializer_class = ContentTypeSerializer
+
+    def get_queryset(self):
+        return get_allowed_models()
 
 
 class ReportViewSet(ReportBuilderViewMixin, viewsets.ModelViewSet):
