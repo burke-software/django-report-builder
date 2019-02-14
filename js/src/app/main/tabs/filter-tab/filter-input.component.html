@@ -23,7 +23,18 @@
     <mat-checkbox [checked]="getBoolean()" (change)="emitBoolean($event.checked)" arial-label="Min (annotation-filter)"></mat-checkbox>
   </div>
 
+  <div *ngSwitchCase="'relative_range'">
+    <mat-form-field>
+      <mat-select [value]="range" (selectionChange)="onRangeChange($event.value)">
+        <mat-option *ngFor="let option of rangeOpts" [value]="option.value">
+          {{ option.display }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <div *ngSwitchDefault [ngSwitch]="fieldType">
+
     <mat-form-field *ngSwitchCase="'DateField'">
       <input matInput [matDatepicker]="picker" [value]="date" (dateChange)="onDateChange($event.value.format('YYYY-MM-DD'))">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -52,5 +63,6 @@
     <mat-form-field *ngSwitchDefault>
       <input matInput value="{{value}}" (keyup)="valueChange.emit($event.currentTarget.value)">
     </mat-form-field>
+
   </div>
 </div>

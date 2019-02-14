@@ -30,6 +30,16 @@ for (let x = 0; x < 24; x += 0.5) {
   } as IDateTimeOption);
 }
 
+const rangeOpts:IDateTimeOption[] = [];
+
+const options = [15, 30, 60, 90, 180];
+for (const option of options) {
+  rangeOpts.push({
+    display: `last ${option} days`,
+    value: `${option * 60 * 60 * 24}`,
+  } as IDateTimeOption);
+}
+
 @Component({
   selector: 'app-filter-input',
   templateUrl: './filter-input.component.html',
@@ -41,7 +51,9 @@ export class FilterInputComponent implements OnChanges {
   @Output() valueChange = new EventEmitter<any>();
   date?: string;
   time?: string;
+  range?: string;
   timeOpts = timeOpts;
+  rangeOpts = rangeOpts;
 
   ngOnChanges(changes: SimpleChanges) {
     if (/Date/.test(this.fieldType)) {
@@ -79,5 +91,14 @@ export class FilterInputComponent implements OnChanges {
       result += ' ' + (this.time || '00:00');
     }
     this.valueChange.emit(result);
+  }
+
+  onRangeChange(seconds: string) {
+    this.range = seconds;
+    this.emitRange(seconds);
+  }
+
+  emitRange(seconds: string) {
+    this.valueChange.emit(seconds);
   }
 }
