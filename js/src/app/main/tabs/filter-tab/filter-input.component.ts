@@ -36,7 +36,7 @@ const options = [15, 30, 60, 90, 180];
 for (const option of options) {
   rangeOpts.push({
     display: `last ${option} days`,
-    value: `${option * 60 * 60 * 24}`,
+    value: `${-option * 60 * 60 * 24}`,
   } as IDateTimeOption);
 }
 
