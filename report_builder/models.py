@@ -609,7 +609,7 @@ class FilterField(AbstractField):
         default='icontains',
     )
     filter_delta = models.BigIntegerField(null=True, blank=True)
-    filter_value = models.CharField(max_length=2000)
+    filter_value = models.CharField(max_length=2000, blank=True)
     filter_value2 = models.CharField(max_length=2000, blank=True)
     exclude = models.BooleanField(default=False)
 
@@ -627,7 +627,7 @@ class FilterField(AbstractField):
                 ' the following field types: {}.'.format(dt_types))
 
         # Check for required relative range filter_delta
-        if self.filter_type == 'relative_range' and self.filter_delta is null:
+        if self.filter_type == 'relative_range' and self.filter_delta is None:
             raise ValidationError(
                 'Relative Range filters must have value and delta inputs.')
 
