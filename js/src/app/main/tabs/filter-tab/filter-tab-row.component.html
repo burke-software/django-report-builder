@@ -39,12 +39,17 @@
   </div>
 
   <div class="mat-cell">
-    <app-filter-input *ngIf="filter.filter_type!=='relative_range'" [value]="filter.filter_value"
-                      [fieldType]="filter.field_type" [filterType]="filter.filter_type"
+    <app-filter-input *ngIf="filter.filter_type!=='relative_range'"
+                      [value]="filter.filter_value"
+                      [fieldType]="filter.field_type"
+                      [filterType]="filter.filter_type"
                       (valueChange)="editFilter({filter_value: $event})"></app-filter-input>
-    <app-filter-input *ngIf="filter.filter_type==='relative_range'" [value]="filter.filter_delta"
-                      [fieldType]="filter.field_type" [filterType]="filter.filter_type"
-                      (valueChange)="editFilter({filter_delta: $event})"></app-filter-input>
+    <app-filter-input *ngIf="filter.filter_type==='relative_range'"
+                      [value]="filter.filter_delta"
+                      [unit]="filter.filter_value"
+                      [filterType]="filter.filter_type"
+                      (valueChange)="editFilter({filter_delta: $event})"
+                      (unitChange)="editFilter({filter_value: $event})"></app-filter-input>
   </div>
 
   <div class="mat-cell">
