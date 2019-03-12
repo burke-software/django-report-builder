@@ -30,13 +30,18 @@ for (let x = 0; x < 24; x += 0.5) {
   } as IDateTimeOption);
 }
 
-const rangeOpts:IDateTimeOption[] = [];
+const rangeUnitOpts:IDateTimeOption[] = [];
 
-const options = [15, 30, 60, 90, 180];
+const days = 'days';
+const hours = 'hours';
+const minutes = 'minutes';
+const seconds = 'seconds';
+
+const options = [days, hours, minutes, seconds];
 for (const option of options) {
-  rangeOpts.push({
-    display: `last ${option} days`,
-    value: `${-option * 60 * 60 * 24}`,
+  rangeUnitOpts.push({
+    display: `${option} ago`,
+    value: `${option}`,
   } as IDateTimeOption);
 }
 
@@ -51,9 +56,10 @@ export class FilterInputComponent implements OnChanges {
   @Output() valueChange = new EventEmitter<any>();
   date?: string;
   time?: string;
-  range?: string;
   timeOpts = timeOpts;
-  rangeOpts = rangeOpts;
+  range?: string;
+  rangeUnit?: string;
+  rangeUnitOpts = rangeUnitOpts;
 
   ngOnChanges(changes: SimpleChanges) {
     if (/Date/.test(this.fieldType)) {
@@ -93,12 +99,32 @@ export class FilterInputComponent implements OnChanges {
     this.valueChange.emit(result);
   }
 
-  onRangeChange(seconds: string) {
-    this.range = seconds;
-    this.emitRange(seconds);
+  onRangeChange(range: string) {
+    this.range = range;
+    this.emitRange();
   }
 
-  emitRange(seconds: string) {
+  onRangeUnitChange(unit: string) {
+    this.rangeUnit = unit;
+    this.emitRange();
+  }
+
+  emitRange() {
+    let seconds = 0;
+    let range = parseInt(this.range, 10);
+    switch (this.rangeUnit) {
+      case days:
+        seconds = range * 24 * 60 * 60;
+        break;
+      case hours:
+        seconds = range * 60 * 60;
+        break;
+      case minutes:
+        seconds = range * 60;
+        break;
+      default:
+        seconds = range;
+    }
     this.valueChange.emit(seconds);
   }
 }

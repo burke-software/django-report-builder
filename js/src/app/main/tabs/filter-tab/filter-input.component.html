@@ -25,8 +25,12 @@
 
   <div *ngSwitchCase="'relative_range'">
     <mat-form-field>
-      <mat-select [value]="range" (selectionChange)="onRangeChange($event.value)">
-        <mat-option *ngFor="let option of rangeOpts" [value]="option.value">
+      <input matInput value="{{ range }}" (keyup)="onRangeChange($event.currentTarget.value)">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select [value]="rangeUnit" (selectionChange)="onRangeUnitChange($event.value)">
+        <mat-option *ngFor="let option of rangeUnitOpts" [value]="option.value">
           {{ option.display }}
         </mat-option>
       </mat-select>
