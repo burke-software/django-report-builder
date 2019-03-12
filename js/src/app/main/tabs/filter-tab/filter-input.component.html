@@ -25,7 +25,7 @@
 
   <div *ngSwitchCase="'relative_range'">
     <mat-form-field>
-      <input matInput value="{{ range }}" (keyup)="onRangeChange($event.currentTarget.value)">
+      <input matInput value="{{ range }}" (keyup)="onRangeChange($event.currentTarget.value)" type="number">
     </mat-form-field>
 
     <mat-form-field>
