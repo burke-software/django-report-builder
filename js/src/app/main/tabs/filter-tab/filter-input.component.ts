@@ -115,7 +115,7 @@ export class FilterInputComponent implements OnChanges {
 
   getNumber(s: string) {
     const n = parseInt(s, 10);
-    return isNaN(n) ? 0 : n;
+    return isNaN(n) ? 0 : Math.abs(n);
   }
 
   getMultiplier() {
@@ -135,7 +135,8 @@ export class FilterInputComponent implements OnChanges {
   }
 
   emitRange() {
-    let seconds = this.getNumber(this.range) * this.getMultiplier();
+    // we need to make seconds negative for the API
+    let seconds = -this.getNumber(this.range) * this.getMultiplier();
     this.valueChange.emit(seconds);
   }
 }
