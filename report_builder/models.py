@@ -750,10 +750,7 @@ class FilterField(AbstractField):
             output = [date.strftime("%Y-%m-%d") for date in output_range]
 
         elif self.field_type == 'DateTimeField':
-            if abs(self.filter_delta) < day:
-                raise ValidationError(
-                    'DateTimeField delta must be at least 1 day.')
-            first = datetime.datetime.today()
+            first = datetime.datetime.now()
             second = first + datetime.timedelta(seconds=self.filter_delta)
             output_range = sorted([first, second])
             output = [date.strftime("%Y-%m-%d %H:%M:%S") for date in output_range]
