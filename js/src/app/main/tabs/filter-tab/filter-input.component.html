@@ -25,7 +25,8 @@
 
   <div *ngSwitchCase="'relative_range'">
     <mat-form-field>
-      <input matInput value="{{ range }}" (keyup)="onRangeChange($event.currentTarget.value)" type="number">
+      <input matInput value="{{ range }}" (keyup)="onRangeChange($event.currentTarget.value)" type="number"
+             oninput="if (isNaN(parseInt(this.value))) this.value = 0; else this.value = parseInt(this.value);">
     </mat-form-field>
 
     <mat-form-field>
