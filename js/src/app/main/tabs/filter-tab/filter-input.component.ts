@@ -13,6 +13,12 @@ interface IDateTimeOption {
   value: string;
 }
 
+interface IRangeOption {
+  display: string;
+  value: string;
+  multiplier: number;
+}
+
 // this code is ugly and Dog willing can be deleted when Angular Material adds a datetime input
 // until that day I will describe what it does in comments because it's real imperative
 const timeOpts: IDateTimeOption[] = [];
@@ -30,18 +36,40 @@ for (let x = 0; x < 24; x += 0.5) {
   } as IDateTimeOption);
 }
 
+const rangeUnitOpts: IRangeOption[] = [];
+
+const days = 'days';
+const hours = 'hours';
+const minutes = 'minutes';
+const seconds = 'seconds';
+
+const options = [days, hours, minutes, seconds];
+const multipliers = [24 * 60 * 60, 60 * 60, 60, 1];
+for (let i = 0; i < options.length; i++) {
+  rangeUnitOpts.push({
+    display: `${options[i]} ago`,
+    value: `${options[i]}`,
+    multiplier: multipliers[i],
+  } as IRangeOption);
+}
+
 @Component({
   selector: 'app-filter-input',
   templateUrl: './filter-input.component.html',
 })
 export class FilterInputComponent implements OnChanges {
   @Input() value: string;
+  @Input() unit: string;
   @Input() filterType: string;
   @Input() fieldType: string;
   @Output() valueChange = new EventEmitter<any>();
+  @Output() unitChange = new EventEmitter<string>();
   date?: string;
   time?: string;
   timeOpts = timeOpts;
+  range?: string;
+  rangeUnit?: string;
+  rangeUnitOpts = rangeUnitOpts;
 
   ngOnChanges(changes: SimpleChanges) {
     if (/Date/.test(this.fieldType)) {
@@ -52,6 +80,10 @@ export class FilterInputComponent implements OnChanges {
     if (changes.filterType && /^(?:isnull|max|min)$/.test(changes.filterType.currentValue) && this.value.length === 0 ) {
       // settimeout is a hack because we probably shouldn't be emitting inside of ngOnChanges. Eventually this should be moved to some kind of serializer
       setTimeout(() => this.emitBoolean(false), 0)
+    }
+    if (this.filterType === 'relative_range') {
+      this.rangeUnit = options.includes(this.unit) ? this.unit : seconds;
+      this.range = (this.getNumber(this.value) / this.getMultiplier()).toString();
     }
   }
 
@@ -79,5 +111,32 @@ export class FilterInputComponent implements OnChanges {
       result += ' ' + (this.time || '00:00');
     }
     this.valueChange.emit(result);
+  }
+
+  getNumber(s: string) {
+    const n = parseInt(s, 10);
+    return isNaN(n) ? 0 : Math.abs(n);
+  }
+
+  getMultiplier() {
+    const option = this.rangeUnitOpts.find(option => option.value === this.rangeUnit);
+    return option ? option.multiplier : 1;
+  }
+
+  onRangeChange(range: string) {
+    this.range = this.getNumber(range).toString();
+    this.emitRange();
+  }
+
+  onRangeUnitChange(unit: string) {
+    this.rangeUnit = unit;
+    this.unitChange.emit(unit);
+    this.emitRange();
+  }
+
+  emitRange() {
+    // we need to make seconds negative for the API
+    let seconds = -this.getNumber(this.range) * this.getMultiplier();
+    this.valueChange.emit(seconds);
   }
 }
