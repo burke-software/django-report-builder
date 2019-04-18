@@ -63,7 +63,7 @@ export class FilterInputComponent implements OnChanges {
   @Input() filterType: string;
   @Input() fieldType: string;
   @Output() valueChange = new EventEmitter<any>();
-  @Output() unitChange = new EventEmitter<any>();
+  @Output() unitChange = new EventEmitter<string>();
   date?: string;
   time?: string;
   timeOpts = timeOpts;
