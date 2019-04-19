@@ -66,6 +66,8 @@ def sort_data(data_list, display_field):
     display_field - report_builder.DisplayField object
     returns sorted data_list
     """
+    if not data_list:
+        return data_list
     position = display_field.position
     is_reverse = display_field.sort_reverse
     # Try to inspect sample data to determine type
