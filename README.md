@@ -8,6 +8,12 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 6.3
+
+- Added Django 2.2 support. Django 1.11 and 2.1 are still supported.
+- Unit tests finally run in Python 3.7 thanks to Celery supporting it
+- Angular updated to version 7
+
 ## 6.2
 
 - Added partial Python 3.7 support. We can't fully support Python 3.7 until Celery does.
@@ -16,10 +22,6 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 - Added Django 2.1 support. 2.0 and 1.11 are still supported.
 
-## 6.0
-
-- Added django 2.0 support. Dropped support for Django 1.8 and 1.10 as Django no longer supports them
-- Bug fixes
 
 # What is Django Report Builder?
 
