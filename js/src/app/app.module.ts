@@ -143,7 +143,7 @@ export const MatModules = [
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
     EffectsModule.forRoot([ReportEffects, ConfigEffects, RouterEffects]),
     HttpClientModule,
-    TreeModule,
+    TreeModule.forRoot(),
     MatSortModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
