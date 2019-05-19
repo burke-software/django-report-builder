@@ -276,16 +276,6 @@ export class ReportEffects {
   );
 
   @Effect()
-  simpleTest$ = ({
-    delayTime = 500,
-    scheduler = asyncScheduler
-  } = {}) => this.actions$.pipe(
-    ofType(ReportActionTypes.CHECK_EXPORT_STATUS),
-    delay(delayTime, scheduler),
-    map(() => new fromReports.DownloadExportedReport('some-link'))
-  );
-
-  @Effect()
   checkExportStatus$ = ({
     delayTime = 500,
     scheduler = asyncScheduler
