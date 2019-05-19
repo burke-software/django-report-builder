@@ -24,6 +24,7 @@ test_coverage:
 test_js:
   image: registry.gitlab.com/dasch8/angular-ci:latest
   script:
+    - cd js
     - yarn --frozen-lockfile
     - yarn lint
     - yarn test --progress false --watch=false --browsers=ChromiumCI

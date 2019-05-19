@@ -28,11 +28,11 @@ for (let x = 0; x < 24; x += 0.5) {
   const displayHour = hour % 12 === 0 ? '12' : String(hour % 12); // display 12-hour clock times
   const valueHour = hour < 10 ? '0' + hour : String(hour); // use two digit 24-hour clock times for the value
   const ampm = hour < 12 ? 'AM' : 'PM'; // before noon display AM, after PM
-  const minutes = x === Math.floor(x) ? '00' : '30'; // 0.0 = on the hour, 0.5 = on the half hour
+  const _minutes = x === Math.floor(x) ? '00' : '30'; // 0.0 = on the hour, 0.5 = on the half hour
 
   timeOpts.push({
-    display: `${displayHour}:${minutes} ${ampm}`,
-    value: `${valueHour}:${minutes}`,
+    display: `${displayHour}:${_minutes} ${ampm}`,
+    value: `${valueHour}:${_minutes}`,
   } as IDateTimeOption);
 }
 
@@ -119,7 +119,7 @@ export class FilterInputComponent implements OnChanges {
   }
 
   getMultiplier() {
-    const option = this.rangeUnitOpts.find(option => option.value === this.rangeUnit);
+    const option = this.rangeUnitOpts.find(_option => _option.value === this.rangeUnit);
     return option ? option.multiplier : 1;
   }
 
@@ -136,7 +136,7 @@ export class FilterInputComponent implements OnChanges {
 
   emitRange() {
     // we need to make seconds negative for the API
-    let seconds = -this.getNumber(this.range) * this.getMultiplier();
-    this.valueChange.emit(seconds);
+    const _seconds = -this.getNumber(this.range) * this.getMultiplier();
+    this.valueChange.emit(_seconds);
   }
 }
