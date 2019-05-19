@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { hot, cold } from 'jasmine-marbles';
+import { hot, cold, getTestScheduler } from 'jasmine-marbles';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { MatSnackBarModule } from '@angular/material';
@@ -225,7 +225,6 @@ describe('Report Effects', () => {
     });
     const reportId = state.reports.selectedReport.id;
     const taskId = '12345';
-    const _delay = Array(52).join('-');
 
     beforeEach(() => {
       TestBed.configureTestingModule(makeTestbedConfig(state));
@@ -248,34 +247,41 @@ describe('Report Effects', () => {
       expect(effects.exportReport$).toBeObservable(expected);
     });
 
-    // Sad times, can't figure out how to make rxjs marbles work with delay
-    xit("CheckExportStatus should dispatch another CheckExportStatus action if the download isn't ready", fakeAsync(() => {
+    it("CheckExportStatus should dispatch another CheckExportStatus action if the download isn't ready", () => {
       actions = hot('a', {
         a: new Actions.CheckExportStatus({ reportId, taskId }),
       });
       const response = cold('-b', { b: { state: 'newp' } });
-      const expected = cold(_delay + 'c', {
+      const expected = cold('---c', {
         c: new Actions.CheckExportStatus({ reportId, taskId }),
       });
 
       service.checkStatus.and.returnValue(response);
+      const actual = effects.checkExportStatus$({
+        delayTime: 20,
+        scheduler: getTestScheduler(),
+      });
 
-      expect(effects.checkExportStatus$).toBeObservable(expected);
-    }));
+      expect(actual).toBeObservable(expected);
+    });
 
-    xit('CheckExportStatus should dispatch a download request if the download is ready', fakeAsync(() => {
+    it('CheckExportStatus should dispatch a download request if the download is ready', fakeAsync(() => {
       const link = 'place/download';
       actions = hot('a', {
         a: new Actions.CheckExportStatus({ reportId, taskId }),
       });
       const response = cold('-b', { b: { state: 'SUCCESS', link } });
-      const expected = cold(_delay + 'c', {
+      const expected = cold('---c', {
         c: new Actions.DownloadExportedReport(link),
       });
 
       service.checkStatus.and.returnValue(response);
+      const actual = effects.checkExportStatus$({
+        delayTime: 20,
+        scheduler: getTestScheduler(),
+      });
 
-      expect(effects.checkExportStatus$).toBeObservable(expected);
+      expect(actual).toBeObservable(expected);
     }));
   });
 });

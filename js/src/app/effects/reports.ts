@@ -1,4 +1,4 @@
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of, asyncScheduler } from 'rxjs';
 import {
   map,
   mergeMap,
@@ -227,26 +227,6 @@ export class ReportEffects {
     )
   );
 
-  @Effect()
-  checkExportStatus$ = this.actions$.pipe(
-    ofType(ReportActionTypes.CHECK_EXPORT_STATUS),
-    delay(500),
-    mergeMap(
-      ({ payload: { reportId, taskId } }: fromReports.CheckExportStatus) =>
-        this.api.checkStatus({ reportId, taskId }).pipe(
-          map(({ state, link }) => {
-            if (state === 'SUCCESS') {
-              return new fromReports.DownloadExportedReport(link);
-            } else if (state === 'FAILURE') {
-              return new fromReports.CancelExportReport();
-            } else {
-              return new fromReports.CheckExportStatus({ reportId, taskId });
-            }
-          })
-        )
-    )
-  );
-
   @Effect({ dispatch: false })
   cancelExportReport$ = this.actions$.pipe(
     ofType(ReportActionTypes.CANCEL_EXPORT_REPORT),
@@ -294,4 +274,38 @@ export class ReportEffects {
     mergeMap(reportId => this.api.copyReport(reportId)),
     map(createdReport => new fromReports.CreateReportSuccess(createdReport))
   );
+
+  @Effect()
+  simpleTest$ = ({
+    delayTime = 500,
+    scheduler = asyncScheduler
+  } = {}) => this.actions$.pipe(
+    ofType(ReportActionTypes.CHECK_EXPORT_STATUS),
+    delay(delayTime, scheduler),
+    map(() => new fromReports.DownloadExportedReport('some-link'))
+  );
+
+  @Effect()
+  checkExportStatus$ = ({
+    delayTime = 500,
+    scheduler = asyncScheduler
+  } = {}) => this.actions$.pipe(
+    ofType(ReportActionTypes.CHECK_EXPORT_STATUS),
+    delay(delayTime, scheduler),
+    mergeMap(
+      ({ payload: { reportId, taskId } }: fromReports.CheckExportStatus) =>
+        this.api.checkStatus({ reportId, taskId }).pipe(
+          map(({ state, link }) => {
+            if (state === 'SUCCESS') {
+              return new fromReports.DownloadExportedReport(link);
+            } else if (state === 'FAILURE') {
+              return new fromReports.CancelExportReport();
+            } else {
+              return new fromReports.CheckExportStatus({ reportId, taskId });
+            }
+          })
+        )
+    )
+  );
+
 }
