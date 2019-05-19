@@ -1,18 +1,18 @@
 image: python:3.6
 
-cache:
-  paths:
-  - ~/.cache/pip/
-
-before_script:
-  - pip install tox
-
 test_py36:
-  script: tox
+  cache:
+    paths:
+    - ~/.cache/pip/
+  script:
+    - pip install tox
+    - tox
 
 test_py37:
   image: python:3.7
-  script: tox -c tox.py37.ini
+  script:
+    - pip install tox
+    - tox -c tox.py37.ini
 
 test_coverage:
   script:
@@ -20,3 +20,10 @@ test_coverage:
     - pip install -e . -r requirements-dev.txt
     - coverage run --source='.' manage.py test --noinput -v 3
     - coverage report --skip-covered | grep TOTAL
+
+test_js:
+  image: registry.gitlab.com/dasch8/angular-ci:latest
+  script:
+    - yarn --frozen-lockfile
+    - yarn lint
+    - yarn test --progress false --watch=false --browsers=ChromiumCI
