@@ -6,16 +6,11 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-
-import { Observable } from 'rxjs/Observable';
-import { _throw } from 'rxjs/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/operator/retry';
-
 import { MatSnackBar } from '@angular/material';
 import { Store } from '@ngrx/store';
+import { Observable, throwError, EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import { State } from './reducers';
 import { CancelGeneratePreview } from './actions/reports';
 
@@ -31,17 +26,21 @@ export class NetworkErrorInterceptor implements HttpInterceptor {
     const baseUrl = document.getElementsByTagName('base')[0].href;
     const apiReq = request.clone({ url: `${baseUrl}${request.url}` });
 
-    return next.handle(apiReq).catch((err: HttpErrorResponse) => {
-      if (err.status === 0 || err.status === 500) {
-        // An error we can't help with happened, one of:
-        // 1. Network error
-        // 2. Client side JS error
-        // 3. Server side 500 error
-        this.store.dispatch(new CancelGeneratePreview());
-        this.snackBar.open('Sorry, something went wrong!', '', {duration: 5000});
-        return Observable.empty();
-      }
-      return _throw(err.error);
-    });
+    return next.handle(apiReq).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err.status === 0 || err.status === 500) {
+          // An error we can't help with happened, one of:
+          // 1. Network error
+          // 2. Client side JS error
+          // 3. Server side 500 error
+          this.store.dispatch(new CancelGeneratePreview());
+          this.snackBar.open('Sorry, something went wrong!', '', {
+            duration: 5000,
+          });
+          return EMPTY;
+        }
+        return throwError(err.error);
+      })
+    );
   }
 }

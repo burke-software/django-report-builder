@@ -8,6 +8,12 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 # News
 
+## 6.3
+
+- Added Django 2.2 support. Django 1.11 and 2.1 are still supported.
+- Unit tests finally run in Python 3.7 thanks to Celery supporting it
+- Angular updated to version 7
+
 ## 6.2
 
 - Added partial Python 3.7 support. We can't fully support Python 3.7 until Celery does.
@@ -16,10 +22,6 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 - Added Django 2.1 support. 2.0 and 1.11 are still supported.
 
-## 6.0
-
-- Added django 2.0 support. Dropped support for Django 1.8 and 1.10 as Django no longer supports them
-- Bug fixes
 
 # What is Django Report Builder?
 
@@ -44,3 +46,15 @@ http://django-report-builder.readthedocs.org/
 [Google group](https://groups.google.com/forum/#!forum/django-report-builder/).
 
 [Contributing](http://django-report-builder.readthedocs.org/en/latest/contributors/)
+
+## Development quick start
+
+This package uses Django in Docker and Angular CLI for development purposes.
+
+1. Start docker `docker-compose up`
+2. Migrate and  create an admin user `docker-compose run --rm web ./manage.py migrate`
+3. Start the Angular CLI server. Ensure Node and is installed. `cd js`, `yarn`, `yarn start`
+4. Django runs on port 8000 by default. Go to localhost:8000/admin and log in.
+5. Angular runs on port 4200. Now that you are logged in go to localhost:4200
+
+More detailed instructions are at [here](https://django-report-builder.readthedocs.io/en/latest/contributors/)

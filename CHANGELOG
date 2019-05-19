@@ -1,3 +1,9 @@
+## 6.3
+
+- Added Django 2.2 support. Django 1.11 and 2.1 are still supported.
+- Unit tests finally run in Python 3.7 thanks to Celery supporting it
+- Angular updated to version 7
+
 ## 6.2
 
 - Added Python 3.7 support
