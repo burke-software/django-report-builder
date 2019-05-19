@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-report-builder",
-    version="6.3.0",
+    version="6.3.1",
     author="David Burke",
     author_email="david@burkesoftware.com",
     description=("Query and Report builder for Django ORM"),
     license="BSD",
     keywords="django report",
     url="https://gitlab.com/burke-software/django-report-builder",
-    packages=find_packages(),
+    packages=find_packages(exclude=["report_builder_demo", "report_builder_demo.*"]),
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
