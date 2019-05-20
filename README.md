@@ -53,8 +53,8 @@ This package uses Django in Docker and Angular CLI for development purposes.
 
 1. Start docker `docker-compose up`
 2. Migrate and  create an admin user `docker-compose run --rm web ./manage.py migrate`
-3. Start the Angular CLI server. Ensure Node and is installed. `cd js`, `yarn`, `yarn start`
+3. Start the Angular CLI server. Ensure Node is installed. `cd js`, `yarn`, `yarn start`
 4. Django runs on port 8000 by default. Go to localhost:8000/admin and log in.
-5. Angular runs on port 4200. Now that you are logged in go to localhost:4200
+5. Angular runs on port 4200. Now that you are logged in, go to localhost:4200
 
 More detailed instructions are at [here](https://django-report-builder.readthedocs.io/en/latest/contributors/)
