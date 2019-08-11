@@ -12,20 +12,18 @@ Please consider supporting the project via librepay. Paid commercial support is 
 
 # News
 
+## 6.3.2
+
+- Fixed admin widgets (Thanks predatell)
+- Angular updated to version 8
+
 ## 6.3
 
 - Added Django 2.2 support. Django 1.11 and 2.1 are still supported.
 - Unit tests finally run in Python 3.7 thanks to Celery supporting it
 - Angular updated to version 7
 
-## 6.2
-
-- Added partial Python 3.7 support. We can't fully support Python 3.7 until Celery does.
-
-## 6.1
-
-- Added Django 2.1 support. 2.0 and 1.11 are still supported.
-
+View more on the [CHANGELOG](CHANGELOG).
 
 # What is Django Report Builder?
 

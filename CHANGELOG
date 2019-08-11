@@ -1,3 +1,12 @@
+## 6.3.2
+
+- Fixed admin widgets (Thanks predatell)
+- Angular updated to version 8
+
+## 6.3.1
+
+Botched 6.3.0 build process, no actual changes here
+
 ## 6.3
 
 - Added Django 2.2 support. Django 1.11 and 2.1 are still supported.

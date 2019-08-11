@@ -36,7 +36,7 @@ export class RightSidebarComponent implements OnChanges {
     this.fieldDataSource = new MatTableDataSource(value);
   }
 
-  @ViewChild('searchFields') searchInput
+  @ViewChild('searchFields', { static: true }) searchInput
 
   fieldDataSource: MatTableDataSource<IField>;
   displayedColumnsField = ['name', 'button'];

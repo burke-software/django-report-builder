@@ -32,7 +32,7 @@ function modifiedStringToDate(report: IReport): IReportSortable {
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   displayedColumns = ['actions', 'name', 'user', 'date'];
   dataSource = new MatTableDataSource<IReportSortable>();
