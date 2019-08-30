@@ -26,8 +26,8 @@
         <mat-option value="istartswith">Starts with (case-insensitive)</mat-option>
         <mat-option value="endswith">Ends with</mat-option>
         <mat-option value="iendswith">Ends with (case-insensitive)</mat-option>
-        <mat-option value="range">range</mat-option>
-        <mat-option value="relative_range">relative_range</mat-option>
+        <mat-option value="range">Range</mat-option>
+        <mat-option value="relative_range" [disabled]="!(filter.field_type === 'DateField' || filter.field_type === 'DateTimeField')">Relative Range</mat-option>
         <mat-option value="week_day">Week day</mat-option>
         <mat-option value="isnull">Is null</mat-option>
         <mat-option value="regex">Regular Expression</mat-option>
@@ -37,15 +37,28 @@
       </mat-select>
     </mat-form-field>
   </div>
+
   <div class="mat-cell">
-    <app-filter-input [value]="filter.filter_value" [fieldType]="filter.field_type" [filterType]="filter.filter_type" (valueChange)="editFilter({filter_value: $event})"></app-filter-input>
+    <app-filter-input *ngIf="filter.filter_type!=='relative_range'"
+                      [value]="filter.filter_value"
+                      [fieldType]="filter.field_type"
+                      [filterType]="filter.filter_type"
+                      (valueChange)="editFilter({filter_value: $event})"></app-filter-input>
+    <app-filter-input *ngIf="filter.filter_type==='relative_range'"
+                      [value]="filter.filter_delta"
+                      [unit]="filter.filter_value"
+                      [filterType]="filter.filter_type"
+                      (valueChange)="editFilter({filter_delta: $event})"
+                      (unitChange)="editFilter({filter_value: $event})"></app-filter-input>
   </div>
+
   <div class="mat-cell">
     <app-filter-input *ngIf="filter.filter_type==='range'" [value]="filter.filter_value2" [fieldType]="filter.field_type" [filterType]="filter.filter_type"
-      (valueChange)="editFilter({filter_value2: $event})">
-    </app-filter-input>
+      (valueChange)="editFilter({filter_value2: $event})"></app-filter-input>
   </div>
+
   <div class="mat-cell">
     <mat-checkbox [checked]="filter.exclude" (change)="editFilter({exclude: $event.checked })" aria-label="Exclude?"></mat-checkbox>
   </div>
+
 </div>

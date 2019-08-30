@@ -13,9 +13,13 @@
         <p>Please add 'django.core.context_processors.static' to context_processors in settings.py</p>
     {% endif %}
     <app-root></app-root>
-    <script type="text/javascript" src="{% static 'report_builder/polyfills.js' %}"></script>
-    <script type="text/javascript" src="{% static 'report_builder/runtime.js' %}"></script>
+    <script type="text/javascript" src="{% static 'report_builder/polyfills-es2015.js' %}" type="module"></script>
+    <script type="text/javascript" src="{% static 'report_builder/runtime-es2015.js' %}" type="module"></script>
     <link rel="stylesheet" href="{% static 'report_builder/styles.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script type="text/javascript" src="{% static 'report_builder/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'report_builder/main-es2015.js' %}" type="module"></script>
+
+    <script type="text/javascript" src="{% static 'report_builder/polyfills-es5.js' %}" nomodule></script>
+    <script type="text/javascript" src="{% static 'report_builder/runtime-es5.js' %}" nomodule></script>
+    <script type="text/javascript" src="{% static 'report_builder/main-es5.js' %}" nomodule></script>
 {% endblock %}

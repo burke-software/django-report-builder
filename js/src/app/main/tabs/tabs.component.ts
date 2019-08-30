@@ -32,7 +32,7 @@ export class TabsComponent implements OnInit {
   report$ = this.store.select(getSelectedReport);
   hasChanged$ = this.store.select(hasEditedSinceLastSave);
   errors$ = this.store.select(getErrors);
-  @ViewChild('tabs') tabs: MatTabGroup;
+  @ViewChild('tabs', { static: true }) tabs: MatTabGroup;
 
   ngOnInit() {
     this.activeTab$.subscribe(number => (this.tabs.selectedIndex = number));

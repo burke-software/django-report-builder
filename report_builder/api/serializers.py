@@ -47,7 +47,7 @@ class FilterFieldSerializer(serializers.ModelSerializer):
                   'exclude', 'position', 'report', 'filter_delta')
         read_only_fields = ('id', 'field_type')
 
-    filter_value = NonStrictCharField()
+    filter_value = NonStrictCharField(allow_blank=True)
 
 
 class UserSerializer(serializers.ModelSerializer):

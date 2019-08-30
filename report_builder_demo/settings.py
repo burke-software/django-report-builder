@@ -120,6 +120,7 @@ CELERY_RESULT_BACKEND = BROKER_URL
 REPORT_BUILDER_ASYNC_REPORT = True
 REPORT_BUILDER_GLOBAL_EXPORT = True
 REPORT_BUILDER_EMAIL_NOTIFICATION = False
+REPORT_BUILDER_EXCLUDE = ['django_celery_beat.solarschedule']
 
 # These default settings can break report builder - so test against them
 REST_FRAMEWORK = {
