@@ -34,8 +34,14 @@ def fieldset_string_to_field(fieldset_dict, model):
     i = 0
     for dict_field in fieldset_dict['fields']:
         if isinstance(dict_field, string_types):
-            fieldset_dict['fields'][i] = model._meta.get_field_by_name(
-                dict_field)[0]
+            try:
+                fieldset_dict['fields'][i] = model._meta.get_field_by_name(
+                    dict_field)[0]
+            except:
+                try:
+                    fieldset_dict['fields'][i] = model._meta.get_field(dict_field)
+                except:
+                    fieldset_dict['fields'][i] = None
         elif isinstance(dict_field, list) or isinstance(dict_field, tuple):
             dict_field[1]['recursive'] = True
             fieldset_string_to_field(dict_field[1], model)

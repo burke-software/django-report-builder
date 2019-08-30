@@ -557,7 +557,10 @@ class DisplayField(AbstractField):
         try:
             model_field = model._meta.get_field_by_name(field_name)[0]
         except:
-            model_field = None
+            try:
+                model_field = model._meta.get_field(field_name)
+            except:
+                model_field = None
         if model_field and model_field.choices:
             return ((model_field.get_prep_value(key), val) for key, val in model_field.choices)
 
@@ -659,7 +662,10 @@ class FilterField(AbstractField):
         try:
             model_field = model._meta.get_field_by_name(field_name)[0]
         except:
-            model_field = None
+            try:
+                model_field = model._meta.get_field(field_name)
+            except:
+                model_field = None
         if model_field and model_field.choices:
             return model_field.choices
 
