@@ -40,6 +40,7 @@ class ReportAdmin(admin.ModelAdmin):
 
     class Media:
         js = [
+            'admin/js/jquery.init.js',
             static_url + 'report_builder/js/report_list.js',
             static_url + 'report_builder/js/report_form.js']
 

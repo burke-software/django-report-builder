@@ -612,7 +612,7 @@ class FilterField(AbstractField):
         default='icontains',
     )
     filter_delta = models.BigIntegerField(null=True, blank=True)
-    filter_value = models.CharField(max_length=2000)
+    filter_value = models.CharField(max_length=2000, blank=True)
     filter_value2 = models.CharField(max_length=2000, blank=True)
     exclude = models.BooleanField(default=False)
 
@@ -630,7 +630,7 @@ class FilterField(AbstractField):
                 ' the following field types: {}.'.format(dt_types))
 
         # Check for required relative range filter_delta
-        if self.filter_type == 'relative_range' and self.filter_delta is null:
+        if self.filter_type == 'relative_range' and self.filter_delta is None:
             raise ValidationError(
                 'Relative Range filters must have value and delta inputs.')
 
@@ -756,10 +756,7 @@ class FilterField(AbstractField):
             output = [date.strftime("%Y-%m-%d") for date in output_range]
 
         elif self.field_type == 'DateTimeField':
-            if abs(self.filter_delta) < day:
-                raise ValidationError(
-                    'DateTimeField delta must be at least 1 day.')
-            first = datetime.datetime.today()
+            first = datetime.datetime.now()
             second = first + datetime.timedelta(seconds=self.filter_delta)
             output_range = sorted([first, second])
             output = [date.strftime("%Y-%m-%d %H:%M:%S") for date in output_range]

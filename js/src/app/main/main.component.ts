@@ -38,7 +38,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements ComponentCanDeactivate {
-  @ViewChild(MatSidenav) sidenav: MatSidenav;
+  @ViewChild(MatSidenav, { static: true }) sidenav: MatSidenav;
   title$ = this.store.select(getTitle);
   activeTab$ = this.store.select(getActiveTab);
 
