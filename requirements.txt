@@ -5,8 +5,8 @@ Werkzeug
 ipdb
 celery[redis]
 flake8
-django-money==0.14.4
-djangorestframework==3.9.4
+django-money>=1.0
+djangorestframework>=3.10
 django_celery_beat==1.4.0
 coverage==4.5.3
 tox
