@@ -221,7 +221,7 @@ class Report(models.Model):
             for field in display_fields:
                 if (not field.group) and (not field.aggregate):
                     field.aggregate = 'Max'
-            values = queryset.values(*group)
+            values = queryset.order_by(*group).values(*group) 
             values = self.add_aggregates(values, display_fields)
             data_list = []
             for row in values:
