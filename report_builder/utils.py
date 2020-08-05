@@ -2,7 +2,7 @@ from decimal import Decimal
 from itertools import chain
 from numbers import Number
 from django.contrib.contenttypes.models import ContentType
-from django.db.models.fields import FieldDoesNotExist
+from django.core.exceptions import FieldDoesNotExist
 from django.conf import settings
 import copy
 import datetime
