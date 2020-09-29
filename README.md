@@ -3,12 +3,14 @@
 A GUI for Django ORM. Build custom queries and display results.
 Targets sys admins and capable end users who might not be able to program or gain direct interactive shell access.
 
-Please consider supporting the project via librepay. Paid commercial support is also available. Email info@burkesoftware.com for more infomation.
+[![pipeline status](https://gitlab.com/burke-software/django-report-builder/badges/master/pipeline.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
+[![coverage report](https://gitlab.com/burke-software/django-report-builder/badges/master/coverage.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
+
+# Call for Sponsorship
 
 <a href="https://liberapay.com/burke-software/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
-[![pipeline status](https://gitlab.com/burke-software/django-report-builder/badges/master/pipeline.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
-[![coverage report](https://gitlab.com/burke-software/django-report-builder/badges/master/coverage.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
+Are you a fan of Report Builder or using it at your workplace? Please consider sponsorship. You may donate on [Liberapay](https://liberapay.com/burke-software/donate) directly or contact me about sponsoring a feature. Right now, we need better documentation and Django 3.1 support. Get your profile or company logo added to our Readme as a sponsor. Paid commercial support is also available. Email info@burkesoftware.com for more infomation.
 
 # News
 
