@@ -12,6 +12,9 @@ Please consider supporting the project via librepay. Paid commercial support is 
 
 # News
 
+## 6.4
+- Added Django 3.0 support
+
 ## 6.3.2
 
 - Fixed admin widgets (Thanks predatell)
