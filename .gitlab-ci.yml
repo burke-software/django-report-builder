@@ -14,6 +14,12 @@ test_py37:
     - pip install tox
     - tox -c tox.py37.ini
 
+test_py38:
+  image: python:3.8-slim
+  script:
+    - pip install tox
+    - tox -c tox.py38.ini
+
 test_coverage:
   script:
     - pip install -e . -r requirements.txt
