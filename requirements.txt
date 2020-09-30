@@ -3,7 +3,7 @@ psycopg2-binary
 django-extensions
 Werkzeug
 ipdb
-celery[redis]
+celery[redis]==4.4.7
 flake8
 django-money>=1.0
 djangorestframework>=3.10

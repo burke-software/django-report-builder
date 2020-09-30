@@ -18,7 +18,7 @@ services:
       - redis
   celery:
     build: .
-    command: celery -A report_builder_demo worker -l info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: celery -A report_builder_demo worker -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
     links:
       - db
       - redis
