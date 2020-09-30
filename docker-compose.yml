@@ -1,7 +1,9 @@
 version: '2'
 services:
   db:
-    image: postgres:9.6
+    image: postgres:12
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
   redis:
     image: redis:3
   web:

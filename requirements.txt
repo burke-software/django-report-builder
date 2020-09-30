@@ -1,5 +1,5 @@
 django-custom-field==2.9
-psycopg2
+psycopg2-binary
 django-extensions
 Werkzeug
 ipdb
@@ -7,9 +7,10 @@ celery[redis]
 flake8
 django-money>=1.0
 djangorestframework>=3.10
-django_celery_beat==1.4.0
+django_celery_beat
 coverage==4.5.3
 tox
 model_mommy
 freezegun
 openpyxl
+model-bakery

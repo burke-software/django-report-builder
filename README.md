@@ -14,6 +14,9 @@ Are you a fan of Report Builder or using it at your workplace? Please consider s
 
 # News
 
+## 6.4
+- Added Django 3.0 support
+
 ## 6.3.2
 
 - Fixed admin widgets (Thanks predatell)

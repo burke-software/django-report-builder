@@ -4,7 +4,7 @@ from django.core import mail
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from model_mommy import mommy
+from model_bakery import baker
 from report_builder.tasks import report_builder_file_async_report_save
 
 
@@ -45,6 +45,6 @@ class ViewTests(TestCase):
         Test to ensure the celery task will succeed given proper params in the right order.
         """
         user = User.objects.create(username='testy', is_staff=True, is_superuser=True)
-        report = mommy.make('Report')
+        report = baker.make('Report')
         res = report_builder_file_async_report_save.delay(report.id, user.id, 'xlsx')
         self.assertEqual(res.successful(), True)

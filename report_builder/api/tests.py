@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import force_authenticate
-from model_mommy import mommy
+from model_bakery import baker
 from .views import ContentTypeViewSet
 
 
@@ -12,7 +12,7 @@ User = get_user_model()
 class ReportBuilderAPITests(TestCase):
     def test_content_viewset(self):
         factory = APIRequestFactory()
-        user = mommy.make(User, is_superuser=True, is_staff=True)
+        user = baker.make(User, is_superuser=True, is_staff=True)
         view = ContentTypeViewSet.as_view({'get': 'list'})
         request = factory.get('/report_builder/api/contenttypes/')
         force_authenticate(request, user=user)
