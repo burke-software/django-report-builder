@@ -10,7 +10,7 @@ Targets sys admins and capable end users who might not be able to program or gai
 
 <a href="https://liberapay.com/burke-software/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
-Are you a fan of Report Builder or using it at your workplace? Please consider sponsorship. You may donate on [Liberapay](https://liberapay.com/burke-software/donate) directly or contact me about sponsoring a feature. Right now, we need better documentation and Django 3.1 support. Get your profile or company logo added to our Readme as a sponsor. Paid commercial support is also available. Email info@burkesoftware.com for more infomation.
+Are you a fan of Report Builder or using it at your workplace? Please consider sponsorship. You may donate on [Liberapay](https://liberapay.com/burke-software/donate) directly or contact me about sponsoring a feature. Right now, we need better documentation. Get your profile or company logo added to our Readme as a sponsor. Paid commercial support is also available. Email info@burkesoftware.com for more infomation.
 
 # News
 
@@ -40,9 +40,9 @@ View more on the [CHANGELOG](CHANGELOG).
 * Add filters
 * Add display fields
 * Preview and create xlsx reports
-* Very simple security, user must have change or "view" permission to view
+* Uses Django permissions models - Staff users must have "change" or "view" permission to view
   reports. Unprivileged users can still build reports and see database schema.
-* Model properties (thanks yekibud)
+   * Report builder is intended for generally trusted staff users and requires is_staff to be set.
 * Export to Report global admin action
 * Scheduled reports can generate and send to users on cron like schedule
 * Optional asynchronous report generation
