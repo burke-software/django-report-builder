@@ -1,4 +1,4 @@
-image: python:3.6
+image: python:3.6-slim
 variables:
   POETRY_VERSION: 1.1.4
   POETRY_VIRTUALENVS_CREATE: "false"
@@ -9,13 +9,13 @@ test_py36:
     paths:
     - ~/.cache/pip/
   script:
-    - pip install tox
+    - pip install tox "poetry==$POETRY_VERSION"
     - tox
 
 test_py37:
-  image: python:3.7
+  image: python:3.7-slim
   script:
-    - pip install tox
+    - pip install tox "poetry==$POETRY_VERSION"
     - tox -c tox.py37.ini
 
 test_py38:
@@ -26,8 +26,8 @@ test_py38:
 
 test_coverage:
   script:
-    - pip install -e . -r requirements.txt
-    - pip install -e . -r requirements-dev.txt
+    - pip install coverage "poetry==$POETRY_VERSION"
+    - poetry install
     - coverage run --source='.' manage.py test --noinput -v 3
     - coverage report --skip-covered | grep TOTAL
 
