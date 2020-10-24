@@ -15,6 +15,7 @@ test_py36:
 test_py37:
   image: python:3.7-slim
   script:
+    - pip install --upgrade pip; pip install zipp
     - pip install tox "poetry==$POETRY_VERSION"
     - tox -c tox.py37.ini
 
