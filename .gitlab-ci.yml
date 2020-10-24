@@ -1,4 +1,8 @@
 image: python:3.6
+variables:
+  POETRY_VERSION: 1.1.4
+  POETRY_VIRTUALENVS_CREATE: "false"
+  PIP_DISABLE_PIP_VERSION_CHECK: "on"
 
 test_py36:
   cache:
@@ -17,7 +21,7 @@ test_py37:
 test_py38:
   image: python:3.8-slim
   script:
-    - pip install tox
+    - pip install tox "poetry==$POETRY_VERSION"
     - tox -c tox.py38.ini
 
 test_coverage:
