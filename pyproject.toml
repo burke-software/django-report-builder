@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "django-report-builder"
+version = "6.4.0"
+description = "Query and Report builder for Django ORM"
+authors = ["David Burke <david@burkesoftware.com>"]
+packages = [
+    { include="report_builder", from="." },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+Django = ">=2.2"
+djangorestframework = "^3.8.0"
+openpyxl = "^3.0.4"
+python-dateutil = "^2.7.0"
+
+[tool.poetry.dev-dependencies]
+django-custom-field = "^3.0"
+psycopg2-binary = "^2.8.5"
+django-extensions = "^3.0.3"
+Werkzeug = "^1.0.1"
+ipdb = "^0.13.3"
+celery = {version = "^5.0.1", extras = ["redis"]}
+flake8 = "^3.8.3"
+django-money = "^1.1"
+django_celery_beat = "^2.0.0"
+tox = "^3.18.1"
+model-bakery = "^1.1.1"
+freezegun = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,10 +1,12 @@
 FROM python:3.8-slim
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1 \
+  POETRY_VERSION=1.1.4 \
+  POETRY_VIRTUALENVS_CREATE=false \
+  PIP_DISABLE_PIP_VERSION_CHECK=on
+
 RUN mkdir /code
 WORKDIR /code
-ADD requirements.txt /code/
-ADD requirements-dev.txt /code/
-ADD setup.py /code/
-RUN pip install -e . -r requirements.txt
-RUN pip install -e . -r requirements-dev.txt
+RUN pip install "poetry==$POETRY_VERSION"
+COPY poetry.lock pyproject.toml /code/
+RUN poetry install --no-interaction --no-ansi 
 ADD . /code/
