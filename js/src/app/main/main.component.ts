@@ -25,7 +25,8 @@ import {
 } from '../actions/reports';
 import { Go } from '../actions/router';
 import { ComponentCanDeactivate } from '../generic.guard';
-import { MatDialog, MatSidenav } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import {
   ConfirmModalComponent,
   IConfirmModalData,

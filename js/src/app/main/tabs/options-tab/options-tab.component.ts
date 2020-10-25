@@ -8,7 +8,7 @@ import {
   DeleteReport,
   CopyReport,
 } from '../../../actions/reports';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { IReportDetailed } from '../../../models/api';
 import {
   ConfirmModalComponent,

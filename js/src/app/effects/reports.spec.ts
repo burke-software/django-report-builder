@@ -3,7 +3,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { hot, cold, getTestScheduler } from 'jasmine-marbles';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
-import { MatSnackBarModule } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 
 import { ReportEffects } from './reports';
