@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { IField, IRelatedField } from '../../models/api';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { TreeNode } from 'angular-tree-component';
 import { ITreeNode } from 'angular-tree-component/dist/defs/api';
 
