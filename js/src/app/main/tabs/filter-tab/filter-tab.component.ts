@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IFilter } from '../../../models/api';
 import { Update } from '@ngrx/entity';
-import { ITreeOptions, IActionMapping } from 'angular-tree-component';
+import { ITreeOptions, IActionMapping } from '@circlon/angular-tree-component';
 
 @Component({
   selector: 'app-filter-tab',

@@ -14,6 +14,7 @@ import { reducer as configReducer } from './reducers/config';
 
 import { State as ReportsState } from './models/reports';
 import { State as ConfigState } from './models/config';
+import { Injectable } from "@angular/core";
 
 export interface RouterStateUrl {
   url: string;
@@ -28,6 +29,7 @@ export interface State {
 }
 
 // https://github.com/ngrx/platform/blob/master/docs/router-store/api.md#custom-router-state-serializer
+@Injectable()
 export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
   serialize(routerState: RouterStateSnapshot): RouterStateUrl {
     let route = routerState.root;

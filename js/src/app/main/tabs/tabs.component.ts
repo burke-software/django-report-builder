@@ -13,7 +13,7 @@ import {
   hasEditedSinceLastSave,
   getErrors,
 } from '../../selectors';
-import { MatTabGroup } from '@angular/material';
+import { MatTabGroup } from '@angular/material/tabs';
 import { Update } from '@ngrx/entity';
 import { IDisplayField, IFilter } from '../../models/api';
 

@@ -25,7 +25,7 @@ import {
   getSelectedReportId,
   getIsAsyncReport,
 } from '../selectors';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 const { ReportActionTypes } = fromReports;
 
 @Injectable()
