@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { IField, IRelatedField } from '../../models/api';
 import { MatTableDataSource } from '@angular/material/table';
-import { TreeNode } from 'angular-tree-component';
-import { ITreeNode } from 'angular-tree-component/dist/defs/api';
+import { TreeNode } from '@circlon/angular-tree-component';
+import { ITreeNode } from '@circlon/angular-tree-component/lib/defs/api';
 
 @Component({
   selector: 'app-right-sidebar',

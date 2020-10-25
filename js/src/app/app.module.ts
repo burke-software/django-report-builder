@@ -8,7 +8,7 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { TreeModule } from 'angular-tree-component';
+import { TreeModule } from '@circlon/angular-tree-component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -35,7 +35,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {
   StoreRouterConnectingModule,
-  RouterStateSerializer,
+  RouterStateSerializer, DefaultRouterStateSerializer,
 } from '@ngrx/router-store';
 
 import { AppComponent } from './app.component';
@@ -135,13 +135,13 @@ export const MatModules = [
     ClickOutsideModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     RouterModule.forRoot(appRoutes),
-    StoreRouterConnectingModule.forRoot({
+    StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer,
       stateKey: 'router',
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
     EffectsModule.forRoot([ReportEffects, ConfigEffects, RouterEffects]),
     HttpClientModule,
-    TreeModule.forRoot(),
+    TreeModule,
     MatSortModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
