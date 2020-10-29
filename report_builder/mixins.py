@@ -21,6 +21,7 @@ from decimal import Decimal
 from numbers import Number
 from functools import reduce
 import datetime
+from urllib.parse import quote
 
 from .utils import (
     get_relation_fields_from_model,
@@ -79,6 +80,19 @@ class DataExportMixin(object):
             except:
                 ws.append(['Unknown Error'])
 
+    def add_content_disposition_header(self,response, filename):
+        """
+        Add an RFC5987 / RFC6266 compliant Content-Disposition header to an
+        HttpResponse to tell the browser to save the HTTP response to a file.
+        """
+        try:
+            filename.encode('ascii')
+            file_expr = 'filename="{}"'.format(filename)
+        except UnicodeEncodeError:
+            file_expr = "filename*=utf-8''{}".format(quote(filename))
+        response['Content-Disposition'] = 'attachment; {}'.format(file_expr)
+        return response
+
     def build_xlsx_response(self, wb, title="report"):
         """ Take a workbook and return a xlsx file response """
         title = generate_filename(title, '.xlsx')
@@ -87,7 +101,7 @@ class DataExportMixin(object):
         response = HttpResponse(
             myfile.getvalue(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=%s' % title
+        self.add_content_disposition_header(response, title)
         response['Content-Length'] = myfile.tell()
         return response
 
@@ -102,7 +116,7 @@ class DataExportMixin(object):
         response = HttpResponse(
             myfile.getvalue(),
             content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s' % title
+        self.add_content_disposition_header(response, title)
         response['Content-Length'] = myfile.tell()
         return response
 
