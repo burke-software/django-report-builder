@@ -9,7 +9,7 @@
   <mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc">
     <ng-container matColumnDef="actions">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef>
-        <a href="/report/add" (click)="newReport($event)" mat-raised-button color="primary" [ngStyle]="{'text-transform': 'uppercase'}">
+        <a href="/report/add" (click)="newReport($event)" mat-raised-button color="primary" >
           <mat-icon>add</mat-icon>
           Add Report</a>
       </mat-header-cell>
