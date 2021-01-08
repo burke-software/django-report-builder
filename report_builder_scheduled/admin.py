@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from .models import ScheduledReport
 
 try:
@@ -14,7 +16,7 @@ class ScheduledReportAdmin(admin.ModelAdmin):
 
     def run_report_url(self, obj):
         url = reverse('run_scheduled_report', kwargs={'pk': obj.id})
-        return '<a href="%s">Run</a>' % (url,)
+        return format_html('<a href="{}">Run Report</a>', url)
 
     run_report_url.allow_tags = True
     run_report_url.short_description = ''
