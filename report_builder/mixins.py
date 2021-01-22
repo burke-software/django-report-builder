@@ -72,6 +72,9 @@ class DataExportMixin(object):
                         row[i] = text_type(item.decode('utf-8', 'ignore'))
                 elif type(item) is dict:
                     row[i] = text_type(item)
+                # convert non native types to string
+                elif type(item) not in {int, float, bool}:
+                    row[i] = text_type(item)
             try:
                 ws.append(row)
             except ValueError as e:
