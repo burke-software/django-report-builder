@@ -14,6 +14,10 @@ Are you a fan of Report Builder or using it at your workplace? Please consider s
 
 # News
 
+## 6.4.2
+
+- Fixes to CI pipeline
+
 ## 6.4
 
 - Added Django 3.0 and 3.1 support. Django 1.11 and 2.2 are still supported. This will likely be the last release to support 1.11.
