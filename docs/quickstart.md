@@ -118,6 +118,11 @@ Advantages of this option
 1. Set up Celery
 2. Set `REPORT_BUILDER_ASYNC_REPORT = True` in settings.py
 
+### Celery Setup 
+Django report builder's "scheduled report" and "asynchronous report" depends on Celery. Celery's official documentation is very good at explaining the setting: http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html#using-celery-with-django.
+
+If we do not need these two features, then no need to install Celery.
+
 ### Email notification when file is uploaded
 
 The reports are emailed to the current user rather than generated and then downloaded. This is if you have reports that take a while to generate or if you'd prefer your users to be emailed.
