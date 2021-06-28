@@ -40,7 +40,7 @@ After dragging your specified fields and saving, users then have the option to p
 
 ##Using the Report Filters Tab
 
-The **Report Filters** option is designed to give users the ability to further refine their data. Refining information functions similiar to editing your report, simply select the **Report Filters** tab and use the available fields list to drag and drop into the empty area. 
+The **Report Filters** option is designed to give users the ability to further refine their data. Refining information functions similar to editing your report, simply select the **Report Filters** tab and use the available fields list to drag and drop into the empty area. 
 
 Using the example above, consider the use case of a user wanting to pull the student-worker data from before, but only for males working on Mondays.
 
