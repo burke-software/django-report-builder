@@ -112,6 +112,7 @@ class DataExportMixin(object):
     def list_to_workbook(self, data, title='report', header=None, widths=None):
         """ Create just a openpxl workbook from a list of data """
         wb = Workbook()
+        wb.guess_types = True
         title = re.sub(r'\W+', '', title)[:30]
 
         if isinstance(data, dict):
