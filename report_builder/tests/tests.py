@@ -1167,7 +1167,7 @@ class ReportTests(TestCase):
         download_csv = reverse('report_download_file', args=[report.id, 'csv'])
         response = self.client.get(download_csv)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response._headers['content-type'][1], 'text/csv')
+        self.assertEqual(response.headers['content-type'], 'text/csv')
         csv_string = response._container[0]
         f = StringIO(csv_string.decode('UTF-8'))
         reader = csv.reader(f, delimiter=',')

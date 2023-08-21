@@ -6,13 +6,13 @@ Targets sys admins and capable end users who might not be able to program or gai
 [![pipeline status](https://gitlab.com/burke-software/django-report-builder/badges/master/pipeline.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
 [![coverage report](https://gitlab.com/burke-software/django-report-builder/badges/master/coverage.svg)](https://gitlab.com/burke-software/django-report-builder/commits/master)
 
-# Call for Sponsorship
-
-<a href="https://liberapay.com/burke-software/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-
-Are you a fan of Report Builder or using it at your workplace? Please consider sponsorship. You may donate on [Liberapay](https://liberapay.com/burke-software/donate) directly or contact me about sponsoring a feature. Right now, we need better documentation. Get your profile or company logo added to our Readme as a sponsor. Paid commercial support is also available. Email info@burkesoftware.com for more infomation.
+Status: Unmaintained and does not support the latest Django version. I haven't used this project personally for many years. Please open an issue if you can help contribute or wish to take over the project entirely.
 
 # News
+
+## 6.5 (unreleased)
+
+- Add Django 4.x support. Django 3.2 is still supported. Thanks @jeanwainer
 
 ## 6.4.2
 
@@ -21,17 +21,6 @@ Are you a fan of Report Builder or using it at your workplace? Please consider s
 ## 6.4
 
 - Added Django 3.0 and 3.1 support. Django 1.11 and 2.2 are still supported. This will likely be the last release to support 1.11.
-
-## 6.3.2
-
-- Fixed admin widgets (Thanks predatell)
-- Angular updated to version 8
-
-## 6.3
-
-- Added Django 2.2 support. Django 1.11 and 2.1 are still supported.
-- Unit tests finally run in Python 3.7 thanks to Celery supporting it
-- Angular updated to version 7
 
 View more on the [CHANGELOG](CHANGELOG).
 

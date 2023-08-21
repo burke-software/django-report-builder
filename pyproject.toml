@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-report-builder"
-version = "6.4.0"
+version = "6.5.0"
 description = "Query and Report builder for Django ORM"
 authors = ["David Burke <david@burkesoftware.com>"]
 packages = [
@@ -9,7 +9,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-Django = ">=2.2"
+Django = ">=3.2"
 djangorestframework = "^3.8.0"
 openpyxl = "^3.0.4"
 python-dateutil = "^2.7.0"
@@ -18,7 +18,7 @@ python-dateutil = "^2.7.0"
 django-custom-field = "^3.0"
 psycopg2-binary = "^2.8.5"
 django-extensions = "^3.0.3"
-Werkzeug = "^1.0.1"
+Werkzeug = ">=2.0.0"
 ipdb = "^0.13.3"
 celery = {version = "^5.0.1", extras = ["redis"]}
 flake8 = "^3.8.3"

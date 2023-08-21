@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-import report_builder_scheduled.tasks
+from django.utils.translation import gettext_lazy as _
 
+import report_builder_scheduled.tasks
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -16,10 +16,10 @@ class ScheduledReport(models.Model):
         'report_builder.Report', on_delete=models.CASCADE
     )
     users = models.ManyToManyField(
-            AUTH_USER_MODEL,
-            limit_choices_to={'is_staff': True},
-            blank=True,
-            help_text="Staff users to notify")
+        AUTH_USER_MODEL,
+        limit_choices_to={'is_staff': True},
+        blank=True,
+        help_text="Staff users to notify")
     other_emails = models.CharField(
         max_length=1000,
         blank=True,

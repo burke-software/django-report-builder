@@ -1,11 +1,11 @@
-version: '2'
+version: '3.8'
 services:
   db:
-    image: postgres:12
+    image: postgres
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
   redis:
-    image: redis:3
+    image: redis
   web:
     build: .
     command: python manage.py runserver_plus 0.0.0.0:8000
@@ -13,13 +13,13 @@ services:
       - .:/code
     ports:
       - "8000:8000"
-    links:
+    depends_on:
       - db
       - redis
   celery:
     build: .
     command: celery -A report_builder_demo worker -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    links:
+    depends_on:
       - db
       - redis
     environment:

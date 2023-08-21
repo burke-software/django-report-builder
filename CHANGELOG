@@ -1,3 +1,7 @@
+## 6.5 (draft)
+
+- Add Django 4.x support. Thanks @jeanwainer
+
 ## 6.4
 
 - Added Django 3.0 and 3.1 support (Thanks mzelazkiewicz)
