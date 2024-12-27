@@ -5,18 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12.5"
 dependencies = [
-    "django-filter>=24.3",
-    "django==5.1.4",
     "djangorestframework>=3.15.2",
     "openpyxl==3.0.4",
     "py-moneyed==0.8",
     "python-dateutil==2.9.0.post0",
     "celery[redis]==5.4.0",
+    "django>=5.1.4",
 ]
 
 [dependency-groups]
 dev = [
-    "django-filter>=24.3",
     "celery[redis]==5.4.0",
     "django-celery-beat==2.7.0",
     "django-custom-field==3.0",

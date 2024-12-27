@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     "report_builder_scheduled",
     "django_celery_beat",
     "django_extensions",
-    "django_filters",
+    # "django_filters",
 )
 
 MIDDLEWARE = [
@@ -121,11 +121,6 @@ REPORT_BUILDER_ASYNC_REPORT = True
 REPORT_BUILDER_GLOBAL_EXPORT = True
 REPORT_BUILDER_EMAIL_NOTIFICATION = False
 REPORT_BUILDER_EXCLUDE = ["django_celery_beat.solarschedule"]
-
-# These default settings can break report builder - so test against them
-REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
-}
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 if TESTING:

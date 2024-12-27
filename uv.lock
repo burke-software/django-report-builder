@@ -206,18 +206,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-filter"
-version = "24.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/50/bc/dc19ae39c235332926dd0efe0951f663fa1a9fc6be8430737ff7fd566b20/django_filter-24.3.tar.gz", hash = "sha256:d8ccaf6732afd21ca0542f6733b11591030fa98669f8d15599b358e24a2cd9c3", size = 144444 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/b1/92f1c30b47c1ebf510c35a2ccad9448f73437e5891bbd2b4febe357cc3de/django_filter-24.3-py3-none-any.whl", hash = "sha256:c4852822928ce17fb699bcfccd644b3574f1a2d80aeb2b4ff4f16b02dd49dc64", size = 95011 },
-]
-
-[[package]]
 name = "django-money"
 version = "1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -238,7 +226,6 @@ source = { virtual = "." }
 dependencies = [
     { name = "celery", extra = ["redis"] },
     { name = "django" },
-    { name = "django-filter" },
     { name = "djangorestframework" },
     { name = "openpyxl" },
     { name = "py-moneyed" },
@@ -251,7 +238,6 @@ dev = [
     { name = "django-celery-beat" },
     { name = "django-custom-field" },
     { name = "django-extensions" },
-    { name = "django-filter" },
     { name = "django-money" },
     { name = "flake8" },
     { name = "freezegun" },
@@ -264,8 +250,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "celery", extras = ["redis"], specifier = "==5.4.0" },
-    { name = "django", specifier = "==5.1.4" },
-    { name = "django-filter", specifier = ">=24.3" },
+    { name = "django", specifier = ">=5.1.4" },
     { name = "djangorestframework", specifier = ">=3.15.2" },
     { name = "openpyxl", specifier = "==3.0.4" },
     { name = "py-moneyed", specifier = "==0.8" },
@@ -278,7 +263,6 @@ dev = [
     { name = "django-celery-beat", specifier = "==2.7.0" },
     { name = "django-custom-field", specifier = "==3.0" },
     { name = "django-extensions", specifier = "==3.2.1" },
-    { name = "django-filter", specifier = ">=24.3" },
     { name = "django-money", specifier = "==1.1" },
     { name = "flake8", specifier = "==3.8.3" },
     { name = "freezegun", specifier = "==1.0.0" },
