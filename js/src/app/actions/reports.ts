@@ -13,6 +13,7 @@ import {
 } from '../models/api';
 
 export enum ReportActionTypes {
+  SEARCH_REPORTS = 'Search Reports',
   GET_REPORT_LIST = 'Get Report List',
   SET_REPORT_LIST = 'Set Report List',
   GET_REPORT = 'Get Report',
@@ -53,6 +54,11 @@ export enum ReportActionTypes {
 }
 
 /** Request an updated list of all reports from the api */
+export class SearchReports implements Action {
+  readonly type = ReportActionTypes.SEARCH_REPORTS;
+  constructor(public payload: string) {}
+}
+
 export class GetReportList implements Action {
   readonly type = ReportActionTypes.GET_REPORT_LIST;
 }
@@ -194,7 +200,7 @@ export class CreateReportSuccess implements Action {
 }
 
 export class CreateReportError implements Action {
-  readonly type = ReportActionTypes.CREATE_REPORT_ERROR
+  readonly type = ReportActionTypes.CREATE_REPORT_ERROR;
   constructor(public payload: any) {}
 }
 

@@ -10,54 +10,64 @@ class Foo(models.Model):
     char_field2 = models.CharField(max_length=50, blank=True)
 
     class ReportBuilder:
-        fields = ('char_field',)
+        fields = ("char_field",)
 
 
 class FooExclude(Foo):
     class ReportBuilder:
-        exclude = ('char_field2',)
+        exclude = ("char_field2",)
 
 
 class Bar(models.Model):
     char_field = models.CharField(max_length=50, blank=True)
-    foos = models.ManyToManyField(Foo, blank=True, related_name='bar_set')
+    foos = models.ManyToManyField(Foo, blank=True, related_name="bar_set")
 
-    CHECK = 'CH'
-    MATE = 'MA'
+    CHECK = "CH"
+    MATE = "MA"
     CHESS_CHOICES = (
-        (CHECK, 'CHECK'),
-        (MATE, 'CHECKMATE'),
+        (CHECK, "CHECK"),
+        (MATE, "CHECKMATE"),
     )
 
     check_mate_status = models.CharField(
-        max_length=2,
-        choices=CHESS_CHOICES,
-        default=CHECK
+        max_length=2, choices=CHESS_CHOICES, default=CHECK
     )
 
     @property
     def i_want_char_field(self):
-        return 'lol no'
+        return "lol no"
 
     @cached_property
     def i_need_char_field(self):
-        return 'lol yes'
+        return "lol yes"
 
     class ReportBuilder:
-        extra = ('i_want_char_field', 'i_need_char_field',)
-        filters = ('char_field',)
+        extra = (
+            "i_want_char_field",
+            "i_need_char_field",
+        )
+        filters = ("char_field",)
 
 
 class Account(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True, db_index=True)
-    balance = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', blank=True, null=True)
-    budget = MoneyField(max_digits=20, decimal_places=4, default_currency='USD', blank=True, null=True)
+    balance = MoneyField(
+        max_digits=10, decimal_places=2, default_currency="USD", blank=True, null=True
+    )
+    budget = MoneyField(
+        max_digits=20, decimal_places=4, default_currency="USD", blank=True, null=True
+    )
 
     class ReportBuilder:
-        fields = ('budget', 'id', 'name', 'balance',)
-        filters = ('budget',)
-        defaults = ('budget',)
-        exclude = ('balance_currency',)
+        fields = (
+            "budget",
+            "id",
+            "name",
+            "balance",
+        )
+        filters = ("budget",)
+        defaults = ("budget",)
+        exclude = ("balance_currency",)
 
 
 class Place(models.Model):
@@ -89,35 +99,38 @@ class Waiter(models.Model):
 class Person(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    last_login = models.DateField(
-        auto_now=True)
-    last_modifed = models.DateField(
-        null=True,
-        blank=True)
-    birth_date = models.DateTimeField(
-        null=True,
-        blank=True)
+    last_login = models.DateField(auto_now=True)
+    last_modifed = models.DateField(null=True, blank=True)
+    birth_date = models.DateTimeField(null=True, blank=True)
     hammer_time = models.TimeField(
-        null=True,
-        blank=True,
-        help_text="U Can't Touch This")
+        null=True, blank=True, help_text="U Can't Touch This"
+    )
 
 
 class Child(models.Model):
-    parent = models.ForeignKey(Person, related_name='children', on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        Person, related_name="children", on_delete=models.CASCADE
+    )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     age = models.IntegerField(null=True, blank=True, default=None)
-    color = models.CharField(max_length=1, blank=True, default='', choices=(
-        ('R', 'Red'),
-        ('G', 'Green'),
-        ('B', 'Blue'),
-    ))
+    color = models.CharField(
+        max_length=1,
+        blank=True,
+        default="",
+        choices=(
+            ("R", "Red"),
+            ("G", "Green"),
+            ("B", "Blue"),
+        ),
+    )
 
 
 class Comment(models.Model):
-    """ django-contrib-comments like model """
-    content_type = models.ForeignKey('contenttypes.ContentType', on_delete=models.CASCADE)
+    """django-contrib-comments like model"""
+
+    content_type = models.ForeignKey(
+        "contenttypes.ContentType", on_delete=models.CASCADE
+    )
     object_pk = models.TextField()
-    content_object = GenericForeignKey(
-        ct_field="content_type", fk_field="object_pk")
+    content_object = GenericForeignKey(ct_field="content_type", fk_field="object_pk")

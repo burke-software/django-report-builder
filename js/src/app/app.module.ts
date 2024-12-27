@@ -35,7 +35,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {
   StoreRouterConnectingModule,
-  RouterStateSerializer, DefaultRouterStateSerializer,
+  RouterStateSerializer,
+  DefaultRouterStateSerializer,
 } from '@ngrx/router-store';
 
 import { AppComponent } from './app.component';
@@ -135,11 +136,13 @@ export const MatModules = [
     ClickOutsideModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     RouterModule.forRoot(appRoutes),
-    StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer,
+    StoreRouterConnectingModule.forRoot({
+      serializer: DefaultRouterStateSerializer,
       stateKey: 'router',
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25 }),
-    EffectsModule.forRoot([ReportEffects, ConfigEffects, RouterEffects]),
+    EffectsModule.forRoot([ConfigEffects, RouterEffects]),
+    EffectsModule.forFeature([ReportEffects]),
     HttpClientModule,
     TreeModule,
     MatSortModule,

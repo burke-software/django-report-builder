@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-
-
-
 import {
   ReportsResponse,
   IReportDetailed,
@@ -43,6 +40,14 @@ export class ApiService {
 
   getReport(reportId: number) {
     return this.http.get<IReportDetailed>(this.apiUrl + `report/${reportId}/`);
+  }
+
+  searchReports(reportName: string | null) {
+    let url = this.apiUrl + `reports/`;
+    if (reportName) {
+      url = url + `?search=${reportName}`;
+    }
+    return this.http.get<ReportsResponse>(url);
   }
 
   getRelatedFields(request: IGetRelatedFieldRequest) {

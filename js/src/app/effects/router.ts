@@ -44,7 +44,7 @@ export class RouterEffects {
     map((action: RouterNavigationAction<RouterStateUrl>) => {
       const route = action.payload.routerState;
       if (route.url === '/') {
-        return new fromReports.GetReportList();
+        return new fromReports.SearchReports('');
       }
       if (route.params.id) {
         return new fromReports.GetReport(route.params.id);

@@ -6,6 +6,8 @@ import {
   withLatestFrom,
   catchError,
   delay,
+  switchMap,
+  skip,
 } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
@@ -26,6 +28,7 @@ import {
   getIsAsyncReport,
 } from '../selectors';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SetReportList } from '../actions/reports';
 const { ReportActionTypes } = fromReports;
 
 @Injectable()
@@ -33,6 +36,7 @@ export class ReportEffects {
   @Effect()
   getReports$: Observable<Action> = this.actions$.pipe(
     ofType(ReportActionTypes.GET_REPORT_LIST),
+    skip(1),
     mergeMap(() =>
       this.api
         .getReports()
@@ -47,6 +51,17 @@ export class ReportEffects {
     private router: Router,
     public snackBar: MatSnackBar
   ) {}
+
+  @Effect()
+  searchReports$: Observable<Action> = this.actions$.pipe(
+    ofType<fromReports.SearchReports>(ReportActionTypes.SEARCH_REPORTS),
+    map(action => action.payload), // Extract the payload
+    switchMap(searchTerm => {
+      return this.api
+        .searchReports(searchTerm)
+        .pipe(map(reports => new SetReportList(reports)));
+    })
+  );
 
   @Effect()
   getReport$: Observable<Action> = this.actions$.pipe(
@@ -276,26 +291,23 @@ export class ReportEffects {
   );
 
   @Effect()
-  checkExportStatus$ = ({
-    delayTime = 500,
-    scheduler = asyncScheduler
-  } = {}) => this.actions$.pipe(
-    ofType(ReportActionTypes.CHECK_EXPORT_STATUS),
-    delay(delayTime, scheduler),
-    mergeMap(
-      ({ payload: { reportId, taskId } }: fromReports.CheckExportStatus) =>
-        this.api.checkStatus({ reportId, taskId }).pipe(
-          map(({ state, link }) => {
-            if (state === 'SUCCESS') {
-              return new fromReports.DownloadExportedReport(link);
-            } else if (state === 'FAILURE') {
-              return new fromReports.CancelExportReport();
-            } else {
-              return new fromReports.CheckExportStatus({ reportId, taskId });
-            }
-          })
-        )
-    )
-  );
-
+  checkExportStatus$ = ({ delayTime = 500, scheduler = asyncScheduler } = {}) =>
+    this.actions$.pipe(
+      ofType(ReportActionTypes.CHECK_EXPORT_STATUS),
+      delay(delayTime, scheduler),
+      mergeMap(
+        ({ payload: { reportId, taskId } }: fromReports.CheckExportStatus) =>
+          this.api.checkStatus({ reportId, taskId }).pipe(
+            map(({ state, link }) => {
+              if (state === 'SUCCESS') {
+                return new fromReports.DownloadExportedReport(link);
+              } else if (state === 'FAILURE') {
+                return new fromReports.CancelExportReport();
+              } else {
+                return new fromReports.CheckExportStatus({ reportId, taskId });
+              }
+            })
+          )
+      )
+    );
 }
