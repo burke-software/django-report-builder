@@ -1,3 +1,8 @@
+## 7.0.0
+- Updated Django and packages to newer versions. 
+- Changed frontend to search reports directly on backend when hitting enter
+- List of reports now only return the last 10 modified reports. 
+
 ## 6.4
 
 - Added Django 3.0 and 3.1 support (Thanks mzelazkiewicz)

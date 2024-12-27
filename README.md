@@ -14,24 +14,7 @@ Are you a fan of Report Builder or using it at your workplace? Please consider s
 
 # News
 
-## 6.4.2
-
-- Fixes to CI pipeline
-
-## 6.4
-
-- Added Django 3.0 and 3.1 support. Django 1.11 and 2.2 are still supported. This will likely be the last release to support 1.11.
-
-## 6.3.2
-
-- Fixed admin widgets (Thanks predatell)
-- Angular updated to version 8
-
-## 6.3
-
-- Added Django 2.2 support. Django 1.11 and 2.1 are still supported.
-- Unit tests finally run in Python 3.7 thanks to Celery supporting it
-- Angular updated to version 7
+## 7.0.0
 
 View more on the [CHANGELOG](CHANGELOG).
 
@@ -70,3 +53,85 @@ This package uses Django in Docker and Angular CLI for development purposes.
 5. Angular runs on port 4200. Now that you are logged in, go to localhost:4200
 
 More detailed instructions are at [here](https://django-report-builder.readthedocs.io/en/latest/contributors/)
+
+## NATOORA
+
+#### Running BackEnd
+To run local environment we can use UV package manager. 
+
+```bash
+# Install UV package manager
+pip3 install uv 
+```
+
+```bash
+# Since toml file already exists, we only need to sync and it will create virtual env automatically
+uv sync --all-groups
+```
+
+```bash
+# Activate Virtual Environment
+source .venv/bin/activate
+```
+
+After activating the venv, we need to run `makemigrations` and `migrate`, which can also be done with UV.
+
+```bash
+uv run manage.py makemigrations
+uv run manage.py migrate
+```
+
+##### Start Local Server
+Runs automatically on `localhost:8000`
+To access admin page go to `localhost:8000/admin`
+
+!! Log In on the backend first to have access from the frontend.
+
+```bash
+uv run manage.py runserver
+```
+
+#### Running FrontEnd
+
+To run the Angular we need to use node 14.21.3.
+It's easier to use `nvm` to swap between node versions.
+
+##### Mac Intallation - On new Macs - 
+1- Install NVM to handle different Node versions
+```bash
+# Install NVM
+brew install nvm
+```
+
+2 - Install roseta to run older versions
+```bash
+# It's necessary to use rosetta
+softwareupdate --install-rosetta
+```
+
+3 - Make sure terminal is open with rosetta.
+- Go to appliactions and find the terminal app
+- Right-click -> Get Info, and select "Open with Rosetta"
+
+4 - Now open the selected terminal and run old architecture, so Node 14 can be installed
+```bash
+# Run on terminal
+arch -x86_64 zsh
+```
+5 - Install node version with NVM and use it.
+```bash
+nvm install 14.21.3
+nvm use 14.21.3
+```
+
+
+#### Starting Angular
+Angular runs on `localhost:4200`
+
+Enter the folder `js` and run yarn to start it. 
+```bash
+cd js/
+yarn
+yarn start
+```
+
