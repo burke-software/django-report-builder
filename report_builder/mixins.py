@@ -1,4 +1,6 @@
-from six import BytesIO, StringIO, text_type, string_types
+from io import BytesIO, StringIO
+text_type = str
+string_types = (str,)
 
 from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
@@ -11,7 +13,6 @@ except ImportError:
     )
 from django.db.models import Avg, Count, Sum, Max, Min
 from openpyxl.workbook import Workbook
-from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font
 import csv
@@ -86,13 +87,15 @@ class DataExportMixin(object):
         """ Take a workbook and return a xlsx file response """
         title = generate_filename(title, '.xlsx')
         myfile = BytesIO()
-        myfile.write(save_virtual_workbook(wb))
+        wb.save(myfile)  # <-- FIXED
+        myfile.seek(0)  # <-- ADD THIS
         response = HttpResponse(
             myfile.getvalue(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=%s' % title
         response['Content-Length'] = myfile.tell()
         return response
+
 
     def build_csv_response(self, wb, title="report"):
         """ Take a workbook and return a csv file response """
@@ -138,8 +141,10 @@ class DataExportMixin(object):
         if not title.endswith('.xlsx'):
             title += '.xlsx'
         myfile = BytesIO()
-        myfile.write(save_virtual_workbook(wb))
+        wb.save(myfile)  # <-- FIXED
+        myfile.seek(0)  # <-- ADD THIS
         return myfile
+
 
     def list_to_csv_file(self, data, title='report', header=None, widths=None):
         """ Make a list into a csv response for download.
@@ -223,7 +228,7 @@ class DataExportMixin(object):
                     path += '__'  # Legacy format to append a __ here.
 
                 new_model = get_model_from_path_string(model_class, path)
-                model_field = new_model._meta.get_field_by_name(field)[0]
+                model_field = new_model._meta.get_field(field)
                 choices = model_field.choices
                 new_display_fields.append(DisplayField(
                     path, '', field, '', '', None, None, choices, ''

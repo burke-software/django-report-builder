@@ -554,7 +554,7 @@ class DisplayField(AbstractField):
 
     def get_choices(self, model, field_name):
         try:
-            model_field = model._meta.get_field_by_name(field_name)[0]
+            model_field = model._meta.get_field(field_name)
         except:
             model_field = None
         if model_field and model_field.choices:
@@ -656,7 +656,7 @@ class FilterField(AbstractField):
 
     def get_choices(self, model, field_name):
         try:
-            model_field = model._meta.get_field_by_name(field_name)[0]
+            model_field = model._meta.get_field(field_name)
         except:
             model_field = None
         if model_field and model_field.choices:

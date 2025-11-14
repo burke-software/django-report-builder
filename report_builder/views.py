@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
-from six import string_types
+string_types = (str,)
 from .utils import duplicate
 from .models import Report
 from .mixins import DataExportMixin
@@ -34,8 +34,7 @@ def fieldset_string_to_field(fieldset_dict, model):
     i = 0
     for dict_field in fieldset_dict['fields']:
         if isinstance(dict_field, string_types):
-            fieldset_dict['fields'][i] = model._meta.get_field_by_name(
-                dict_field)[0]
+            fieldset_dict['fields'][i] = (model._meta.get_field(dict_field), None, None, None)
         elif isinstance(dict_field, list) or isinstance(dict_field, tuple):
             dict_field[1]['recursive'] = True
             fieldset_string_to_field(dict_field[1], model)
